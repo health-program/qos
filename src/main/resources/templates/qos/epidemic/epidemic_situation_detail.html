@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type" />
+    <section class="content-header">
+        <h1>疫情管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/epidemic/index"><i class="fa fa-list-alt"></i>疫情列表</a></li>
+            <li class="active">疫情详情</li>
+        </ol>
+    </section>
+    <section class="content">      
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/epidemic/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/qos/epidemic/update?id="+$("#id").val(),
+            columns: [
+                { title: "事发单位名称", name: "incidentUnit", inputType: "TEXT" },//required:"required"
+	            { title: "报告单位", name: "reportUnit", inputType: "SELECT", enum: "report-unit-type"},
+	            { title: "病种分类", name: "sicknessClassify", inputType: "SELECT", enum: "sickness-type" },
+	            { title: "区域", name: "region", inputType: "SELECT",enum:"region-type" },
+	            { title: "发病人数(首周)", name: "firstWeek", inputType: "NUMBER" },
+	            { title: "班级", name: "grade", inputType: "TEXT" },
+	            { title: "发病人数(累计)", name: "total", inputType: "NUMBER" },
+	            { title: "停课班级数", name: "suspendGradeNumber", inputType: "NUMBER" },
+	            { title: "应急接种班级数", name: "vaccinationGradeNumber", inputType: "NUMBER" },
+	            { title: "停课人数", name: "suspendPeopleNumber", inputType: "NUMBER" },
+	            { title: "应急接种人数", name: "vaccinationPeopleNumber", inputType: "NUMBER" },
+	            { title: "停课时间", name: "suspendData", inputType: "DATE" },
+	            { title: "出动人次数(市级专业部门)", name: "municipalLeveNumber", inputType: "NUMBER" },
+	            { title: "出动人次数(区镇级专业部门)", name: "districtTownNumber", inputType: "NUMBER" },
+	            { title: "是否原因溯源", name: "isReasonTraceability", inputType: "RADIO",enum: "boolean-type" },
+	            { title: "溯源是否清楚", name: "isTraceabilityClear", inputType: "RADIO", enum: "boolean-type"},
+	            { title: "是否预警值", name: "isEarlyWarningValue", inputType: "RADIO",enum: "boolean-type", colspan: 2 },
+	            { title: "备注", name: "remarks", inputType: "TEXTAREA" }
+            ]
+        }
+   
+        $.getAjax("/qos/epidemic/get?id=" + $("#id").val(), function(data) {
+        	var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

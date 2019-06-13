@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.epidemic.EpidemicSituationMapper">
+
+	<select id="searchFindPage" resultType="com.paladin.qos.service.epidemic.vo.EpidemicSituationVO">
+	SELECT 
+	e.id,e.incident_unit AS incidentUnit,e.report_unit AS reportUnit,e.sickness_classify AS sicknessClassify,e.grade AS grade,e.region AS region 
+	FROM epidemic_situation AS e WHERE 1=1
+	
+	<if test="incidentUnit !=null and incidentUnit != '' ">
+		AND e.incident_unit  LIKE CONCAT('%',#{incidentUnit},'%')
+	</if>
+	
+	</select>
+    
+</mapper>

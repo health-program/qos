@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+     <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type" /> 
+    <section class="content-header">
+        <h1>疫情管理</h1>
+    </section>
+    <section class="content">
+    <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                   	<div class="form-group">
+                        <div class="col-md-2">
+                            <input type="text" id="incidentUnit" name="incidentUnit" class="form-control" th:value="${query?.incidentUnit}" placeholder="请输入事发单位名称" >
+                        </div>
+                        <div class="col-md-10">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>                       
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>               
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增疫情</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        var limit = $("#pageLimit").val();
+        var offset = $("#pageOffset").val();
+        var page = (limit && offset) ? offset / limit + 1 : 1;
+
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "事发单位名称", align: "center", field: "incidentUnit" },
+                    { title: "报告单位", align: "center", field: "reportUnit",enumcode: "report-unit-type"},
+                    { title: "病种分类", align: "center", field: "sicknessClassify",enumcode:"sickness-type"},
+                    { title: "班级", align: "center", field: "grade"},
+                    { title: "区域", align: "center", field: "region",enumcode:"region-type" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .grant': function(e, value, row, index) {
+                            	remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/epidemic/find/page',
+            searchbar: '#searchbar',
+            showColumns: true,
+            pageSize: limit || undefined,
+            pageNumber: page || 1,
+            pagination: true,
+            clickToSelect: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/qos/epidemic/add';
+    }
+
+    function detail(row) {
+        window.location = '/qos/epidemic/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        window.location = '/qos/epidemic/remove?id=' + row.id;
+    }
+
+    function getSelectRow(notShowError) {
+        var rows = table.getSelections();
+        var row = rows.length > 0 ? rows[0] : null;
+        if (!notShowError && !row) {
+            $.errorMessage("请选中一条业务数据");
+        }
+        return row;
+    }
+    </script>
+</body>
+
+</html>
