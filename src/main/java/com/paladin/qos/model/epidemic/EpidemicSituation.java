@@ -1,12 +1,10 @@
 package com.paladin.qos.model.epidemic;
 
 import java.util.Date;
-
 import javax.persistence.Id;
+import com.paladin.framework.common.BaseModel;
 
-import com.paladin.framework.common.UnDeleteBaseModel;
-
-public class EpidemicSituation extends UnDeleteBaseModel{
+public class EpidemicSituation extends BaseModel{
     
     @Id
     private String id;

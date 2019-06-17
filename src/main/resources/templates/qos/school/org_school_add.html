@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
+    <section class="content-header">
+        <h1>学校基础情况管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/org/school/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/org/school/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        server: false,
+        cancelBtn: false,
+        editFormClass: false,
+        columns: [
+				{ title: "学校名称", name: "parentSchoolId",required: "required", inputType: "TEXT" },
+				{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
+				{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
+				{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
+				{ title: "主要领导姓名", name: "mainLeaderName", inputType: "TEXT" },
+				{ title: "主要领导电话", name: "mainLeaderCellphone", inputType: "TEXT" },
+				{ title: "分管领导姓名", name: "chargeLeaderName", inputType: "TEXT" },
+				{ title: "分管领导电话", name: "chargeLeaderCellphone", inputType: "TEXT" },
+				{ title: "具体负责人姓名", name: "specificChargeLeaderName", inputType: "TEXT" },
+				{ title: "具体负责人电话", name: "specificChargeLeaderCellphone", inputType: "TEXT" },
+				{ title: "地址", name: "address", inputType: "TEXTAREA" ,colspan: 2 },
+				{
+	                title: "人数",
+	                name: "people",
+	                required: "required",
+	                inputType: "SUB-MODEL",
+	                subViewField: "personnelName",
+	                addSubModelBtnTitle: '添加人数',
+	                colCount: 8,
+	                subTitleViewHtmml: function(data) {
+	                	debugger;
+	                    var a = $.getConstantEnumValue("school-section-type", data.schoolSection);
+	                    var b = $.getConstantEnumValue("grade-type", data.grade);
+	                    var html = '<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">学段</span>:' + a + '<span style="margin-left:2%;">年级</span>:'+b+'</span>';
+	                    html+='<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">总人数</span>:' + data.totalNumber + '<span style="margin-left:2%;">寄宿生人数</span>:'+data.boardersNumber+'<span style="margin-left:2%;">教职员工人数</span>:'+data.teachingNumber+'<span style="margin-left:2%;">后勤保障人数</span>:'+data.logisticsNumber+'</span>';
+	                    return html;
+	                },
+	                subModelOptions: {
+	                    headBorder: false,
+	                    hearderBox: false,
+	                    server: false,
+	                    layerOption: {
+	                        height: 480,
+	                        width: 780
+	                    },
+	                    columns: [
+	                        { title: "学段", name: "schoolSection",enum:"school-section-type", required: "required", inputType: "SELECT" },
+	                        { title: "年级", name: "grade", enum: "grade-type",  inputType: "SELECT" },
+	                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "TEXT" },
+	                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "TEXT" },
+	                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "TEXT" },
+	                        { title: "后勤保障人数", name: "logisticsNumber", required: "required", inputType: "TEXT" },
+	                    ]
+	                }
+	            }
+				]
+    }
+    
+
+    $(function() {    
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+         model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            server: false,
+            submitClick: function() {
+                save();
+            }
+        });
+        model.setData(null);
+       
+    });
+    
+    
+    var model;
+    function save(confirm){
+    	 var data = model.getFormData();
+    	 var people = data.people;
+         if (people && people.length > 0) {
+        	  $.postJsonAjax("/qos/org/school/save", data, function(result) {
+                  $.successAlert("保存成功", function() {
+                      window.location = '/qos/org/school/index';
+                  });
+              }, $("#submitBtn"));
+         }else{
+        	 $.errorMessage("人数这行必须添加一条记录！");
+         }
+    }
+    
+    </script>
+</body>
+
+</html>

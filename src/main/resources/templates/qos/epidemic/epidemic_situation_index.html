@@ -35,7 +35,7 @@
                 <table id="dataGrid"></table>
                 <div id="toolbar">
                     <div class="btn-group">
-                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增疫情</a>
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
                     </div>
                 </div>
             </div>
@@ -70,24 +70,23 @@
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
-                            'click .grant': function(e, value, row, index) {
+                            'click .remove': function(e, value, row, index) {
                             	remove(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                            '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
                         }
                     }
                 ]
             ],
             url: '/qos/epidemic/find/page',
             searchbar: '#searchbar',
+            exportUrl: '/qos/epidemic/export',
+            showExport: true,
             showColumns: true,
-            pageSize: limit || undefined,
-            pageNumber: page || 1,
             pagination: true,
-            clickToSelect: true,
             toolbar: "#toolbar",
             showRefresh: true
         });
@@ -102,9 +101,17 @@
     }
 
     function remove(row) {
-        window.location = '/qos/epidemic/remove?id=' + row.id;
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/qos/epidemic/remove?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
     }
-
+    
+    
     function getSelectRow(notShowError) {
         var rows = table.getSelections();
         var row = rows.length > 0 ? rows[0] : null;

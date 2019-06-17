@@ -1,36 +1,33 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/header" />
+<head th:include="/qos/header" />
 
 <body>
-     <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type" /> 
+    <tt:constant enumcode="nature-type,subordination-type,region-type"/>
     <section class="content-header">
         <h1>学校基础情况管理</h1>
     </section>
     <section class="content">
-    <div class="box box-solid">
+        <div class="box box-solid">
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
-                   	<div class="form-group">
-                        <div class="col-md-2">
-                           
-                        </div>
-                        <div class="col-md-10">
+                	<div class="form-group">
+	                    <div class="col-md-12">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
 		                    </div>
-		                </div>                       
-                    </div>
+		                </div>
+	                </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
-                </form>               
+                </form>
                 <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
                 <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
             </div>
         </div>
-        <div class="box box-solid">
+        <div class="box box-solid" style="margin-top:20px">
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
                 <div id="toolbar">
@@ -41,7 +38,7 @@
             </div>
         </div>
     </section>
-    <div th:include="/common/footer" />
+    <div th:include="/qos/footer" />
     <script type="text/javascript">
     var table;
     $(function() {
@@ -49,19 +46,15 @@
     });
 
     function initDataGrid() {
-        var limit = $("#pageLimit").val();
-        var offset = $("#pageOffset").val();
-        var page = (limit && offset) ? offset / limit + 1 : 1;
-
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
-                    { title: "学校名称", align: "center", field: "" },
-                    { title: "地址", align: "center", field: "",enumcode: ""},
-                    { title: "隶属关系", align: "center", field: "",enumcode:""},
-                    { title: "区域", align: "center", field: ""},
-                    { title: "性质", align: "center", field: "",enumcode:"" },
+                    { title: "学校名称", field: "parentSchoolId" },
+					{ title: "地址", field: "address" },
+					{ title: "性质", field: "nature", enumcode: "nature-type" },
+					{ title: "隶属关系", field: "affiliation",enumcode: "subordination-type" },
+					{ title: "区域", field: "district" ,enumcode: "region-type"},
                     {
                         title: "操作",
                         align: "center",
@@ -70,48 +63,46 @@
                             'click .detail': function(e, value, row, index) {
                                 detail(row);
                             },
-                            'click .grant': function(e, value, row, index) {
-                            	remove(row);
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
                         }
                     }
                 ]
             ],
-            url: '',///qos/school/find/page
+            url: '/qos/org/school/find/page',
             searchbar: '#searchbar',
+            exportUrl: '/qos/org/school/export',
+            showExport: true,
             showColumns: true,
-            pageSize: limit || undefined,
-            pageNumber: page || 1,
             pagination: true,
-            clickToSelect: true,
             toolbar: "#toolbar",
             showRefresh: true
         });
     }
 
     function add() {
-        window.location = '/qos/school/basics/add';
+        window.location = '/qos/org/school/add';
     }
 
     function detail(row) {
-        window.location = '/qos/school/basics/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/qos/org/school/detail' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
-        window.location = '/qos/school/basics/remove?id=' + row.id;
-    }
-
-    function getSelectRow(notShowError) {
-        var rows = table.getSelections();
-        var row = rows.length > 0 ? rows[0] : null;
-        if (!notShowError && !row) {
-            $.errorMessage("请选中一条业务数据");
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/qos/org/school/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
         }
-        return row;
     }
     </script>
 </body>

@@ -8,8 +8,8 @@
     <section class="content-header">
         <h1>疫情管理</h1>
         <ol class="breadcrumb">
-            <li><a href="/qos/epidemic/index"><i class="fa fa-list-alt"></i>疫情信息列表</a></li>
-            <li class="active">添加疫情</li>
+            <li><a href="/qos/epidemic/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">新增</li>
         </ol>
     </section>
     <section class="content">
@@ -21,7 +21,8 @@
     <script type="text/javascript">
     var options = {
         id: "model",
-        name: "添加疫情",
+        cancelBtn: false,
+        name: "新增",
         url: "/qos/epidemic/save",
         columns: [
             { title: "事发单位名称", name: "incidentUnit", inputType: "TEXT" },//required:"required"

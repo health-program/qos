@@ -1,20 +1,27 @@
 package com.paladin.qos.controller.epidemic;
 
+import java.io.IOException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
+import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.controller.epidemic.dto.EpidemicExportCondition;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
 import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
@@ -96,6 +103,29 @@ public class EpidemicController extends ControllerSupport {
     @ResponseBody
     public Object remove(@RequestParam String id){
 	return CommonResponse.getSuccessResponse(epidemicSituationService.removeByPrimaryKey(id));
+    }
+    
+    
+    @PostMapping(value = "/export")
+    @ResponseBody
+    public Object export(@RequestBody EpidemicExportCondition condition) {
+	if (condition == null) {
+	    return CommonResponse.getFailResponse("导出失败：请求参数异常");
+	}
+	condition.sortCellIndex();
+	EpidemicSituationQueryDTO query = condition.getQuery();
+	try {
+	    if (query != null) {
+		if (condition.isExportAll()) {
+		    return CommonResponse.getSuccessResponse("success",ExportUtil.export(condition,epidemicSituationService.searchAll(query),EpidemicSituation.class));
+		} else if (condition.isExportPage()) {
+		    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, epidemicSituationService.searchPage(query).getData(), EpidemicSituation.class));
+		}
+	    }
+	    return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
+	} catch (IOException | ExcelWriteException e) {
+	    return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
+	}
     }
 
 }
