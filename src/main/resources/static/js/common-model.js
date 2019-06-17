@@ -744,7 +744,7 @@ var _FieldBuilder = function(name, interfaces) {
         dependTrigger: function(column, model) {
             // 依赖域变化注册，监听依赖域变更
             model.editBody.find("[name='" + column.name + "']").change(function() {
-                if (model.filling === false) {
+                if (model.filling !== true) {
                     model.checkEditDependency();
                 }
             });
@@ -1605,7 +1605,7 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
     dependTrigger: function(column, model) {
         // 这里使用icheck 所以调用ifChecked事件
         model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function() {
-            if (model.filling === false) {
+            if (model.filling !== true) {
                 model.checkEditDependency();
             }
         });
@@ -1685,7 +1685,7 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
     dependTrigger: function(column, model) {
         // 这里使用icheck 所以调用ifChecked事件
         model.editBody.find("input[name='" + column.name + "']").on('ifChecked', function() {
-            if (model.filling === false) {
+            if (model.filling !== true) {
                 model.checkEditDependency();
             }
         });
