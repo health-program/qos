@@ -1382,6 +1382,296 @@ var _selectServerFieldBuilder = new _FieldBuilder("SELECT-SERVER", {
     }
 });
 
+// 树形下拉框域构建器
+var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
+    initHandler: function(column, model) {
+        if (column.multiple === true) {
+            column.separator = column.separator || ',';
+        }
+        this.getDataFromServer(column, model);
+        this.initRemoveButton(column, model);
+    },
+    getEditValue: function(column, model) {
+        return column.selectItem ? column.selectItem.value : null;
+    },
+    formDataHandler: function(column, formData, model) {
+        if (column.editDisplay !== "hide") {
+            var setted = false;
+            for (; i < formData.length; i++) {
+                if (formData[i].name == column.name) {
+                    formData[i].value = column.selectItem ? column.selectItem.value : null;
+                    setted = true;
+                    break;
+                }
+            }
+
+            if (!setted) {
+                formData.push({
+                    name: column.name,
+                    value: column.selectItem ? column.selectItem.value : null,
+                    type: "text",
+                    required: false
+                });
+            }
+        }
+    },
+    getDataFromServer: function(column, model) {
+        var that = this;
+        $.getAjax(column.url, function(data) {
+            var k = column.idField || 'id',
+                n = column.nameField || 'name',
+                c = column.childrenField || 'children',
+                p = column.parentField || 'parentId',
+                rv = column.rootParentValue;
+
+            var treeList = [],
+                treeData = null;
+            if (data) {
+                if (!$.isArray(data)) data = [data];
+                if (column.isListData) {
+
+                    data.forEach(function(item) {
+
+                        item.text = item[n];
+                        item.keyValue = item[k];
+
+                        var pid = item[k];
+                        children = $.grep(data, function(n, i) {
+                            return n[p] == pid;
+                        });
+
+                        item.nodes = children && children.length == 0 ? null: children;
+                        treeList.push(item);
+                    });
+
+                    treeData = $.grep(data, function(n, i) {
+                        if (rv) {
+                            return n[p] == rv;
+                        } else {
+                            return !n[p];
+                        }
+                    });
+
+
+                } else {
+                    var g = function(items) {
+                        var nodes = [];
+                        items.forEach(function(item) {
+                            var node = {
+                                text: item[n],
+                                keyValue: item[k]
+                            };
+
+                            var children = item[c];
+                            if (children) {
+                                node.nodes = g(children);
+                                if (node.nodes.length == 0) {
+                                    node.nodes = null;
+                                }
+                            }
+                            nodes.push(node);
+                            list.push(node);
+                        });
+                        return nodes;
+                    }
+                }
+            }
+
+            column.serverTreeData = treeData;
+            column.serverTreeListData = treeList;
+            column.serverDataGot = true;
+
+            that.fillDataFromServer(column, model);
+        });
+    },
+    fillDataFromServer: function(column, model) {
+        this.initTreeSelect(column, model);
+
+        if (model.status == 'view') {
+            this.fillView(column, model.data, model);
+        }
+
+        if (model.status == 'edit') {
+            if (column.editable === false) {
+                this.fillView(column, model.data, model, this.getEditTarget(column, model));
+            } else {
+                this.fillEdit(column, model.data, model);
+            }
+        }
+    },
+    initRemoveButton: function(column, model) {
+        var that = this;
+        $("#tonto-tree-select-remove-" + column.name).click(function() {
+            that.setSelectItem(column, model, null);
+        });
+    },
+    initTreeSelect: function(column, model) {
+        if (column.editable === false) return;
+        var that = this;
+        var input = that.getEditTarget(column, model);
+        if (!input && input.length == 0) return;
+        input.click(function() {
+            layer.open({
+                type: 1,
+                title: column.treeSelectTitle || " ",
+                content: "<div class='tonto-tree-select-div'></div>",
+                area: ['350px', '460px'],
+                success: function(layero, index) {
+                    if (!column.serverTreeData) return;
+
+                    var $tree = $(layero).find('.tonto-tree-select-div');
+                    $tree.treeview({
+                        data: column.serverTreeData,
+                        levels: column.treeSelectLevel || 1
+                    });
+
+                    $tree.on('nodeSelected', function(event, data) {
+                        var item = { name: data.text, value: data.keyValue };
+                        if (column.viewPathName === true) {
+                            item.name = that.getDataName(column, item.value);
+                        }
+
+                        if (typeof column.treeSelectedHandler == 'function') {
+                            var result = column.treeSelectedHandler(data);
+                            if (result === false) {
+                                return;
+                            }
+
+                            if (result && result !== true) {
+                                item = result;
+                            }
+                        }
+                        that.setSelectItem(column, model, item);
+                        layer.close(index);
+                    });
+                }
+            });
+        });
+    },
+    setSelectItem: function(column, model, item, target) {
+        column.selectItem = item;
+        var input = target || this.getEditTarget(column, model);
+        if (!input && input.length == 0) return;
+
+        var v = item ? item.name : '';
+        var isP = input.is("p") || column.editable === false;
+
+        if (isP) {
+            if (v || v === 0) {
+                input.removeClass("text-muted");
+                input.text(v);
+            } else {
+                input.addClass("text-muted");
+                input.text("无");
+            }
+        } else {
+            if (v || v === 0) {
+                input.val(v);
+            } else {
+                input.val('');
+            }
+        }
+    },
+    getDataName: function(column, v) {
+        if (column.serverTreeListData) {
+            if (column.multiple === true) {
+                // 待做
+            } else {
+                if (v || v === 0) {
+                    if (column.viewPathName === true) {
+                        var g = function(items, str) {
+                            for (var i = 0; i < items.length; i++) {
+                                var item = items[i];
+                                if (item.keyValue == v) {
+                                    return str ? str + "-" + item.text : item.text;
+                                } else {
+                                    if (item.nodes) {
+                                        var r = g(item.nodes, str ? str + "-" + item.text : item.text);
+                                        if (r) return r;
+                                    }
+                                }
+                            }
+                        }
+
+                        return g(column.serverTreeData);
+                    } else {
+                        for (var i = 0; i < column.serverTreeListData.length; i++) {
+                            var a = column.serverTreeListData[i];
+                            if (a.keyValue == v) {
+                                v = a.text;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return v;
+    },
+    fillView: function(column, data, model, target) {
+        if (column.serverDataGot === true) {
+            var p = target || this.getViewTarget(column, model);
+            if (!p || p.length == 0) return;
+            var v = data ? data[column.name] : null;
+            v = this.getDataName(column, v);
+
+            if (v || v === 0) {
+                p.removeClass("text-muted");
+                p.text(v);
+            } else {
+                p.addClass("text-muted");
+                p.text("无");
+            }
+        }
+    },
+    fillEdit: function(column, data, model, target) {
+        if (column.serverDataGot === true) {
+            var ov = data ? data[column.name] : null;
+            var v = this.getDataName(column, ov);
+            if (v || v === 0) {
+                this.setSelectItem(column, model, {
+                    name: v,
+                    value: ov
+                }, target);
+            } else {
+                this.setSelectItem(column, model, null, target);
+            }
+        }
+    },
+    generateEditFormHtml: function(column, isFirst, options) {
+        var colspan = column.colspan || 1,
+            required = column.required === 'required',
+            multiple = column.multiple === true;
+
+        var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
+        html += '<div class="col-sm-' + this.getEditColSize(column, colspan, options) + '">\n';
+        html += '<div class="input-group">'
+
+        var inputAttr = {
+            name: column.name,
+            placeholder: column.placeholder || null,
+            class: "form-control",
+            autocomplete: "off",
+            readonly: "readonly",
+            style: "background: rgb(255, 255, 255);",
+            required: required ? "required" : null
+        }
+
+        if (column.attr) {
+            inputAttr = $.extend(inputAttr, column.attr);
+        }
+
+        html += '<input ' + generateTagAttribute(inputAttr) + '/>\n';
+        html += '<span class="input-group-addon" id="tonto-tree-select-remove-' + column.name + '" style="cursor:pointer"><i class="glyphicon glyphicon-remove"></i></span>';
+        html += '</div>\n';
+        html += '</div>\n';
+        return {
+            colspan: colspan,
+            html: html
+        };
+    }
+});
+
 // 附件域构建器
 var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
     setDataHandler: function(column, data, model) {
@@ -1992,6 +2282,8 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
                     if (com) {
                         subModel.setData(com.data);
+                    } else {
+                        subModel.setData(null);
                     }
                 }
             },

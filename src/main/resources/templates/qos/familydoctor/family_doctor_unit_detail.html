@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>家庭医生社区管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/family/doctor/unit/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/family/doctor/unit/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/qos/family/doctor/unit/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "单位名称", name: "unit", inputType: "TEXT" },
+				{ title: "人口数", name: "population", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/qos/family/doctor/unit/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

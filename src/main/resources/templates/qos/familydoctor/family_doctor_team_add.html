@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>家庭医生团队管理</h1>
+        <input type="hidden" id="unitId" name="unitId" th:value="${unitId}"/>
+        <ol class="breadcrumb">
+            <li><a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "新增",
+        url:"/qos/family/doctor/team/save",
+        columns: [
+				{ title: "团队名称", name: "teamName", inputType: "TEXT" },
+				{ title: "服务责任小区（自然村）", name: "serviceDistrict", inputType: "TEXTAREA" },
+				{ title: "服务区域常住人口数", name: "servicePopulation", inputType: "TEXT" },
+				{ title: "经纬度", name: "coordinate", inputType: "TEXT" }
+				]
+    }
+
+    $(function() { 
+    	var unitId=$("#unitId").val();
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        options.columns;
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
+                    window.location = "/qos/family/doctor/team/index?unitId="+unitId;
+                });
+            }
+        });
+        $("#"+model.name+"_form").prepend('<input type="hidden" name="unitId" id="unitId" value="'+unitId+'"/>');
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

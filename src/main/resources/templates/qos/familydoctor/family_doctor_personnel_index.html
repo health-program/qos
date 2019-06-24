@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="sex-type,job-rank-type,oeducation-type,personnel-category-type"/>
+    <section class="content-header">
+        <h1>家庭医生人员管理</h1>
+        <ol class="breadcrumb">
+        	<li><a href="/qos/family/doctor/unit/index"><i class="fa fa-table"></i>社区管理列表</a></li>
+            <li><a th:href="@{/qos/family/doctor/team/index(unitId=${unitId})}"><i class="fa fa-table"></i>团队管理列表</a></li>
+            <li class="active">人员管理</li>
+        </ol>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                 <input type="hidden" name="teamId" id="teamId" th:value="${teamId}"/>
+                	<div class="form-group">
+                	<div class="col-md-2">
+                            <input type="text" name="name" class="form-control" th:value="${query?.name}" placeholder="请输入姓名" >
+                        </div>
+	                    <div class="col-md-10">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('form')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>
+	                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+					{ title: "姓名", field: "name" },
+					{ title: "性别", field: "sex", enumcode: "sex-type" },
+					{ title: "年龄", field: "age" },
+					{ title: "学历", field: "oeducation",enumcode:"oeducation-type" },
+					{ title: "职称", field: "jobRank",enumcode:"job-rank-type" },
+					{ title: "人员类别", field: "personnelCategory",enumcode:"personnel-category-type" },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/family/doctor/personnel/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/qos/family/doctor/personnel/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/qos/family/doctor/personnel/add?teamId='+$("#teamId").val();;
+    }
+
+    function detail(row) {
+    	var teamId = $("#teamId").val();
+        window.location = '/qos/family/doctor/personnel/detail?teamId='+teamId+'' + (row ? ('&id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/qos/family/doctor/personnel/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    </script>
+</body>
+
+</html>

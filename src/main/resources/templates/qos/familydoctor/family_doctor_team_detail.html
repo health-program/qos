@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>家庭医生团队管理</h1>
+        <input type="hidden" id="unitId" name="unitId" th:value="${unitId}"/>
+        <ol class="breadcrumb">
+            <li><a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var unitId=$("#unitId").val();
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/qos/family/doctor/team/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "团队名称", name: "teamName", inputType: "TEXT" },
+				{ title: "服务责任小区（自然村）", name: "serviceDistrict", inputType: "TEXTAREA" },
+				{ title: "服务区域常住人口数", name: "servicePopulation", inputType: "TEXT" },
+				{ title: "经纬度", name: "coordinate", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/qos/family/doctor/team/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+            $("#"+model.name+"_form").prepend('<input type="hidden" name="unitId" id="unitId" value="'+unitId+'"/>');
+        });
+    });
+    </script>
+</body>
+
+</html>

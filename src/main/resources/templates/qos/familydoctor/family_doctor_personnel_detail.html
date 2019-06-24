@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="sex-type,boolean-type,job-rank-type,oeducation-type,personnel-category-type"/>
+    <section class="content-header">
+        <h1>家庭医生人员管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/family/doctor/unit/index"><i class="fa fa-table"></i>社区管理</a></li>
+            <li><a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}"><i class="fa fa-table"></i>团队管理</a></li>
+            <li><a th:href="@{/qos/family/doctor/personnel/index?(teamId=${teamId})}"><i class="fa fa-table"></i>人员管理</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a th:href="@{/qos/family/doctor/personnel/index?(teamId=${teamId})}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var teamId=$("#teamId").val();
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/qos/family/doctor/personnel/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "姓名", name: "name", inputType: "TEXT" },
+				{ title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT" },
+				{ title: "年龄", name: "age", inputType: "TEXT" },
+				{ title: "学历", name: "oeducation", inputType: "SELECT",enum: "oeducation-type" },
+				{ title: "职称", name: "jobRank", inputType: "SELECT",enum: "job-rank-type" },
+				{ title: "人员类别", name: "personnelCategory", inputType: "SELECT",enum: "personnel-category-type" },
+				{ title: "其他人员（请注明）", name: "otherPersonnel", inputType: "TEXT" },
+				{ title: "医院专科团队医生(医院+医生)", name: "specialtyTeamDoctor", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/qos/family/doctor/personnel/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+            $("#"+model.name+"_form").prepend('<input type="hidden" name="teamId" id="teamId" value="'+teamId+'"/>');
+        });
+    });
+    </script>
+</body>
+
+</html>
