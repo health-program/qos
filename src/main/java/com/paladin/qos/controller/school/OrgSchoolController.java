@@ -48,8 +48,10 @@ public class OrgSchoolController extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = OrgSchoolQuery.class, paramIndex = 0)
     public Object findPage(OrgSchoolQuery query) {
-	return CommonResponse.getSuccessResponse(orgSchoolService.searchPage(query));
+	return CommonResponse.getSuccessResponse(orgSchoolService.searchFindPage(query));
     }
+    
+    
 
     @GetMapping("/get")
     @ResponseBody

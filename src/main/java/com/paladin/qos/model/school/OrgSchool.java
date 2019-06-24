@@ -1,10 +1,10 @@
 package com.paladin.qos.model.school;
 
-import com.paladin.framework.common.UnDeleteBaseModel;
+import com.paladin.framework.common.BaseModel;
 
 import javax.persistence.Id;
 
-public class OrgSchool extends UnDeleteBaseModel {
+public class OrgSchool extends BaseModel {
 
 	// 
 	@Id

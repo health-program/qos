@@ -45,6 +45,8 @@ public class EpidemicSituationVO {
     private Integer isTraceabilityClear;//溯源是否清楚(是为1，否为2)
 
     private String remarks;//备注
+    
+    private Date createTime;
 
     public String getId() {
         return id;
@@ -197,4 +199,13 @@ public class EpidemicSituationVO {
     public void setRemarks(String remarks) {
         this.remarks = remarks;
     }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+    
 }

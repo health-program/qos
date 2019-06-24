@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.school.OrgSchoolMapper">
 
+<select id="findSchool" resultType="com.paladin.qos.service.school.vo.OrgSchoolVO">
+	SELECT o.id, n.`school_full_name`AS parentSchoolId,o.`address`,o.`affiliation`,o.`district`,o.`nature`,o.`create_Time` AS createTime FROM 
+	org_school AS o 
+	LEFT JOIN org_school_name AS n ON o.`parent_school_id`=n.`id` where 1=1 
+	<if test="schoolName !=null and schoolName != '' ">
+	 AND n.`school_full_name` LIKE CONCAT('%',#{schoolName},'%') 
+	</if>
+	<if test="affiliation !=null and affiliation != '' ">
+	 AND affiliation = #{affiliation} 
+	</if>
+	<if test="nature !=null and nature != '' ">
+	 AND nature = #{nature}
+	</if>
+	<if test="district !=null and district != '' ">
+	 AND district = #{district}
+	</if>
+	ORDER BY o.create_time DESC
+</select>
 </mapper>

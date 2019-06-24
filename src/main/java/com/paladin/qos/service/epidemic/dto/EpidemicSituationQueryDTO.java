@@ -9,6 +9,8 @@ import com.paladin.framework.common.OffsetPage;
 public class EpidemicSituationQueryDTO extends OffsetPage{
 
     private String incidentUnit;//事发单位名称
+    
+    private String reportUnit;//报告单位
 
     public String getIncidentUnit() {
         return incidentUnit;
@@ -16,6 +18,14 @@ public class EpidemicSituationQueryDTO extends OffsetPage{
 
     public void setIncidentUnit(String incidentUnit) {
         this.incidentUnit = incidentUnit;
+    }
+
+    public String getReportUnit() {
+        return reportUnit;
+    }
+
+    public void setReportUnit(String reportUnit) {
+        this.reportUnit = reportUnit;
     }
     
 }

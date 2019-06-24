@@ -3,14 +3,21 @@
 <mapper namespace="com.paladin.qos.mapper.epidemic.EpidemicSituationMapper">
 
 	<select id="searchFindPage" resultType="com.paladin.qos.service.epidemic.vo.EpidemicSituationVO">
-	SELECT 
-	e.id,e.incident_unit AS incidentUnit,e.report_unit AS reportUnit,e.sickness_classify AS sicknessClassify,e.grade AS grade,e.region AS region 
-	FROM epidemic_situation AS e WHERE 1=1
+	SELECT e.id,n.`school_full_name` AS incidentUnit,e.report_unit AS reportUnit,e.sickness_classify AS sicknessClassify,e.grade AS grade,e.region AS region,
+	e.create_time AS createTime  
+	FROM epidemic_situation AS e 
+	LEFT JOIN org_school AS s ON e.`incident_unit`=s.`id` 
+	LEFT JOIN org_school_name AS n ON s.`parent_school_id`=n.`id`
+	WHERE 1=1
 	
 	<if test="incidentUnit !=null and incidentUnit != '' ">
 		AND e.incident_unit  LIKE CONCAT('%',#{incidentUnit},'%')
 	</if>
 	
+	<if test="reportUnit != null and reportUnit != '' ">
+		AND e.report_unit =#{reportUnit}
+	</if>
+	ORDER BY e.create_time DESC
 	</select>
     
 </mapper>

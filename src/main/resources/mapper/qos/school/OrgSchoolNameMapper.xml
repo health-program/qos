@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.school.OrgSchoolNameMapper">
+
+<select id="schoolNameFind" resultType="com.paladin.qos.service.school.vo.SchoolNameVO">
+	SELECT s.id ,o.`school_full_name`AS name FROM org_school AS s LEFT JOIN org_school_name AS o ON s.`parent_school_id`=o.id 
+</select>
+</mapper>

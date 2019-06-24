@@ -5,13 +5,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
+import com.paladin.qos.mapper.school.OrgSchoolMapper;
 import com.paladin.qos.model.school.OrgSchool;
 import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.school.dto.OrgSchoolDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolPeopleDTO;
+import com.paladin.qos.service.school.dto.OrgSchoolQuery;
 import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
@@ -23,6 +27,15 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     @Autowired
     private OrgSchoolPeopleService orgSchoolPeopleService;
     
+    @Autowired
+    private OrgSchoolMapper orgSchoolMapper;
+    
+    
+    public PageResult<OrgSchoolVO> searchFindPage(OrgSchoolQuery query) {
+	Page<OrgSchoolVO> page = PageHelper.offsetPage(query.getOffset(),query.getLimit());
+	orgSchoolMapper.findSchool(query);
+	return new PageResult<>(page);
+    }
     
     public OrgSchoolVO getSchool(String id){
 	if(StringUtil.isEmpty(id)){

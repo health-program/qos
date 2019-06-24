@@ -26,7 +26,7 @@
             name: "详情",
             url: "/qos/epidemic/update?id="+$("#id").val(),
             columns: [
-                { title: "事发单位名称", name: "incidentUnit", inputType: "TEXT" },//required:"required"
+                 { title: "事发单位名称", name: "incidentUnit", inputType: "SELECT-SERVER", multiple: false,url: "/qos/epidemic/find/select"},
 	            { title: "报告单位", name: "reportUnit", inputType: "SELECT", enum: "report-unit-type"},
 	            { title: "病种分类", name: "sicknessClassify", inputType: "SELECT", enum: "sickness-type" },
 	            { title: "区域", name: "region", inputType: "SELECT",enum:"region-type" },

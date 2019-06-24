@@ -29,7 +29,7 @@
 	        cancelBtn: false,
 	        editFormClass: false,
 	        columns: [
-					{ title: "学校名称", name: "parentSchoolId",required: "required", inputType: "TEXT" },
+					{ title: "学校名称", isListData:true, name: "parentSchoolId", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName', parentField:'parentId',url:"/qos/org/school/name/find/all" },
 					{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 					{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
 					{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
@@ -66,6 +66,7 @@
 		                    columns: [
 		                        { title: "学段", name: "schoolSection",enum:"school-section-type", required: "required", inputType: "SELECT" },
 		                        { title: "年级", name: "grade", enum: "grade-type",  inputType: "SELECT" },
+		                       /*  { title: "年级", name: "grade1", enum: "grade-type",  inputType: "SELECT",dependency: ["schoolSection", "2","3","4","5","6"] }, */
 		                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "TEXT" },
 		                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "TEXT" },
 		                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "TEXT" },

@@ -1,9 +1,7 @@
 package com.paladin.qos.controller.epidemic;
 
 import java.io.IOException;
-
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
@@ -27,6 +24,7 @@ import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.OrgSchoolNameService;
 
 /**
  * @author 黄伟华
@@ -38,6 +36,9 @@ public class EpidemicController extends ControllerSupport {
 
     @Autowired
     private EpidemicSituationService epidemicSituationService;
+    
+    @Autowired
+    private OrgSchoolNameService orgSchoolNameService;
 
     @RequestMapping("/index")
     @QueryInputMethod(queryClass = EpidemicSituationQueryDTO.class)
@@ -50,6 +51,12 @@ public class EpidemicController extends ControllerSupport {
     @QueryOutputMethod(queryClass = EpidemicSituationQueryDTO.class, paramIndex = 0)
     public Object find(EpidemicSituationQueryDTO query) {
 	return CommonResponse.getSuccessResponse(epidemicSituationService.searchFindPage(query));
+    }
+    
+    @RequestMapping("/find/select")
+    @ResponseBody
+    public Object schoolName() {
+	return CommonResponse.getSuccessResponse(orgSchoolNameService.schoolNameFind());
     }
     
     @RequestMapping("/detail")

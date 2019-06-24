@@ -15,6 +15,8 @@ public class OrgSchoolPeopleDTO {
 
 	// 年级
 	private Integer grade;
+	
+	private Integer grade1;
 
 	// 总人数
 	private Integer totalNumber;
@@ -134,6 +136,16 @@ public class OrgSchoolPeopleDTO {
 
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
+	}
+
+	public Integer getGrade1() {
+	    return grade1;
+	}
+
+	public void setGrade1(Integer grade1) {
+	    if(grade1 != null){
+		this.grade = grade1;
+	    }
 	}
 
 }

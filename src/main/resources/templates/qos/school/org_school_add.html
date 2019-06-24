@@ -26,7 +26,7 @@
         cancelBtn: false,
         editFormClass: false,
         columns: [
-				{ title: "学校名称", name: "parentSchoolId",required: "required", inputType: "TEXT" },
+				{ title: "学校名称",isListData:true, name: "parentSchoolId", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName',url:"/qos/org/school/name/find/all" },
 				{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 				{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
 				{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
@@ -46,7 +46,6 @@
 	                addSubModelBtnTitle: '添加人数',
 	                colCount: 8,
 	                subTitleViewHtmml: function(data) {
-	                	debugger;
 	                    var a = $.getConstantEnumValue("school-section-type", data.schoolSection);
 	                    var b = $.getConstantEnumValue("grade-type", data.grade);
 	                    var html = '<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">学段</span>:' + a + '<span style="margin-left:2%;">年级</span>:'+b+'</span>';
@@ -64,17 +63,18 @@
 	                    columns: [
 	                        { title: "学段", name: "schoolSection",enum:"school-section-type", required: "required", inputType: "SELECT" },
 	                        { title: "年级", name: "grade", enum: "grade-type",  inputType: "SELECT" },
-	                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "TEXT" },
-	                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "TEXT" },
-	                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "TEXT" },
-	                        { title: "后勤保障人数", name: "logisticsNumber", required: "required", inputType: "TEXT" },
+	                        /* { title: "年级", name: "grade1", enum: "grade-type",  inputType: "SELECT",dependency: ["schoolSection", "2","3","4","5","6"] }, */
+	                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "NUMBER" },
+	                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "NUMBER" },
+	                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "NUMBER" },
+	                        { title: "后勤保障人数", name: "logisticsNumber", required: "required", inputType: "NUMBER" },
 	                    ]
 	                }
 	            }
 				]
     }
     
-
+	var index;
     $(function() {    
         var html = generateEditHtml(options);
         $(".content").html(html);
@@ -87,9 +87,69 @@
             }
         });
         model.setData(null);
-       
+        
+       /*  $("input[name='SchoolName']").attr("readonly",true)
+        
+          $("input[name='SchoolName']").click(function(){
+        	  $.getAjax("/qos/org/school/name/find/page", function(res) {
+        		 index = layer.open({
+       	            type: 1,
+       	            title: "学校",
+       	         	closeBtn: 2,
+       	            shadeClose: true,
+       	            shade: 0.3,
+       	            shadeClose : true,
+       	            area:$.getOpenLayerSize("350","500"),
+       	            content: "<div id='treeview'/></div>"
+       	        });
+       			initTree(res)
+      	    	});
+    	}) */
     });
     
+    
+  /*   var treedata;
+    function initTree(res) {
+        if (res.data) {
+            var value = res.data,
+                root = $.grep(value, function(n, i) {
+                    return n.parentId ? false : true;
+                });
+
+            var g = function(ps) {
+                var nodes = [];
+                for (var i = 0; i < ps.length; i++) {
+                    var node = {},p = ps[i];
+                    node.text = p.schoolFullName;
+                    node.data = p;
+                    var children = $.grep(value, function(n, i) {
+                        return n.parentId == p.id;
+                    });
+                    
+                    if (children && children.length > 0) {
+                        node.nodes = g(children);
+                    }
+                    nodes.push(node);
+                }
+                return nodes;
+            }
+            treedata = g(root);
+            $('#treeview').treeview({
+                data: treedata,
+                silent:true,
+                bootstrap2: false, 
+	            highlightSelected:false,
+                levels: 1,
+                onNodeSelected: function(event, data) {
+                	var name ="input[name='SchoolName']";
+                	$(name).val(data.text);
+                	$(name).after('<input type="hidden" name="parentSchoolId" id="parentSchoolId" value=""/>');
+                	$("#parentSchoolId").val(data.data.id);
+                	layer.close(index);
+                }
+            });
+        }
+    } */
     
     var model;
     function save(confirm){

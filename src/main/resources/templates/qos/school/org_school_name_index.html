@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <section class="content-header">
+        <h1>学校管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/treetable.js"></script>
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+					{ title: "名称", field: "schoolFullName",align: "left", },
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .add': function(e, value, row, index) {
+                                add(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                        	if(row.level != "3"){
+                        		 return '<button class="add btn btn-xs btn-success" style="margin-right:10px"><i class="glyphicon glyphicon-plus"></i>添加子项</button>' +
+                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                        	}else{
+                        		return '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+                        	}
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/org/school/name/find/all',
+            searchbar: '#searchbar',
+            exportUrl: '/qos/org/school/name/export',
+            showExport: false,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true,
+            treeView: true, //是否开启树视图
+            treeId: "id", //id字段
+            treeParentFilter: true, //过滤掉父节点不正确的（置为空）
+            treeParentField: "parentId", //父ID字段
+            treeField: "schoolFullName", //展示树的字段
+            clickToSelect: true,
+            showColumns:true
+        });
+    }
+    
+    
+    
+	    var content = '<form id="transfers" class="form-horizontal" style="margin-top: 20px;">' +
+	    '    <input type="hidden" id="parentId" value="" />' +
+	    '    <input type="hidden" id="level" value="" />' +
+	    '    <label for="name" class="col-xs-3 control-label">名称</label>' +
+	    '    <div class="col-xs-8">' +
+	    '        <input type="text" class="form-control" id="schoolFullName" name="schoolFullName" required="required" placeholder="请输入"></input>' +
+	    '    </div>' +
+	    '    <div class="col-sm-5 col-sm-offset-4" style="margin-top: 20px;">' +
+	    '        <a onclick="submit()" type="button" class="btn btn-primary btn-block">确定</a>' +
+	    '    </div>' +
+	    '</form>';
+	    
+	var index;
+    function add(row) {
+    	 index = layer.open({
+             type: 1,
+             title: '添加',
+             closeBtn: 1,
+             maxmin: true, //开启最大化最小化按钮
+             area: $.getOpenLayerSize(400, 200),
+             maxmin: false, //开启最大化最小化按钮
+             content: content,
+             success: function(){
+            	 if(row != null){
+            		 $("#parentId").val(row.id)
+                	 if(row.level == '1'){
+                		 $("#level").val(2);
+                	 }
+                	 if(row.level == '2'){
+                		 $("#level").val(3);
+                	 }
+            	 }else{
+            		 $("#level").val(1);
+            	 }
+            	
+             }
+         });
+    }
+    
+    function submit() {
+    	var schoolFullName = $("#schoolFullName").val();
+    	 if (schoolFullName == null || schoolFullName == '') {
+             $.errorMessage("名称不能为空");
+             return;
+         }
+    	var level = $("#level").val();
+    	var parentId = $("#parentId").val();
+    	var data = {
+    		schoolFullName:schoolFullName,
+    		parentId:parentId,
+    		level:level
+    	}
+        $.postAjax("/qos/org/school/name/save",data, function(res) {
+            $.successMessage("新增成功");
+            table.refresh();
+            layer.close(index);
+        })
+    }
+    
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/qos/org/school/name/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    </script>
+</body>
+
+</html>

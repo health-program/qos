@@ -4,4 +4,44 @@ import com.paladin.framework.common.OffsetPage;
 
 public class OrgSchoolQuery extends OffsetPage {
 
+    private String schoolName;
+    
+    private String affiliation;
+    
+    private String nature;
+    
+    private String district;
+
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
+    public String getAffiliation() {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation) {
+        this.affiliation = affiliation;
+    }
+
+    public String getNature() {
+        return nature;
+    }
+
+    public void setNature(String nature) {
+        this.nature = nature;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+    
 }

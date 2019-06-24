@@ -1,6 +1,5 @@
 package com.paladin.qos.service.school;
 
-import io.lettuce.core.dynamic.annotation.Param;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class OrgSchoolPeopleService extends ServiceSupport<OrgSchoolPeople> {
 	return searchAll(new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID,QueryType.EQUAL, schoolId));
     }
     
-    public int deletePeople(@Param("schoolId")String schoolId){
+    public int deletePeople(String schoolId){
 	return removeByExample(new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID, QueryType.EQUAL, schoolId));
     }
 
