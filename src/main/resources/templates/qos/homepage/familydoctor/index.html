@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
+<script type="text/javascript" src="/static/js/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/js/map/mapgetscript.js"></script>
+<script type="text/javascript" src="/static/js/map/SearchInfoWindow_min.js"></script>
+ 
+	
+	
+	
+	
+	
+	  <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+
+  
+  
+  
+
+
+<body id="body">
+     <nav id="nav">
+	     <span class='index_left text-00e4ff left'>
+	                     <img src="../../../static/image/index/home.png" />家庭医生
+	     </span>
+	    <div class="middle">
+		     <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>
+	     </div>
+	     <div class='right'>
+	     	 <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		     <span  class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		     <span  class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+	     </div>
+     </nav>
+   <div id="middle" >
+	    <div class="left position-relative">
+	    	<div class="bg_opacity">
+	    	   <div class="header line">重点人群签约率</div>
+	    	    <div class="fr width100 text-align-right pr-100 position-absolute absolute1 absolute2">
+	    	    	<div class="mb5">
+	    	    		<select>
+	    	    			<option>请选择</option>
+	    	    			<option>2019-6</option>
+	    	    		</select>
+	    	    	</div>
+	 
+	    	    	<div>
+	    	    		<select>
+	    	    			<option>请选择</option>
+	    	    			<option>请11111</option>
+	    	    		</select>
+	    	    	</div>
+	    	    </div>
+	    	   <div id="emergency"></div>
+	    	</div>
+	    	<div class="bg_opacity">
+	    	  <div class="header line">综合健康管理服务包签约率</div>
+	    	  <div id="chartmain"></div>
+	    	</div>
+	    	<div class="bg_opacity">
+	    		<div class="header line">个性化服务签约率</div>
+	    		 <div id="individualization"></div>
+	    	</div>
+	    </div>
+	    <div class="middle">
+  					      	
+<div id="demo" class="carousel slide" data-ride="carousel">
+   <!-- 指示符 -->
+  <ul class="carousel-indicators">
+    <li data-target="#demo" data-slide-to="0" class="active"></li>
+    <li data-target="#demo" data-slide-to="1"></li>
+    <li data-target="#demo" data-slide-to="2"></li>
+  </ul>
+ 
+  <!-- 轮播图片 -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+       <ul>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">慢病签约人员管理数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">慢病签约人员随访数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">签约人员双向转诊数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">家庭病床建床数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">专病小区专科诊疗数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">上门服务人次数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">营养指导人次数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">康复指导人次数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+		</ul>
+    </div>
+    <div class="carousel-item">
+      <ul>
+     	    <li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">用药指导人次数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">慢病长处方服务数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">签约居民体检人数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">心脑血管高危人群筛查人数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+			</li>
+		<li class="doctor-mid-bg">
+			<p class="text-ffffff fz14 pt26">肿瘤高危人群筛查数</p>
+			<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+		</li>
+		<li class="doctor-mid-bg">
+			<p class="text-ffffff fz14 pt26">骨质疏松高危人群筛查数</p>
+			<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+		</li>
+		<li class="doctor-mid-bg">
+			<p class="text-ffffff fz14 pt26">COPD高危人群筛查数</p>
+			<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+		</li>
+		<li class="doctor-mid-bg">
+			<p class="text-ffffff fz14 pt26">儿童哮喘筛查数</p>
+			<p class="text-01d4f9 fz24 margin-top-21">2W</p>
+		</li>
+	 </ul>
+    </div>
+    <div class="carousel-item">
+         <ul>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">健康自助监测评估数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">5W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">CDSS心脑血管风险评估数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">5W</p>
+			</li>
+			<li class="doctor-mid-bg">
+				<p class="text-ffffff fz14 pt26">个性化健康信息精准推送数</p>
+				<p class="text-01d4f9 fz24 margin-top-21">5W</p>
+			</li>
+		</ul>
+    </div>
+  </div>
+</div>
+ 
+ 	 	<div class="roll">
+   				 <div class="header header_bg">
+		 		 	<span>社区名称▼</span>
+		 		 	<span>团队名称</span>
+		 		 	<span>姓名</span>
+		 		 	<span>年龄</span>
+		 		 	<span>职称▼</span>
+		 		 	<span>工作岗位▼</span>
+		 		 	<span>是否团队长▼</span>
+		 		 </div>
+		 	 	
+		 	  <div id="box"> 
+			    <ul id="list1">
+			         <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+		 			 <div class="header">
+			 		 	<span>社区名称</span>
+			 		 	<span>团队名称</span>
+			 		 	<span>姓名</span>
+			 		 	<span>年龄</span>
+			 		 	<span>职称</span>
+			 		 	<span>工作岗位</span>
+			 		 	<span>是否团队长</span>
+		 			 </div>
+			    </ul>
+			    <ul id="list2"></ul>
+			</div>
+					 	
+		 	</div>
+		 	
+        </div>
+	    <div class="right" style="float:left;">
+		   		<div class="bg_opacity  position-relative ml40">
+			   		<div class="header line">年度服务有效履约率</div>
+			   		<div class="fr width100 text-align-right pr-20">
+	    	    </div>
+		    		<div id="effective"></div>
+		    	</div>
+		    	<div class="bg_opacity ml40">
+			    	<div class="header line">签约机构门诊就诊率</div>
+		    	  	<div id="visiting"></div>
+		    	</div>
+		    	<div class="bg_opacity position-relative ml40">
+			      <div class="header line">签约医生门诊就诊率</div>
+			      <div id="signingDoctor" style="width:500px;height:300px;"></div>
+		    	</div>
+	    </div>
+   </div>
+   
+	
+</body>
+<div th:include="/qos/footer" />
+ <script>
+ $(function(){
+	       //指定图标的配置和数据
+	          var option = {
+	        		    xAxis: {
+	        		        type: 'category',
+	        		        data: ['2015', '2016', '2017', '2018', '2019'],
+	        		        axisLine:{
+	                            lineStyle:{
+	                                color:'#657ca8',
+	                                width:1,//这里是为了突出显示加上的
+	                            }
+	                        },
+	        		        axisLabel: {
+	                            show: true,
+	                            textStyle: {
+	                                color: '#19d1ff'
+	                            }
+	                        }
+	        		    },
+	        		    yAxis: {
+	        		    	splitLine:{
+	        		    		   show:false
+	        		    		},
+	        		        type: 'value',
+	        		        data: ['2015', '2016', '2017', '2018', '2019'],
+	        		        axisLine:{
+	                            lineStyle:{
+	                                color:'#657ca8',
+	                                width:1,//这里是为了突出显示加上的
+	                            }
+	                        },
+	        		        axisLabel: {
+	                            show: true,
+	                            textStyle: {
+	                                color: '#19d1ff'
+	                            }
+	                        }
+	        		    },
+	        		    series: [{
+	        		        data: [820, 932, 901, 934, 1290, 1330, 1320],
+	        		        type: 'line',
+	        		    	lineStyle:{
+	                                color:'#f45e23',
+	                                width:2,//这里是为了突出显示加上的
+	                            }
+	                        
+	        		    },{
+	        		        data: [620, 532, 601, 834, 890, 730, 920],
+	        		        type: 'line',
+	        		        lineStyle:{
+                                color:'#00b4b1',
+                                width:2,//这里是为了突出显示加上的
+                            }
+	        		    }]
+	        		};
+ 				 //初始化echarts实例
+	          var myChart = echarts.init(document.getElementById('chartmain'));
+			      myChart.setOption(option);
+			      
+			      // individualization  个性化
+			       var myChart1 = echarts.init(document.getElementById('individualization'));
+			      myChart1.setOption(option);
+			      
+			      
+			      var myChart2 = echarts.init(document.getElementById('effective'));
+			      myChart2.setOption(option);
+			      
+			      
+			      var myChart3 = echarts.init(document.getElementById('visiting'));
+			      myChart3.setOption(option);
+			      
+			      
+			      
+			      var myChart4 = echarts.init(document.getElementById('signingDoctor'));
+			      myChart4.setOption(option);
+			     
+			      //急诊人数开始
+			        //指定图标的配置和数据
+	          var emergencyoption = {
+	        		  xAxis: {
+	        		        type: 'category',
+	        		        data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
+	        		        axisLine:{
+	                            lineStyle:{
+	                                color:'#19d1ff',
+	                                width:1,//这里是为了突出显示加上的
+	                            }
+	                        }
+	        		    },
+	        		    yAxis: {
+	        		        type: 'value',
+	        		        splitLine:{
+	                            show:false
+	                        },
+	                        axisLine:{
+	                            lineStyle:{
+	                                color:'#19d1ff',
+	                                width:1,//这里是为了突出显示加上的
+	                            }
+	                        }
+	        		    },
+	        		    series: [{
+	        		    	  itemStyle: {
+	        		              normal: {
+	        		                  // 随机显示
+	        		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+	        		                
+	        		                  // 定制显示（按顺序）
+	        		                /*   color: function(params) { 
+	        		                      var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000']; 
+	        		                      return colorList[params.dataIndex] 
+	        		                  } */
+	        		              },
+	        		          },
+	        		          barWidth : 30,
+	        		        data: [120, 200, 150, 80, 70],
+	        		        type: 'bar'
+	        		    }]
+	        		};
+ 				 //初始化echarts实例
+	          var myChartEmergency = echarts.init(document.getElementById('emergency'));
+	          	  myChartEmergency.setOption(emergencyoption);
+			      //急诊人数结束
+		 
+			      
+			      // 无缝滚动
+			      
+			      
+	          	  var box=document.getElementById("box");
+	          	  var l1=document.getElementById("list1");
+	          	  var l2=document.getElementById("list2");
+	          	  l2.innerHTML=l1.innerHTML;//克隆list1的数据，使得list2和list1的数据一样
+	          	  function scrollup(){
+	          	    if(box.scrollTop>=l1.offsetHeight){ //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
+	          	      box.scrollTop=0;
+	          	    }else{
+	          	      box.scrollTop++;
+	          	    }
+	          	  }
+
+	          	  var scrollMove=setInterval(scrollup,30);//数值越大，滚动速度越慢
+
+	          	  //鼠标经过时，滚动停止
+	          	  box.onmouseover=function(){
+	          	    clearInterval(scrollMove)
+	          	  }
+
+	          	  //鼠标离开时，滚动继续
+	          	  box.onmouseout=function(){
+	          	    scrollMove=setInterval(scrollup,30);
+	          	  }
+	          	  
+})
+ </script>
+   <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  <script type="text/javascript"></script>
+</html>

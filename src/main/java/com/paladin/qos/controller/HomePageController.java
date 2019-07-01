@@ -15,8 +15,17 @@ import com.paladin.framework.core.GlobalProperties;
 @RequestMapping("/home/page/"+GlobalProperties.project+"")
 public class HomePageController {
 
-    	@RequestMapping(value = "/index")
+    @RequestMapping(value = "/index")
 	public String homeIndex(HttpServletRequest request){
 	    return "/" + GlobalProperties.project + "/homepage/index";
 	}
+    
+    
+    @RequestMapping(value = "/familydoctor")
+  	public String familyIndex(HttpServletRequest request){
+  	    return "/" + GlobalProperties.project + "/homepage/familydoctor/index";
+  	}
 }
+
+
+ 
