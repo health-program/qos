@@ -6,9 +6,9 @@ import com.paladin.qos.service.familydoctor.FamilyDoctorTeamService;
 import com.paladin.qos.service.familydoctor.dto.FamilyDoctorTeamQuery;
 import com.paladin.qos.service.familydoctor.dto.FamilyDoctorTeamDTO;
 import com.paladin.qos.service.familydoctor.vo.FamilyDoctorTeamVO;
-
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -32,7 +32,7 @@ import java.io.IOException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/qos/family/doctor/team")
+@RequestMapping("/" + GlobalProperties.project+"/family/doctor/team")
 public class FamilyDoctorTeamController extends ControllerSupport {
 
     @Autowired
