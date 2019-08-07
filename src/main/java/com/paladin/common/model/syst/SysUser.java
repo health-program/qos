@@ -38,11 +38,15 @@ public class SysUser extends UnDeleteBaseModel implements Serializable {
 	@Column(name = "id")
 	@GeneratedValue(generator = "UUID")
 	private String id;
+	private String name;
 	private String account;
 	private String password;
 	private String casPassword;
 	private String salt;
 	private String userId;
+	private String unitId;
+	private String idCard;
+	private String roleId;
 	private Integer state;
 	private Integer type;
 	private Date lastLoginTime;
@@ -62,6 +66,14 @@ public class SysUser extends UnDeleteBaseModel implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+	    return name;
+	}
+
+	public void setName(String name) {
+	    this.name = name;
 	}
 
 	public String getAccount() {
@@ -128,5 +140,27 @@ public class SysUser extends UnDeleteBaseModel implements Serializable {
 		this.casPassword = casPassword;
 	}
 
+	public String getRoleId() {
+	    return roleId;
+	}
 
+	public void setRoleId(String roleId) {
+	    this.roleId = roleId;
+	}
+
+	public String getUnitId() {
+	    return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+	    this.unitId = unitId;
+	}
+
+	public String getIdCard() {
+	    return idCard;
+	}
+
+	public void setIdCard(String idCard) {
+	    this.idCard = idCard;
+	}
 }

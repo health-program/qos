@@ -11,10 +11,15 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.paladin.common.mapper.syst.SysUserMapper;
 import com.paladin.common.model.syst.SysUser;
+import com.paladin.common.service.syst.dto.SysUserQuery;
+import com.paladin.common.service.syst.vo.SysUserVO;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.GeneralCriteriaBuilder;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.configuration.PaladinProperties;
@@ -170,5 +175,41 @@ public class SysUserService extends ServiceSupport<SysUser> {
 		user.setLastLoginTime(new Date());
 		sysUserMapper.updateByPrimaryKeySelective(user);
 	}
+	
+	public SysUser getUser(String account) {
+		Example example = GeneralCriteriaBuilder.buildAnd(SysUser.class, new Condition(SysUser.COLUMN_FIELD_ACCOUNT, QueryType.EQUAL, account));
+		List<SysUser> users = sysUserMapper.selectByExample(example);
+		return (users != null && users.size() > 0) ? users.get(0) : null;
+	}
+	
+	public int resetOrgUserPassword(String userId) {
 
+		SysUser user = get(userId);
+		SysUser sysUser = getUser(user.getAccount());
+		if (sysUser == null) {
+			throw new BusinessException("账号异常");
+		}
+
+		String salt = SecureUtil.createSalte();
+		String password = paladinProperties.getDefaultPassword();
+		password = SecureUtil.createPassword(password, salt);
+
+		SysUser updateUser = new SysUser();
+		updateUser.setId(sysUser.getId());
+		updateUser.setSalt(salt);
+		updateUser.setPassword(password);
+		updateUser.setIsFirstLogin(1);// 密码重置后该状态值设为1
+
+		return updateSelective(updateUser);
+
+	}
+	
+	
+	
+	 public PageResult<SysUserVO> sysUserAll(SysUserQuery query){
+	   	Page<SysUserVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+	   	sysUserMapper.sysUserAll(query);
+	   	return new PageResult<>(page);
+	       }
+	 
 }

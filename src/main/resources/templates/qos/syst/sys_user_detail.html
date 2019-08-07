@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type" />
+    <section class="content-header">
+        <h1>帐号管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/sys/user/index"><i class="fa fa-list-alt"></i>帐号列表</a></li>
+            <li class="active">帐号详情</li>
+        </ol>
+    </section>
+    <section class="content">      
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/sys/user/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/qos/sys/user/update?id="+$("#id").val(),
+            columns: [
+                     { title: "帐号", name: "account", inputType: "TEXT", required:"required" },
+             		 { title: "用户名", name: "name", inputType: "TEXT", required:"required"},
+             		 { title: "角色", name: "roleId",required: "required", inputType: "SELECT-SERVER",multiple: false, idField:'id',nameField:'roleName',url:"/qos/sys/user/find/role" }
+            ]
+        }
+   
+        $.getAjax("/qos/sys/user/get?id=" + $("#id").val(), function(data) {
+        	var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

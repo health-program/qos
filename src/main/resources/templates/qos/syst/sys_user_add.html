@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type" />
+    <section class="content-header">
+        <h1>帐号管理<span style="font-size: 15px;color: red;">(密码默认为1)</span></h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/sys/user/index"><i class="fa fa-list-alt"></i>帐号列表</a></li>
+            <li class="active">添加帐号</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/sys/user/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+            id: "model",
+            cancelBtn: false,
+            name: "新增",
+            url:"/qos/sys/user/save",
+            columns: [
+    				 { title: "帐号", name: "account", inputType: "TEXT", required:"required" },
+            		 { title: "用户名", name: "name", inputType: "TEXT", required:"required"},
+            		 { title: "角色", name: "roleId",required: "required", inputType: "SELECT-SERVER",multiple: false, idField:'id',nameField:'roleName',url:"/qos/sys/user/find/role" }
+    				]
+        }
+    $(function() {     
+    	debugger;
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+       	$.initComponment($(".content"));
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("新增成功(密码默认为1)",function(){
+                    window.location = "/qos/sys/user/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

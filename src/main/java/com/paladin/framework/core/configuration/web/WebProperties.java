@@ -10,7 +10,7 @@ public class WebProperties {
 	/**
 	 * 文件存放地址
 	 */
-	private String filePath = "file:D:/file/";
+	private String filePath = "file:E:/file/";
 
 	/**
 	 * 文件最大M数

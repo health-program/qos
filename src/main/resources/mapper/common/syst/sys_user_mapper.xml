@@ -5,4 +5,9 @@
 		UPDATE sys_user SET account = #{nowAccount},update_time=now() where user_id = #{userId} and
 		account = #{originAccount}
 	</update>
+	
+	<select id="sysUserAll" resultType="com.paladin.common.service.syst.vo.SysUserVO">
+	SELECT u.id,u.`name`,u.`account`,r.`role_name`as roleId,u.`create_time` AS createTime FROM sys_user AS u LEFT JOIN 
+	org_role AS r ON u.`role_id`=r.`id` WHERE u.`type` !=1 and u.`is_delete` = 0 
+	</select>
 </mapper>
