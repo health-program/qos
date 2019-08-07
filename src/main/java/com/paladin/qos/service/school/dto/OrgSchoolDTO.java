@@ -40,6 +40,24 @@ public class OrgSchoolDTO {
 
 	// 具体负责人电话
 	private String specificChargeLeaderCellphone;
+	
+	// 后勤保障人数
+	private Integer logistics;
+			
+	// 校医(兼职)人数
+	private Integer schoolDoctorPart;
+					
+	// 保健老师(兼职)人数
+	private Integer healthTeacherPart;
+
+	// 校医(专职)人数
+	private Integer schoolDoctorFull;
+						
+	// 保健老师(专职)人数
+	private Integer healthTeacherFull;
+		
+	//学生总人数
+	private Integer total;
 
 	private List<OrgSchoolPeopleDTO> people;
 
@@ -146,4 +164,53 @@ public class OrgSchoolDTO {
 	public void setPeople(List<OrgSchoolPeopleDTO> people) {
 	    this.people = people;
 	}
+
+	public Integer getLogistics() {
+	    return logistics;
+	}
+
+	public void setLogistics(Integer logistics) {
+	    this.logistics = logistics;
+	}
+
+	public Integer getSchoolDoctorPart() {
+	    return schoolDoctorPart;
+	}
+
+	public void setSchoolDoctorPart(Integer schoolDoctorPart) {
+	    this.schoolDoctorPart = schoolDoctorPart;
+	}
+
+	public Integer getHealthTeacherPart() {
+	    return healthTeacherPart;
+	}
+
+	public void setHealthTeacherPart(Integer healthTeacherPart) {
+	    this.healthTeacherPart = healthTeacherPart;
+	}
+
+	public Integer getSchoolDoctorFull() {
+	    return schoolDoctorFull;
+	}
+
+	public void setSchoolDoctorFull(Integer schoolDoctorFull) {
+	    this.schoolDoctorFull = schoolDoctorFull;
+	}
+
+	public Integer getHealthTeacherFull() {
+	    return healthTeacherFull;
+	}
+
+	public void setHealthTeacherFull(Integer healthTeacherFull) {
+	    this.healthTeacherFull = healthTeacherFull;
+	}
+
+	public Integer getTotal() {
+	    return total;
+	}
+
+	public void setTotal(Integer total) {
+	    this.total = total;
+	}
+	
 }

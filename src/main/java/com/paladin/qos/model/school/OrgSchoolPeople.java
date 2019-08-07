@@ -23,17 +23,14 @@ public class OrgSchoolPeople extends BaseModel {
 	// 年级
 	private Integer grade;
 
-	// 总人数
-	private Integer totalNumber;
+	// 年级学生人数
+	private Integer total;
 
 	// 寄宿生人数
-	private Integer boardersNumber;
+	private Integer boarders;
 
 	// 教职员工人数
-	private Integer teachingNumber;
-
-	// 后勤保障人数
-	private Integer logisticsNumber;
+	private Integer teaching;
 
 	public String getId() {
 		return id;
@@ -67,36 +64,27 @@ public class OrgSchoolPeople extends BaseModel {
 		this.grade = grade;
 	}
 
-	public Integer getTotalNumber() {
-		return totalNumber;
+	public Integer getTotal() {
+	    return total;
 	}
 
-	public void setTotalNumber(Integer totalNumber) {
-		this.totalNumber = totalNumber;
+	public void setTotal(Integer total) {
+	    this.total = total;
 	}
 
-	public Integer getBoardersNumber() {
-		return boardersNumber;
+	public Integer getBoarders() {
+	    return boarders;
 	}
 
-	public void setBoardersNumber(Integer boardersNumber) {
-		this.boardersNumber = boardersNumber;
+	public void setBoarders(Integer boarders) {
+	    this.boarders = boarders;
 	}
 
-	public Integer getTeachingNumber() {
-		return teachingNumber;
+	public Integer getTeaching() {
+	    return teaching;
 	}
 
-	public void setTeachingNumber(Integer teachingNumber) {
-		this.teachingNumber = teachingNumber;
+	public void setTeaching(Integer teaching) {
+	    this.teaching = teaching;
 	}
-
-	public Integer getLogisticsNumber() {
-		return logisticsNumber;
-	}
-
-	public void setLogisticsNumber(Integer logisticsNumber) {
-		this.logisticsNumber = logisticsNumber;
-	}
-
 }

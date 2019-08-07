@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
     <section class="content-header">
-        <h1>学校基础情况管理</h1>
+        <h1>学校信息添加</h1>
         <ol class="breadcrumb">
             <li><a href="/qos/org/school/index"><i class="fa fa-table"></i>列表</a></li>
             <li class="active">新增</li>
@@ -26,7 +26,7 @@
         cancelBtn: false,
         editFormClass: false,
         columns: [
-				{ title: "学校名称",isListData:true, name: "parentSchoolId", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName',url:"/qos/org/school/name/find/all" },
+				{ title: "学校名称",isListData:true, name: "parentSchoolId",required: "required", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName',url:"/qos/org/school/name/find/all" },
 				{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 				{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
 				{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
@@ -36,6 +36,12 @@
 				{ title: "分管领导电话", name: "chargeLeaderCellphone", inputType: "TEXT" },
 				{ title: "具体负责人姓名", name: "specificChargeLeaderName", inputType: "TEXT" },
 				{ title: "具体负责人电话", name: "specificChargeLeaderCellphone", inputType: "TEXT" },
+				{title : "校医(专职)人数",name : "schoolDoctorFull",inputType : "NUMBER"}, 
+				{title : "保健老师(专职)人数",name : "healthTeacherFull",inputType : "NUMBER"},
+				{title : "校医(兼职)人数",name : "schoolDoctorPart",inputType : "NUMBER"}, 
+				{title : "保健老师(兼职)人数",name : "healthTeacherPart",inputType : "NUMBER"},
+				{title : "后勤保障人数",name : "logistics",inputType : "NUMBER"}, 
+				{title : "学生总人数",name : "total",inputType : "NUMBER"}, 
 				{ title: "地址", name: "address", inputType: "TEXTAREA" ,colspan: 2 },
 				{
 	                title: "人数",
@@ -48,125 +54,83 @@
 	                subTitleViewHtmml: function(data) {
 	                    var a = $.getConstantEnumValue("school-section-type", data.schoolSection);
 	                    var b = $.getConstantEnumValue("grade-type", data.grade);
-	                    var html = '<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">学段</span>:' + a + '<span style="margin-left:2%;">年级</span>:'+b+'</span>';
-	                    html+='<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">总人数</span>:' + data.totalNumber + '<span style="margin-left:2%;">寄宿生人数</span>:'+data.boardersNumber+'<span style="margin-left:2%;">教职员工人数</span>:'+data.teachingNumber+'<span style="margin-left:2%;">后勤保障人数</span>:'+data.logisticsNumber+'</span>';
-	                    return html;
-	                },
-	                subModelOptions: {
-	                    headBorder: false,
-	                    hearderBox: false,
-	                    server: false,
-	                    layerOption: {
-	                        height: 480,
-	                        width: 780
-	                    },
-	                    columns: [
-	                        { title: "学段", name: "schoolSection",enum:"school-section-type", required: "required", inputType: "SELECT" },
-	                        { title: "年级", name: "grade", enum: "grade-type",  inputType: "SELECT" },
-	                        /* { title: "年级", name: "grade1", enum: "grade-type",  inputType: "SELECT",dependency: ["schoolSection", "2","3","4","5","6"] }, */
-	                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "NUMBER" },
-	                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "NUMBER" },
-	                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "NUMBER" },
-	                        { title: "后勤保障人数", name: "logisticsNumber", required: "required", inputType: "NUMBER" },
-	                    ]
-	                }
-	            }
-				]
-    }
-    
-	var index;
-    $(function() {    
-        var html = generateEditHtml(options);
-        $(".content").html(html);
-       	$.initComponment($(".content"));
-         model = new tonto.Model("model", options.columns, {
-            pattern:"edit",
-            server: false,
-            submitClick: function() {
-                save();
-            }
-        });
-        model.setData(null);
-        
-       /*  $("input[name='SchoolName']").attr("readonly",true)
-        
-          $("input[name='SchoolName']").click(function(){
-        	  $.getAjax("/qos/org/school/name/find/page", function(res) {
-        		 index = layer.open({
-       	            type: 1,
-       	            title: "学校",
-       	         	closeBtn: 2,
-       	            shadeClose: true,
-       	            shade: 0.3,
-       	            shadeClose : true,
-       	            area:$.getOpenLayerSize("350","500"),
-       	            content: "<div id='treeview'/></div>"
-       	        });
-       			initTree(res)
-      	    	});
-    	}) */
-    });
-    
-    
-  /*   var treedata;
-    function initTree(res) {
-        if (res.data) {
-            var value = res.data,
-                root = $.grep(value, function(n, i) {
-                    return n.parentId ? false : true;
-                });
+	                    var html = '<span class="product-description" style="line-height:34px">'
+	                    		+ '<span style="margin-left:2%;">学段</span>:'
+	                    		+ a
+	                    		+ '<span style="margin-left:2%;">年级</span>:'
+	                    		+ b
+								+ '<span style="margin-left:2%;">年级学生人数</span>:'
+								+ data.total
+								+ '<span style="margin-left:2%;">寄宿生人数</span>:'
+								+ data.boarders
+								+ '<span style="margin-left:2%;">教职员工人数</span>:'
+								+ data.teaching
+								+ '</span>';
+								return html;
+								},
+									subModelOptions : {
+										headBorder : false,
+										hearderBox : false,
+										server : false,
+										layerOption : {
+											height : 430,
+											width : 700
+										},
+										columns : [ 
+										    {title : "学段",name : "schoolSection",enum : "school-section-type",required : "required",inputType : "SELECT"}, 
+										    {title : "年级",name : "grade",enum : "grade-type",inputType : "SELECT"},
+											{title : "年级学生人数",name : "total",required : "required",inputType : "NUMBER"},
+											{title : "寄宿生人数",name : "boarders",required : "required",inputType : "NUMBER"}, 
+											{title : "教职员工人数",name : "teaching",required : "required",inputType : "NUMBER"} 
+											]
+									}
+								} ]
+					}
 
-            var g = function(ps) {
-                var nodes = [];
-                for (var i = 0; i < ps.length; i++) {
-                    var node = {},p = ps[i];
-                    node.text = p.schoolFullName;
-                    node.data = p;
-                    var children = $.grep(value, function(n, i) {
-                        return n.parentId == p.id;
-                    });
-                    
-                    if (children && children.length > 0) {
-                        node.nodes = g(children);
-                    }
-                    nodes.push(node);
-                }
-                return nodes;
-            }
-            treedata = g(root);
-            $('#treeview').treeview({
-                data: treedata,
-                silent:true,
-                bootstrap2: false, 
-	            highlightSelected:false,
-                levels: 1,
-                onNodeSelected: function(event, data) {
-                	var name ="input[name='SchoolName']";
-                	$(name).val(data.text);
-                	$(name).after('<input type="hidden" name="parentSchoolId" id="parentSchoolId" value=""/>');
-                	$("#parentSchoolId").val(data.data.id);
-                	layer.close(index);
-                }
-            });
-        }
-    } */
-    
-    var model;
-    function save(confirm){
-    	 var data = model.getFormData();
-    	 var people = data.people;
-         if (people && people.length > 0) {
-        	  $.postJsonAjax("/qos/org/school/save", data, function(result) {
-                  $.successAlert("保存成功", function() {
-                      window.location = '/qos/org/school/index';
-                  });
-              }, $("#submitBtn"));
-         }else{
-        	 $.errorMessage("人数这行必须添加一条记录！");
-         }
-    }
-    
-    </script>
+					var index;
+					$(function() {
+						var html = generateEditHtml(options);
+						$(".content").html(html);
+						$.initComponment($(".content"));
+						model = new tonto.Model("model", options.columns, {
+							pattern : "edit",
+							server : false,
+							submitClick : function() {
+								var data = model.getFormData();
+								var parentSchoolId = data.parentSchoolId;
+								if(parentSchoolId){
+									$.get("/qos/org/school/info",{"id":parentSchoolId},function(res){
+										if(res.result != null){
+											$.errorMessage("该学校信息已录入");
+											return false;
+										}else{
+											save();
+										}
+									})
+								}else{
+									$.errorMessage("学校名称不能为空");
+									return false;
+								}
+							}
+						});
+						model.setData(null);
+					});
+					var model;
+					function save(confirm) {
+						var data = model.getFormData();
+						var people = data.people;
+						if (people && people.length > 0) {
+							$.postJsonAjax("/qos/org/school/save",data,function(result) {
+							$.successAlert("保存成功",function() {
+								window.location = '/qos/org/school/index';
+								});
+								}, $("#submitBtn"));
+						} else {
+							$.errorMessage("人数这行必须添加一条记录！");
+						}
+					}
+					
+</script>
 </body>
 
 </html>

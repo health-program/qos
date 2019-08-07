@@ -6,9 +6,9 @@ import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
 import com.paladin.qos.service.school.dto.OrgSchoolDTO;
 import com.paladin.qos.service.school.vo.OrgSchoolVO;
-
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -31,8 +31,13 @@ import java.io.IOException;
 
 import javax.validation.Valid;
 
+/**
+ * < 学校基础情况管理>
+ * @author  MyKite
+ * @version  [版本号, 2019年7月23日]
+ */
 @Controller
-@RequestMapping("/qos/org/school")
+@RequestMapping("/" + GlobalProperties.project+"/org/school")
 public class OrgSchoolController extends ControllerSupport {
 
     @Autowired
@@ -50,13 +55,17 @@ public class OrgSchoolController extends ControllerSupport {
     public Object findPage(OrgSchoolQuery query) {
 	return CommonResponse.getSuccessResponse(orgSchoolService.searchFindPage(query));
     }
-    
-    
 
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {
 	return CommonResponse.getSuccessResponse(orgSchoolService.getSchool(id));
+    }
+    
+    @GetMapping("/info")
+    @ResponseBody
+    public Object orgSchoolDetail(@RequestParam String id){
+	return CommonResponse.getSuccessResponse(orgSchoolService.orgSchoolDetail(id));
     }
 
     @GetMapping("/add")

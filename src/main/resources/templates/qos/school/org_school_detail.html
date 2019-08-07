@@ -7,7 +7,7 @@
     <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type"/>
     <input th:value="${id}" id="id" type="hidden" />
     <section class="content-header">
-        <h1>学校基础情况管理</h1>
+        <h1>学校信息详情</h1>
         <ol class="breadcrumb">
             <li><a href="/qos/org/school/index"><i class="fa fa-list-alt"></i>列表</a></li>
             <li class="active">详情</li>
@@ -39,6 +39,12 @@
 					{ title: "分管领导电话", name: "chargeLeaderCellphone", inputType: "TEXT" },
 					{ title: "具体负责人姓名", name: "specificChargeLeaderName", inputType: "TEXT" },
 					{ title: "具体负责人电话", name: "specificChargeLeaderCellphone", inputType: "TEXT" },
+					{title : "校医(专职)人数",name : "schoolDoctorFull",inputType : "NUMBER"}, 
+					{title : "保健老师(专职)人数",name : "healthTeacherFull",inputType : "NUMBER"},
+					{title : "校医(兼职)人数",name : "schoolDoctorPart",inputType : "NUMBER"}, 
+					{title : "保健老师(兼职)人数",name : "healthTeacherPart",inputType : "NUMBER"},
+					{title : "后勤保障人数",name : "logistics",inputType : "NUMBER"}, 
+					{title : "学生总人数",name : "total",inputType : "NUMBER"},
 					{ title: "地址", name: "address", inputType: "TEXTAREA" ,colspan: 2 },
 					{
 		                title: "人数",
@@ -51,67 +57,76 @@
 		                subTitleViewHtmml: function(data) {
 		                    var a = $.getConstantEnumValue("school-section-type", data.schoolSection);
 		                    var b = $.getConstantEnumValue("grade-type", data.grade);
-		                    var html = '<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">学段</span>:' + a + '<span style="margin-left:2%;">年级</span>:'+b+'</span>';
-		                    html+='<span class="product-description" style="line-height:34px"><span style="margin-left:2%;">总人数</span>:' + data.totalNumber + '<span style="margin-left:2%;">寄宿生人数</span>:'+data.boardersNumber+'<span style="margin-left:2%;">教职员工人数</span>:'+data.teachingNumber+'<span style="margin-left:2%;">后勤保障人数</span>:'+data.logisticsNumber+'</span>';
-		                    return html;
-		                },
-		                subModelOptions: {
-		                    headBorder: false,
-		                    hearderBox: false,
-		                    server: false,
-		                    layerOption: {
-		                        height: 480,
-		                        width: 780
-		                    },
-		                    columns: [
-		                        { title: "学段", name: "schoolSection",enum:"school-section-type", required: "required", inputType: "SELECT" },
-		                        { title: "年级", name: "grade", enum: "grade-type",  inputType: "SELECT" },
-		                       /*  { title: "年级", name: "grade1", enum: "grade-type",  inputType: "SELECT",dependency: ["schoolSection", "2","3","4","5","6"] }, */
-		                        { title: "学生总人数", name: "totalNumber", required: "required", inputType: "TEXT" },
-		                        { title: "寄宿生人数", name: "boardersNumber", required: "required", inputType: "TEXT" },
-		                        { title: "教职员工人数", name: "teachingNumber", required: "required", inputType: "TEXT" },
-		                        { title: "后勤保障人数", name: "logisticsNumber", required: "required", inputType: "TEXT" },
-		                    ]
-		                }
-		            }
-					]
-	    }
-    var model,itemId;
-    
-    $(function() {
-    	 var html = generateHtml(options);
-         $(".content").html(html);
-         $.initComponment($(".content"));
-         itemId = $("#id").val();
-    	
-        $.getAjax("/qos/org/school/get?id="+$("#id").val(), function(data) {
-        	model = new tonto.Model("model", options.columns, {
-                 server: false,
-                 submitClick: function() {
-                	 update();
-                 }
-             });
-            model.setData(data);
-        });
-    });
-    
-    function update(confirm){
-   	 var data = model.getFormData();
-   	 var people = data.people;
-        if (people && people.length > 0) {
-        	 data['id'] = itemId;
-       	  $.postJsonAjax("/qos/org/school/update", data, function(result) {
-                 $.successAlert("保存成功", function() {
-                	 model.toView();
-                     model.setData(data);
-                 });
-             }, $("#submitBtn"));
-        }else{
-       	 $.errorMessage("人数这行必须添加一条记录！");
-        }
-   }
-    
-    </script>
+		                    var html = '<span class="product-description" style="line-height:34px">'
+	                    		+ '<span style="margin-left:2%;">学段</span>:'
+	                    		+ a
+	                    		+ '<span style="margin-left:2%;">年级</span>:'
+	                    		+ b
+								+ '<span style="margin-left:2%;">年级学生人数</span>:'
+								+ data.total
+								+ '<span style="margin-left:2%;">寄宿生人数</span>:'
+								+ data.boarders
+								+ '<span style="margin-left:2%;">教职员工人数</span>:'
+								+ data.teaching
+								+ '</span>';
+								return html;
+								},
+								subModelOptions : {
+									headBorder : false,
+									hearderBox : false,
+									server : false,
+									layerOption : {
+										height : 680,
+										width : 930
+									},
+									columns : [ 
+									          {title : "学段",name : "schoolSection",enum : "school-section-type",required : "required",inputType : "SELECT"}, 
+									          {title : "年级",name : "grade",enum : "grade-type",inputType : "SELECT"},
+											  {title : "学生总人数",name : "total",required : "required",inputType : "TEXT"}, 
+											  {title : "寄宿生人数",name : "boarders",required : "required",inputType : "TEXT"}, 
+											  {title : "教职员工人数",name : "teaching",required : "required",inputType : "TEXT"}
+											  ]
+								}
+								} ]
+					}
+					var model, itemId;
+
+					$(function() {
+						var html = generateHtml(options);
+						$(".content").html(html);
+						$.initComponment($(".content"));
+						itemId = $("#id").val();
+
+						$.getAjax("/qos/org/school/get?id=" + $("#id").val(),
+								function(data) {
+									model = new tonto.Model("model",
+											options.columns, {
+												server : false,
+												submitClick : function() {
+													update();
+												}
+											});
+									model.setData(data);
+								});
+					});
+
+					function update(confirm) {
+						var data = model.getFormData();
+						var people = data.people;
+						if (people && people.length > 0) {
+							data['id'] = itemId;
+							$.postJsonAjax("/qos/org/school/update", data,
+									function(result) {
+										$.successAlert("保存成功", function() {
+											model.toView();
+											model.setData(data);
+										});
+									}, $("#submitBtn"));
+						} else {
+							$.errorMessage("人数这行必须添加一条记录！");
+						}
+					}
+				</script>
 </body>
 
 </html>

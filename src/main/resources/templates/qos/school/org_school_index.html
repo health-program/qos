@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="nature-type,subordination-type,region-type"/>
     <section class="content-header">
-        <h1>学校基础情况管理</h1>
+        <h1>学校信息录入列表</h1>
     </section>
     <section class="content">
         <div class="box box-solid">
@@ -14,19 +14,24 @@
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
                 	 <div class="col-md-2">
-                            <input type="text" name="schoolName" class="form-control" th:value="${query?.schoolName}" placeholder="请输入事发单位名称" >
+                            <input type="text" name="schoolName" class="form-control" th:value="${query?.schoolName}" placeholder="请输入学校名称" >
                         </div>
+                        <div class="col-md-2">
+							 <select name="district" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.district}" enumcode="region-type">
+                                 <option value="">请选择区域</option>
+                             </select>
+						</div>
 						<div class="col-md-2">
 	                        <select name="affiliation" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.affiliation}" enumcode="subordination-type">
 								<option value="">请选择隶属关系</option>
 							</select>
 						</div>
 						<div class="col-md-2">
-							 <select name="district" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.district}" enumcode="region-type">
-                                 <option value="">请选择区域</option>
-                             </select>
+							<select name="nature" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.nature}" enumcode="nature-type">
+								<option value="">请选择性质</option>
+							</select>
 						</div>
-	                    <div class="col-md-6">
+						<div class="col-md-4">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>

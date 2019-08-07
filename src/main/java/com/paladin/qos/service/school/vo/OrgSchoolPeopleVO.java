@@ -17,16 +17,13 @@ public class OrgSchoolPeopleVO {
 	private Integer grade;
 
 	// 总人数
-	private Integer totalNumber;
+	private Integer total;
 
 	// 寄宿生人数
-	private Integer boardersNumber;
+	private Integer boarders;
 
 	// 教职员工人数
-	private Integer teachingNumber;
-
-	// 后勤保障人数
-	private Integer logisticsNumber;
+	private Integer teaching;
 
 	// 
 	private Date createTime;
@@ -72,36 +69,28 @@ public class OrgSchoolPeopleVO {
 		this.grade = grade;
 	}
 
-	public Integer getTotalNumber() {
-		return totalNumber;
+	public Integer getTotal() {
+	    return total;
 	}
 
-	public void setTotalNumber(Integer totalNumber) {
-		this.totalNumber = totalNumber;
+	public void setTotal(Integer total) {
+	    this.total = total;
 	}
 
-	public Integer getBoardersNumber() {
-		return boardersNumber;
+	public Integer getBoarders() {
+	    return boarders;
 	}
 
-	public void setBoardersNumber(Integer boardersNumber) {
-		this.boardersNumber = boardersNumber;
+	public void setBoarders(Integer boarders) {
+	    this.boarders = boarders;
 	}
 
-	public Integer getTeachingNumber() {
-		return teachingNumber;
+	public Integer getTeaching() {
+	    return teaching;
 	}
 
-	public void setTeachingNumber(Integer teachingNumber) {
-		this.teachingNumber = teachingNumber;
-	}
-
-	public Integer getLogisticsNumber() {
-		return logisticsNumber;
-	}
-
-	public void setLogisticsNumber(Integer logisticsNumber) {
-		this.logisticsNumber = logisticsNumber;
+	public void setTeaching(Integer teaching) {
+	    this.teaching = teaching;
 	}
 
 	public Date getCreateTime() {
@@ -135,5 +124,4 @@ public class OrgSchoolPeopleVO {
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
 	}
-
 }

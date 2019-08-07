@@ -14,8 +14,12 @@ import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.school.dto.OrgSchoolDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolPeopleDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO;
+import com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO;
 import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.PageResult;
+import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
@@ -30,11 +34,14 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     @Autowired
     private OrgSchoolMapper orgSchoolMapper;
     
-    
     public PageResult<OrgSchoolVO> searchFindPage(OrgSchoolQuery query) {
 	Page<OrgSchoolVO> page = PageHelper.offsetPage(query.getOffset(),query.getLimit());
 	orgSchoolMapper.findSchool(query);
 	return new PageResult<>(page);
+    }
+    
+    public OrgSchool orgSchoolDetail(String id){
+	return searchOne(new Condition(OrgSchool.PARENT_SCHOOL_ID,QueryType.EQUAL, id));
     }
     
     public OrgSchoolVO getSchool(String id){
@@ -51,7 +58,6 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	vo.setPeople(orgSchoolPeopleService.findSchoolPeople(id));
 	return vo;
     }
-    
     
     @Transactional
     public int schoolSave(OrgSchoolDTO dto){
@@ -76,7 +82,6 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	    people.setSchoolId(schoolId);
 	    orgSchoolPeopleService.save(people);
 	}
-	
 	return save(school);
     }
     
@@ -84,12 +89,12 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     public int schoolUpdate(OrgSchoolDTO dto){
 	String schoolId = dto.getId();
 	if (schoolId == null || schoolId.length() == 0) {
-		throw new BusinessException("没有对应需要更新学校信息");
+		throw new BusinessException("没有对应需要更新的学校信息");
 	}
 
 	OrgSchool school = get(schoolId);
 	if (school == null) {
-		throw new BusinessException("没有对应需要更新学校信息");
+		throw new BusinessException("没有对应需要更新的学校信息");
 	}
 
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
@@ -107,12 +112,28 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	    people.setSchoolId(schoolId);
 	    orgSchoolPeopleService.save(people);
 	}
-	
 	return update(school);
-	
     }
     
+    /**
+     * 学校学额统计
+     * @param query
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public List<OrgSchoolPersonnelCountVO> schoolPersonnelCount(OrgSchoolQuery query){
+	return orgSchoolMapper.schoolPersonnelCount(query);
+    }
     
+    /**
+     * 学校校医配备核查情况统计
+     * @param query
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public List<OrgSchoolDoctorCountVO> schoolDoctorCount(OrgSchoolQuery query){
+	return orgSchoolMapper.schoolDoctorCount(query);
+    }
     
     @Transactional
     public int deleteSchoolAndPeople(String id){

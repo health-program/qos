@@ -4,31 +4,26 @@ import java.util.Date;
 
 public class OrgSchoolPeopleDTO {
 
-	// 主键
-	private String id;
+ // 主键
+ 	private String id;
 
-	// 学校ID
-	private String schoolId;
+ 	// 学校ID
+ 	private String schoolId;
 
-	// 学段
-	private Integer schoolSection;
+ 	// 学段
+ 	private Integer schoolSection;
 
-	// 年级
-	private Integer grade;
-	
-	private Integer grade1;
+ 	// 年级
+ 	private Integer grade;
 
-	// 总人数
-	private Integer totalNumber;
+ 	// 总人数
+ 	private Integer total;
 
-	// 寄宿生人数
-	private Integer boardersNumber;
+ 	// 寄宿生人数
+ 	private Integer boarders;
 
-	// 教职员工人数
-	private Integer teachingNumber;
-
-	// 后勤保障人数
-	private Integer logisticsNumber;
+ 	// 教职员工人数
+ 	private Integer teaching;
 
 	// 
 	private Date createTime;
@@ -73,37 +68,29 @@ public class OrgSchoolPeopleDTO {
 	public void setGrade(Integer grade) {
 		this.grade = grade;
 	}
-
-	public Integer getTotalNumber() {
-		return totalNumber;
+	
+	public Integer getTotal() {
+	    return total;
 	}
 
-	public void setTotalNumber(Integer totalNumber) {
-		this.totalNumber = totalNumber;
+	public void setTotal(Integer total) {
+	    this.total = total;
 	}
 
-	public Integer getBoardersNumber() {
-		return boardersNumber;
+	public Integer getBoarders() {
+	    return boarders;
 	}
 
-	public void setBoardersNumber(Integer boardersNumber) {
-		this.boardersNumber = boardersNumber;
+	public void setBoarders(Integer boarders) {
+	    this.boarders = boarders;
 	}
 
-	public Integer getTeachingNumber() {
-		return teachingNumber;
+	public Integer getTeaching() {
+	    return teaching;
 	}
 
-	public void setTeachingNumber(Integer teachingNumber) {
-		this.teachingNumber = teachingNumber;
-	}
-
-	public Integer getLogisticsNumber() {
-		return logisticsNumber;
-	}
-
-	public void setLogisticsNumber(Integer logisticsNumber) {
-		this.logisticsNumber = logisticsNumber;
+	public void setTeaching(Integer teaching) {
+	    this.teaching = teaching;
 	}
 
 	public Date getCreateTime() {
@@ -137,15 +124,4 @@ public class OrgSchoolPeopleDTO {
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
 	}
-
-	public Integer getGrade1() {
-	    return grade1;
-	}
-
-	public void setGrade1(Integer grade1) {
-	    if(grade1 != null){
-		this.grade = grade1;
-	    }
-	}
-
 }
