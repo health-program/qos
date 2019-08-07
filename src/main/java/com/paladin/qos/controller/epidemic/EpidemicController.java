@@ -1,7 +1,9 @@
 package com.paladin.qos.controller.epidemic;
 
 import java.io.IOException;
+
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -26,12 +30,12 @@ import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
 import com.paladin.qos.service.school.OrgSchoolNameService;
 
-/**
+/** 疫情管理
  * @author 黄伟华
  * @version 2019年6月11日 下午1:39:24
  */
 @Controller
-@RequestMapping("/qos/epidemic")
+@RequestMapping("/" + GlobalProperties.project+"/epidemic")
 public class EpidemicController extends ControllerSupport {
 
     @Autowired

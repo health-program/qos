@@ -16,12 +16,22 @@
                         <div class="col-md-2">
                             <input type="text" id="incidentUnit" name="incidentUnit" class="form-control" th:value="${query?.incidentUnit}" placeholder="请输入事发单位名称" >
                         </div>
+                        <div class="col-md-2">
+							<select id="region" name="region"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.region}"enumcode="region-type">
+								<option value="">请选择区域</option>
+							</select>
+						</div>
                          <div class="col-md-2">
                         <select id="reportUnit" name="reportUnit" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.reportUnit}" enumcode="report-unit-type">
 							<option value="">请选择报告单位</option>
 						</select>
 						</div>
-                        <div class="col-md-8">
+						<div class="col-md-2">
+							<select id="sicknessClassify" name="sicknessClassify"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.sicknessClassify}"enumcode="sickness-type">
+								<option value="">请选病种分类</option>
+							</select>
+						</div>
+                        <div class="col-md-4">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
@@ -64,9 +74,9 @@
                 [
                     { title: "事发单位名称", align: "center", field: "incidentUnit" },
                     { title: "报告单位", align: "center", field: "reportUnit",enumcode: "report-unit-type"},
+                    { title: "区域", align: "center", field: "region",enumcode:"region-type" },
                     { title: "病种分类", align: "center", field: "sicknessClassify",enumcode:"sickness-type"},
                     { title: "班级", align: "center", field: "grade"},
-                    { title: "区域", align: "center", field: "region",enumcode:"region-type" },
                     { title: "创建时间", align: "center", field: "createTime",formatter: "datetime" },
                     {
                         title: "操作",

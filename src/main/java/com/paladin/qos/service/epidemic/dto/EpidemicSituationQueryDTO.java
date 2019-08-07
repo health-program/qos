@@ -11,6 +11,10 @@ public class EpidemicSituationQueryDTO extends OffsetPage{
     private String incidentUnit;//事发单位名称
     
     private String reportUnit;//报告单位
+    
+    private String region;//区域
+    
+    private String sicknessClassify;//病种分类
 
     public String getIncidentUnit() {
         return incidentUnit;
@@ -26,6 +30,22 @@ public class EpidemicSituationQueryDTO extends OffsetPage{
 
     public void setReportUnit(String reportUnit) {
         this.reportUnit = reportUnit;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getSicknessClassify() {
+        return sicknessClassify;
+    }
+
+    public void setSicknessClassify(String sicknessClassify) {
+        this.sicknessClassify = sicknessClassify;
     }
     
 }

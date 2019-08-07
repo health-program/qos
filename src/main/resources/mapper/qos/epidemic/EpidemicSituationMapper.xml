@@ -17,6 +17,15 @@
 	<if test="reportUnit != null and reportUnit != '' ">
 		AND e.report_unit =#{reportUnit}
 	</if>
+	
+	<if test="region != null and region != '' ">
+		AND e.region =#{region}
+	</if>
+	
+	<if test="sicknessClassify != null and sicknessClassify != '' ">
+		AND e.sickness_classify =#{sicknessClassify}
+	</if>
+	
 	ORDER BY e.create_time DESC
 	</select>
     
