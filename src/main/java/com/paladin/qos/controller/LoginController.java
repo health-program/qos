@@ -40,10 +40,24 @@ public class LoginController {
 	@Autowired
 	private SysUserService sysUserService;
 
-	@ApiOperation(value = "主页面")
+	@ApiOperation(value = "后台主页面")
 	@GetMapping(value = "/index")
 	public Object main(HttpServletRequest request) {
-		CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+	    	CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+		ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
+		model.addObject("name", userSession.getUserName());
+		
+		Collection<MenuPermission> menus = userSession.getMenuResources();
+		StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
+		createMenuHtml(menus, sb);
+		model.addObject("menuHtml", sb.toString());
+		return model;
+	}
+	
+	/*@ApiOperation(value = "后台主页面")
+	@GetMapping(value = "/admin/index")
+	public Object adminIndex(){
+	    	CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
 		ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
 		model.addObject("name", userSession.getUserName());
 
@@ -52,7 +66,7 @@ public class LoginController {
 		createMenuHtml(menus, sb);
 		model.addObject("menuHtml", sb.toString());
 		return model;
-	}
+	}*/
 
 	private void createMenuHtml(Collection<MenuPermission> menus, StringBuilder sb) {
 		for (MenuPermission menu : menus) {

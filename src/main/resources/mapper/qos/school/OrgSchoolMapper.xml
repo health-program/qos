@@ -20,4 +20,47 @@
 	</if>
 	ORDER BY o.create_time DESC
 </select>
+
+<select id="schoolPersonnelCount" resultType="com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO">
+	SELECT s.id ,s.`parent_school_id` AS parentSchoolId,n.`school_full_name` AS schoolFullName,SUM(p.`total`) AS total FROM `org_school` AS s 
+	LEFT JOIN org_school_name AS n ON s.`parent_school_id`=n.`id` 
+	LEFT JOIN org_school_people AS p ON s.`id` = p.`school_id` WHERE 1=1
+	<if test="district != null and district !='' ">
+		AND  s.`district` =#{district}
+	</if>
+	<if test="affiliation != null and affiliation != '' ">
+		AND s.`affiliation` = #{affiliation}
+	</if>
+	<if test="nature != null and nature != '' ">
+		AND s.`nature` = #{nature}
+	</if>	
+	GROUP BY s.`parent_school_id`
+</select>
+
+<select id="schoolDoctorCount" resultType="com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO">
+	SELECT 
+	  s.id,
+	  s.`parent_school_id` AS parentSchoolId,
+	  n.`school_full_name` AS schoolFullName,
+	  SUM(s.`school_doctor_part`) AS schoolDoctorPart,
+	  SUM(s.`school_doctor_full`) AS schoolDoctorFull,
+	  SUM(s.`health_teacher_part`) AS healthTeacherPart,
+	  SUM(s.`health_teacher_full`) AS healthTeacherFull 
+	FROM
+	  `org_school` AS s 
+	  LEFT JOIN org_school_name AS n 
+	    ON s.`parent_school_id` = n.`id` 
+	   WHERE 1 = 1 
+	<if test="district != null and district !='' ">
+		AND  s.`district` =#{district}
+	</if>
+	<if test="affiliation != null and affiliation != '' ">
+		AND s.`affiliation` = #{affiliation}
+	</if>
+	<if test="nature != null and nature != '' ">
+		AND s.`nature` = #{nature}
+	</if>	
+	GROUP BY s.`parent_school_id` 
+</select>
+
 </mapper>

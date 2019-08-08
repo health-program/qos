@@ -9,6 +9,7 @@ import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
 import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -26,12 +27,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.io.IOException;
 
 import javax.validation.Valid;
 
+/**
+ * < 学校管理>
+ * @author  MyKite
+ * @version  [版本号, 2019年7月23日]
+ */
 @Controller
-@RequestMapping("/qos/org/school/name")
+@RequestMapping("/" + GlobalProperties.project+"/org/school/name")
 public class OrgSchoolNameController extends ControllerSupport {
 
     @Autowired
