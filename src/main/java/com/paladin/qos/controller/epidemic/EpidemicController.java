@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -35,7 +34,7 @@ import com.paladin.qos.service.school.OrgSchoolNameService;
  * @version 2019年6月11日 下午1:39:24
  */
 @Controller
-@RequestMapping("/" + GlobalProperties.project+"/epidemic")
+@RequestMapping("/qos/epidemic")
 public class EpidemicController extends ControllerSupport {
 
     @Autowired

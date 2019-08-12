@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.paladin.common.core.CommonUserSession;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.syst.SysUserService;
-import com.paladin.framework.core.GlobalProperties;
+import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.web.response.CommonResponse;
 
@@ -34,7 +33,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api("用户认证模块")
 @Controller
-@RequestMapping("/" + GlobalProperties.project)
+@RequestMapping("/qos")
 public class LoginController {
 
 	@Autowired
@@ -43,22 +42,8 @@ public class LoginController {
 	@ApiOperation(value = "后台主页面")
 	@GetMapping(value = "/index")
 	public Object main(HttpServletRequest request) {
-	    	CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
-		ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
-		model.addObject("name", userSession.getUserName());
-		
-		Collection<MenuPermission> menus = userSession.getMenuResources();
-		StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
-		createMenuHtml(menus, sb);
-		model.addObject("menuHtml", sb.toString());
-		return model;
-	}
-	
-	/*@ApiOperation(value = "后台主页面")
-	@GetMapping(value = "/admin/index")
-	public Object adminIndex(){
-	    	CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
-		ModelAndView model = new ModelAndView("/" + GlobalProperties.project + "/index");
+		CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+		ModelAndView model = new ModelAndView("/qos/index");
 		model.addObject("name", userSession.getUserName());
 
 		Collection<MenuPermission> menus = userSession.getMenuResources();
@@ -66,7 +51,21 @@ public class LoginController {
 		createMenuHtml(menus, sb);
 		model.addObject("menuHtml", sb.toString());
 		return model;
-	}*/
+	}
+
+	/*
+	 * @ApiOperation(value = "后台主页面")
+	 * 
+	 * @GetMapping(value = "/admin/index") public Object adminIndex(){
+	 * CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+	 * ModelAndView model = new ModelAndView("/" + GlobalProperties.project +
+	 * "/index"); model.addObject("name", userSession.getUserName());
+	 * 
+	 * Collection<MenuPermission> menus = userSession.getMenuResources();
+	 * StringBuilder sb = new StringBuilder("<li class=\"header\">菜单</li>");
+	 * createMenuHtml(menus, sb); model.addObject("menuHtml", sb.toString()); return
+	 * model; }
+	 */
 
 	private void createMenuHtml(Collection<MenuPermission> menus, StringBuilder sb) {
 		for (MenuPermission menu : menus) {
@@ -119,7 +118,7 @@ public class LoginController {
 		if (subject.isAuthenticated()) {
 			return main(request);
 		}
-		return "/" + GlobalProperties.project + "/login";
+		return "/qos/login";
 	}
 
 	@ApiOperation(value = "用户认证")
@@ -138,7 +137,7 @@ public class LoginController {
 			return main(request);
 		} else {
 			model.addAttribute("isError", true);
-			return "/" + GlobalProperties.project + "/login";
+			return "/qos/login";
 		}
 	}
 

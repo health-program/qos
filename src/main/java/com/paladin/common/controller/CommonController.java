@@ -1,5 +1,10 @@
 package com.paladin.common.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.paladin.common.core.ConstantsContainer;
-import com.paladin.common.core.ConstantsContainer.KeyValue;
+import com.paladin.common.core.container.ConstantsContainer;
+import com.paladin.common.core.container.ConstantsContainer.KeyValue;
 import com.paladin.common.model.syst.SysAttachment;
 import com.paladin.common.service.syst.SysAttachmentService;
 import com.paladin.framework.common.OffsetPage;
 import com.paladin.framework.core.VersionContainerManager;
+import com.paladin.framework.core.VersionContainerManager.VersionObject;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.web.response.CommonResponse;
@@ -133,25 +139,59 @@ public class CommonController {
 		return CommonResponse.getSuccessResponse(result);
 	}
 
+	@ApiOperation(value = "容器页面")
+	@GetMapping("/container/index")
+	public Object containerIndex() {
+		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+			return "/common/container/index";
+		}
+		return "/common/error/error";
+	}
+
+	@ApiOperation(value = "重启容器")
+	@GetMapping("/container/find/all")
+	@ResponseBody
+	public Object findContainers() {
+		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+			List<VersionObject> versionObjects = VersionContainerManager.getVersionObjects();
+			List<Map<String, Object>> result = new ArrayList<>();
+
+			for (VersionObject versionObject : versionObjects) {
+				Map<String, Object> objectMap = new HashMap<>();
+				objectMap.put("id", versionObject.getId());
+				objectMap.put("updateTime", versionObject.getUpdateTime());
+				objectMap.put("version", versionObject.getVersion());
+				result.add(objectMap);
+			}
+
+			return CommonResponse.getSuccessResponse(result);
+		}
+		return CommonResponse.getNoPermissionResponse("无权限");
+	}
+
 	@ApiOperation(value = "重启容器")
 	@ApiImplicitParam(name = "container", value = "容器ID", required = true)
-	@GetMapping("/restart/container")
+	@GetMapping("/container/restart")
 	@ResponseBody
 	public Object restartContainer(@RequestParam String container) {
 		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+			long t1 = System.currentTimeMillis();
 			VersionContainerManager.versionChanged(container);
-			return CommonResponse.getSuccessResponse();
+			long t2 = System.currentTimeMillis();
+			return CommonResponse.getSuccessResponse("", t2 - t1);
 		}
 		return CommonResponse.getNoPermissionResponse("无权限");
 	}
 
 	@ApiOperation(value = "重启所有容器")
-	@GetMapping("/restart/container/all")
+	@GetMapping("/container/restart/all")
 	@ResponseBody
 	public Object restartAllContainer() {
 		if (UserSession.getCurrentUserSession().isSystemAdmin()) {
+			long t1 = System.currentTimeMillis();
 			VersionContainerManager.versionChanged();
-			return CommonResponse.getSuccessResponse();
+			long t2 = System.currentTimeMillis();
+			return CommonResponse.getSuccessResponse("", t2 - t1);
 		}
 		return CommonResponse.getNoPermissionResponse("无权限");
 	}

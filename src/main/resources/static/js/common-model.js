@@ -1397,7 +1397,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
     formDataHandler: function(column, formData, model) {
         if (column.editDisplay !== "hide") {
             var setted = false;
-            for (; i < formData.length; i++) {
+            for (var i = 0; i < formData.length; i++) {
                 if (formData[i].name == column.name) {
                     formData[i].value = column.selectItem ? column.selectItem.value : null;
                     setted = true;
@@ -1417,7 +1417,11 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
     },
     getDataFromServer: function(column, model) {
         var that = this;
-        $.getAjax(column.url, function(data) {
+        $.getAjax(column.url, function(data) {            
+            if(typeof column.selectDataFilter === 'function') {
+                data = column.selectDataFilter(column, data);
+            }
+
             var k = column.idField || 'id',
                 n = column.nameField || 'name',
                 c = column.childrenField || 'children',
@@ -1427,11 +1431,9 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
             var treeList = [],
                 treeData = null;
             if (data) {
-                if (!$.isArray(data)) data = [data];
+                if (!$.isArray(data)) data = [data];               
                 if (column.isListData) {
-
                     data.forEach(function(item) {
-
                         item.text = item[n];
                         item.keyValue = item[k];
 
@@ -1451,15 +1453,14 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
                             return !n[p];
                         }
                     });
-
-
                 } else {
                     var g = function(items) {
                         var nodes = [];
                         items.forEach(function(item) {
                             var node = {
                                 text: item[n],
-                                keyValue: item[k]
+                                keyValue: item[k],
+                                data: item
                             };
 
                             var children = item[c];
@@ -1470,10 +1471,11 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
                                 }
                             }
                             nodes.push(node);
-                            list.push(node);
+                            treeList.push(node);
                         });
                         return nodes;
                     }
+                    treeData = g(data);
                 }
             }
 
@@ -1513,7 +1515,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
         input.click(function() {
             layer.open({
                 type: 1,
-                title: column.treeSelectTitle || " ",
+                title: column.selectTitle || " ",
                 content: "<div class='tonto-tree-select-div'></div>",
                 area: ['350px', '460px'],
                 success: function(layero, index) {
@@ -1531,8 +1533,8 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
                             item.name = that.getDataName(column, item.value);
                         }
 
-                        if (typeof column.treeSelectedHandler == 'function') {
-                            var result = column.treeSelectedHandler(data);
+                        if (typeof column.selectedHandler == 'function') {
+                            var result = column.selectedHandler(data);
                             if (result === false) {
                                 return;
                             }
@@ -1649,7 +1651,7 @@ var _selectTreeServerFieldBuilder = new _FieldBuilder("SELECT-TREE-SERVER", {
 
         var inputAttr = {
             name: column.name,
-            placeholder: column.placeholder || null,
+            placeholder: column.placeholder || "请选择" + column.title,
             class: "form-control",
             autocomplete: "off",
             readonly: "readonly",
@@ -1851,6 +1853,7 @@ var _attachmentFieldBuilder = new _FieldBuilder("ATTACHMENT", {
             layoutTemplates: {
                 actionUpload: '' //去除上传预览缩略图中的上传图片；
             },
+            allowedPreviewTypes:['image'],
             uploadAsync: false,
             maxFileCount: column.maxFileCount || 5,
             allowedFileExtensions: column.allowedFileExtensions || ["jpeg", "jpg", "png", "gif"],
@@ -1945,10 +1948,8 @@ var _radioFieldBuilder = new _FieldBuilder("RADIO", {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
-        html += '<div class="col-sm-' + this.getEditColSize(column, colspan, options) + '">\n';
         var attrHtml = column.attr ? generateTagAttribute(column.attr) : "";
-        html += '<div name="' + column.name + '" class="tonto-radio-constant" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '" ' + attrHtml + '></div>\n';
-        html += '</div>\n';
+        html += '<div class="tonto-radio-constant col-sm-' + this.getEditColSize(column, colspan, options) + '" name="' + column.name + '" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '" ' + attrHtml + '></div>\n';
         return {
             colspan: colspan,
             html: html
@@ -2030,10 +2031,8 @@ var _checkBoxFieldBuilder = new _FieldBuilder("CHECKBOX", {
         var colspan = column.colspan || 1,
             required = column.required === 'required';
         var html = '<label for="' + column.name + '" class="col-sm-' + options.labelSize + ' control-label">' + this.getRequiredIcon(column, options) + column.title + '：</label>\n';
-        html += '<div class="col-sm-' + this.getEditColSize(column, colspan, options) + '">\n';
         var attrHtml = column.attr ? generateTagAttribute(column.attr) : "";
-        html += '<div name="' + column.name + '" class="tonto-checkbox-constant" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '" ' + attrHtml + '></div>\n';
-        html += '</div>\n';
+        html += '<div name="' + column.name + '" class="tonto-checkbox-constant col-sm-' + this.getEditColSize(column, colspan, options) + '" ' + (required ? 'required="required"' : '') + ' enumcode="' + column.enum + '" ' + attrHtml + '></div>\n';
         return {
             colspan: colspan,
             html: html
@@ -2242,6 +2241,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
             firstLabelSize: 3,
             inputSize: 8,
             labelSize: 3,
+            formPaddingLeft: 10,
             formButtonBar: [{
                 id: subOp.id + '_edit_cancel_btn',
                 type: 'button',
@@ -2253,7 +2253,7 @@ var _subModelFieldBuilder = new _FieldBuilder("SUB-MODEL", {
 
         var subOp = $.extend(defaultSubOp, subOp);
         var html = generateEditFormHtml(subOp, false);
-        html = "<div style='padding:50px'>" + html + "</div>";
+        html = "<div style='padding-top:50px;padding-bottom:50px;padding-right:10px;padding-left:10px'>" + html + "</div>";
         var layerOption = subOp.layerOption || {};
         layerOption = $.extend({
                 success: function(layero, index) {

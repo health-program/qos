@@ -1,456 +1,439 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:include="/qos/header" />
 <link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
-<script type="text/javascript" src="/static/js/map/mapapi.js"></script>
-<script type="text/javascript" src="/static/js/map/mapgetscript.js"></script>
-<script type="text/javascript" src="/static/js/map/SearchInfoWindow_min.js"></script>
-
+<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
+<script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
 
 <body id="body">
-     <nav id="nav">
-	     <span class='index_left text-00e4ff left'>
-	                     <img src="../../../static/image/index/home.png" />综合质量展示
-	     </span>
-	    <div class="middle">
-		     <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>
-	     </div>
-	     <div class='right'>
-	     	 <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
-		     <span  class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
-		     <span  class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
-	     </div>
-     </nav>
-   <header id="header">
-      <div class="fourclass">
-         <div class="left">
-         	 <img src="../../../static/image/index/index_people.png" />
-         </div>
-         <div class="right">
-           <div class="text-ffffff top">本月总门急诊人次</div>
-           <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
-         </div>
-      </div>
-     <div class="fourclass">
-       <div class="left">
-        <img src="../../../static/image/index/index_file.png" />
+    <nav id="nav">
+        <span class='index_left text-00e4ff left'>
+            <img src="../../../static/image/index/home.png" />综合质量展示
+        </span>
+        <div class="middle">
+            <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>
         </div>
-       <div class="right">
-         <div class="text-ffffff top">健康档案总数 </div>
-         <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
-       </div>
-     </div>
-     <div class="fourclass">
-       <div class="left">
-        <img src="../../../static/image/index/index_spec.png" />
-       </div>
-       <div class="right">
-         <div  class="text-ffffff top">特殊人群管理数</div>
-         <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
-       </div>
-     </div>
-     <div class="fourclass">
-       <div class="left">
-        <img src="../../../static/image/index/index_doctor.png" />
-       </div>
-       <div class="right">
-         <div class="text-ffffff top">家庭医生团队数</div>
-         <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
-       </div>
-     </div>
-   </header>
-   <div id="middle">
-	    <div class="left position-relative">
-	    	<div class="bg_opacity">
-	    	   <div class="header line">在岗及卫技人员情况</div>
-	    	    <div class="fr width100 text-align-right pr-20 position-absolute absolute1">
-	    	    	<div><span class='orangeline middle-line'></span><span class="text-ffffff">在岗人员</span></div>
-	    	    	<div><span class='greenline middle-line'></span><span class="text-ffffff">卫技人员</span></div>
-	    	    </div>
-	    	   <div id="chartmain"></div>
-	    	</div>
-	    	<div class="bg_opacity">
-	    	  <div class="header line">昆山门急诊人次数</div>
-	    	  <div id="emergency"></div>
-	    	</div>
-	    	<div class="bg_opacity">
-	    		<div class="header line">家庭医生团队情况</div>
-	    		<div id="doctor"></div>
-	    	</div>
-	    </div>
-	    <div class="middle">
-	    	 <div id="allmap"  style="height:1000px;width:700px;background:black;"></div>
-				<input id="site"  type="text"  style="display:none">
-				<input id="longitude"  type="text" value="121.047817" style="display:none">
-				<input id="latitude"  type="text" value="31.395795" style="display:none">
-	    </div>
-	    <div class="right">
-		   		<div class="bg_opacity  position-relative">
-			   		<div class="header line">家庭医生团队情况</div>
-			   		<div class="fr width100 text-align-right pr-20">
-	    	    	<div>
-	    	    		<select>
-						  <option value ="volvo">请选择</option>
-						  <option value ="saab">Saab</option>
-						  <option value="opel">Opel</option>
-						  <option value="audi">Audi</option>
-						</select>
-	    	    	</div>
-	    	     </div>
-		    		<div id="emergency1"></div>
-		    	</div>
-		    	<div class="bg_opacity">
-			    	<div class="header line">昆山门急诊人次数</div>
-		    	  	<div id="emergency2"></div>
-		    	</div>
-		    	<div class="bg_opacity position-relative">
-			      <div class="header line">住院/出院人次数</div>
-			       <div class="fr width100 text-align-right pr-20 position-absolute">
-	    	    	<div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
-	    	    	<div><span class='greenline middle-line'></span><span class="text-ffffff">出院人数</span></div>
-	    	      </div>
-		    	  <div id="emergency3" style="width:500px;height:300px;"></div>
-		    	</div>
-	    </div>
-   </div>
+        <div class='right'>
+            <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+        </div>
+    </nav>
+    <header id="header">
+        <div class="fourclass">
+            <div class="left">
+                <img src="../../../static/image/index/index_people.png" />
+            </div>
+            <div class="right">
+                <div class="text-ffffff top">本月总门急诊人次</div>
+                <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
+            </div>
+        </div>
+        <div class="fourclass">
+            <div class="left">
+                <img src="../../../static/image/index/index_file.png" />
+            </div>
+            <div class="right">
+                <div class="text-ffffff top">健康档案总数 </div>
+                <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
+            </div>
+        </div>
+        <div class="fourclass">
+            <div class="left">
+                <img src="../../../static/image/index/index_spec.png" />
+            </div>
+            <div class="right">
+                <div class="text-ffffff top">特殊人群管理数</div>
+                <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
+            </div>
+        </div>
+        <div class="fourclass">
+            <div class="left">
+                <img src="../../../static/image/index/index_doctor.png" />
+            </div>
+            <div class="right">
+                <div class="text-ffffff top">家庭医生团队数</div>
+                <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
+            </div>
+        </div>
+    </header>
+    <div id="middle">
+        <div class="left position-relative">
+            <div class="bg_opacity">
+                <div class="header line">在岗及卫技人员情况</div>
+                <div class="fr width100 text-align-right pr-20 position-absolute absolute1">
+                    <div><span class='orangeline middle-line'></span><span class="text-ffffff">在岗人员</span></div>
+                    <div><span class='greenline middle-line'></span><span class="text-ffffff">卫技人员</span></div>
+                </div>
+                <div id="chartmain"></div>
+            </div>
+            <div class="bg_opacity">
+                <div class="header line">昆山门急诊人次数</div>
+                <div id="emergency"></div>
+            </div>
+            <div class="bg_opacity">
+                <div class="header line">家庭医生团队情况</div>
+                <div id="doctor"></div>
+            </div>
+        </div>
+        <div class="middle">
+            <div id="allmap" style="height:1000px;width:700px;background:black;"></div>
+            <input id="site" type="text" style="display:none">
+            <input id="longitude" type="text" value="121.047817" style="display:none">
+            <input id="latitude" type="text" value="31.395795" style="display:none">
+        </div>
+        <div class="right">
+            <div class="bg_opacity  position-relative">
+                <div class="header line">家庭医生团队情况</div>
+                <div class="fr width100 text-align-right pr-20">
+                    <div>
+                        <select>
+                            <option value="volvo">请选择</option>
+                            <option value="saab">Saab</option>
+                            <option value="opel">Opel</option>
+                            <option value="audi">Audi</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="emergency1"></div>
+            </div>
+            <div class="bg_opacity">
+                <div class="header line">昆山门急诊人次数</div>
+                <div id="emergency2"></div>
+            </div>
+            <div class="bg_opacity position-relative">
+                <div class="header line">住院/出院人次数</div>
+                <div class="fr width100 text-align-right pr-20 position-absolute">
+                    <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
+                    <div><span class='greenline middle-line'></span><span class="text-ffffff">出院人数</span></div>
+                </div>
+                <div id="emergency3" style="width:500px;height:300px;"></div>
+            </div>
+        </div>
+    </div>
 </body>
 <div th:include="/qos/footer" />
- <script>
- $(function(){
-	       //指定图标的配置和数据
-	          var option = {
-	        		    xAxis: {
-	        		        type: 'category',
-	        		        data: ['2015', '2016', '2017', '2018', '2019'],
-	        		        axisLine:{
-	                            lineStyle:{
-	                                color:'#657ca8',
-	                                width:1,//这里是为了突出显示加上的
-	                            }
-	                        },
-	        		        axisLabel: {
-	                            show: true,
-	                            textStyle: {
-	                                color: '#19d1ff'
-	                            }
-	                        }
-	        		    },
-	        		    yAxis: {
-	        		        type: 'value',
-	        		        data: ['2015', '2016', '2017', '2018', '2019'],
-	        		        axisLine:{
-	                            lineStyle:{
-	                                color:'#657ca8',
-	                                width:1,//这里是为了突出显示加上的
-	                            }
-	                        },
-	        		        axisLabel: {
-	                            show: true,
-	                            textStyle: {
-	                                color: '#19d1ff'
-	                            }
-	                        }
-	        		    },
-	        		    series: [{
-	        		        data: [820, 932, 901, 934, 1290, 1330, 1320],
-	        		        type: 'line',
-	        		    	lineStyle:{
-	                                color:'#f45e23',
-	                                width:2,//这里是为了突出显示加上的
-	                            }
-	                        
-	        		    },{
-	        		        data: [620, 532, 601, 834, 890, 730, 920],
-	        		        type: 'line',
-	        		        lineStyle:{
-                                color:'#00b4b1',
-                                width:2,//这里是为了突出显示加上的
-                            }
-	        		    }]
-	        		};
- 				 //初始化echarts实例
-	          var myChart = echarts.init(document.getElementById('chartmain'));
-			      myChart.setOption(option);
-			      
-			      //急诊人数开始
-			        //指定图标的配置和数据
-	          var emergencyoption = {
-	        		  xAxis: {
-	        		        type: 'category',
-	        		        data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
-	        		        axisLine:{
-	                            lineStyle:{
-	                                color:'#19d1ff',
-	                                width:1,//这里是为了突出显示加上的
-	                            }
-	                        }
-	        		    },
-	        		    yAxis: {
-	        		        type: 'value',
-	        		        splitLine:{
-	                            show:false
-	                        },
-	                        axisLine:{
-	                            lineStyle:{
-	                                color:'#19d1ff',
-	                                width:1,//这里是为了突出显示加上的
-	                            }
-	                        }
-	        		    },
-	        		    series: [{
-	        		    	  itemStyle: {
-	        		              normal: {
-	        		                  // 随机显示
-	        		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
-	        		                
-	        		                  // 定制显示（按顺序）
-	        		                /*   color: function(params) { 
-	        		                      var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000']; 
-	        		                      return colorList[params.dataIndex] 
-	        		                  } */
-	        		              },
-	        		          },
-	        		          barWidth : 30,
-	        		        data: [120, 200, 150, 80, 70],
-	        		        type: 'bar'
-	        		    }]
-	        		};
- 				 //初始化echarts实例
-	          var myChartEmergency = echarts.init(document.getElementById('emergency'));
-	          	  myChartEmergency.setOption(emergencyoption);
-			      //急诊人数结束
-			      
-			      
-	          	var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
-	          	  myChartEmergency1.setOption(emergencyoption);
-	          	  
-	          	var myChartEmergency2 = echarts.init(document.getElementById('emergency2'));
-	          	  myChartEmergency2.setOption(emergencyoption);
-	          	  
-	          	  
-	          	var myChartEdoctor = echarts.init(document.getElementById('doctor'));
-	          	myChartEdoctor.setOption(emergencyoption);
-	          	  
-	          	  
-	          
-	          	  
-// 住院/出院人次数开始
-	          	  
-var people = {
-   xAxis : [
-        {
-            type : 'category',
-            data : ['亭林','震川','周市镇','千灯镇','巴城镇'],
-            axisLine:{
-                lineStyle:{
-                    color:'#19d1ff',
-                    width:1,//这里是为了突出显示加上的
+<script>
+$(function() {
+    //指定图标的配置和数据
+    var option = {
+        xAxis: {
+            type: 'category',
+            data: ['2015', '2016', '2017', '2018', '2019'],
+            axisLine: {
+                lineStyle: {
+                    color: '#657ca8',
+                    width: 1, //这里是为了突出显示加上的
                 }
             },
-            splitLine:{
-         	   show:false
-         	}
-        }
-    ],
-    yAxis : [
-        {
-            type : 'value',
-            axisLine:{
-                lineStyle:{
-                    color:'#19d1ff',
-                    width:1,//这里是为了突出显示加上的
+            axisLabel: {
+                show: true,
+                textStyle: {
+                    color: '#19d1ff'
                 }
-            },
-            splitLine:{
-         	   show:false
-         	}
-        }
-        
-    
-    ],
-    series : [
-        {
-            name:'蒸发量',
-            type:'bar',
-            data:[2.6, 4.9, 7.0, 23.2, 25.6],
-            itemStyle: {
-	              normal: {
-	                   // 定制显示（按顺序）
-	                  color: function(params) { 
-	                      var colorList = ['#cf572a']; 
-	                      return colorList[params.dataIndex] 
-	                  } 
-	              },
-	          }
-          	
+            }
         },
-        {
-            name:'降水量',
-            type:'bar',
-            data:[2.6, 5.9, 9.0, 26.4, 28.7],
-            itemStyle: {
-	              normal: {
-	                   // 定制显示（按顺序）
-	                  color: function(params) { 
-	                      var colorList = ['#28b1ff']; 
-	                      return colorList[params.dataIndex] 
-	                  } 
-	              },
-	          }
-        }
-    ]
-};
+        yAxis: {
+            type: 'value',
+            data: ['2015', '2016', '2017', '2018', '2019'],
+            axisLine: {
+                lineStyle: {
+                    color: '#657ca8',
+                    width: 1, //这里是为了突出显示加上的
+                }
+            },
+            axisLabel: {
+                show: true,
+                textStyle: {
+                    color: '#19d1ff'
+                }
+            }
+        },
+        series: [{
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: 'line',
+            lineStyle: {
+                color: '#f45e23',
+                width: 2, //这里是为了突出显示加上的
+            }
 
-var myChartEmergency3 = echarts.init(document.getElementById('emergency3'));
-	myChartEmergency3.setOption(people);
-// 住院/出院人次数结束
-	})
- </script>
- 
- 
- <script>
-  // 地图
-  
-  
-   var markerArr = [ {
-        title : "安师大分部",
-        point : "120.897198,31.40491",
-        address : "芜湖市弋江区安徽师范大学",
-        description : "安师大分部位于芜湖市弋江区安师大附近，为Ejob公司分部",
-        tel : "10086"
-      }, {
-        title : "EasyJob总部",
-        point : "123.897197,31.40499",
-        address : "芜湖市弋江区 安徽信息工程学院",
-        description : "Ejob大厦位于芜湖市弋江区鲁港附近，为Ejob公司综合研发及办公总部",
-        tel : "10086"
-      }, {
-        title : "皖医分部",
-        point : "120.2,32.40491",
-        address : "芜湖市弋江区皖南医学院",
-        description : "皖医分部位于芜湖市弋江区皖医附近，为Ejob公司分部",
-        tel : "10086"
-      }, {
-        title : "商贸分部",
-        point : "120.9,33.40491",
-        address : "芜湖市弋江区安徽商贸职业技术学院",
-        description : "商贸分部位于芜湖市弋江区商贸附近，为Ejob公司分部",
-        tel : "10086"
-      }, {
-        title : "安机电分部",
-        point : "120.697142,32.46466",
-        address : "芜湖市弋江区安徽机电职业技术学院",
-        description : "安机电分部位于芜湖市弋江区安机电附近，为Ejob公司安分部",
-        tel : "10086"
-      } ];
-  
-  
-  var marker2;
-  var map = new BMap.Map("allmap");
-  var cityName = '昆山';
-  map.centerAndZoom(cityName, 12);                     // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
-  map.addControl(new BMap.OverviewMapControl());              //添加缩略地图控件
-  map.enableScrollWheelZoom(true);
-  map.setMapStyle({style:'midnight'});  
-  var geoc = new BMap.Geocoder();
-  map.addControl(new BMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_LARGE ,anchor: BMAP_ANCHOR_TOP_LEFT, offset: new BMap.Size(40, 250)}));
-  var bdary = new BMap.Boundary();
-  bdary.get(cityName, function (rs) {       //获取行政区域
+        }, {
+            data: [620, 532, 601, 834, 890, 730, 920],
+            type: 'line',
+            lineStyle: {
+                color: '#00b4b1',
+                width: 2, //这里是为了突出显示加上的
+            }
+        }]
+    };
+    //初始化echarts实例
+    var myChart = echarts.init(document.getElementById('chartmain'));
+    myChart.setOption(option);
+
+    //急诊人数开始
+    //指定图标的配置和数据
+    var emergencyoption = {
+        xAxis: {
+            type: 'category',
+            data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
+            axisLine: {
+                lineStyle: {
+                    color: '#19d1ff',
+                    width: 1, //这里是为了突出显示加上的
+                }
+            }
+        },
+        yAxis: {
+            type: 'value',
+            splitLine: {
+                show: false
+            },
+            axisLine: {
+                lineStyle: {
+                    color: '#19d1ff',
+                    width: 1, //这里是为了突出显示加上的
+                }
+            }
+        },
+        series: [{
+            itemStyle: {
+                normal: {
+                    // 随机显示
+                    color: function(d) { return "#" + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16); }
+
+                    // 定制显示（按顺序）
+                    /*   color: function(params) { 
+                          var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000']; 
+                          return colorList[params.dataIndex] 
+                      } */
+                },
+            },
+            barWidth: 30,
+            data: [120, 200, 150, 80, 70],
+            type: 'bar'
+        }]
+    };
+    //初始化echarts实例
+    var myChartEmergency = echarts.init(document.getElementById('emergency'));
+    myChartEmergency.setOption(emergencyoption);
+    //急诊人数结束
+
+
+    var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
+    myChartEmergency1.setOption(emergencyoption);
+
+    var myChartEmergency2 = echarts.init(document.getElementById('emergency2'));
+    myChartEmergency2.setOption(emergencyoption);
+
+
+    var myChartEdoctor = echarts.init(document.getElementById('doctor'));
+    myChartEdoctor.setOption(emergencyoption);
+
+    // 住院/出院人次数开始
+
+    var people = {
+        xAxis: [{
+            type: 'category',
+            data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
+            axisLine: {
+                lineStyle: {
+                    color: '#19d1ff',
+                    width: 1, //这里是为了突出显示加上的
+                }
+            },
+            splitLine: {
+                show: false
+            }
+        }],
+        yAxis: [{
+                type: 'value',
+                axisLine: {
+                    lineStyle: {
+                        color: '#19d1ff',
+                        width: 1, //这里是为了突出显示加上的
+                    }
+                },
+                splitLine: {
+                    show: false
+                }
+            }
+
+
+        ],
+        series: [{
+                name: '蒸发量',
+                type: 'bar',
+                data: [2.6, 4.9, 7.0, 23.2, 25.6],
+                itemStyle: {
+                    normal: {
+                        // 定制显示（按顺序）
+                        color: function(params) {
+                            var colorList = ['#cf572a'];
+                            return colorList[params.dataIndex]
+                        }
+                    },
+                }
+
+            },
+            {
+                name: '降水量',
+                type: 'bar',
+                data: [2.6, 5.9, 9.0, 26.4, 28.7],
+                itemStyle: {
+                    normal: {
+                        // 定制显示（按顺序）
+                        color: function(params) {
+                            var colorList = ['#28b1ff'];
+                            return colorList[params.dataIndex]
+                        }
+                    },
+                }
+            }
+        ]
+    };
+
+    var myChartEmergency3 = echarts.init(document.getElementById('emergency3'));
+    myChartEmergency3.setOption(people);
+    // 住院/出院人次数结束
+})
+</script>
+<script>
+// 地图
+
+var markerArr = [{
+    title: "安师大分部",
+    point: "120.897198,31.40491",
+    address: "芜湖市弋江区安徽师范大学",
+    description: "安师大分部位于芜湖市弋江区安师大附近，为Ejob公司分部",
+    tel: "10086"
+}, {
+    title: "EasyJob总部",
+    point: "123.897197,31.40499",
+    address: "芜湖市弋江区 安徽信息工程学院",
+    description: "Ejob大厦位于芜湖市弋江区鲁港附近，为Ejob公司综合研发及办公总部",
+    tel: "10086"
+}, {
+    title: "皖医分部",
+    point: "120.2,32.40491",
+    address: "芜湖市弋江区皖南医学院",
+    description: "皖医分部位于芜湖市弋江区皖医附近，为Ejob公司分部",
+    tel: "10086"
+}, {
+    title: "商贸分部",
+    point: "120.9,33.40491",
+    address: "芜湖市弋江区安徽商贸职业技术学院",
+    description: "商贸分部位于芜湖市弋江区商贸附近，为Ejob公司分部",
+    tel: "10086"
+}, {
+    title: "安机电分部",
+    point: "120.697142,32.46466",
+    address: "芜湖市弋江区安徽机电职业技术学院",
+    description: "安机电分部位于芜湖市弋江区安机电附近，为Ejob公司安分部",
+    tel: "10086"
+}];
+
+var marker2;
+var map = new BMap.Map("allmap");
+var cityName = '昆山';
+map.centerAndZoom(cityName, 12); // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
+map.addControl(new BMap.OverviewMapControl()); //添加缩略地图控件
+map.enableScrollWheelZoom(true);
+map.setMapStyle({ style: 'midnight' });
+var geoc = new BMap.Geocoder();
+map.addControl(new BMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_LARGE, anchor: BMAP_ANCHOR_TOP_LEFT, offset: new BMap.Size(40, 250) }));
+var bdary = new BMap.Boundary();
+bdary.get(cityName, function(rs) { //获取行政区域
     // map.clearOverlays();        //清除地图覆盖物
     //for循环都删除掉了，只剩下这个
     //网上查了下，东西经南北纬的范围
-    var EN_JW = "180, 90;";         //东北角
-    var NW_JW = "-180,  90;";       //西北角
-    var WS_JW = "-180, -90;";       //西南角
-    var SE_JW = "180, -90;";        //东南角
+    var EN_JW = "180, 90;"; //东北角
+    var NW_JW = "-180,  90;"; //西北角
+    var WS_JW = "-180, -90;"; //西南角
+    var SE_JW = "180, -90;"; //东南角
     //4.添加环形遮罩层
-    var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#00214c", fillOpacity:0, strokeOpacity: 0.5 }); //建立多边形覆盖物
+    var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#00214c", fillOpacity: 0, strokeOpacity: 0.5 }); //建立多边形覆盖物
     map.addOverlay(ply1);
     //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
-    var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 5, strokeColor: "#00a6bc",fillColor: "" });
+    var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 5, strokeColor: "#00a6bc", fillColor: "" });
     map.addOverlay(ply);
     //map.setViewport(ply.getPath());    //调整视野
-    map.addEventListener("click", function(e){
-      map.removeOverlay(marker2)
-     })
-  });
-  function init() {
-  /*   var point = new BMap.Point('120.985726', '31.381985');
-    marker2 = new BMap.Marker(point);  // 创建标注 */
-  /*   map.setMapStyle({style:'midnight'});  */ 
-    map.addOverlay(marker2);        
-    
- 
+    map.addEventListener("click", function(e) {
+        map.removeOverlay(marker2)
+    })
+});
+
+function init() {
+    /*   var point = new BMap.Point('120.985726', '31.381985');
+      marker2 = new BMap.Marker(point);  // 创建标注 */
+    /*   map.setMapStyle({style:'midnight'});  */
+    map.addOverlay(marker2);
 
     var point = new Array(); //存放标注点经纬信息的数组
     var marker = new Array(); //存放标注点对象的数组
     var info = new Array(); //存放提示信息窗口对象的数组
-    var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
+    var searchInfoWindow = new Array(); //存放检索信息窗口对象的数组
     for (var i = 0; i < markerArr.length; i++) {
-      var p0 = markerArr[i].point.split(",")[0]; //
-      var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来
-      point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
-      console.log('11111111111'+p0)
-      console.log('2222222222'+p1)
-	  var myIcon = new BMap.Icon("logo2.png", new BMap.Size(90,53));
-      marker2[i] = new window.BMap.Marker(point[i],{icon:myIcon});
-      map.addOverlay(marker[i]);
-      marker2[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-      //显示marker的title，marker多的话可以注释掉
-      var label = new window.BMap.Label(markerArr[i].title, {
-        offset : new window.BMap.Size(20, -10)
-      });
-      marker[i].setLabel(label);
-      // 创建信息窗口对象
-      info[i] = "<p style=’font-size:12px;lineheight:1.8em;’>"
-        + "</br>简介："
-        + markerArr[i].description
-        + "</br>地址："
-        + markerArr[i].address
-        + "</br> 电话：" + markerArr[i].tel + "</br></p>";
-      //创建百度样式检索信息窗口对象
-      searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,
-        info[i], {
-          title : markerArr[i].title, //标题
-          width : 290, //宽度
-          height : 100, //高度
-          panel : "panel", //检索结果面板
-          enableAutoPan : true, //自动平移
-          searchTypes : [ BMAPLIB_TAB_SEARCH, //周边检索
-            BMAPLIB_TAB_TO_HERE, //到这里去
-            BMAPLIB_TAB_FROM_HERE //从这里出发
-          ]
+        var p0 = markerArr[i].point.split(",")[0]; //
+        var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来
+        point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
+        console.log('11111111111' + p0)
+        console.log('2222222222' + p1)
+        var myIcon = new BMap.Icon("logo2.png", new BMap.Size(90, 53));
+        marker2[i] = new window.BMap.Marker(point[i], { icon: myIcon });
+        map.addOverlay(marker[i]);
+        marker2[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        //显示marker的title，marker多的话可以注释掉
+        var label = new window.BMap.Label(markerArr[i].title, {
+            offset: new window.BMap.Size(20, -10)
         });
- 
-      //添加点击事件
-      marker2[i].addEventListener("click", (function(k) {
-        // js 闭包
-        return function() {
-          //将被点击marker置为中心
-          map.centerAndZoom(point[k], 18);
-          //在marker上打开检索信息窗口
-          searchInfoWindow[k].open(marker[k]);
-        }
-      })(i));
+        marker[i].setLabel(label);
+        // 创建信息窗口对象
+        info[i] = "<p style=’font-size:12px;lineheight:1.8em;’>" +
+            "</br>简介：" +
+            markerArr[i].description +
+            "</br>地址：" +
+            markerArr[i].address +
+            "</br> 电话：" + markerArr[i].tel + "</br></p>";
+        //创建百度样式检索信息窗口对象
+        searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,
+            info[i], {
+                title: markerArr[i].title, //标题
+                width: 290, //宽度
+                height: 100, //高度
+                panel: "panel", //检索结果面板
+                enableAutoPan: true, //自动平移
+                searchTypes: [BMAPLIB_TAB_SEARCH, //周边检索
+                    BMAPLIB_TAB_TO_HERE, //到这里去
+                    BMAPLIB_TAB_FROM_HERE //从这里出发
+                ]
+            });
+
+        //添加点击事件
+        marker2[i].addEventListener("click", (function(k) {
+            // js 闭包
+            return function() {
+                //将被点击marker置为中心
+                map.centerAndZoom(point[k], 18);
+                //在marker上打开检索信息窗口
+                searchInfoWindow[k].open(marker[k]);
+            }
+        })(i));
     }
-    
-    
-    
-    
-    
-   
+
     marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-    geoc.getLocation(point, function(rs)
-    {
-      var xiangxi = rs.addressComponents;
-      var adress=xiangxi.province + ", " + xiangxi.city + ", " + xiangxi.district + ", " + xiangxi.street + ", " + xiangxi.streetNumber; //创建信息窗口
-      document.getElementById("site").value=adress;
+    geoc.getLocation(point, function(rs) {
+        var xiangxi = rs.addressComponents;
+        var adress = xiangxi.province + ", " + xiangxi.city + ", " + xiangxi.district + ", " + xiangxi.street + ", " + xiangxi.streetNumber; //创建信息窗口
+        document.getElementById("site").value = adress;
     });
-  
-  }
-  init()
- </script>
+
+}
+init()
+</script>
 <script type="text/javascript"></script>
+
 </html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>用户登录日志查看</h1>
+        <ol class="breadcrumb">
+            <li><a href="/common/sys/logger/login/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/common/sys/logger/login/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+
+    $(function() {
+    	var options = {
+	        id: "model",
+	        name: "详情",
+	        url:"/common/sys/logger/login/update?id="+$("#id").val(),
+	        columns: [
+				{ title: "ip", name: "ip", required: "required", inputType: "TEXT" },
+				{ title: "登录方式", name: "loginType", required: "required", inputType: "TEXT" },
+				{ title: "登录账号", name: "account", required: "required", inputType: "TEXT" },
+				{ title: "用户ID", name: "userId", required: "required", inputType: "TEXT" },
+				{ title: "用户类型", name: "userType", required: "required", inputType: "TEXT" }
+				]
+	    }
+    
+        $.getAjax("/common/sys/logger/login/get?id="+$("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

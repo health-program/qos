@@ -7,19 +7,13 @@ import java.util.regex.Pattern;
 import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.paladin.common.mapper.syst.SysUserMapper;
 import com.paladin.common.model.syst.SysUser;
-import com.paladin.common.service.syst.dto.SysUserQuery;
-import com.paladin.common.service.syst.vo.SysUserVO;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.GeneralCriteriaBuilder;
-import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.configuration.PaladinProperties;
@@ -38,10 +32,6 @@ public class SysUserService extends ServiceSupport<SysUser> {
 
 	@Resource
 	private PaladinProperties paladinProperties;
-
-	private String createCasPassword(String password) {
-		return new SimpleHash("md5", password).toBase64();
-	}
 	
 	/**
 	 * 创建一个账号
@@ -58,7 +48,6 @@ public class SysUserService extends ServiceSupport<SysUser> {
 
 		String salt = SecureUtil.createSalte();
 		String password = paladinProperties.getDefaultPassword();
-		String casPassword = createCasPassword(password);
 		password = SecureUtil.createPassword(password, salt);
 
 		SysUser user = new SysUser();
@@ -68,7 +57,6 @@ public class SysUserService extends ServiceSupport<SysUser> {
 		user.setUserId(userId);
 		user.setState(SysUser.STATE_ENABLED);
 		user.setType(type);
-		user.setCasPassword(casPassword);
 
 		return save(user);
 
@@ -146,14 +134,11 @@ public class SysUserService extends ServiceSupport<SysUser> {
 		}
 
 		String salt = SecureUtil.createSalte();
-		String newCasPassword = createCasPassword(newPassword);
-		newPassword = SecureUtil.createPassword(newPassword, salt);
 
 		SysUser updateUser = new SysUser();
 		updateUser.setId(user.getId());
 		updateUser.setSalt(salt);
 		updateUser.setPassword(newPassword);
-		updateUser.setCasPassword(newCasPassword);
 		updateUser.setIsFirstLogin(0);// 密码强制修改后该状态值设为0
 		updateUser.setUpdateTime(new Date());
 		
@@ -171,45 +156,8 @@ public class SysUserService extends ServiceSupport<SysUser> {
 		SysUser sysUser = getUserByAccount(account);
 		SysUser user = new SysUser();
 		user.setId(sysUser.getId());
-		user.setIsFirstLogin(0);
 		user.setLastLoginTime(new Date());
 		sysUserMapper.updateByPrimaryKeySelective(user);
 	}
-	
-	public SysUser getUser(String account) {
-		Example example = GeneralCriteriaBuilder.buildAnd(SysUser.class, new Condition(SysUser.COLUMN_FIELD_ACCOUNT, QueryType.EQUAL, account));
-		List<SysUser> users = sysUserMapper.selectByExample(example);
-		return (users != null && users.size() > 0) ? users.get(0) : null;
-	}
-	
-	public int resetOrgUserPassword(String userId) {
 
-		SysUser user = get(userId);
-		SysUser sysUser = getUser(user.getAccount());
-		if (sysUser == null) {
-			throw new BusinessException("账号异常");
-		}
-
-		String salt = SecureUtil.createSalte();
-		String password = paladinProperties.getDefaultPassword();
-		password = SecureUtil.createPassword(password, salt);
-
-		SysUser updateUser = new SysUser();
-		updateUser.setId(sysUser.getId());
-		updateUser.setSalt(salt);
-		updateUser.setPassword(password);
-		updateUser.setIsFirstLogin(1);// 密码重置后该状态值设为1
-
-		return updateSelective(updateUser);
-
-	}
-	
-	
-	
-	 public PageResult<SysUserVO> sysUserAll(SysUserQuery query){
-	   	Page<SysUserVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
-	   	sysUserMapper.sysUserAll(query);
-	   	return new PageResult<>(page);
-	       }
-	 
 }

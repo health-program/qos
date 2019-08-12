@@ -9,7 +9,6 @@ import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
 import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -38,7 +37,7 @@ import javax.validation.Valid;
  * @version  [版本号, 2019年7月23日]
  */
 @Controller
-@RequestMapping("/" + GlobalProperties.project+"/org/school/name")
+@RequestMapping("/qos/org/school/name")
 public class OrgSchoolNameController extends ControllerSupport {
 
     @Autowired

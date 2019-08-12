@@ -96,9 +96,9 @@ $(function() {
     dbName = $("#dbName").val();
     tableName = $("#tableName").val();
     // 偷懒
-    $.getAjax("/common/sys/constant/find/all/key", function(keys) {
-        initDataGrid(keys);
-    });
+    //$.getAjax("/common/sys/constant/find/all/key", function(keys) {
+    initDataGrid();
+    //});
 });
 
 var defaultColumns = {
@@ -234,23 +234,24 @@ function initDataGrid(keys) {
                 x["data"] = res;
                 x["total"] = res.length;
 
-                if ($.isArray(keys)) {
-                    res.forEach(function(a) {
-                        var i = 0
-                        for (; i < keys.length; i++) {
-                            var key = keys[i];
-                            if (key == a.name || a.name + "-type" == key || a.name + "_type" == key) {
-                                a.enumCode = key;
-                                break;
-                            }
-                        }
-                        if (i == keys.length) {
-                            if (a.name.startsWith("is_")) {
-                                a.enumCode = "boolean";
-                            }
-                        }
-                    });
-                }
+                // 自动匹配
+                // if ($.isArray(keys)) {
+                //     res.forEach(function(a) {
+                //         var i = 0
+                //         for (; i < keys.length; i++) {
+                //             var key = keys[i];
+                //             if (key == a.name || a.name + "-type" == key || a.name + "_type" == key) {
+                //                 a.enumCode = key;
+                //                 break;
+                //             }
+                //         }
+                //         if (i == keys.length) {
+                //             if (a.name.startsWith("is_")) {
+                //                 a.enumCode = "boolean";
+                //             }
+                //         }
+                //     });
+                // }
 
                 return x;
             } else {

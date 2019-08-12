@@ -5,25 +5,23 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.paladin.framework.core.GlobalProperties;
-
 /**   
  * @author MyKite
  * @version 2019年6月24日 下午3:04:58 
  */
 @Controller
-@RequestMapping("/home/page/"+GlobalProperties.project+"")
+@RequestMapping("/home/page/qos")
 public class HomePageController {
 
     @RequestMapping(value = "/index")
 	public String homeIndex(HttpServletRequest request){
-	    return "/" + GlobalProperties.project + "/homepage/index";
+	    return "/qos/homepage/index";
 	}
     
     
     @RequestMapping(value = "/familydoctor")
   	public String familyIndex(HttpServletRequest request){
-  	    return "/" + GlobalProperties.project + "/homepage/familydoctor/index";
+  	    return "/qos/homepage/familydoctor/index";
   	}
 }
 

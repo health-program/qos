@@ -8,7 +8,6 @@ import com.paladin.qos.service.familydoctor.dto.FamilyDoctorUnitDTO;
 import com.paladin.qos.service.familydoctor.vo.FamilyDoctorUnitVO;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.GlobalProperties;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -32,7 +31,7 @@ import java.io.IOException;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/" + GlobalProperties.project+"/family/doctor/unit")
+@RequestMapping("/qos/family/doctor/unit")
 public class FamilyDoctorUnitController extends ControllerSupport {
 
     @Autowired
