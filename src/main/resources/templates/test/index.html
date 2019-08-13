@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <section class="content-header">
+        <h1>测试页面</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" method="post" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input type="text" id="processorId" class="form-control" placeholder="请输入处理器ID">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="unitId" class="form-control" placeholder="请输入机构ID">
+                        </div>
+                        <div class="col-md-2">
+                            <select id="timeType" class="form-control">
+                                <option value="10">按年计算</option>
+                                <option value="11">按月计算</option>
+                                <option value="12">按日计算</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" id="time" class="form-control tonto-datepicker-date" placeholder="请选择日期">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary" onclick="jisuan()"><i class="fa fa-search"></i>计算</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/treetable.js"></script>
+    <script type="text/javascript">
+    function jisuan() {
+        var request = {
+            processorId: $("#processorId").val(),
+            timeType: $("#timeType").val(),
+            time: $("#time").val(),
+            unitId: $("#unitId").val()
+        };
+
+        $.postAjax("/test/process", request, function(data) {
+            var r = data.eventNum * 100 / data.totalNum;
+            var html = data.eventNum + " / " + data.totalNum + " = " + r + "%";
+            $.successAlert(html);
+        });
+    }
+    $(function() {
+
+    });
+    </script>
+</body>
+
+</html>
