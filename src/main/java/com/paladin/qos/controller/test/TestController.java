@@ -30,7 +30,7 @@ public class TestController {
 	@RequestMapping("/process")
 	@ResponseBody
 	public Object process(TestDTO testDTO) {
-		DataProcessor processor = dataProcessorManager.getDataPreprocessor(testDTO.getProcessorId());
+		DataProcessor processor = dataProcessorManager.getDataProcessor(testDTO.getProcessorId());
 		if (processor != null) {
 			return CommonResponse.getSuccessResponse(processor.process(testDTO.getTimeType(), testDTO.getTime(), testDTO.getUnitId()));
 		}

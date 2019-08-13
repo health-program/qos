@@ -9,13 +9,15 @@ import org.springframework.stereotype.Component;
 import com.paladin.qos.analysis.DataProcessor;
 
 @Component
-public class MortalityOfHospitalizedDataPreprocessor extends DataProcessor {
+public class MortalityOfHospitalizedDataProcessor extends DataProcessor {
 
+	public static final String EVENT_ID = "mortality_of_hospitalized";
+	
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
-	public String getProcessorId() {
-		return "mortality_of_hospitalized";
+	public String getEventId() {
+		return EVENT_ID;
 	}
 
 	@Override
