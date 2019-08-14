@@ -21,23 +21,23 @@ public class InfectIndication extends BaseModel{
         this.hospitalId = hospitalId;
     }
 
-    private String totalInfection;//医院感染总发生率统计
+    private Double totalInfection;//医院感染总发生率统计
 
-    private String operatingDepartmentsInfection;//与手术相关科室感染发生率统计
+    private Double operatingDepartmentsInfection;//与手术相关科室感染发生率统计
 
-    private String operatingPartInfection;//手术部位感染总发生率统计
+    private Double operatingPartInfection;//手术部位感染总发生率统计
 
-    private String operatingRiskInfection;//手术风险分级（NNIS分级）手术部位感染率统计
+    private Double operatingRiskInfection;//手术风险分级（NNIS分级）手术部位感染率统计
 
-    private String lungInfection;//手术患者肺部感染发生率统计
+    private Double lungInfection;//手术患者肺部感染发生率统计
 
-    private String newBornInfection;//新生儿患者医院感染发生率统计
+    private Double newBornInfection;//新生儿患者医院感染发生率统计
 
-    private String  selectiveOperationsInfection;//择期手术患者医院感染发生率统计
+    private Double  selectiveOperationsInfection;//择期手术患者医院感染发生率统计
 
-    private String bloodInfection;//与血液透析相关血液感染发生率统计
+    private Double bloodInfection;//与血液透析相关血液感染发生率统计
 
-    private String intensiveCareUnitInfection;//重症监护室相关感染率统计
+    private Double intensiveCareUnitInfection;//重症监护室相关感染率统计
 
     private Date createTime;
 
@@ -55,75 +55,75 @@ public class InfectIndication extends BaseModel{
         this.id = id;
     }
 
-    public String getTotalInfection() {
+    public Double getTotalInfection() {
         return totalInfection;
     }
 
-    public void setTotalInfection(String totalInfection) {
+    public void setTotalInfection(Double totalInfection) {
         this.totalInfection = totalInfection;
     }
 
-    public String getOperatingDepartmentsInfection() {
+    public Double getOperatingDepartmentsInfection() {
         return operatingDepartmentsInfection;
     }
 
-    public void setOperatingDepartmentsInfection(String operatingDepartmentsInfection) {
+    public void setOperatingDepartmentsInfection(Double operatingDepartmentsInfection) {
         this.operatingDepartmentsInfection = operatingDepartmentsInfection;
     }
 
-    public String getOperatingPartInfection() {
+    public Double getOperatingPartInfection() {
         return operatingPartInfection;
     }
 
-    public void setOperatingPartInfection(String operatingPartInfection) {
+    public void setOperatingPartInfection(Double operatingPartInfection) {
         this.operatingPartInfection = operatingPartInfection;
     }
 
-    public String getOperatingRiskInfection() {
+    public Double getOperatingRiskInfection() {
         return operatingRiskInfection;
     }
 
-    public void setOperatingRiskInfection(String operatingRiskInfection) {
+    public void setOperatingRiskInfection(Double operatingRiskInfection) {
         this.operatingRiskInfection = operatingRiskInfection;
     }
 
-    public String getLungInfection() {
+    public Double getLungInfection() {
         return lungInfection;
     }
 
-    public void setLungInfection(String lungInfection) {
+    public void setLungInfection(Double lungInfection) {
         this.lungInfection = lungInfection;
     }
 
-    public String getNewBornInfection() {
+    public Double getNewBornInfection() {
         return newBornInfection;
     }
 
-    public void setNewBornInfection(String newBornInfection) {
+    public void setNewBornInfection(Double newBornInfection) {
         this.newBornInfection = newBornInfection;
     }
 
-    public String getSelectiveOperationsInfection() {
+    public Double getSelectiveOperationsInfection() {
         return selectiveOperationsInfection;
     }
 
-    public void setSelectiveOperationsInfection(String selectiveOperationsInfection) {
+    public void setSelectiveOperationsInfection(Double selectiveOperationsInfection) {
         this.selectiveOperationsInfection = selectiveOperationsInfection;
     }
 
-    public String getBloodInfection() {
+    public Double getBloodInfection() {
         return bloodInfection;
     }
 
-    public void setBloodInfection(String bloodInfection) {
+    public void setBloodInfection(Double bloodInfection) {
         this.bloodInfection = bloodInfection;
     }
 
-    public String getIntensiveCareUnitInfection() {
+    public Double getIntensiveCareUnitInfection() {
         return intensiveCareUnitInfection;
     }
 
-    public void setIntensiveCareUnitInfection(String intensiveCareUnitInfection) {
+    public void setIntensiveCareUnitInfection(Double intensiveCareUnitInfection) {
         this.intensiveCareUnitInfection = intensiveCareUnitInfection;
     }
 
