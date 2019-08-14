@@ -3,7 +3,20 @@ package com.paladin.qos.analysis;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * 数据处理器，对数据进行时间维度和机构维度的数据预处理，提高统计效率
+ * 
+ * @author TontoZhou
+ * @since 2019年8月14日
+ */
 public abstract class DataProcessor {
+
+	/** 时间粒度：按年 */
+	public final static int TIME_GRANULARITY_YEAR = 10;
+	/** 时间粒度：按月 */
+	public final static int TIME_GRANULARITY_MONTH = 11;
+	/** 时间粒度：按日 */
+	public final static int TIME_GRANULARITY_DAY = 12;
 
 	/**
 	 * 处理器处理的事件ID
@@ -13,7 +26,17 @@ public abstract class DataProcessor {
 	public abstract String getEventId();
 
 	/**
-	 * 处理数据，开始结束时间应当已经处理过（按照timeType），例如开始时间2019-8-13 00:00:00，结束时间为2019-8-14 00:00:00，不能带时分秒
+	 * 处理时间粒度
+	 * 
+	 * @return
+	 */
+	public int getTimeGranularity() {
+		return TIME_GRANULARITY_DAY;
+	}
+
+	/**
+	 * 处理数据，开始结束时间应当已经处理过（按照timeType），例如开始时间2019-8-13 00:00:00，结束时间为2019-8-14
+	 * 00:00:00，不能带时分秒
 	 * 
 	 * @param timeType
 	 * @param startTime
@@ -45,6 +68,7 @@ public abstract class DataProcessor {
 		metadata.setDay(day);
 		metadata.setWeekMonth(weekMonth);
 		metadata.setWeekYear(weekYear);
+		metadata.setEventId(getEventId());
 
 		return metadata;
 	}
@@ -65,26 +89,26 @@ public abstract class DataProcessor {
 		Calendar c = Calendar.getInstance();
 		c.setTime(startTime);
 
-		if (timeType == RateMetadata.TIME_TYPE_YEAR) {
+		if (timeType == TIME_GRANULARITY_YEAR) {
 			c.set(Calendar.MONTH, 0);
 			c.set(Calendar.DAY_OF_MONTH, 1);
-		} else if (timeType == RateMetadata.TIME_TYPE_MONTH) {
+		} else if (timeType == TIME_GRANULARITY_MONTH) {
 			c.set(Calendar.DAY_OF_MONTH, 1);
-		} 
-		
+		}
+
 		startTime = c.getTime();
-		
+
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		int weekYear = c.get(Calendar.WEEK_OF_YEAR);
 		int weekMonth = c.get(Calendar.WEEK_OF_MONTH);
 
-		if (timeType == RateMetadata.TIME_TYPE_YEAR) {
+		if (timeType == TIME_GRANULARITY_YEAR) {
 			c.add(Calendar.YEAR, 1);
-		} else if (timeType == RateMetadata.TIME_TYPE_MONTH) {
+		} else if (timeType == TIME_GRANULARITY_MONTH) {
 			c.add(Calendar.MONTH, 1);
-		} else if (timeType == RateMetadata.TIME_TYPE_DAY) {
+		} else if (timeType == TIME_GRANULARITY_DAY) {
 			c.add(Calendar.DAY_OF_MONTH, 1);
 		}
 

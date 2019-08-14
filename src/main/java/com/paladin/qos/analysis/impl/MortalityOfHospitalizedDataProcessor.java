@@ -11,7 +11,7 @@ import com.paladin.qos.analysis.DataProcessor;
 @Component
 public class MortalityOfHospitalizedDataProcessor extends DataProcessor {
 
-	public static final String EVENT_ID = "mortality_of_hospitalized";
+	public static final String EVENT_ID = "MORTALITY_OF_HOSPITALIZED";
 	
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 	
