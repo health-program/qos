@@ -666,3 +666,25 @@ CREATE TABLE `tonto_container_version` (
 INSERT INTO `tonto_container_version` VALUES ('constants_container', '1');
 INSERT INTO `tonto_container_version` VALUES ('role_container', '1');
 INSERT INTO `tonto_container_version` VALUES ('unit_container', '1');
+
+
+-- 医院感染类指标统计表
+DROP TABLE IF EXISTS `infect_indication`;
+CREATE TABLE `infect_indication` (
+  `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
+  `hospital_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '医院',
+  `total_infection` DOUBLE COMMENT '医院感染总发生率统计',
+  `operating_departments_infection` DOUBLE COMMENT '与手术相关科室感染发生率统计',
+  `operating_part_infection` DOUBLE COMMENT '手术部位感染总发生率统计',
+  `operating_risk_infection` DOUBLE COMMENT '手术风险分级（NNIS分级）手术部位感染率统计',
+ `lung_infection` DOUBLE COMMENT '手术患者肺部感染发生率统计',
+ `new_born_infection` DOUBLE COMMENT '新生儿患者医院感染发生率统计',
+ `selective_operations_infection` DOUBLE COMMENT '择期手术患者医院感染发生率统计',
+ `blood_infection` DOUBLE COMMENT '与血液透析相关血液感染发生率统计',
+ `intensive_care_unit_infection` DOUBLE COMMENT '重症监护室相关感染率统计',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `update_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
