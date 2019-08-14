@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,40 +25,82 @@ public class ConstantsContainer implements VersionContainer {
 	private static Map<String, Map<String, String>> constantValueMap = new HashMap<>();
 	private static Map<String, Map<String, String>> constantKeyMap = new HashMap<>();
 
-	public boolean initialize() {
-		Map<String, List<KeyValue>> enumConstantMap = new HashMap<>();
-		List<SysConstant> constants = constantService.findAll();
-		for (SysConstant constant : constants) {
-			String type = constant.getType();
-			List<KeyValue> kvList = enumConstantMap.get(type);
-			if (kvList == null) {
-				kvList = new ArrayList<>();
-				enumConstantMap.put(type, kvList);
+	private static Map<String, List<KeyValue>> otherConstantMap = new HashMap<>();
+
+	public synchronized boolean initialize(boolean needReadTable) {
+
+		if (needReadTable) {
+			Map<String, List<KeyValue>> enumConstantMap = new HashMap<>();
+			Map<String, Map<String, String>> constantValueMap = new HashMap<>();
+			Map<String, Map<String, String>> constantKeyMap = new HashMap<>();
+
+			List<SysConstant> constants = constantService.findAll();
+			for (SysConstant constant : constants) {
+				String type = constant.getType();
+				List<KeyValue> kvList = enumConstantMap.get(type);
+				if (kvList == null) {
+					kvList = new ArrayList<>();
+					enumConstantMap.put(type, kvList);
+				}
+
+				String code = constant.getCode();
+				String name = constant.getName();
+
+				kvList.add(new KeyValue(code, name));
+
+				Map<String, String> valueMap = constantValueMap.get(type);
+				if (valueMap == null) {
+					valueMap = new HashMap<>();
+					constantValueMap.put(type, valueMap);
+				}
+
+				valueMap.put(name, code);
+
+				Map<String, String> keyMap = constantKeyMap.get(type);
+				if (keyMap == null) {
+					keyMap = new HashMap<>();
+					constantKeyMap.put(type, keyMap);
+				}
+
+				keyMap.put(code, name);
 			}
 
-			String code = constant.getCode();
-			String name = constant.getName();
-
-			kvList.add(new KeyValue(code, name));
-
-			Map<String, String> valueMap = constantValueMap.get(type);
-			if (valueMap == null) {
-				valueMap = new HashMap<>();
-				constantValueMap.put(type, valueMap);
-			}
-
-			valueMap.put(name, code);
-
-			Map<String, String> keyMap = constantKeyMap.get(type);
-			if (keyMap == null) {
-				keyMap = new HashMap<>();
-				constantKeyMap.put(type, keyMap);
-			}
-
-			keyMap.put(code, name);
+			ConstantsContainer.constantMap = enumConstantMap;
+			ConstantsContainer.constantValueMap = constantValueMap;
+			ConstantsContainer.constantKeyMap = constantKeyMap;
 		}
 
-		constantMap = enumConstantMap;
+		for (Entry<String, List<KeyValue>> entry : otherConstantMap.entrySet()) {
+			String type = entry.getKey();
+			List<KeyValue> kvs = entry.getValue();
+
+			Map<String, String> valueMap = ConstantsContainer.constantValueMap.get(type);
+			if (valueMap == null) {
+				valueMap = new HashMap<>();
+				ConstantsContainer.constantValueMap.put(type, valueMap);
+			} else {
+				valueMap.clear();
+			}
+
+			Map<String, String> keyMap = ConstantsContainer.constantKeyMap.get(type);
+			if (keyMap == null) {
+				keyMap = new HashMap<>();
+				ConstantsContainer.constantKeyMap.put(type, keyMap);
+			} else {
+				keyMap.clear();
+			}
+
+			for (KeyValue kv : kvs) {
+				String code = kv.getKey();
+				String name = kv.getValue();
+
+				valueMap.put(name, code);
+				keyMap.put(code, name);
+			}
+
+			ConstantsContainer.constantMap.put(type, kvs);
+		}
+
 		return true;
 	}
 
@@ -66,21 +109,22 @@ public class ConstantsContainer implements VersionContainer {
 		return "constants_container";
 	}
 
-	private static ConstantsContainer container;
-
-	public static ConstantsContainer getInstance() {
-		return container;
+	@Override
+	public boolean versionChangedHandle(long version) {
+		initialize(true);
+		container = this;
+		return true;
 	}
+
+	public void putConstant(String typeCode, List<KeyValue> list) {
+		otherConstantMap.put(typeCode, list);
+		initialize(false);
+	}
+
+	private static ConstantsContainer container;
 
 	public static void updateData() {
 		VersionContainerManager.versionChanged(container.getId());
-	}
-
-	@Override
-	public boolean versionChangedHandle(long version) {
-		initialize();
-		container = this;
-		return true;
 	}
 
 	public static Map<String, List<KeyValue>> getTypeChildren(String... typeCodes) {
