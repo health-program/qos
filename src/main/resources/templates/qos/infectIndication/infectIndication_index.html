@@ -99,16 +99,17 @@
     }
     var canAdd = $("#canAdd").val();
     function add() {
-        alert(canAdd);
-        if(canAdd){
+
+        if(canAdd === 'true'){
             window.location = '/qos/infectIndication/add';
+
         }else{
+
             $.errorMessage("添加记录未满半年！");
         }
 
     }
 
-    alert(row);
     function detail(row) {
         window.location = '/qos/infectIndication/detail' + (row ? ('?id=' + row.id) : '');
     }

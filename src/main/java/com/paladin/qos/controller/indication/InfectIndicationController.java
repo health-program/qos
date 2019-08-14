@@ -43,21 +43,16 @@ public class InfectIndicationController extends ControllerSupport {
 
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = InfectIndicationQuery.class)
-	public String index() {
+	public String index(Model model) {
+		Boolean canAdd=infectIndicationService.canAdd();
+		model.addAttribute("canAdd",canAdd);
 		return "/qos/infectIndication/infectIndication_index";
 	}
 
 	@RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	@QueryOutputMethod(queryClass = InfectIndicationQuery.class, paramIndex = 0)
-	public Object findPage(InfectIndicationQuery query,Model model) {
-		Boolean canAdd=false;
-		try {
-			canAdd=infectIndicationService.canAdd();
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		model.addAttribute("canAdd",canAdd);
+	public Object findPage(InfectIndicationQuery query) {
 		return CommonResponse.getSuccessResponse(infectIndicationService.searchFindPage(query));
 	}
 
@@ -69,7 +64,6 @@ public class InfectIndicationController extends ControllerSupport {
 
 	@GetMapping("/add")
 	public String addInput(Model model) {
-
 		return "/qos/infectIndication/infectIndication_add";
 	}
 

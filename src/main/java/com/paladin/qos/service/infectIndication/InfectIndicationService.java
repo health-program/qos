@@ -7,24 +7,17 @@ import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
 import com.paladin.qos.mapper.infectIndication.InfectIndicationMapper;
 import com.paladin.qos.model.infectIndication.InfectIndication;
 import com.paladin.qos.service.infectIndication.dto.InfectIndicationDTO;
 import com.paladin.qos.service.infectIndication.dto.InfectIndicationQuery;
 import com.paladin.qos.service.infectIndication.vo.InfectIndicationVO;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class InfectIndicationService extends ServiceSupport<InfectIndication> {
@@ -83,18 +76,18 @@ public class InfectIndicationService extends ServiceSupport<InfectIndication> {
     }
 
     //判断半年后新增
-    public Boolean canAdd() throws ParseException {
-        InfectIndication infectIndication=infectIndicationMapper.findRecentlyRecord();
+    public Boolean canAdd() {
+        InfectIndication infectIndication = infectIndicationMapper.findRecentlyRecord();
         //todo test
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        Date testDate=sdf.parse("2019-2-12");
-        if (null!=infectIndication){
-            Date recordDate=infectIndication.getCreateTime();
-            Calendar c=Calendar.getInstance();
-            c.setTime(testDate);
-            c.add(Calendar.MONTH,6);
-            Date currentTime=new Date();
-            if (c.getTime().after(currentTime)){
+//        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+//        Date testDate=sdf.parse("2019-2-13");
+        if (null != infectIndication) {
+            Date recordDate = infectIndication.getCreateTime();
+            Calendar c = Calendar.getInstance();
+            c.setTime(recordDate);
+            c.add(Calendar.MONTH, 6);
+            Date currentTime = new Date();
+            if (c.getTime().after(currentTime)) {
                 return false;
             }
         }
