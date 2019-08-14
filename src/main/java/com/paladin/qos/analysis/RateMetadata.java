@@ -1,10 +1,6 @@
 package com.paladin.qos.analysis;
 
 public class RateMetadata {
-
-	public final static int TIME_TYPE_YEAR = 10;
-	public final static int TIME_TYPE_MONTH = 11;
-	public final static int TIME_TYPE_DAY = 12;
 	
 	private long totalNum;
 	private long eventNum;
@@ -19,6 +15,8 @@ public class RateMetadata {
 	
 	// 机构、群体维度
 	private String unitValue;
+	
+	private String eventId;
 
 	public int getTimeType() {
 		return timeType;
@@ -90,6 +88,14 @@ public class RateMetadata {
 
 	public void setWeekMonth(int weekMonth) {
 		this.weekMonth = weekMonth;
+	}
+
+	public String getEventId() {
+		return eventId;
+	}
+
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 	
 	

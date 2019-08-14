@@ -5,4 +5,6 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 
 public interface DataProcessedDayMapper extends CustomMapper<DataProcessedDay>{
 
+	public int updateData(DataProcessedDay model);
+	
 }

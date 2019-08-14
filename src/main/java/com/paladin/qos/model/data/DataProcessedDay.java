@@ -30,10 +30,10 @@ public class DataProcessedDay {
 	private String unitId;
 
 	// 样本总数
-	private Integer totalNum;
+	private Long totalNum;
 
 	// 事件总数
-	private Integer eventNum;
+	private Long eventNum;
 
 	// 比率
 	private String rate;
@@ -102,19 +102,19 @@ public class DataProcessedDay {
 		this.unitId = unitId;
 	}
 
-	public Integer getTotalNum() {
+	public Long getTotalNum() {
 		return totalNum;
 	}
 
-	public void setTotalNum(Integer totalNum) {
+	public void setTotalNum(Long totalNum) {
 		this.totalNum = totalNum;
 	}
 
-	public Integer getEventNum() {
+	public Long getEventNum() {
 		return eventNum;
 	}
 
-	public void setEventNum(Integer eventNum) {
+	public void setEventNum(Long eventNum) {
 		this.eventNum = eventNum;
 	}
 
