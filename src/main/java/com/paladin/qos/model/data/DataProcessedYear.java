@@ -24,7 +24,7 @@ public class DataProcessedYear {
 	private Integer eventNum;
 
 	// 
-	private String rate;
+	private Integer rate;
 
 	public String getId() {
 		return id;
@@ -74,12 +74,13 @@ public class DataProcessedYear {
 		this.eventNum = eventNum;
 	}
 
-	public String getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
+
 
 }

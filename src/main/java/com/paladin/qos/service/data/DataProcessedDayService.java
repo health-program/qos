@@ -1,5 +1,6 @@
 package com.paladin.qos.service.data;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,8 @@ public class DataProcessedDayService extends ServiceSupport<DataProcessedDay> {
 
 	@Autowired
 	private DataProcessedDayMapper dataProcessedDayMapper;
+	
+	
 
 	public boolean updateOrSave(DataProcessedDay model) {
 		if (dataProcessedDayMapper.updateData(model) == 0) {
@@ -22,4 +25,6 @@ public class DataProcessedDayService extends ServiceSupport<DataProcessedDay> {
 		return true;
 	}
 
+
+	
 }

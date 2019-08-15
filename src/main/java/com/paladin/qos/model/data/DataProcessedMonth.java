@@ -16,6 +16,9 @@ public class DataProcessedMonth {
 
 	// 月份
 	private Integer month;
+	
+	// 顺序号
+	private Integer serialNumber;
 
 	// 机构ID
 	private String unitId;
@@ -27,7 +30,7 @@ public class DataProcessedMonth {
 	private Integer eventNum;
 
 	// 
-	private String rate;
+	private Integer rate;
 
 	public String getId() {
 		return id;
@@ -85,12 +88,22 @@ public class DataProcessedMonth {
 		this.eventNum = eventNum;
 	}
 
-	public String getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
+
+	public Integer getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(Integer serialNumber) {
+		this.serialNumber = serialNumber;
+	}
+
+	
 
 }

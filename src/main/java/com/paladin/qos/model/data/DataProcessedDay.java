@@ -3,7 +3,14 @@ package com.paladin.qos.model.data;
 import javax.persistence.Id;
 
 public class DataProcessedDay {
-
+	
+	public static final String COLUMN_FIELD_EVENT_ID = "eventId";
+	public static final String COLUMN_FIELD_UNIT_ID = "unitId";
+	
+	public static final String COLUMN_FIELD_YEAR = "year";
+	public static final String COLUMN_FIELD_MONTH = "month";
+	public static final String COLUMN_FIELD_DAY = "day";
+	
 	// ID
 	@Id
 	private String id;
@@ -26,6 +33,9 @@ public class DataProcessedDay {
 	// 按月第几个星期
 	private Integer weekMonth;
 
+	// 顺序号
+	private Integer serialNumber;
+	
 	// 机构单位ID
 	private String unitId;
 
@@ -36,7 +46,7 @@ public class DataProcessedDay {
 	private Long eventNum;
 
 	// 比率
-	private String rate;
+	private Integer rate;
 
 	public String getId() {
 		return id;
@@ -118,12 +128,21 @@ public class DataProcessedDay {
 		this.eventNum = eventNum;
 	}
 
-	public String getRate() {
+	public Integer getRate() {
 		return rate;
 	}
 
-	public void setRate(String rate) {
+	public void setRate(Integer rate) {
 		this.rate = rate;
 	}
+
+	public Integer getSerialNumber() {
+		return serialNumber;
+	}
+
+	public void setSerialNumber(Integer serialNumber) {
+		this.serialNumber = serialNumber;
+	}
+
 
 }

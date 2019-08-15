@@ -1,6 +1,7 @@
 package com.paladin.qos.analysis;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -72,4 +73,25 @@ public class TimeUtil {
 
 	}
 
+	public static int getSerialNumberByDay(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+
+		return year * 10000 + month * 100 + day;
+	}
+
+	
+	public static int getSerialNumberByMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+
+		return year * 100 + month;
+	}
 }

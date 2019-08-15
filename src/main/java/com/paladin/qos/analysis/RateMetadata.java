@@ -12,7 +12,7 @@ public class RateMetadata {
 	private int day;
 	private int weekYear;
 	private int weekMonth;
-	
+		
 	// 机构、群体维度
 	private String unitValue;
 	
@@ -97,6 +97,5 @@ public class RateMetadata {
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
-	
 	
 }
