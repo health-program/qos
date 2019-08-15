@@ -34,9 +34,6 @@ public class InfectionController extends ControllerSupport {
     @Autowired
     private InfectionService infectionService;
 
-    @Autowired
-    private SysUserService sysUserService;
-
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = InfectionQuery.class)
 	public String index(Model model) {

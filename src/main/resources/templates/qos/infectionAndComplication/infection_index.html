@@ -63,7 +63,7 @@
             idField: "id",
             columns: [
                 [
-                    {title: "医院感染总发生率", field: "totalInfection"},
+                    {title: "医院感染总发生率", field: "totalInfection",formatter: getRate},
                     {title: "创建时间", field: "createTime",formatter: "datetime"},
                     {title: "创建人", field: "createUserId"},
                     {
@@ -108,6 +108,9 @@
             $.errorMessage("添加记录未满半年！");
         }
 
+    }
+    function getRate(value, row, index){
+        return value+"%";
     }
 
     function detail(row) {

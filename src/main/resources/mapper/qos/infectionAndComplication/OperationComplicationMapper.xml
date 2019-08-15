@@ -17,7 +17,7 @@
 				o.anaesthesia,
 				o.create_time as createTime,
 				s.account as  createUserId
-		FROM operattion_index o
+		FROM operation_complication o
 		left join sys_user as s on s.id = o.create_user_id 
 		where 1=1 
 		<if test="embolism != null and embolism != '' ">
@@ -47,7 +47,7 @@
 			o.create_time AS createTime,
 			s.account AS createUserId
 		FROM
-			operattion_index as o
+			operation_complication as o
 		left join sys_user as s on s.id = o.create_user_id 
 		where 1=1
 		ORDER BY
@@ -62,7 +62,7 @@
     
     <!-- 新增 -->
     <insert id="insertInto">
-    		insert into operattion_index
+    		insert into operation_complication
     		    (
     		    id,
   				embolism,
@@ -104,14 +104,14 @@
 				o.sudden_death as suddenDeath,
 				o.operative_complications as operativeComplications,
 				o.anaesthesia
-			FROM operattion_index as  o where  id = #{0}
+			FROM operation_complication as  o where  id = #{0}
          </select>
          
          
          
          
          <update id="updates">
-            update operattion_index as o 
+            update operation_complication as o
              set
 	             o.embolism = #{embolism},
 	             o.pulmonary_embolism = #{pulmonaryEmbolism},
@@ -128,6 +128,6 @@
          
     <!-- 刪除 -->
       <delete id="deletes">
-      		delete from operattion_index where id = #{id}
+      		delete from operation_complication where id = #{id}
       </delete>
 </mapper>
