@@ -210,12 +210,12 @@ public class DataProcessContainer implements SpringContainer {
 
 	private String getRate(long totalNum, long eventNum) {
 		if (totalNum == 0 || eventNum == 0) {
-			return "0.00%";
+			return "0.00";
 		}
 
 		long r = eventNum * 100000 / totalNum;
 		if (r < 5) {
-			return "0.00%";
+			return "0.00";
 		}
 
 		r += 5;
@@ -234,7 +234,6 @@ public class DataProcessContainer implements SpringContainer {
 
 		sb.insert(size - 3, '.');
 		sb.deleteCharAt(size);
-		sb.append("%");
 
 		return sb.toString();
 	}

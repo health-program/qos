@@ -4,8 +4,6 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.infectIndication.InfectIndication;
 import com.paladin.qos.service.infectIndication.dto.InfectIndicationQuery;
 import com.paladin.qos.service.infectIndication.vo.InfectIndicationVO;
-import com.paladin.qos.service.school.dto.OrgSchoolQuery;
-import com.paladin.qos.service.school.vo.OrgSchoolVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

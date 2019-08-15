@@ -1,8 +1,6 @@
 package com.paladin.qos.service.infectIndication.dto;
 
 import java.util.Date;
-import java.util.List;
-
 
 public class InfectIndicationDTO {
 

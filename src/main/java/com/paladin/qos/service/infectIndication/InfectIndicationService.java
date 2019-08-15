@@ -14,17 +14,14 @@ import com.paladin.qos.service.infectIndication.dto.InfectIndicationDTO;
 import com.paladin.qos.service.infectIndication.dto.InfectIndicationQuery;
 import com.paladin.qos.service.infectIndication.vo.InfectIndicationVO;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class InfectIndicationService extends ServiceSupport<InfectIndication> {
