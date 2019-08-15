@@ -165,18 +165,19 @@ public class DataProcessContainer implements SpringContainer {
 		int month = rateMetadata.getMonth();
 		int day = rateMetadata.getDay();
 		String eventId = rateMetadata.getEventId();
+		String unitId = rateMetadata.getUnitValue();
 
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(eventId);
+		sb.append('_').append(unitId).append('_');
 		sb.append(year);
 		if (month < 10) {
-			sb.append("0");
+			sb.append('0');
 		}
 		sb.append(month);
 		if (day < 10) {
-			sb.append("0");
+			sb.append('0');
 		}
 		sb.append(day);
-		sb.append("_").append(eventId);
 
 		String id = sb.toString();
 
@@ -208,15 +209,32 @@ public class DataProcessContainer implements SpringContainer {
 	}
 
 	private String getRate(long totalNum, long eventNum) {
-		if (totalNum == 0)
-			return "0%";
+		if (totalNum == 0 || eventNum == 0) {
+			return "0.00";
+		}
+
 		long r = eventNum * 100000 / totalNum;
+		if (r < 5) {
+			return "0.00";
+		}
+
 		r += 5;
-		StringBuilder sb = new StringBuilder(String.valueOf(r));
-		int size = sb.length();
+
+		StringBuilder sb = new StringBuilder();
+		String s = String.valueOf(r);
+		int size = s.length();
+		if (size == 2) {
+			sb.append('0').append('0');
+		} else if (size == 3) {
+			sb.append('0');
+		}
+
+		sb.append(s);
+		size = sb.length();
+
 		sb.insert(size - 3, '.');
 		sb.deleteCharAt(size);
-		sb.append("%");
+
 		return sb.toString();
 	}
 
