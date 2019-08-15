@@ -1,19 +1,21 @@
-package com.paladin.qos.service.operationComplication.vo;
+package com.paladin.qos.model.infectionAndComplication;
 
+import javax.persistence.Id;
 import java.util.Date;
 
-public class OperationComplicationVO {
-
+public class OperationComplication {
+	 @Id
 	 public String id;
-	 public String getId() {
+     public String embolism;
+     public String getId() {
 		return id;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	
+     
     public Date createTime;
-    public Date getCreateTime() {
+    public String createUserId;
+    public Date updateTime;
+    public String updateUserId;
+	public Date getCreateTime() {
 		return createTime;
 	}
 	public void setCreateTime(Date createTime) {
@@ -37,19 +39,16 @@ public class OperationComplicationVO {
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
 	}
-
-	public String createUserId;
-    public Date updateTime;
-    public String updateUserId;
-    
-	public String embolism;
-	  public String pulmonaryEmbolism;
-	  public String venousThrombosis;
-	  public String hematoma;
-	  public String woundDehiscence;
-	  public String suddenDeath;
-	  public String operativeComplications;
-	  public String anaesthesia;
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String pulmonaryEmbolism;
+     public String venousThrombosis;
+     public String hematoma;
+     public String woundDehiscence;
+     public String suddenDeath;
+     public String operativeComplications;
+     public String anaesthesia;
 	public String getEmbolism() {
 		return embolism;
 	}
@@ -98,4 +97,5 @@ public class OperationComplicationVO {
 	public void setAnaesthesia(String anaesthesia) {
 		this.anaesthesia = anaesthesia;
 	}
+     
 }

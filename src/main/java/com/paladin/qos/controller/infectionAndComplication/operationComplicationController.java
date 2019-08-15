@@ -1,40 +1,36 @@
-package com.paladin.qos.controller.operationComplication;
+package com.paladin.qos.controller.infectionAndComplication;
 
-import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.operationComplication.dto.operationComplicationExportCondition;
-import com.paladin.qos.model.operationComplication.OperationComplication;
-import com.paladin.qos.service.operationComplication.OperationComplicationService;
-import com.paladin.qos.service.operationComplication.dto.OperationComplicationQueryDTO;
-import com.paladin.qos.service.operationComplication.vo.OperationComplicationVO;
- 
+import com.paladin.qos.controller.infectionAndComplication.dto.operationComplicationExportCondition;
+
+import com.paladin.qos.model.infectionAndComplication.OperationComplication;
+import com.paladin.qos.service.infectionAndComplication.OperationComplicationService;
+import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
+import com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @Controller
 @RequestMapping("/qos/operationComplication")
 public class operationComplicationController {
 	
-	@Autowired 
-	OperationComplicationService  operationComplicationService;
+	@Autowired
+	OperationComplicationService operationComplicationService;
 	
 	@GetMapping("/index")
 	public String index(Model model) {
 		//Boolean canAdd=operationComplicationService.canAdd();
 		//model.addAttribute("canAdd",canAdd);
 		
-		return "/qos/operationComplication/operationComplication_index";
+		return "/qos/infectionAndComplication/operationComplication_index";
 	}
 	
 	
@@ -52,7 +48,7 @@ public class operationComplicationController {
 		//新增
 		@RequestMapping("/add")
 		public String add() {
-			return "/qos/operationComplication/operationComplication_add";
+			return "/qos/infectionAndComplication/operationComplication_add";
 		}
 		
 	 
@@ -78,7 +74,7 @@ public class operationComplicationController {
 		 @GetMapping("/detail")
 		    public String detail(@RequestParam String id,Model model) {
 		 	   model.addAttribute("id", id);
-		 	  return "/qos/operationComplication/operationComplication_detail"; 
+		 	  return "/qos/infectionAndComplication/operationComplication_detail";
 		 	}
  
 		@RequestMapping(value = "/get", method = {RequestMethod.POST,RequestMethod.GET})

@@ -1,47 +1,29 @@
-package com.paladin.qos.service.operationComplication.dto;
+package com.paladin.qos.service.infectionAndComplication.dto;
 
-import java.util.Date;
-
-import com.paladin.framework.common.OffsetPage;
-
-public class OperationComplicationQueryDTO extends  OffsetPage {
+public class OperationComplicationDTO {
+	public String id;
+	  public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	public String embolism;
-    public Date createTime;
-    public String createUserId;
-    public Date updateTime;
-    public String updateUserId;
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-	public String getCreateUserId() {
+	public String createUserId;
+	
+	  public String getCreateUserId() {
 		return createUserId;
 	}
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-	public String getUpdateUserId() {
-		return updateUserId;
-	}
-	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
-	}
-	
 	public String pulmonaryEmbolism;
-     public String venousThrombosis;
-     public String hematoma;
-     public String woundDehiscence;
-     public String suddenDeath;
-     public String operativeComplications;
-     public String anaesthesia;
+	  public String venousThrombosis;
+	  public String hematoma;
+	  public String woundDehiscence;
+	  public String suddenDeath;
+	  public String operativeComplications;
+	  public String anaesthesia;
 	public String getEmbolism() {
 		return embolism;
 	}
@@ -90,5 +72,5 @@ public class OperationComplicationQueryDTO extends  OffsetPage {
 	public void setAnaesthesia(String anaesthesia) {
 		this.anaesthesia = anaesthesia;
 	}
-	 
+	  
 }

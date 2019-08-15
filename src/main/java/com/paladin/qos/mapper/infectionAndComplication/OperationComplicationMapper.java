@@ -1,12 +1,12 @@
-package com.paladin.qos.mapper.operationComplication;
-import java.util.List;
+package com.paladin.qos.mapper.infectionAndComplication;
 
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
-import com.paladin.qos.model.operationComplication.OperationComplication;
-import com.paladin.qos.service.operationComplication.dto.OperationComplicationDTO;
-import com.paladin.qos.service.operationComplication.dto.OperationComplicationQueryDTO;
-import com.paladin.qos.service.operationComplication.vo.OperationComplicationVO;
+import com.paladin.qos.model.infectionAndComplication.OperationComplication;
+import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
+import com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO;
 
+
+import java.util.List;
 
 
 public interface OperationComplicationMapper extends CustomMapper<OperationComplication>{
