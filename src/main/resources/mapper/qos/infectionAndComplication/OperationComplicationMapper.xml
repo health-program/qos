@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.infectionAndComplication.OperationComplicationMapper">
+
+
+   <!--查看全部-->
+   <select id="infectIndicationAll" resultType="com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO">
+         SELECT
+   			    o.id,
+   		  		o.embolism,
+				o.pulmonary_embolism as pulmonaryEmbolism,
+				o.venous_thrombosis as venousThrombosis,
+				o.hematoma,
+				o.wound_dehiscence as woundDehiscence,
+				o.sudden_death as suddenDeath,
+				o.operative_complications as operativeComplications,
+				o.anaesthesia,
+				o.create_time as createTime,
+				s.account as  createUserId
+		FROM operation_complication o
+		left join sys_user as s on s.id = o.create_user_id 
+		where 1=1 
+		<if test="embolism != null and embolism != '' ">
+		 and embolism=#{embolism}
+		</if>
+		<if test="pulmonaryEmbolism != null and pulmonaryEmbolism != ''">
+		  and pulmonaryEmbolism=#{pulmonaryEmbolism}
+		 </if>
+		 <if test="createUserId !=null and createUserId != '' ">
+            AND create_user_id LIKE CONCAT('%',#{createUserId},'%')
+        </if>
+    </select>
+    
+    
+    <!-- 查看最近半年 -->
+    <select id="findRecentlyRecord" resultType="com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO">
+      SELECT
+			o.id,
+			o.embolism,
+			o.pulmonary_embolism AS pulmonaryEmbolism,
+			o.venous_thrombosis AS venousThrombosis,
+			o.hematoma,
+			o.wound_dehiscence AS woundDehiscence,
+			o.sudden_death AS suddenDeath,
+			o.operative_complications AS operativeComplications,
+			o.anaesthesia,
+			o.create_time AS createTime,
+			s.account AS createUserId
+		FROM
+			operation_complication as o
+		left join sys_user as s on s.id = o.create_user_id 
+		where 1=1
+		ORDER BY
+			o.create_time DESC
+		LIMIT 1 
+    </select>
+    
+    
+ 
+    
+    
+    
+    <!-- 新增 -->
+    <insert id="insertInto">
+    		insert into operation_complication
+    		    (
+    		    id,
+  				embolism,
+				pulmonary_embolism ,
+				venous_thrombosis,
+				hematoma,
+				wound_dehiscence,
+				sudden_death,
+				operative_complications,
+				anaesthesia,
+				create_time,
+				create_user_id
+				)
+    	   values (
+    		  #{id},
+    		  #{embolism},
+    		  #{pulmonaryEmbolism},
+    		  #{venousThrombosis},
+    		  #{hematoma},
+    		  #{woundDehiscence},
+    		  #{suddenDeath},
+    		  #{operativeComplications},
+    		  #{anaesthesia},
+    		  #{createTime},
+    		  #{createUserId}
+    		)
+     </insert>
+    
+    
+    <!--查看详情开始--> 
+         <select id="queryById" parameterType="string"	resultType="com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO">
+            SELECT 
+                o.id,
+                o.embolism,
+				o.pulmonary_embolism as pulmonaryEmbolism,
+				o.venous_thrombosis as venousThrombosis,
+				o.hematoma,
+				o.wound_dehiscence as woundDehiscence,
+				o.sudden_death as suddenDeath,
+				o.operative_complications as operativeComplications,
+				o.anaesthesia
+			FROM operation_complication as  o where  id = #{0}
+         </select>
+         
+         
+         
+         
+         <update id="updates">
+            update operation_complication as o
+             set
+	             o.embolism = #{embolism},
+	             o.pulmonary_embolism = #{pulmonaryEmbolism},
+	             o.venous_thrombosis = #{venousThrombosis},
+	             o.hematoma = #{hematoma},
+	             o.wound_dehiscence = #{woundDehiscence},
+	             o.sudden_death = #{suddenDeath},
+	             o.operative_complications = #{operativeComplications},
+	             o.anaesthesia = #{anaesthesia},
+	             o.update_time = #{updateTime}
+  			 where id = #{id}
+         </update>
+         
+         
+    <!-- 刪除 -->
+      <delete id="deletes">
+      		delete from operation_complication where id = #{id}
+      </delete>
+</mapper>

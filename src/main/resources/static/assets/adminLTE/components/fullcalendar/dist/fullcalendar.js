@@ -6936,7 +6936,7 @@ var DayGrid = /** @class */ (function (_super) {
     };
     /* Event Drag Visualization
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of an event or external element being dragged.
+    // Renders a visual infectionAndComplication of an event or external element being dragged.
     // `eventLocation` has zoned start and end (optional)
     DayGrid.prototype.renderDrag = function (eventFootprints, seg, isTouch) {
         var i;
@@ -6949,14 +6949,14 @@ var DayGrid = /** @class */ (function (_super) {
             return true; // signal helpers rendered
         }
     };
-    // Unrenders any visual indication of a hovering event
+    // Unrenders any visual infectionAndComplication of a hovering event
     DayGrid.prototype.unrenderDrag = function () {
         this.unrenderHighlight();
         this.helperRenderer.unrender();
     };
     /* Event Resize Visualization
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of an event being resized
+    // Renders a visual infectionAndComplication of an event being resized
     DayGrid.prototype.renderEventResize = function (eventFootprints, seg, isTouch) {
         var i;
         for (i = 0; i < eventFootprints.length; i++) {
@@ -6964,7 +6964,7 @@ var DayGrid = /** @class */ (function (_super) {
         }
         this.helperRenderer.renderEventResizingFootprints(eventFootprints, seg, isTouch);
     };
-    // Unrenders a visual indication of an event being resized
+    // Unrenders a visual infectionAndComplication of an event being resized
     DayGrid.prototype.unrenderEventResize = function () {
         this.unrenderHighlight();
         this.helperRenderer.unrender();
@@ -8957,7 +8957,7 @@ var DateComponent = /** @class */ (function (_super) {
     };
     // Drag-n-Drop Rendering (for both events and external elements)
     // ---------------------------------------------------------------------------------------------------------------
-    // Renders a visual indication of a event or external-element drag over the given drop zone.
+    // Renders a visual infectionAndComplication of a event or external-element drag over the given drop zone.
     // If an external-element, seg will be `null`.
     // Must return elements used for any mock events.
     DateComponent.prototype.renderDrag = function (eventFootprints, seg, isTouch) {
@@ -8969,29 +8969,29 @@ var DateComponent = /** @class */ (function (_super) {
         });
         return renderedHelper;
     };
-    // Unrenders a visual indication of an event or external-element being dragged.
+    // Unrenders a visual infectionAndComplication of an event or external-element being dragged.
     DateComponent.prototype.unrenderDrag = function () {
         this.callChildren('unrenderDrag', arguments);
     };
     // Event Resizing
     // ---------------------------------------------------------------------------------------------------------------
-    // Renders a visual indication of an event being resized.
+    // Renders a visual infectionAndComplication of an event being resized.
     DateComponent.prototype.renderEventResize = function (eventFootprints, seg, isTouch) {
         this.callChildren('renderEventResize', arguments);
     };
-    // Unrenders a visual indication of an event being resized.
+    // Unrenders a visual infectionAndComplication of an event being resized.
     DateComponent.prototype.unrenderEventResize = function () {
         this.callChildren('unrenderEventResize', arguments);
     };
     // Selection
     // ---------------------------------------------------------------------------------------------------------------
-    // Renders a visual indication of the selection
+    // Renders a visual infectionAndComplication of the selection
     // TODO: rename to `renderSelection` after legacy is gone
     DateComponent.prototype.renderSelectionFootprint = function (componentFootprint) {
         this.renderHighlight(componentFootprint);
         this.callChildren('renderSelectionFootprint', arguments);
     };
-    // Unrenders a visual indication of selection
+    // Unrenders a visual infectionAndComplication of selection
     DateComponent.prototype.unrenderSelection = function () {
         this.unrenderHighlight();
         this.callChildren('unrenderSelection', arguments);
@@ -11065,7 +11065,7 @@ var EventDragging = /** @class */ (function (_super) {
                     eventDefMutation = null;
                     util_1.disableCursor();
                 }
-                // if a valid drop location, have the subclass render a visual indication
+                // if a valid drop location, have the subclass render a visual infectionAndComplication
                 if (eventDefMutation &&
                     view.renderDrag(// truthy if rendered something
                     component.eventRangesToEventFootprints(mutatedEventInstanceGroup.sliceRenderRanges(component.dateProfile.renderUnzonedRange, calendar)), seg, dragListener.isTouch)) {
@@ -11554,7 +11554,7 @@ var AgendaView = /** @class */ (function (_super) {
     };
     /* Selection
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of a selection
+    // Renders a visual infectionAndComplication of a selection
     AgendaView.prototype.renderSelectionFootprint = function (componentFootprint) {
         if (!componentFootprint.isAllDay) {
             this.timeGrid.renderSelectionFootprint(componentFootprint);
@@ -12079,7 +12079,7 @@ var TimeGrid = /** @class */ (function (_super) {
     };
     /* Event Drag Visualization
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of an event being dragged over the specified date(s).
+    // Renders a visual infectionAndComplication of an event being dragged over the specified date(s).
     // A returned value of `true` signals that a mock "helper" event has been rendered.
     TimeGrid.prototype.renderDrag = function (eventFootprints, seg, isTouch) {
         var i;
@@ -12096,24 +12096,24 @@ var TimeGrid = /** @class */ (function (_super) {
             }
         }
     };
-    // Unrenders any visual indication of an event being dragged
+    // Unrenders any visual infectionAndComplication of an event being dragged
     TimeGrid.prototype.unrenderDrag = function () {
         this.unrenderHighlight();
         this.helperRenderer.unrender();
     };
     /* Event Resize Visualization
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of an event being resized
+    // Renders a visual infectionAndComplication of an event being resized
     TimeGrid.prototype.renderEventResize = function (eventFootprints, seg, isTouch) {
         this.helperRenderer.renderEventResizingFootprints(eventFootprints, seg, isTouch);
     };
-    // Unrenders any visual indication of an event being resized
+    // Unrenders any visual infectionAndComplication of an event being resized
     TimeGrid.prototype.unrenderEventResize = function () {
         this.helperRenderer.unrender();
     };
     /* Selection
     ------------------------------------------------------------------------------------------------------------------*/
-    // Renders a visual indication of a selection. Overrides the default, which was to simply render a highlight.
+    // Renders a visual infectionAndComplication of a selection. Overrides the default, which was to simply render a highlight.
     TimeGrid.prototype.renderSelectionFootprint = function (componentFootprint) {
         if (this.opt('selectHelper')) {
             this.helperRenderer.renderComponentFootprint(componentFootprint);
@@ -12122,7 +12122,7 @@ var TimeGrid = /** @class */ (function (_super) {
             this.renderHighlight(componentFootprint);
         }
     };
-    // Unrenders any visual indication of a selection
+    // Unrenders any visual infectionAndComplication of a selection
     TimeGrid.prototype.unrenderSelection = function () {
         this.helperRenderer.unrender();
         this.unrenderHighlight();
