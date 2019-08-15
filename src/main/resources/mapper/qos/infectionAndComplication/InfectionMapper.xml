@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.paladin.qos.mapper.infectIndication.InfectIndicationMapper">
-	<resultMap id="BaseResultMap" type="com.paladin.qos.model.infectIndication.InfectIndication">
+<mapper namespace="com.paladin.qos.mapper.infectionAndComplication.InfectionMapper">
+	<resultMap id="BaseResultMap" type="com.paladin.qos.model.infectionAndComplication.Infection">
 		<id column="id" jdbcType="VARCHAR" property="id" />
         <!--医院的对象-->
         <result column="hospital_id" jdbcType="VARCHAR" property="hospitalId" />
@@ -38,8 +38,10 @@
         update_user_id
     </sql>
 
-    <insert id="insert" parameterType="com.paladin.qos.model.infectIndication.InfectIndication">
-        insert into infect_indication (id,
+
+    <insert id="insert" parameterType="com.paladin.qos.model.infectionAndComplication.Infection">
+        insert into infection (
+        id,
         hospital_id,
         total_infection,
         operating_departments_infection,
@@ -61,8 +63,8 @@
         #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR})
     </insert>
 
-    <update id="update" parameterType="com.paladin.qos.model.infectIndication.InfectIndication">
-        update infect_indication
+    <update id="update" parameterType="com.paladin.qos.model.infectionAndComplication.Infection">
+        update infection
         set total_infection = #{totalInfection,jdbcType=VARCHAR},
         operating_departments_infection = #{operatingDepartmentsInfection,jdbcType=DOUBLE},
         operating_part_infection = #{operatingPartInfection,jdbcType=DOUBLE},
@@ -79,13 +81,14 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
-    <select id="findInfectRecord" resultType="com.paladin.qos.service.infectIndication.vo.InfectIndicationVO">
-        SELECT i.id,i.`total_infection` AS totalInfection,i.`create_time` as createTime,i.`create_user_id` AS  createUserId
+    <select id="findInfectRecord" resultType="com.paladin.qos.service.infectionAndComplication.vo.InfectionVO">
+        SELECT i.id,i.`total_infection` AS totalInfection,i.`create_time` as createTime, s.account AS createUserId
         FROM
-        infect_indication as i
+        infection as i
+        LEFT JOIN sys_user s ON i.create_user_id=s.id
         WHERE 1=1
         <if test="createUserId !=null and createUserId != '' ">
-            AND create_user_id LIKE CONCAT('%',#{createUserId},'%')
+            AND s.account LIKE CONCAT('%',#{createUserId},'%')
         </if>
         <!--<if test="dateBegin != null and dateBegin!=''">-->
             <!--and create_time <![CDATA[ >= ]]>Date(#{dateBegin})-->
@@ -94,13 +97,13 @@
             <!--and create_time <![CDATA[ <= ]]>Date(#{dateEnd})-->
         <!--</if>-->
 
-        ORDER BY create_time DESC
+        ORDER BY i.create_time DESC
     </select>
 
     <select id="findRecentlyRecord" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM
-        infect_indication
+        infection
         ORDER BY create_time DESC
         limit 1
     </select>
@@ -108,12 +111,12 @@
     <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from infect_indication
+        from infection
         where id = #{id,jdbcType=VARCHAR}
     </select>
 
     <delete id="deleteById" parameterType="String">
-        delete from infect_indication
+        delete from infection
          where id = #{id,jdbcType=VARCHAR}
     </delete>
 

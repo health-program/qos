@@ -87,9 +87,9 @@
                     }
                 ]
             ],
-            url: '/qos/infectIndication/find/page',
+            url: '/qos/infectionAndComplication/infection/find/page',
             searchbar: '#searchbar',
-            exportUrl: '/qos/infectIndication/export',
+            exportUrl: '/qos/infectionAndComplication/infection/export',
             showExport: true,
             showColumns: true,
             pagination: true,
@@ -99,9 +99,9 @@
     }
     var canAdd = $("#canAdd").val();
     function add() {
-        window.location = '/qos/infectIndication/add';
+        window.location = '/qos/infectionAndComplication/infection/add';
         if(canAdd === 'true'){
-            window.location = '/qos/infectIndication/add';
+            window.location = '/qos/infectionAndComplication/infection/add';
 
         }else{
 
@@ -111,13 +111,13 @@
     }
 
     function detail(row) {
-        window.location = '/qos/infectIndication/detail' + (row ? ('?id=' + row.id) : '');
+        window.location = '/qos/infectionAndComplication/infection/detail' + (row ? ('?id=' + row.id) : '');
     }
 
     function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function () {
-                $.getAjax('/qos/infectIndication/delete?id=' + row.id, function () {
+                $.getAjax('/qos/infectionAndComplication/infection/delete?id=' + row.id, function () {
                     $.successMessage("删除成功");
                     table.refresh();
                 });

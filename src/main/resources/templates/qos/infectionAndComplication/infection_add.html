@@ -8,21 +8,21 @@
     <section class="content-header">
         <h1>医院感染类指标添加</h1>
         <ol class="breadcrumb">
-            <li><a href="/qos/infectIndication/index"><i class="fa fa-table"></i>列表</a></li>
+            <li><a href="/qos/infectionAndComplication/infection/index"><i class="fa fa-table"></i>列表</a></li>
             <li class="active">新增</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/qos/infectIndication/index" class="btn btn-primary btn-block">返回</a>
+    	<a href="/qos/infectionAndComplication/infection/index" class="btn btn-primary btn-block">返回</a>
     </div>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
     var options = {
         id: "model",
         name: "新增",
-        url: "/qos/infectIndication/save",
+        url: "/qos/infectionAndComplication/infection/save",
         cancelBtn: false,
         columns: [
             {title : "医院感染总发生率统计",name : "totalInfection",inputType : "NUMBER"},
@@ -47,7 +47,7 @@
             pattern:"edit",
             successCallback:function(){
                 $.successAlert("保存成功", function() {
-                    window.location = "/qos/infectIndication/index";
+                    window.location = "/qos/infectionAndComplication/infection/index";
                 });
             }
         });

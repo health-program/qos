@@ -1,25 +1,11 @@
-package com.paladin.qos.model.infectIndication;
+package com.paladin.qos.service.infectionAndComplication.dto;
 
-import com.paladin.framework.common.BaseModel;
-
-import javax.persistence.Id;
 import java.util.Date;
 
-public class InfectIndication extends BaseModel{
 
-    @Id
+public class InfectionDTO {
+
     private String id;
-
-    //todo 医院的对象
-    private String hospitalId;
-
-    public String getHospitalId() {
-        return hospitalId;
-    }
-
-    public void setHospitalId(String hospitalId) {
-        this.hospitalId = hospitalId;
-    }
 
     private Double totalInfection;//医院感染总发生率统计
 
@@ -159,4 +145,5 @@ public class InfectIndication extends BaseModel{
     public void setUpdateUserId(String updateUserId) {
         this.updateUserId = updateUserId;
     }
+	
 }

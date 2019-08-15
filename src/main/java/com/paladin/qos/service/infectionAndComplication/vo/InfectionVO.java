@@ -1,21 +1,24 @@
-package com.paladin.qos.service.infectIndication.dto;
+package com.paladin.qos.service.infectionAndComplication.vo;
 
-import com.paladin.framework.common.OffsetPage;
 
 import java.util.Date;
 
-/**
- * @author wcw
- * @version 2019年8月8日 下午15:34:10
- */
-public class InfectIndicationQuery extends OffsetPage {
+public class InfectionVO {
 
+    private String id;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     private Double totalInfection;//医院感染总发生率统计
-    
+
     private Double operatingDepartmentsInfection;//与手术相关科室感染发生率统计
-    
+
     private Double operatingPartInfection;//手术部位感染总发生率统计
 
     private Double operatingRiskInfection;//手术风险分级（NNIS分级）手术部位感染率统计
@@ -118,13 +121,6 @@ public class InfectIndicationQuery extends OffsetPage {
         this.createTime = createTime;
     }
 
-    public String getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setCreateUserId(String createUserId) {
-        this.createUserId = createUserId;
-    }
 
     public Date getUpdateTime() {
         return updateTime;
@@ -134,6 +130,14 @@ public class InfectIndicationQuery extends OffsetPage {
         this.updateTime = updateTime;
     }
 
+    public String getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(String createUserId) {
+        this.createUserId = createUserId;
+    }
+
     public String getUpdateUserId() {
         return updateUserId;
     }
@@ -141,4 +145,6 @@ public class InfectIndicationQuery extends OffsetPage {
     public void setUpdateUserId(String updateUserId) {
         this.updateUserId = updateUserId;
     }
+    
+    
 }
