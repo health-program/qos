@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+        <h1>数据展示</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select name="eventId" class="form-control tonto-select-constant" enumcode="data-event-type">
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" value="2018-01-01">
+                        </div>
+                        <div class="col-md-2">
+                            <input name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="sumChartDiv" class="box-body" style="height: 250px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
+                        <div class="form-group">
+                            <label for="monthInput" class="col-sm-2 control-label">医院日统计热力图</label>
+                            <div class="col-md-4">
+                                <input id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                    <div id="dayChartDiv" class="box-body" style="height: 500px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var table, sumChart, dayChart, sumData, requestParams;
+    $(function() {
+        initTable();
+    });
+
+    function getRate(row) {
+        var e = row.eventNum,
+            t = row.totalNum;
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "医院名称", field: "unitName" },
+                    { title: "住院死亡人数（人）", field: "eventNum" },
+                    { title: "同期出院总人数（人）", field: "totalNum" },
+                    {
+                        title: "死亡率",
+                        field: "rate",
+                        formatter: function(value, row, index) {
+                            return value + "%";
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/analysis/data/processing',
+            pagination: false,
+            searchbar: '#searchbar',
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+                sumData = res.points || [];
+                for (var i = 0; i < sumData.length; i++) {
+                    var row = sumData[i];
+                    row.rate = getRate(row);
+                }
+                initSumChart();
+                initDayChart();
+
+                return sumData;
+            }
+        });
+    }
+
+    function initSumChart() {
+        if (!sumChart) {
+            var dom = document.getElementById("sumChartDiv");
+            var sumChart = echarts.init(dom);
+
+            // Enable data zoom when user click bar.
+            var zoomSize = 6;
+            sumChart.on('click', function(params) {
+                console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+                sumChart.dispatchAction({
+                    type: 'dataZoom',
+                    startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                    endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+                });
+            });
+        }
+
+        var dataAxis = [],
+            data = [],
+            yMax = 1, //100
+            dataShadow = [];
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            dataAxis.push(it.unitName);
+            data.push(it.rate);
+            dataShadow.push(yMax);
+        }
+
+        option = {
+            title: {
+                text: '医院总和统计'
+            },
+            xAxis: {
+                data: dataAxis,
+                axisLabel: {
+                    inside: true,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                z: 10
+            },
+            yAxis: {
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            dataZoom: [{
+                type: 'inside'
+            }],
+            series: [{ // For shadow
+                    type: 'bar',
+                    itemStyle: {
+                        normal: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    barGap: '-100%',
+                    barCategoryGap: '40%',
+                    data: dataShadow,
+                    animation: false
+                },
+                {
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [
+                                    { offset: 0, color: '#83bff6' },
+                                    { offset: 0.5, color: '#188df0' },
+                                    { offset: 1, color: '#188df0' }
+                                ]
+                            )
+                        },
+                        emphasis: {
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [
+                                    { offset: 0, color: '#2378f7' },
+                                    { offset: 0.7, color: '#2378f7' },
+                                    { offset: 1, color: '#83bff6' }
+                                ]
+                            )
+                        }
+                    },
+                    data: data
+                }
+            ]
+        };
+
+
+        if (option && typeof option === "object") {
+            sumChart.setOption(option, true);
+        }
+    }
+
+    function getMonthData(unitPoints, s, e) {
+        var monthData = [];
+        for (var k = 0; k < unitPoints.length; k++) {
+            var ps = unitPoints[k].points;
+            var t = 0;
+            for (var l = s; l < e; l++) {
+                monthData.push([t, k, getRate(ps[l])]);
+                t++;
+            }
+        }
+        return monthData;
+    }
+
+    function getMonthId(year, month) {
+        if (month < 10) {
+            return year + '-0' + month;
+        } else {
+            return year + '-' + month;
+        }
+    }
+
+    var calendarDataMap, units;
+
+    function initDayChart() {
+        requestParams.dataType = 1;
+        $.postAjax("/qos/analysis/data/processed", requestParams, function(data) {
+            var unitPoints = data.unitPoints;
+
+            calendarDataMap = {};
+            units = [];
+
+            var firstDay, lastDay, fristMonth, lastMonth;
+
+            if (unitPoints && unitPoints.length > 0) {
+                for (var i = 0; i < unitPoints.length; i++) {
+                    units.push(unitPoints[i].unitName);
+                }
+
+                var unitPoint = unitPoints[0];
+                var points = unitPoints[0].points;
+
+                if (points && points.length > 0) {
+
+                    var year = points[0].year,
+                        month = points[0].month,
+                        day = points[0].day,
+                        size = 0,
+                        frist = true,
+                        s = 0,
+                        j = 0;
+
+                    firstDay = day;
+
+                    for (; j < points.length; j++) {
+                        var p = points[j];
+                        size++;
+                        var y = p.year,
+                            m = p.month;
+                        if (month != m) {
+                            calendarDataMap[getMonthId(year, month)] = {
+                                year: year,
+                                month: month,
+                                day: day,
+                                size: size - 1,
+                                points: getMonthData(unitPoints, s, j)
+                            };
+
+                            if (frist) {
+                                fristMonth = getMonthId(year, month);
+                                frist = false;
+                            }
+
+                            month = m;
+                            year = y;
+                            day = 1;
+                            s = j;
+                            size = 1;
+                        }
+                    }
+
+                    lastMonth = getMonthId(year, month);
+                    lastDay = points[j - 1].day;
+
+                    calendarDataMap[lastMonth] = {
+                        year: year,
+                        month: month,
+                        points: getMonthData(unitPoints, s, j)
+                    };
+                }
+
+            }
+
+            if (fristMonth) {
+                laydate.render({
+                    elem: '#monthInput',
+                    type: 'month',
+                    min: fristMonth + '-' + firstDay,
+                    max: lastMonth + '-' + lastDay,
+                    value: fristMonth,
+                    done: function(value, date, endDate) {
+                        drawDayChart(value);
+                    }
+                });
+
+                drawDayChart(fristMonth);
+            }
+        });
+    }
+
+    function drawDayChart(dataId) {
+        if (!dayChart) {
+            var dom = document.getElementById("dayChartDiv");
+            dayChart = echarts.init(dom);
+        }
+
+        if (!dataId) {
+            return;
+        };
+
+        var data = calendarDataMap[dataId],
+            yAxis = units,
+            xAxis = [];
+
+        if (!data) {
+            return;
+        }
+
+        var year = data.year,
+            month = data.month;
+
+        for (var s = data.day, i = 0; i < data.size; s++, i++) {
+            xAxis.push(s);
+        }
+
+        data = data.points;
+
+        option = {
+            tooltip: {
+                position: 'top'
+            },
+            animation: false,
+            grid: {
+                height: '50%',
+                y: '10%'
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxis,
+                splitArea: {
+                    show: true
+                }
+            },
+            yAxis: {
+                type: 'category',
+                data: yAxis,
+                splitArea: {
+                    show: true
+                }
+            },
+            visualMap: {
+                min: 0,
+                max: 10,
+                calculable: true,
+                orient: 'horizontal',
+                left: 'center',
+                bottom: '15%'
+            },
+            series: [{
+                name: 'Punch Card',
+                type: 'heatmap',
+                data: data,
+                label: {
+                    normal: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+
+        if (option && typeof option === "object") {
+            dayChart.setOption(option, true);
+        }
+    }
+    </script>
+</body>
+
+</html>

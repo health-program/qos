@@ -25,7 +25,7 @@ import com.paladin.qos.service.data.DataProcessedDayService;
 public class DataProcessContainer implements SpringContainer {
 
 	private static Logger logger = LoggerFactory.getLogger(DataProcessContainer.class);
-
+	
 	private Map<String, DataProcessor> processorMap = new HashMap<>();
 	private Set<String> eventSet = new HashSet<>();
 

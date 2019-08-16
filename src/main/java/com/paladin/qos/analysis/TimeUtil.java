@@ -84,7 +84,6 @@ public class TimeUtil {
 		return year * 10000 + month * 100 + day;
 	}
 
-	
 	public static int getSerialNumberByMonth(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -93,5 +92,11 @@ public class TimeUtil {
 		int month = c.get(Calendar.MONTH) + 1;
 
 		return year * 100 + month;
+	}
+
+	public static int getYear(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		return c.get(Calendar.YEAR);
 	}
 }

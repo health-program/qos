@@ -3,13 +3,14 @@ package com.paladin.qos.controller.analysis;
 import java.util.Date;
 import java.util.List;
 
-public class DataProcessRequest {
+public class AnalysisRequest {
 	
 	private Date startTime;
 	private Date endTime;
 	private List<String> unitIds;
 	private String eventId;
 	
+	private int dataType;
 	
 	public Date getStartTime() {
 		return startTime;
@@ -34,6 +35,12 @@ public class DataProcessRequest {
 	}
 	public void setEventId(String eventId) {
 		this.eventId = eventId;
+	}
+	public int getDataType() {
+		return dataType;
+	}
+	public void setDataType(int dataType) {
+		this.dataType = dataType;
 	}
 	
 	
