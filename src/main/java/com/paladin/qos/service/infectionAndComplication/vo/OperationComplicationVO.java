@@ -3,21 +3,24 @@ package com.paladin.qos.service.infectionAndComplication.vo;
 import java.util.Date;
 
 public class OperationComplicationVO {
-
-	 public String id;
-	 public String getId() {
+    public String id;
+    public String createUserId;
+    public String updateUserId;
+    public Date createTime;
+	public Date updateTime;
+	public Double embolism;
+	public Double pulmonaryEmbolism;
+	public Double venousThrombosis;
+	public Double hematoma;
+	public Double woundDehiscence;
+	public Double suddenDeath;
+	public Double operativeComplications;
+	public Double anaesthesia;
+	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
-	}
-	
-    public Date createTime;
-    public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
 	}
 	public String getCreateUserId() {
 		return createUserId;
@@ -25,77 +28,71 @@ public class OperationComplicationVO {
 	public void setCreateUserId(String createUserId) {
 		this.createUserId = createUserId;
 	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
 	public String getUpdateUserId() {
 		return updateUserId;
 	}
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
 	}
-
-	public String createUserId;
-    public Date updateTime;
-    public String updateUserId;
-    
-	public String embolism;
-	  public String pulmonaryEmbolism;
-	  public String venousThrombosis;
-	  public String hematoma;
-	  public String woundDehiscence;
-	  public String suddenDeath;
-	  public String operativeComplications;
-	  public String anaesthesia;
-	public String getEmbolism() {
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+	public Double getEmbolism() {
 		return embolism;
 	}
-	public void setEmbolism(String embolism) {
+	public void setEmbolism(Double embolism) {
 		this.embolism = embolism;
 	}
-	public String getPulmonaryEmbolism() {
+	public Double getPulmonaryEmbolism() {
 		return pulmonaryEmbolism;
 	}
-	public void setPulmonaryEmbolism(String pulmonaryEmbolism) {
+	public void setPulmonaryEmbolism(Double pulmonaryEmbolism) {
 		this.pulmonaryEmbolism = pulmonaryEmbolism;
 	}
-	public String getVenousThrombosis() {
+	public Double getVenousThrombosis() {
 		return venousThrombosis;
 	}
-	public void setVenousThrombosis(String venousThrombosis) {
+	public void setVenousThrombosis(Double venousThrombosis) {
 		this.venousThrombosis = venousThrombosis;
 	}
-	public String getHematoma() {
+	public Double getHematoma() {
 		return hematoma;
 	}
-	public void setHematoma(String hematoma) {
+	public void setHematoma(Double hematoma) {
 		this.hematoma = hematoma;
 	}
-	public String getWoundDehiscence() {
+	public Double getWoundDehiscence() {
 		return woundDehiscence;
 	}
-	public void setWoundDehiscence(String woundDehiscence) {
+	public void setWoundDehiscence(Double woundDehiscence) {
 		this.woundDehiscence = woundDehiscence;
 	}
-	public String getSuddenDeath() {
+	public Double getSuddenDeath() {
 		return suddenDeath;
 	}
-	public void setSuddenDeath(String suddenDeath) {
+	public void setSuddenDeath(Double suddenDeath) {
 		this.suddenDeath = suddenDeath;
 	}
-	public String getOperativeComplications() {
+	public Double getOperativeComplications() {
 		return operativeComplications;
 	}
-	public void setOperativeComplications(String operativeComplications) {
+	public void setOperativeComplications(Double operativeComplications) {
 		this.operativeComplications = operativeComplications;
 	}
-	public String getAnaesthesia() {
+	public Double getAnaesthesia() {
 		return anaesthesia;
 	}
-	public void setAnaesthesia(String anaesthesia) {
+	public void setAnaesthesia(Double anaesthesia) {
 		this.anaesthesia = anaesthesia;
 	}
+
 }

@@ -1,7 +1,6 @@
 package com.paladin.qos.controller.infectionAndComplication;
 
 import com.paladin.common.core.export.ExportUtil;
-import com.paladin.common.service.syst.SysUserService;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;

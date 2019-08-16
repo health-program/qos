@@ -4,8 +4,6 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.infectionAndComplication.Infection;
 import com.paladin.qos.service.infectionAndComplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectionAndComplication.vo.InfectionVO;
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
