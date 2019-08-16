@@ -1279,12 +1279,10 @@
              var q = options.queryParams;
 
              options.queryParams = function(params) {
+                 $(options.searchbar).serializeObject(params);
                  if (q) {
                      params = q(params);
                  }
-
-                 $(options.searchbar).serializeObject(params);
-
                  return params;
              };
          }

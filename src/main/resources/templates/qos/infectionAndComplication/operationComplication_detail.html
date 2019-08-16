@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+ 
+ 
+  <section class="content-header">
+        <h1>手术并发症指标详情</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/infectionAndComplication/operationComplication/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+ 		<a th:href="@{/qos/operationComplication/index?(teamId=${teamId})}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+      var options = {
+ 	        id: "model",
+ 	        name: "详情",
+ 	        server: false,
+ 	        cancelBtn: false,
+ 	        editFormClass: false,
+ 	        columns: [
+ 	        	  { title: "手术患者并发症发生率统计", align: "center", name: "embolism",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者手术后肺栓塞发生率统计", align: "center", name: "pulmonaryEmbolism",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者手术后深静脉血栓发生率统计", align: "center", name: "venousThrombosis",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者手术后出血或血肿发生率统计", align: "center", name: "hematoma",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者手术伤口裂开发生率统计", align: "center", name: "woundDehiscence",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者手术后猝死发生率统计", align: "center", name: "suddenDeath",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术死亡患者手术并发症发生率统计", align: "center", name: "operativeComplications",inputType: "NUMBER",unit:"%"},
+ 	                 { title: "手术患者麻醉并发症发生率统计", align: "center", name: "anaesthesia",inputType: "NUMBER",unit:"%"},
+ 				     ]
+ 					}
+ 					var model, itemId;
+
+ 					$(function() {
+ 						var html = generateHtml(options);
+ 						$(".content").html(html);
+ 						$.initComponment($(".content"));
+ 						itemId = $("#id").val();
+
+ 						$.getAjax("/qos/operationComplication/get?id=" + $("#id").val(),
+ 								function(data) {
+ 									model = new tonto.Model("model",
+ 											options.columns, {
+ 												server : false,
+ 												submitClick : function() {
+ 													update();
+ 												}
+ 											});
+ 									model.setData(data);
+ 								});
+ 					});
+
+ 					function update(confirm) {
+ 						var data = model.getFormData();
+ 							data['id'] = itemId;
+ 							$.postJsonAjax("/qos/operationComplication/update", data,
+ 									function(result) {
+ 										$.successAlert("保存成功", function() {
+ 											model.toView();
+ 											model.setData(data);
+ 										});
+ 									}, $("#submitBtn"));
+ 					}
+   </script>
+</body>
+
+</html>

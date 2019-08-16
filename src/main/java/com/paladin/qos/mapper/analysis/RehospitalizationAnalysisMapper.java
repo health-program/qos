@@ -12,3 +12,4 @@ public interface RehospitalizationAnalysisMapper {
 	long getEventNum(Map<String, Object> params);
 
 }
+                           

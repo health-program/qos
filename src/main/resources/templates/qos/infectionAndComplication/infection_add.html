@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
+    <section class="content-header">
+        <h1>医院感染类指标添加</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/infectionAndComplication/infection/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/infectionAndComplication/infection/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        url: "/qos/infectionAndComplication/infection/save",
+        cancelBtn: false,
+        columns: [
+            {title : "医院感染总发生率统计",name : "totalInfection",inputType : "NUMBER",unit:"%"},
+            {title : "与手术相关科室感染发生率统计",name : "operatingDepartmentsInfection",inputType : "NUMBER",unit:"%"},
+            {title : "手术部位感染总发生率统计",name : "operatingPartInfection",inputType : "NUMBER",unit:"%"},
+            {title : "手术风险分级（NNIS分级）手术部位感染率统计",name : "operatingRiskInfection",inputType : "NUMBER",unit:"%"},
+            {title : "手术患者肺部感染发生率统计",name : "lungInfection",inputType : "NUMBER",unit:"%"},
+            {title : "新生儿患者医院感染发生率统计",name : "newBornInfection",inputType : "NUMBER",unit:"%"},
+            {title: "择期手术患者医院感染发生率统计", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%"},
+            {title: "与血液透析相关血液感染发生率统计", name: "bloodInfection", inputType: "NUMBER",unit:"%"},
+            {title: "重症监护室相关感染率统计", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%"}
+
+                ]
+					}
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponment($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功", function() {
+                    window.location = "/qos/infectionAndComplication/infection/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+					
+</script>
+</body>
+
+</html>

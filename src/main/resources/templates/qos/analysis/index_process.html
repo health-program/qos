@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+        <h1>数据处理管理</h1>
+    </section>
+    <section class="content">
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "数据处理",
+        url: "/qos/analysis/process",
+        columns: [
+            { title: "统计事件", name: "eventId", inputType: "SELECT", enum: "data-event-type", required: "required" },
+            { title: "开始时间", name: "startTime", inputType: "DATE" },
+            { title: "结束时间", name: "endTime", inputType: "DATE" }
+        ]
+    }
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponment($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern: "edit",
+            successCallback: function() {
+                $.successAlert("保存成功", function() {
+                    // TODO
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

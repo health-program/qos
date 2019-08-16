@@ -669,8 +669,8 @@ INSERT INTO `tonto_container_version` VALUES ('unit_container', '1');
 
 
 -- 医院感染类指标统计表
-DROP TABLE IF EXISTS `infect_indication`;
-CREATE TABLE `infect_indication` (
+DROP TABLE IF EXISTS `infection`;
+CREATE TABLE `infection` (
   `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
   `hospital_id` varchar(30) COLLATE utf8_unicode_ci NOT NULL COMMENT '医院',
   `total_infection` DOUBLE COMMENT '医院感染总发生率统计',

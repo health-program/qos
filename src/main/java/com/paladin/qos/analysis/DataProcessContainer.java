@@ -25,7 +25,7 @@ import com.paladin.qos.service.data.DataProcessedDayService;
 public class DataProcessContainer implements SpringContainer {
 
 	private static Logger logger = LoggerFactory.getLogger(DataProcessContainer.class);
-
+	
 	private Map<String, DataProcessor> processorMap = new HashMap<>();
 	private Set<String> eventSet = new HashSet<>();
 
@@ -189,7 +189,10 @@ public class DataProcessContainer implements SpringContainer {
 		model.setYear(year);
 		model.setWeekMonth(rateMetadata.getWeekMonth());
 		model.setWeekYear(rateMetadata.getWeekYear());
-
+		
+		int serialNumber = year * 10000 + month * 100 + day;
+		model.setSerialNumber(serialNumber);
+		
 		long totalNum = rateMetadata.getTotalNum();
 		long eventNum = rateMetadata.getEventNum();
 
@@ -208,35 +211,17 @@ public class DataProcessContainer implements SpringContainer {
 
 	}
 
-	private String getRate(long totalNum, long eventNum) {
+	
+	private int getRate(long totalNum, long eventNum) {
 		if (totalNum == 0 || eventNum == 0) {
-			return "0.00%";
+			return 0;
 		}
-
 		long r = eventNum * 100000 / totalNum;
 		if (r < 5) {
-			return "0.00%";
+			return 0;
 		}
-
 		r += 5;
-
-		StringBuilder sb = new StringBuilder();
-		String s = String.valueOf(r);
-		int size = s.length();
-		if (size == 2) {
-			sb.append('0').append('0');
-		} else if (size == 3) {
-			sb.append('0');
-		}
-
-		sb.append(s);
-		size = sb.length();
-
-		sb.insert(size - 3, '.');
-		sb.deleteCharAt(size);
-		sb.append("%");
-
-		return sb.toString();
+		return (int) (r / 10);
 	}
 
 }
