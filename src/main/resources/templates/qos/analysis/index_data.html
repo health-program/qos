@@ -87,10 +87,10 @@
             columns: [
                 [
                     { title: "医院名称", field: "unitName" },
-                    { title: "住院死亡人数（人）", field: "eventNum" },
-                    { title: "同期出院总人数（人）", field: "totalNum" },
+                    { title: "事件发生数", field: "eventNum" },
+                    { title: "样本总数", field: "totalNum" },
                     {
-                        title: "死亡率",
+                        title: "概率",
                         field: "rate",
                         formatter: function(value, row, index) {
                             return value + "%";
@@ -140,10 +140,20 @@
             data = [],
             yMax = 1, //100
             dataShadow = [];
+
+
         for (var i = 0; i < sumData.length; i++) {
             var it = sumData[i];
             dataAxis.push(it.unitName);
             data.push(it.rate);
+            if(yMax < it.rate) {
+                yMax = it.rate;
+            }
+        }
+
+        yMax = Math.ceil(yMax / 10) * 10;
+
+        for (var i = 0; i < sumData.length; i++) {
             dataShadow.push(yMax);
         }
 
