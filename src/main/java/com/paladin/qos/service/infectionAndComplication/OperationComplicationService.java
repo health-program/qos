@@ -8,6 +8,7 @@ import com.paladin.framework.core.session.UserSession;
 
 import com.paladin.qos.mapper.infectionAndComplication.OperationComplicationMapper;
 import com.paladin.qos.model.infectionAndComplication.OperationComplication;
+import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
 import com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,21 +39,17 @@ public class OperationComplicationService extends ServiceSupport<OperationCompli
 
 
        @Transactional
-		public int updates(OperationComplicationVO InfectIndicationDTO) {
+		public int updates(OperationComplicationDTO dto) {
 			// TODO Auto-generated method stub
-    	   InfectIndicationDTO.setUpdateTime(new Date());
-			return operationComplicationMapper.updates(InfectIndicationDTO);
+    	   dto.setUpdateTime(new Date());
+			return operationComplicationMapper.updates(dto);
 		}
-
 
        @Transactional
 		public int delete(String id) {
 			// TODO Auto-generated method stub
 			return operationComplicationMapper.deletes(id);
 		}
-
-
-  
 
 	    @Transactional
 		public Object insertInto(OperationComplicationVO vo) {
@@ -63,11 +60,6 @@ public class OperationComplicationService extends ServiceSupport<OperationCompli
 	    	vo.setCreateTime(new Date());
 			return operationComplicationMapper.insertInto(vo);
 		}
-
- 
-	 
-       
-	    
 	    
 	    //判断半年后新增
 	    @Transactional
@@ -86,11 +78,6 @@ public class OperationComplicationService extends ServiceSupport<OperationCompli
 		        }
 		        return true;
 		}
-
-
-	
- 
-	 
 
 }
 

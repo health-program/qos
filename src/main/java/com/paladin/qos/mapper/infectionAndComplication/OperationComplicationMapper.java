@@ -2,6 +2,7 @@ package com.paladin.qos.mapper.infectionAndComplication;
 
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.infectionAndComplication.OperationComplication;
+import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
 import com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO;
 
@@ -14,7 +15,7 @@ public interface OperationComplicationMapper extends CustomMapper<OperationCompl
 
 	public OperationComplicationVO queryById(String id);
 
-	public int updates(OperationComplicationVO vo);
+	public int updates(OperationComplicationDTO dto);
 
 	public int deletes(String id);
 

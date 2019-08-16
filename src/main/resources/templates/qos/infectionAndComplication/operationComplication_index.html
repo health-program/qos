@@ -63,7 +63,7 @@
             idField: "id",
             columns: [
                 [
-                  	 {title: "手术患者并发症发生率统计",align: "center", field: "embolism"},
+                  	 {title: "手术患者并发症发生率统计",align: "center", field: "embolism",formatter: getRate},
                      {title: "创建时间", align: "center",field: "createTime",formatter: "datetime"},
                      { title: "创建人", align: "center",field: "createUserId"},
                      {
@@ -133,9 +133,11 @@
     
     
     
+    function getRate(value, row, index){
+        return value+"%";
+    }
     
-    
- function remove(row) {
+    function remove(row) {
         if (row) {
             layer.confirm('确定删除吗?', function() {
                 $.getAjax('/qos/operationComplication/delete?id=' + row.id, function() {
