@@ -21,6 +21,10 @@
 	ORDER BY o.create_time DESC
 </select>
 
+<select id="parentSchoolId" resultType="com.paladin.qos.service.school.vo.OrgSchoolVO">
+	SELECT * FROM org_school WHERE parent_school_id = #{id}
+</select>
+
 <select id="schoolPersonnelCount" resultType="com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO">
 	SELECT s.id ,s.`parent_school_id` AS parentSchoolId,n.`school_full_name` AS schoolFullName,SUM(p.`total`) AS total FROM `org_school` AS s 
 	LEFT JOIN org_school_name AS n ON s.`parent_school_id`=n.`id` 

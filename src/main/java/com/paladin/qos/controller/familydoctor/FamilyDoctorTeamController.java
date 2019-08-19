@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -71,38 +72,51 @@ public class FamilyDoctorTeamController extends ControllerSupport {
     }
     
     @PostMapping("/save")
-	@ResponseBody
+    @ResponseBody
     public Object save(@Valid FamilyDoctorTeamDTO familyDoctorTeamDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-        FamilyDoctorTeam model = beanCopy(familyDoctorTeamDTO, new FamilyDoctorTeam());
-		String id = UUIDUtil.createUUID();
-		model.setId(id);
-		if (familyDoctorTeamService.save(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(familyDoctorTeamService.get(id), new FamilyDoctorTeamVO()));
-		}
-		return CommonResponse.getFailResponse();
+	if (bindingResult.hasErrors()) {
+		return validErrorHandler(bindingResult);
+	}
+	if(familyDoctorTeamService.countTaem(familyDoctorTeamDTO.getTeamName()) != null){
+	    return CommonResponse.getErrorResponse("团队名称已存在");
+	}
+	FamilyDoctorTeam model = beanCopy(familyDoctorTeamDTO, new FamilyDoctorTeam());
+	String id = UUIDUtil.createUUID();
+	model.setId(id);
+	if (familyDoctorTeamService.save(model) > 0) {
+		return CommonResponse.getSuccessResponse(beanCopy(familyDoctorTeamService.get(id), new FamilyDoctorTeamVO()));
+	}
+	return CommonResponse.getFailResponse();
 	}
 
     @PostMapping("/update")
-	@ResponseBody
+    @ResponseBody
     public Object update(@Valid FamilyDoctorTeamDTO familyDoctorTeamDTO, BindingResult bindingResult) {
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-		String id = familyDoctorTeamDTO.getId();
-		FamilyDoctorTeam model = beanCopy(familyDoctorTeamDTO, familyDoctorTeamService.get(id));
-		if (familyDoctorTeamService.update(model) > 0) {
-			return CommonResponse.getSuccessResponse(beanCopy(familyDoctorTeamService.get(id), new FamilyDoctorTeamVO()));
-		}
-		return CommonResponse.getFailResponse();
+	if (bindingResult.hasErrors()) {
+		return validErrorHandler(bindingResult);
+	}
+	String id = familyDoctorTeamDTO.getId();
+	FamilyDoctorTeam model = beanCopy(familyDoctorTeamDTO, familyDoctorTeamService.get(id));
+	if (familyDoctorTeamService.update(model) > 0) {
+		return CommonResponse.getSuccessResponse(beanCopy(familyDoctorTeamService.get(id), new FamilyDoctorTeamVO()));
+	}
+	return CommonResponse.getFailResponse();
 	}
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(familyDoctorTeamService.removeTeam(id));
+    }
+    
+    @RequestMapping("/import")
+    @ResponseBody
+    public Object importTeam(@RequestParam("file") MultipartFile file,@RequestParam("unitId") String unitId) {
+	try {
+	    return CommonResponse.getSuccessResponse(familyDoctorTeamService.importTeam(file.getInputStream(), unitId));
+	} catch (IOException e) {
+	    return CommonResponse.getFailResponse("导入异常");
+	}
     }
     
     @PostMapping(value = "/export")

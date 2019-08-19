@@ -17,5 +17,12 @@ public class OrgSchoolPeopleService extends ServiceSupport<OrgSchoolPeople> {
 	public int deletePeople(String schoolId) {
 		return removeByExample(new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID, QueryType.EQUAL, schoolId));
 	}
+	
+	public List<OrgSchoolPeople> getGrade(String schoolId,int grade){
+	    return searchAll(new Condition[]{
+		    new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID, QueryType.EQUAL, schoolId),
+		    new Condition(OrgSchoolPeople.COLUMN_SCHOOL_GRADE, QueryType.EQUAL, grade),
+	    });
+	}; 
 
 }

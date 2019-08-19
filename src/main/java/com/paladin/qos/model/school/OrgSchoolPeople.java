@@ -8,6 +8,8 @@ import javax.persistence.Id;
 public class OrgSchoolPeople extends BaseModel {
     
     public static final String COLUMN_SCHOOL_ID= "schoolId";
+    
+    public static final String COLUMN_SCHOOL_GRADE= "grade";
 
 	// 主键
     	@Id

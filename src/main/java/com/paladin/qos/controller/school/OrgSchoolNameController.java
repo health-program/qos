@@ -81,11 +81,14 @@ public class OrgSchoolNameController extends ControllerSupport {
     
     @PostMapping("/save")
     @ResponseBody
-    public Object save(@Valid OrgSchoolNameDTO orgSchoolNameDTO,BindingResult bindingResult) {
+    public Object save(@Valid OrgSchoolNameDTO dto,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
 	    return validErrorHandler(bindingResult);
 	}
-	OrgSchoolName model = beanCopy(orgSchoolNameDTO, new OrgSchoolName());
+	if(orgSchoolNameService.judge(dto.getSchoolFullName()) !=null){
+	    return CommonResponse.getErrorResponse("学校名称已存在");
+	}
+	OrgSchoolName model = beanCopy(dto, new OrgSchoolName());
 	String id = UUIDUtil.createUUID();
 	if(StringUtil.isEmpty(model.getParentId())){
 	    model.setParentId(null);

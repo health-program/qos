@@ -27,6 +27,10 @@ public class OrgSchoolNameService extends ServiceSupport<OrgSchoolName> {
     public List<OrgSchoolName> findSchoolName(String parentId) {
 	return searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID,QueryType.EQUAL, parentId));
     }
+    
+    public SchoolNameVO judge(String schoolFullName){
+	return orgSchoolNameMapper.getSchoolName(schoolFullName);
+    }
 
     public int removeBySchoolName(String id){
 	if(StringUtil.isEmpty(id)){

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -109,6 +110,16 @@ public class OrgSchoolController extends ControllerSupport {
     @ResponseBody
     public Object delete(@RequestParam String id) {
 	return CommonResponse.getResponse(orgSchoolService.deleteSchoolAndPeople(id));
+    }
+    
+    @RequestMapping("/import")
+    @ResponseBody
+    public Object importOrgSchool(@RequestParam("file") MultipartFile file) {
+	try {
+	    return CommonResponse.getSuccessResponse(orgSchoolService.importOrgSchool(file.getInputStream()));
+	} catch (IOException e) {
+	    return CommonResponse.getFailResponse("导入异常");
+	}
     }
 
     @PostMapping(value = "/export")

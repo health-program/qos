@@ -48,6 +48,7 @@
         </div>
     </section>
     <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
     <script type="text/javascript">
     var table;
     $(function() {
@@ -97,7 +98,7 @@
     }
 
     function add() {
-        window.location = '/qos/family/doctor/personnel/add?teamId='+$("#teamId").val();;
+        window.location = '/qos/family/doctor/personnel/add?teamId='+$("#teamId").val();
     }
 
     function detail(row) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
@@ -115,6 +116,15 @@ public class EpidemicController extends ControllerSupport {
 	return CommonResponse.getSuccessResponse(epidemicSituationService.removeByPrimaryKey(id));
     }
     
+    @RequestMapping("/import")
+    @ResponseBody
+    public Object importEpidemic(@RequestParam("file") MultipartFile file) {
+	try {
+	    return CommonResponse.getSuccessResponse(epidemicSituationService.importEpidemic(file.getInputStream()));
+	} catch (IOException e) {
+	    return CommonResponse.getFailResponse("导入异常");
+	}
+    }
     
     @PostMapping(value = "/export")
     @ResponseBody

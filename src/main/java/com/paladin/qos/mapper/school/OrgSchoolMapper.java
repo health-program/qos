@@ -16,4 +16,6 @@ public interface OrgSchoolMapper extends CustomMapper<OrgSchool>{
     public List<OrgSchoolPersonnelCountVO> schoolPersonnelCount(OrgSchoolQuery query);
     
     public List<OrgSchoolDoctorCountVO> schoolDoctorCount(OrgSchoolQuery query);
+    
+    public OrgSchoolVO parentSchoolId(String id);
 }

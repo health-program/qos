@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -87,6 +88,9 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
 	if (bindingResult.hasErrors()) {
 	    return validErrorHandler(bindingResult);
 	}
+	if(familyDoctorPersonnelService.countPersonnel(familyDoctorPersonnelDTO.getName())>0){
+	    return CommonResponse.getErrorResponse("姓名不能重复！");
+	}
 	FamilyDoctorPersonnel model = beanCopy(familyDoctorPersonnelDTO,new FamilyDoctorPersonnel());
 	String id = UUIDUtil.createUUID();
 	model.setId(id);
@@ -117,6 +121,16 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(familyDoctorPersonnelService.removeByPrimaryKey(id));
+    }
+    
+    @RequestMapping("/import")
+    @ResponseBody
+    public Object importPersonnel(@RequestParam("filePersonnel") MultipartFile filePersonnel) {
+	try {
+	    return CommonResponse.getSuccessResponse(familyDoctorPersonnelService.importPersonnel(filePersonnel.getInputStream()));
+	} catch (IOException e) {
+	    return CommonResponse.getFailResponse("导入异常");
+	}
     }
     
     @PostMapping(value = "/export")

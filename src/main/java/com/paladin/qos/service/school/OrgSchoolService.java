@@ -1,28 +1,48 @@
 package com.paladin.qos.service.school;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.qos.mapper.school.OrgSchoolMapper;
+import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.school.OrgSchool;
 import com.paladin.qos.model.school.OrgSchoolPeople;
+import com.paladin.qos.service.school.dto.ExcelOrgSchool;
 import com.paladin.qos.service.school.dto.OrgSchoolDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolPeopleDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
 import com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO;
 import com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO;
 import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import com.paladin.qos.service.school.vo.SchoolNameVO;
+import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.framework.common.Condition;
+import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.QueryType;
+import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
+import com.paladin.framework.excel.DefaultSheet;
+import com.paladin.framework.excel.EnumContainer;
+import com.paladin.framework.excel.read.DefaultReadColumn;
+import com.paladin.framework.excel.read.ExcelReadException;
+import com.paladin.framework.excel.read.ExcelReader;
+import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
 @Service
@@ -33,6 +53,9 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     
     @Autowired
     private OrgSchoolMapper orgSchoolMapper;
+    
+    @Autowired
+    private OrgSchoolNameMapper orgSchoolNameMapper;
     
     public PageResult<OrgSchoolVO> searchFindPage(OrgSchoolQuery query) {
 	Page<OrgSchoolVO> page = PageHelper.offsetPage(query.getOffset(),query.getLimit());
@@ -55,7 +78,11 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	}
 	OrgSchoolVO vo = new OrgSchoolVO();
 	SimpleBeanCopyUtil.simpleCopy(school, vo);
-	vo.setPeople(orgSchoolPeopleService.findSchoolPeople(id));
+	List<OrgSchoolPeople> people = orgSchoolPeopleService
+		.findSchoolPeople(id).stream()
+		.sorted(Comparator.comparing(OrgSchoolPeople::getGrade))
+		.collect(Collectors.toList());
+	vo.setPeople(people);
 	return vo;
     }
     
@@ -139,6 +166,111 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     public int deleteSchoolAndPeople(String id){
 	removeByPrimaryKey(id);
 	return orgSchoolPeopleService.deletePeople(id);
+    }
+    
+    private static final List<ReadColumn> schoolImportColumns = DefaultReadColumn.createReadColumn(ExcelOrgSchool.class, new EnumContainer(){
+ 	
+ 	@Override
+	public String getEnumName(String type, String key) {
+	    return ConstantsContainer.getTypeValue(type, key);
+	}
+
+	@Override
+	public String getEnumKey(String type, String name) {
+	    return ConstantsContainer.getTypeKey(type, name);
+	}
+     });
+    
+    /**
+     * 导入学校信息    
+     * @param excelInputStream
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    @SuppressWarnings("resource")
+    @Transactional
+    public ExcelImportResult importOrgSchool(InputStream excelInputStream) {
+    XSSFWorkbook workbook;
+    try {
+        workbook = new XSSFWorkbook(excelInputStream);
+    } catch (IOException e1) {
+        throw new BusinessException("导入异常");
+    }
+    
+    ExcelReader<ExcelOrgSchool> reader = new ExcelReader<>(ExcelOrgSchool.class, schoolImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 1);
+    List<ExcelImportError> errors = new ArrayList<>();
+    
+    int i = 0;
+    
+	while (reader.hasNext()) {
+	    i++;
+	    if (i > 500) {
+		break;
+	    }
+	    ExcelOrgSchool excelOrgSchool = null;
+	    try {
+		excelOrgSchool = reader.readRow();
+	    } catch (ExcelReadException e) {
+		errors.add(new ExcelImportError(i, e));
+		continue;
+	    }
+
+	    String schoolName = excelOrgSchool.getParentSchoolName();
+
+	    if (StringUtil.isEmpty(schoolName)) {
+		errors.add(new ExcelImportError(i, "学校名称不能为空"));
+		continue;
+	    }
+
+	    SchoolNameVO schoolNameVO = orgSchoolNameMapper.getSchoolName(schoolName);
+	    
+	    if (schoolNameVO == null) {
+		errors.add(new ExcelImportError(i, "" + schoolName + ":学校名称不存在"));
+		continue;
+	    }
+
+	    try {
+		OrgSchoolPeople people = new OrgSchoolPeople();
+		SimpleBeanCopyUtil.simpleCopy(excelOrgSchool, people);
+
+		OrgSchoolVO schoolVO = orgSchoolMapper.parentSchoolId(schoolNameVO.getId());
+		if (schoolVO != null) {
+		  List<OrgSchoolPeople> list = orgSchoolPeopleService.getGrade(schoolVO.getId(), people.getGrade());
+		    if(!CollectionUtils.isEmpty(list)){
+			errors.add(new ExcelImportError(i, "年级已经存在"));
+			continue;
+		    }
+		    
+		    String id = UUIDUtil.createUUID();
+		    people.setId(id);
+		    people.setTotal(excelOrgSchool.getGradeTotal());
+		    people.setSchoolId(schoolVO.getId());
+		    orgSchoolPeopleService.save(people);
+
+		} else {
+		    String OrgSchoolId = UUIDUtil.createUUID();
+		    OrgSchool orgSchool = new OrgSchool();
+		    SimpleBeanCopyUtil.simpleCopy(excelOrgSchool, orgSchool);
+		    orgSchool.setId(OrgSchoolId);
+		    orgSchool.setParentSchoolId(schoolNameVO.getId());
+		    save(orgSchool);
+		    String peopleId = UUIDUtil.createUUID();
+		    people.setId(peopleId);
+		    people.setSchoolId(OrgSchoolId);
+		    people.setTotal(excelOrgSchool.getGradeTotal());
+		    orgSchoolPeopleService.save(people);
+		}
+
+	    } catch (BusinessException e) {
+		errors.add(new ExcelImportError(i, e.getMessage()));
+		continue;
+	    } catch (Exception e) {
+		errors.add(new ExcelImportError(i, "保存失败"));
+		continue;
+	    }
+
+	}
+    return new ExcelImportResult(i, errors);
     }
 
 }
