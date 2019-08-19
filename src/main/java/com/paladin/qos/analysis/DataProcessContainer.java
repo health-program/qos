@@ -103,7 +103,7 @@ public class DataProcessContainer implements SpringContainer {
 		DataProcessor processor = processorMap.get(eventId);
 
 		if (processor == null) {
-			logger.error("找到事件[" + eventId + "]对应的处理器");
+			logger.error("未找到事件[" + eventId + "]对应的处理器");
 			return;
 		}
 

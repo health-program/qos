@@ -1,6 +1,5 @@
 package com.paladin.qos.analysis.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,19 +9,17 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.mapper.analysis.RehospitalizationAnalysisMapper;
+
 @Component
-public class RehospitalzationAnalysisDataProcessor extends DataProcessor{
-	
-	@Autowired 
+public class RehospitalzationAnalysisDataProcessor extends DataProcessor {
+
+	@Autowired
 	private RehospitalizationAnalysisMapper rehospitalizationAnalysisMapper;
-	
-    
-	public static final String EVENT_ID = "11001";
-	
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+	public static final String EVENT_ID = "11100";
+
 	@Override
 	public String getEventId() {
-
 		return EVENT_ID;
 	}
 
@@ -31,11 +28,9 @@ public class RehospitalzationAnalysisDataProcessor extends DataProcessor{
 	 */
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
-
 		Map<String, Object> params = new HashMap<String, Object>();
-		String aa  = format.format(startTime);
-		params.put("startTime", format.format(startTime));
-		params.put("endTime", format.format(endTime));
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		return rehospitalizationAnalysisMapper.getTotalNum(params);
 	}
@@ -45,10 +40,9 @@ public class RehospitalzationAnalysisDataProcessor extends DataProcessor{
 	 */
 	@Override
 	public long getEventNum(Date startTime, Date endTime, String unitId) {
-		
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("startTime", format.format(startTime));
-		params.put("endTime", format.format(endTime));
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		return rehospitalizationAnalysisMapper.getEventNum(params);
 	}
