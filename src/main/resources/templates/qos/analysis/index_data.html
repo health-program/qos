@@ -2,10 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-  <!--   <section class="content-header">
+    <!--   <section class="content-header">
         <h1>数据展示</h1>
     </section> -->
     <section class="content">
@@ -45,7 +44,7 @@
             </div>
             <div class="col-md-6">
                 <div class="box box-solid">
-                    <div id="sumChartDiv" class="box-body" style="height: 250px">
+                    <div id="sumChartDiv" class="box-body" style="height: 300px">
                     </div>
                 </div>
                 <div class="box box-solid">
@@ -57,13 +56,14 @@
                             </div>
                         </div>
                     </form>
-                    <div id="dayChartDiv" class="box-body" style="height: 500px">
+                    <div id="dayChartDiv" class="box-body" style="height: 400px">
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
     <script type="text/javascript">
     var table, sumChart, dayChart, sumData, requestParams;
     $(function() {
@@ -101,6 +101,11 @@
             url: '/qos/analysis/data/processing',
             pagination: false,
             searchbar: '#searchbar',
+            onClickRow: function(row, $element) {
+                $('.table-selected').removeClass('table-selected');
+                $($element).addClass('table-selected');
+                console.log(row);
+            },
             queryParams: function(params) {
                 requestParams = params;
                 return params;
@@ -146,7 +151,7 @@
             var it = sumData[i];
             dataAxis.push(it.unitName);
             data.push(it.rate);
-            if(yMax < it.rate) {
+            if (yMax < it.rate) {
                 yMax = it.rate;
             }
         }
@@ -238,194 +243,16 @@
         }
     }
 
-    function getMonthData(unitPoints, s, e) {
-        var monthData = [];
-        for (var k = 0; k < unitPoints.length; k++) {
-            var ps = unitPoints[k].points;
-            var t = 0;
-            for (var l = s; l < e; l++) {
-                monthData.push([t, k, getRate(ps[l])]);
-                t++;
-            }
-        }
-        return monthData;
-    }
-
-    function getMonthId(year, month) {
-        if (month < 10) {
-            return year + '-0' + month;
-        } else {
-            return year + '-' + month;
-        }
-    }
-
-    var calendarDataMap, units;
+    var heatMapChart;
 
     function initDayChart() {
         requestParams.dataType = 1;
-        $.postAjax("/qos/analysis/data/processed", requestParams, function(data) {
-            var unitPoints = data.unitPoints;
+        requestParams.dateSelector = '#monthInput';
 
-            calendarDataMap = {};
-            units = [];
-
-            var firstDay, lastDay, fristMonth, lastMonth;
-
-            if (unitPoints && unitPoints.length > 0) {
-                for (var i = 0; i < unitPoints.length; i++) {
-                    units.push(unitPoints[i].unitName);
-                }
-
-                var unitPoint = unitPoints[0];
-                var points = unitPoints[0].points;
-
-                if (points && points.length > 0) {
-
-                    var year = points[0].year,
-                        month = points[0].month,
-                        day = points[0].day,
-                        size = 0,
-                        frist = true,
-                        s = 0,
-                        j = 0;
-
-                    firstDay = day;
-
-                    for (; j < points.length; j++) {
-                        var p = points[j];
-                        size++;
-                        var y = p.year,
-                            m = p.month;
-                        if (month != m) {
-                            calendarDataMap[getMonthId(year, month)] = {
-                                year: year,
-                                month: month,
-                                day: day,
-                                size: size - 1,
-                                points: getMonthData(unitPoints, s, j)
-                            };
-
-                            if (frist) {
-                                fristMonth = getMonthId(year, month);
-                                frist = false;
-                            }
-
-                            month = m;
-                            year = y;
-                            day = 1;
-                            s = j;
-                            size = 1;
-                        }
-                    }
-
-                    lastMonth = getMonthId(year, month);
-                    lastDay = points[j - 1].day;
-
-                    calendarDataMap[lastMonth] = {
-                        year: year,
-                        month: month,
-                        points: getMonthData(unitPoints, s, j)
-                    };
-                }
-
-            }
-
-            if (fristMonth) {
-                laydate.render({
-                    elem: '#monthInput',
-                    type: 'month',
-                    min: fristMonth + '-' + firstDay,
-                    max: lastMonth + '-' + lastDay,
-                    value: fristMonth,
-                    done: function(value, date, endDate) {
-                        drawDayChart(value);
-                    }
-                });
-
-                drawDayChart(fristMonth);
-            }
-        });
-    }
-
-    function drawDayChart(dataId) {
-        if (!dayChart) {
-            var dom = document.getElementById("dayChartDiv");
-            dayChart = echarts.init(dom);
+        if (!heatMapChart) {
+            heatMapChart = new tonto.Heatmap("dayChartDiv");
         }
-
-        if (!dataId) {
-            return;
-        };
-
-        var data = calendarDataMap[dataId],
-            yAxis = units,
-            xAxis = [];
-
-        if (!data) {
-            return;
-        }
-
-        var year = data.year,
-            month = data.month;
-
-        for (var s = data.day, i = 0; i < data.size; s++, i++) {
-            xAxis.push(s);
-        }
-
-        data = data.points;
-
-        option = {
-            tooltip: {
-                position: 'top'
-            },
-            animation: false,
-            grid: {
-                height: '50%',
-                y: '10%'
-            },
-            xAxis: {
-                type: 'category',
-                data: xAxis,
-                splitArea: {
-                    show: true
-                }
-            },
-            yAxis: {
-                type: 'category',
-                data: yAxis,
-                splitArea: {
-                    show: true
-                }
-            },
-            visualMap: {
-                min: 0,
-                max: 10,
-                calculable: true,
-                orient: 'horizontal',
-                left: 'center',
-                bottom: '15%'
-            },
-            series: [{
-                name: 'Punch Card',
-                type: 'heatmap',
-                data: data,
-                label: {
-                    normal: {
-                        show: true
-                    }
-                },
-                itemStyle: {
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }]
-        };
-
-        if (option && typeof option === "object") {
-            dayChart.setOption(option, true);
-        }
+        heatMapChart.updateData(requestParams);
     }
     </script>
 </body>
