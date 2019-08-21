@@ -688,3 +688,41 @@ CREATE TABLE `infection` (
   `update_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新人',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+DROP TABLE IF EXISTS `count_screenNumber`;
+CREATE TABLE `count_screenNumber` (
+  `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
+  `perinatal_heart_disease_number` INTEGER COMMENT '围产期心脏病筛查人数',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `update_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `count_referral`;
+CREATE TABLE `count_referral` (
+  `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
+	`up_out_number` INTEGER COMMENT '本医疗机构向上级医疗机构转出人数',
+	`down_out_number` INTEGER COMMENT '本医疗机构向下级医疗机构转出人数',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `update_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+DROP TABLE IF EXISTS `count_antibiotics`;
+CREATE TABLE `count_antibiotics` (
+  `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
+	`varieties` INTEGER COMMENT '住院患者人均使用抗菌药物品种数',
+	`average_cost` DOUBLE COMMENT '住院患者人均使用抗菌药物费用',
+`user_rate` DOUBLE COMMENT '住院患者使用抗菌药物的百分率',
+`rate_of_total` DOUBLE COMMENT '住院患者抗菌药物占总费用百分率',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `create_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '创建人',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `update_user_id` varchar(32) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT '更新人',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

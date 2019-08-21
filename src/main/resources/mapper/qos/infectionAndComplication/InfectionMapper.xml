@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.paladin.qos.mapper.infectionAndComplication.InfectionMapper">
-	<resultMap id="BaseResultMap" type="com.paladin.qos.model.infectionAndComplication.Infection">
+<mapper namespace="com.paladin.qos.mapper.infectioncomplication.InfectionMapper">
+	<resultMap id="BaseResultMap" type="com.paladin.qos.model.infectioncomplication.Infection">
 		<id column="id" jdbcType="VARCHAR" property="id" />
         <!--医院的对象-->
         <result column="hospital_id" jdbcType="VARCHAR" property="hospitalId" />
@@ -39,7 +39,7 @@
     </sql>
 
 
-    <insert id="insert" parameterType="com.paladin.qos.model.infectionAndComplication.Infection">
+    <insert id="insert" parameterType="com.paladin.qos.model.infectioncomplication.Infection">
         insert into infection (
         id,
         hospital_id,
@@ -63,7 +63,7 @@
         #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR})
     </insert>
 
-    <update id="update" parameterType="com.paladin.qos.model.infectionAndComplication.Infection">
+    <update id="update" parameterType="com.paladin.qos.model.infectioncomplication.Infection">
         update infection
         set total_infection = #{totalInfection,jdbcType=VARCHAR},
         operating_departments_infection = #{operatingDepartmentsInfection,jdbcType=DOUBLE},
@@ -81,7 +81,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
-    <select id="findInfectRecord" resultType="com.paladin.qos.service.infectionAndComplication.vo.InfectionVO">
+    <select id="findInfectRecord" resultType="com.paladin.qos.service.infectioncomplication.vo.InfectionVO">
         SELECT i.id,i.`total_infection` AS totalInfection,i.`create_time` as createTime, s.account AS createUserId
         FROM
         infection as i

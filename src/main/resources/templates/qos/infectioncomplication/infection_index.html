@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header"/>
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type"/>
+<section class="content-header">
+    <h1>医院感染类指标</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input type="text" name="createUserId" class="form-control" th:value="${query?.createUserId}" placeholder="请输入用户名" >
+                    </div>
+
+                    <!--<div class="col-md-2">-->
+                        <!--<select name="nature" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.nature}" enumcode="nature-type">-->
+                            <!--<option value="">请选择性质</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <div class="col-md-10">
+                        <div class="pull-right" >
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+    </div>
+    <div class="box box-solid" style="margin-top:20px">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+                <div class="btn-group">
+                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<input type="hidden" id="canAdd" th:value="${canAdd}"/>
+<div th:include="/qos/footer"/>
+
+<script type="text/javascript">
+    var table;
+    $(function () {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医院感染总发生率", field: "totalInfection",formatter: getRate},
+                    {title: "创建时间", field: "createTime",formatter: "datetime"},
+                    {title: "创建人", field: "createUserId"},
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function (e, value, row, index) {
+                                detail(row);
+
+                            },
+                            'click .remove': function (e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/infectioncomplication/infection/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/qos/infectioncomplication/infection/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+    var canAdd = $("#canAdd").val();
+    function add() {
+        // window.location = '/qos/infectioncomplication/infection/add';
+        if(canAdd === 'true'){
+            window.location = '/qos/infectioncomplication/infection/add';
+
+        }else{
+
+            $.errorMessage("添加记录未满半年！");
+        }
+
+    }
+    function getRate(value, row, index){
+        if(value)
+        return value+"%";
+    }
+
+    function detail(row) {
+        window.location = '/qos/infectioncomplication/infection/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function () {
+                $.getAjax('/qos/infectioncomplication/infection/delete?id=' + row.id, function () {
+                    $.successMessage("删除成功");
+                    window.location = '/qos/infectioncomplication/infection/index';
+                    table.refresh();
+                });
+            });
+        }
+    }
+</script>
+</body>
+
+</html>

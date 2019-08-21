@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header"/>
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type"/>
+<section class="content-header">
+    <h1>双向转诊统计</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input type="text" name="createUserId" class="form-control" th:value="${query?.createUserId}" placeholder="请输入用户名" >
+                    </div>
+
+                    <!--<div class="col-md-2">-->
+                        <!--<select name="nature" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.nature}" enumcode="nature-type">-->
+                            <!--<option value="">请选择性质</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <div class="col-md-10">
+                        <div class="pull-right" >
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+    </div>
+    <div class="box box-solid" style="margin-top:20px">
+        <div id="result" class="box-body">
+            <table id="dataGrid"></table>
+            <div id="toolbar">
+                <div class="btn-group">
+                    <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<input type="hidden" id="canAdd" th:value="${canAdd}"/>
+<div th:include="/qos/footer"/>
+
+<script type="text/javascript">
+    var table;
+    $(function () {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "本医疗机构向上级医疗机构转出人数", field: "upOutNumber"},
+                    {title: "本医疗机构向下级医疗机构转出人数", field: "downOutNumber"},
+                    {title: "创建时间", field: "createTime",formatter: "datetime"},
+                    {title: "创建人", field: "createUserId"},
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function (e, value, row, index) {
+                                detail(row);
+
+                            },
+                            'click .remove': function (e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/count/referral/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/qos/count/referral/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+
+    var content = '<form id="transfers" class="form-horizontal" style="margin-top: 20px;">' +
+
+        '    <label for="name" class="col-xs-8 control-label">本医疗机构向上级医疗机构转出人数</label>' +
+        '    <div class="col-xs-8" style="margin-left: 18px">' +
+        '        <input type="number" class="form-control" id="upOutNumber" name="upOutNumber" required="required" placeholder="请输入"></input>' +
+        '    </div>' +
+        '    <label for="name" class="col-xs-8 control-label">本医疗机构向下级医疗机构转出人数</label>' +
+        '    <div class="col-xs-8" style="margin-left: 18px">' +
+        '        <input type="number" class="form-control" id="downOutNumber" name="downOutNumber" required="required" placeholder="请输入"></input>' +
+        '    </div>' +
+        '    <div class="col-sm-5 col-sm-offset-4" style="margin-top: 20px;">' +
+        '        <a onclick="submit()" type="button" class="btn btn-primary btn-block">确定</a>' +
+        '    </div>' +
+        '</form>';
+
+    var index;
+    function add(row) {
+        index = layer.open({
+            type: 1,
+            title: '添加',
+            closeBtn: 1,
+            maxmin: true, //开启最大化最小化按钮
+            area: $.getOpenLayerSize(400, 250),
+            maxmin: false, //开启最大化最小化按钮
+            content: content,
+            success: function(){
+
+
+            }
+        });
+    }
+
+    function submit() {
+        var upOutNumber = $("#upOutNumber").val();
+        var downOutNumber=$("#downOutNumber").val();
+        // if (schoolFullName == null || schoolFullName == '') {
+        //     $.errorMessage("名称不能为空");
+        //     return;
+        // }
+        // var level = $("#level").val();
+        // var parentId = $("#parentId").val();
+        var data = {
+            upOutNumber:upOutNumber,
+            downOutNumber:downOutNumber
+        }
+        $.postAjax("/qos/count/referral/save",data, function(res) {
+            $.successMessage("新增成功");
+            table.refresh();
+            layer.close(index);
+        })
+    }
+    // var canAdd = $("#canAdd").val();
+    // function add() {
+    //     // window.location = '/qos/infectioncomplication/infection/add';
+    //     if(canAdd === 'true'){
+    //         window.location = '/qos/infectionAndComplication/infection/add';
+    //
+    //     }else{
+    //
+    //         $.errorMessage("添加记录未满半年！");
+    //     }
+    //
+    // }
+
+
+    function detail(row) {
+        window.location = '/qos/count/referral/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function () {
+                $.getAjax('/qos/count/referral/delete?id=' + row.id, function () {
+                    $.successMessage("删除成功");
+                    window.location = '/qos/count/referral/index';
+                    table.refresh();
+                });
+            });
+        }
+    }
+</script>
+</body>
+
+</html>
