@@ -106,6 +106,6 @@ public class AnalysisController {
 			endDate = new Date();
 		}
 
-		return CommonResponse.getSuccessResponse(analysisService.getAnalysisResult(eventId, startDate, endDate));
+		return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, startDate, endDate));
 	}
 }

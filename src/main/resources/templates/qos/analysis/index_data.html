@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <!--   <section class="content-header">
@@ -81,11 +82,14 @@
         return x.toFixed(2) * 1;
     }
 
+    var currentElement;
+
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
+                    { checkbox: true },
                     { title: "医院名称", field: "unitName" },
                     { title: "事件发生数", field: "eventNum" },
                     { title: "样本总数", field: "totalNum" },
@@ -101,9 +105,14 @@
             url: '/qos/analysis/data/processing',
             pagination: false,
             searchbar: '#searchbar',
-            onClickRow: function(row, $element) {
-                $('.table-selected').removeClass('table-selected');
-                $($element).addClass('table-selected');
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
                 console.log(row);
             },
             queryParams: function(params) {
@@ -111,7 +120,7 @@
                 return params;
             },
             responseHandler: function(res) {
-                sumData = res.points || [];
+                sumData = res || [];
                 for (var i = 0; i < sumData.length; i++) {
                     var row = sumData[i];
                     row.rate = getRate(row);

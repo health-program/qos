@@ -278,3 +278,4 @@ tonto.DayData.prototype.getData = function(year, month) {
 tonto.DayData.prototype.getFirstData = function() {
     return this.getData(this.firstYear, this.firstMonth);
 }
+

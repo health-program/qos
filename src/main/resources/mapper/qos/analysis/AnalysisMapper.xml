@@ -69,7 +69,7 @@
 	</select>
 	
 	
-	<select id="getAnalysisResult" resultType="com.paladin.qos.service.analysis.data.AnalysisUnit">
+	<select id="getAnalysisResultGroupByUnit" resultType="com.paladin.qos.service.analysis.data.AnalysisUnit">
 		SELECT unit_id AS unitId,
 	       SUM(event_num) AS eventNum,
 	       SUM(total_num) AS totalNum
@@ -78,6 +78,31 @@
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
 		GROUP BY `unit_id`
+	</select>
+	
+	<select id="getAnalysisResultGroupByMonth" resultType="com.paladin.qos.service.analysis.data.AnalysisMonth">
+		SELECT year, 
+		   month,
+	       SUM(event_num) AS eventNum,
+	       SUM(total_num) AS totalNum
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		GROUP BY `year`, `month`
+	</select>
+	
+	<select id="getAnalysisResultOfUnitGroupByMonth" resultType="com.paladin.qos.service.analysis.data.AnalysisMonth">
+		SELECT year, 
+		   month,
+	       SUM(event_num) AS eventNum,
+	       SUM(total_num) AS totalNum
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND unit_id=#{unitId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		GROUP BY `year`, `month`
 	</select>
 	
 </mapper>
