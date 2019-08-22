@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+	<tt:constant enumcode="boolean-type,role-level-type" />
+	
+    <section class="content-header">
+        <h1>抗菌药物使用统计详情</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/infectionAndComplication/operationComplication/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+ 		<a th:href="@{/qos/countantibiotics/index?(teamId=${teamId})}" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}"/>
+    
+    
+    
+	<div th:include="/common/footer" />
+	<script type="text/javascript">
+	
+	
+	
+	
+	 var options = {
+	 	        id: "model",
+	 	        name: "详情",
+	 	        server: false,
+	 	        cancelBtn: false,
+	 	        editFormClass: false,
+	 	        columns: [
+	 	        	{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left",name: "varieties",inputType: "NUMBER",unit:"%"},
+					{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",name: "averageCost",inputType: "NUMBER",unit:"%"},
+					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",name: "userRate",inputType: "NUMBER",unit:"%"},
+					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",name: "rateOfTotal",inputType: "NUMBER",unit:"%"},
+	 				     ]
+	 					}
+	 					var model, itemId;
+
+	 					$(function() {
+	 						var html = generateHtml(options);
+	 						$(".content").html(html);
+	 						$.initComponment($(".content"));
+	 						itemId = $("#id").val();
+
+	 						$.getAjax("/qos/countantibiotics/get?id=" + $("#id").val(),
+	 								function(data) {
+	 									model = new tonto.Model("model",
+	 											options.columns, {
+	 												server : false,
+	 												submitClick : function() {
+	 													update();
+	 												}
+	 											});
+	 									model.setData(data);
+	 								});
+	 					});
+
+	 					function update(confirm) {
+	 						var data = model.getFormData();
+	 							data['id'] = itemId;
+	 							$.postJsonAjax("/qos/countantibiotics/update", data,
+	 									function(result) {
+	 										$.successAlert("保存成功", function() {
+	 											model.toView();
+	 											model.setData(data);
+	 										});
+	 									}, $("#submitBtn"));
+	 					}
+	 					
+	   
+		function getRate(value, row, index) {
+			return value + "%";
+		}
+ 	</script>
+</body>
+
+</html>
