@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
 import com.paladin.qos.service.analysis.data.DataPointDay;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
@@ -26,6 +27,11 @@ public interface AnalysisMapper {
 	List<DataPointWeekMonth> getDataPointOfWeekMonth(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("start") int start,
 			@Param("end") int end);
 
-	List<AnalysisUnit> getAnalysisResult(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+	List<AnalysisUnit> getAnalysisResultGroupByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
+	List<AnalysisMonth> getAnalysisResultGroupByMonth(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+
+	List<AnalysisMonth> getAnalysisResultOfUnitGroupByMonth(@Param("eventId") String eventId, @Param("unitId") String unitId,  @Param("start") int start, @Param("end") int end);
+
+	
 }

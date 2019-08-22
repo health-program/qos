@@ -11,8 +11,8 @@ import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
+import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
-import com.paladin.qos.service.analysis.data.AnalysisUnitResult;
 import com.paladin.qos.service.analysis.data.DataPointDay;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
@@ -132,11 +132,42 @@ public class AnalysisService {
 		return new DataResult<DataPointWeekMonth>(eventId, DATA_TYPE_WEEK_MONTH, unitPoints);
 	}
 
-	// ----------------------------------->查找某事件所有医院在时间段内的统计<-----------------------------------
-
-	public AnalysisUnitResult getAnalysisResult(String eventId, Date startDate, Date endDate) {
-		List<AnalysisUnit> list = analysisMapper.getAnalysisResult(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
-		return new AnalysisUnitResult(eventId, list);
+	/**
+	 * 按医院分组统计时间段内事件
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.getAnalysisResultGroupByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
+	/**
+	 * 按时间分组统计时间段内所有医院事件
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.getAnalysisResultGroupByMonth(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 
+	 * 按时间分组统计时间段内某医院事件
+	 * 
+	 * @param eventId
+	 * @param unitId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, String unitId, Date startDate, Date endDate) {
+		return analysisMapper.getAnalysisResultOfUnitGroupByMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+	}
 }
