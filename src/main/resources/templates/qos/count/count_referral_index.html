@@ -116,20 +116,25 @@
         '</form>';
 
     var index;
+    var canAdd = $("#canAdd").val();
     function add(row) {
-        index = layer.open({
-            type: 1,
-            title: '添加',
-            closeBtn: 1,
-            maxmin: true, //开启最大化最小化按钮
-            area: $.getOpenLayerSize(400, 250),
-            maxmin: false, //开启最大化最小化按钮
-            content: content,
-            success: function(){
+        if(canAdd === 'true'){
+            index = layer.open({
+                type: 1,
+                title: '添加',
+                closeBtn: 1,
+                maxmin: true, //开启最大化最小化按钮
+                area: $.getOpenLayerSize(400, 250),
+                maxmin: false, //开启最大化最小化按钮
+                content: content,
+                success: function(){
+                }
+            });
+        }else{
 
+            $.errorMessage("添加记录未满一个月！");
+        }
 
-            }
-        });
     }
 
     function submit() {

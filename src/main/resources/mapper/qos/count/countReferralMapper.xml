@@ -2,6 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.count.CountReferralMapper">
 
+    <resultMap id="BaseResultMap" type="com.paladin.qos.model.count.CountReferral">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="up_out_number" jdbcType="INTEGER" property="upOutNumber" />
+        <result column="down_out_number" jdbcType="INTEGER" property="downOutNumber" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        up_out_number,
+        down_out_number,
+        create_time,
+        create_user_id,
+        update_time,
+        update_user_id
+    </sql>
+
     <select id="findReferralRecord" resultType="com.paladin.qos.service.count.vo.CountReferralVO">
         SELECT c.id,c.`up_out_number` AS upOutNumber,c.`down_out_number` AS downOutNumber,c.`create_time` as createTime, s.account AS createUserId
         FROM
@@ -19,5 +39,13 @@
         <!--</if>-->
 
         ORDER BY c.create_time DESC
+    </select>
+
+    <select id="findRecentlyRecord" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM
+        count_referral
+        ORDER BY create_time DESC
+        limit 1
     </select>
 </mapper>

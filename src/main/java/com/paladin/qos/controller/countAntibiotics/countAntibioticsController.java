@@ -1,22 +1,5 @@
 package com.paladin.qos.controller.countAntibiotics;
 
-import java.io.IOException;
-import java.util.Date;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
@@ -26,14 +9,19 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.countAntibiotics.dto.CountAntibioticsExportCondition;
 import com.paladin.qos.model.countantibiotics.CountAntibiotics;
-import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.service.countantibiotics.CountAntibioticsService;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
-import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
-import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
-import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/qos/countantibiotics")

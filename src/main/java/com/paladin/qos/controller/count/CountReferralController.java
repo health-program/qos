@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.text.ParseException;
 
 @Controller
 @RequestMapping("/qos/count/referral")
@@ -34,7 +35,9 @@ public class CountReferralController extends ControllerSupport {
 
     @GetMapping("/index")
     @QueryInputMethod(queryClass = CountReferral.class)
-    public String index(){
+    public String index(Model model){
+        Boolean canAdd = countReferralService.canAdd();
+        model.addAttribute("canAdd",canAdd);
         return "/qos/count/count_referral_index";
     }
 

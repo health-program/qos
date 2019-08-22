@@ -690,8 +690,8 @@ CREATE TABLE `infection` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 
-DROP TABLE IF EXISTS `count_screenNumber`;
-CREATE TABLE `count_screenNumber` (
+DROP TABLE IF EXISTS `count_screen_number`;
+CREATE TABLE `count_screen_number` (
   `id` varchar(32) COLLATE utf8_unicode_ci NOT NULL COMMENT 'id',
   `perinatal_heart_disease_number` INTEGER COMMENT '围产期心脏病筛查人数',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',

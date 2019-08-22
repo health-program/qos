@@ -21,4 +21,7 @@ public interface CountReferralMapper extends CustomMapper<CountReferral>{
 
     //根据查询条件搜索记录列表
     List<CountReferralVO> findReferralRecord(CountReferralQuery query);
+
+    //查找最近一条记录
+    CountReferral findRecentlyRecord();
 }
