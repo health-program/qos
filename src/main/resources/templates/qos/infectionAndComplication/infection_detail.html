@@ -16,7 +16,7 @@
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/qos/infectionAndComplication/infection/index?(teamId=${teamId})}" class="btn btn-primary btn-block">返回</a>
+    	<a href="/qos/infectionAndComplication/infection/index" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
     <div th:include="/qos/footer" />
@@ -29,15 +29,15 @@
 	        cancelBtn: false,
 	        editFormClass: false,
 	        columns: [
-					{title : "医院感染总发生率统计",name : "totalInfection",inputType : "NUMBER",unit:"%"},
-					{title : "与手术相关科室感染发生率统计",name : "operatingDepartmentsInfection",inputType : "NUMBER",unit:"%"},
-					{title : "手术部位感染总发生率统计",name : "operatingPartInfection",inputType : "NUMBER",unit:"%"},
-					{title : "手术风险分级（NNIS分级）手术部位感染率统计",name : "operatingRiskInfection",inputType : "NUMBER",unit:"%"},
-					{title : "手术患者肺部感染发生率统计",name : "lungInfection",inputType : "NUMBER",unit:"%"},
-					{title : "新生儿患者医院感染发生率统计",name : "newBornInfection",inputType : "NUMBER",unit:"%"},
-					{title: "择期手术患者医院感染发生率统计", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%"},
-                    {title: "与血液透析相关血液感染发生率统计", name: "bloodInfection", inputType: "NUMBER",unit:"%"},
-                    {title: "重症监护室相关感染率统计", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%"}
+					{title : "医院感染总发生率",name : "totalInfection",inputType : "NUMBER",unit:"%"},
+					{title : "与手术相关科室感染发生率",name : "operatingDepartmentsInfection",inputType : "NUMBER",unit:"%"},
+					{title : "手术部位感染总发生率",name : "operatingPartInfection",inputType : "NUMBER",unit:"%"},
+					{title : "手术风险分级（NNIS分级）手术部位感染率",name : "operatingRiskInfection",inputType : "NUMBER",unit:"%"},
+					{title : "手术患者肺部感染发生率",name : "lungInfection",inputType : "NUMBER",unit:"%"},
+					{title : "新生儿患者医院感染发生率",name : "newBornInfection",inputType : "NUMBER",unit:"%"},
+					{title: "择期手术患者医院感染发生率", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%"},
+                    {title: "与血液透析相关血液感染发生率", name: "bloodInfection", inputType: "NUMBER",unit:"%"},
+                    {title: "重症监护室相关感染率", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%"}
 				     ]
 					}
 					var model, itemId;

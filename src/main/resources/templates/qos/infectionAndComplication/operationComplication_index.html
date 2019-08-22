@@ -6,7 +6,7 @@
 <body>
 	<tt:constant enumcode="boolean-type,role-level-type" />
 	<section class="content-header">
-		<h1>手术并发症类指标</h1>
+		<h1>手术并发症类指标统计</h1>
 	</section>
 	<section class="content">
 		<div class="box box-solid">
@@ -87,15 +87,24 @@
 											formatter : getRate
 										},
 										{
+											title : "手术患者手术后深静脉血栓发生率",
+											align : "center",
+											field : "venousThrombosis",
+											formatter : getRate
+										},
+										{
+											title : "手术患者手术后出血或血肿发生率",
+											align : "center",
+											field : "hematoma",
+											formatter : getRate
+										},
+										
+										
+										{
 											title : "创建时间",
 											align : "center",
 											field : "createTime",
 											formatter : "datetime"
-										},
-										{
-											title : "创建人",
-											align : "center",
-											field : "createUserId"
 										},
 										{
 											title : "操作",

@@ -82,11 +82,19 @@
     </update>
 
     <select id="findInfectRecord" resultType="com.paladin.qos.service.infectionAndComplication.vo.InfectionVO">
-        SELECT i.id,i.`total_infection` AS totalInfection,i.`create_time` as createTime, s.account AS createUserId
-        FROM
-        infection as i
-        LEFT JOIN sys_user s ON i.create_user_id=s.id
-        WHERE 1=1
+        SELECT
+			i.id,
+			i.`total_infection` AS totalInfection,
+			i.operating_departments_infection as operatingDepartmentsInfection,
+			i.operating_part_infection as operatingPartInfection,
+			i.operating_risk_infection as operatingRiskInfection,
+			i.`create_time` AS createTime,
+			s.account AS createUserId
+		FROM
+			infection AS i
+		LEFT JOIN sys_user s ON i.create_user_id = s.id
+		WHERE
+			1 = 1
         <if test="createUserId !=null and createUserId != '' ">
             AND s.account LIKE CONCAT('%',#{createUserId},'%')
         </if>
