@@ -9,14 +9,14 @@
   <section class="content-header">
         <h1>手术并发症指标详情</h1>
         <ol class="breadcrumb">
-            <li><a href="/qos/infectionAndComplication/operationComplication/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li><a href="/qos/operationComplication/index"><i class="fa fa-list-alt"></i>列表</a></li>
             <li class="active">详情</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
- 		<a th:href="@{/qos/operationComplication/index?(teamId=${teamId})}" class="btn btn-primary btn-block">返回</a>
+ 		<a th:href="@{/qos/operationComplication/index}" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
     <div th:include="/qos/footer" />

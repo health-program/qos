@@ -6,7 +6,7 @@
 <body>
 <tt:constant enumcode="nature-type,subordination-type,region-type"/>
 <section class="content-header">
-    <h1>医院感染类指标</h1>
+    <h1>医院感染类指标统计</h1>
 </section>
 <section class="content">
     <div class="box box-solid">
@@ -64,8 +64,10 @@
             columns: [
                 [
                     {title: "医院感染总发生率", field: "totalInfection",formatter: getRate},
+                    {title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection",formatter: getRate},
+                    {title: "手术部位感染总发生率", field: "operatingPartInfection",formatter: getRate},
+                    {title: "手术风险分级(NNIS分级)手术部位感染率", field: "operatingRiskInfection",formatter: getRate},
                     {title: "创建时间", field: "createTime",formatter: "datetime"},
-                    {title: "创建人", field: "createUserId"},
                     {
                         title: "操作",
                         align: "center",

@@ -7,22 +7,23 @@
     <tt:constant enumcode="boolean-type,role-level-type" />
     
     <section class="content-header">
-        <h1>人员信息</h1>
+        <h1>手术并发症类指标添加</h1>
         <ol class="breadcrumb">
-            <li><a href="/common/people/index"><i class="fa fa-list-alt"></i>人员列表Dannwwu</a></li>
-            <li class="active">添加人员</li>
+            <li><a href="/qos/operationComplication/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">添加</li>
         </ol>
     </section>
     <section class="content">
     </section>
     <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/qos/ren/index" class="btn btn-primary btn-block">返回</a>
+    	<a href="/qos/operationComplication/index" class="btn btn-primary btn-block">返回</a>
     </div>
     <div th:include="/common/footer" />
     <script type="text/javascript">
     var options = {
         id: "model",
-        name: "添加角色",
+        cancelBtn: false,
+        name: "添加",
         url: "/qos/operationComplication/save",
         columns: [
         	 { title: "手术患者并发症发生率", align: "center", name: "embolism",inputType: "NUMBER",unit:"%"},

@@ -47,6 +47,12 @@ public class DataUnitController extends ControllerSupport {
 	public Object findPage(DataUnitQuery query) {
 		return CommonResponse.getSuccessResponse(dataUnitService.searchPage(query));
 	}
+	
+	@RequestMapping(value = "/find/select", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object find() {
+		return CommonResponse.getSuccessResponse(dataUnitService.findAll());
+	}
 
 	@GetMapping("/get")
 	@ResponseBody
