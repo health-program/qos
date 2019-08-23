@@ -7,6 +7,9 @@ import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicatio
 import com.paladin.qos.service.infectionAndComplication.vo.OperationComplicationVO;
 
 
+
+import io.lettuce.core.dynamic.annotation.Param;
+
 import java.util.List;
 
 
@@ -22,7 +25,7 @@ public interface OperationComplicationMapper extends CustomMapper<OperationCompl
 	public int insertInto(OperationComplicationVO vo);
 
 
-	public OperationComplicationVO findRecentlyRecord();
+	public OperationComplicationVO findRecentlyRecord(@Param("unitId") String uintId);
 }
 
 

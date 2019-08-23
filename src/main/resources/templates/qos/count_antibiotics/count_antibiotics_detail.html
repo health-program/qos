@@ -18,9 +18,6 @@
     <div class="col-sm-2 col-sm-offset-5 btn-back">
  		<a href="/qos/countantibiotics/index" class="btn btn-primary btn-block">返回</a>
     </div>
-    <input type="hidden" id="id" th:value="${id}"/>
-    
-    
     
 	<div th:include="/common/footer" />
 	<script type="text/javascript">
@@ -42,14 +39,12 @@
 					{ title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
 	 				     ]
 	 					}
-	 					var model, itemId;
+	 					var model;
 
 	 					$(function() {
 	 						var html = generateHtml(options);
 	 						$(".content").html(html);
 	 						$.initComponment($(".content"));
-	 						itemId = $("#id").val();
-
 	 						$.getAjax("/qos/countantibiotics/get?id=" + $("#id").val(),
 	 								function(data) {
 	 									model = new tonto.Model("model",
