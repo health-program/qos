@@ -32,7 +32,12 @@ public class CountReferralService extends ServiceSupport<CountReferral> {
         return new PageResult<>(page);
     }
 
-    //判断半年后新增
+
+    public int judge(String unitId){
+        return countReferralMapper.judge(unitId);
+    }
+
+
     public Boolean canAdd()  {
         CountReferral countReferral = countReferralMapper.findRecentlyRecord();
         //todo test

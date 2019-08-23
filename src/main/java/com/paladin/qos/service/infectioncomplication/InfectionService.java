@@ -43,9 +43,6 @@ public class InfectionService extends ServiceSupport<Infection> {
         }
         Infection infection = new Infection();
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(dto, infection);
-
-        //todo 取当前登录账号对应的医院
-        infection.setHospitalId("2");
         return save(infection);
     }
 
@@ -76,8 +73,8 @@ public class InfectionService extends ServiceSupport<Infection> {
     }
 
     //判断半年后新增
-    public Boolean canAdd() {
-        Infection infection = infectionMapper.findRecentlyRecord();
+    public Boolean canAdd(String unitId) {
+        Infection infection = infectionMapper.findRecentlyRecord(unitId);
         //todo test
 //        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 //        Date testDate=sdf.parse("2019-2-13");

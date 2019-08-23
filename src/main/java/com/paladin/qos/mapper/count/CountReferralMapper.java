@@ -11,6 +11,7 @@ import com.paladin.qos.service.school.dto.OrgSchoolQuery;
 import com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO;
 import com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO;
 import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface CountReferralMapper extends CustomMapper<CountReferral>{
 
     //查找最近一条记录
     CountReferral findRecentlyRecord();
+
+    public int judge(@Param("unitId") String unitId);
 }

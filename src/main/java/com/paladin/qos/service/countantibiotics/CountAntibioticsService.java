@@ -12,9 +12,12 @@ import com.paladin.qos.model.countantibiotics.CountAntibiotics;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 
+import java.util.Date;
+import java.util.List;
+
 @Service
 public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
-    
+
     @Autowired
     CountAntibioticsMapper countAntibioticsMapper;
 
@@ -23,9 +26,14 @@ public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
 	countAntibioticsMapper.selecttoAll(query);
 	return new PageResult<>(page);
     }
-    
+
     public int judge(String unitId){
 	return countAntibioticsMapper.judge(unitId);
     }
-	    
+
+    public List<CountAntibioticsVO> getReportByQuery(String unitId,Date month) {
+//		eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate)
+        return countAntibioticsMapper.getReportByQuery(unitId,month);
+    }
+
 }

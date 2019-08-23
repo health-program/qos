@@ -1,6 +1,8 @@
 package com.paladin.qos.service.infectioncomplication.vo;
 
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 import java.util.Date;
 
 public class InfectionVO {
@@ -41,6 +43,19 @@ public class InfectionVO {
 
     private String updateUserId;
 
+    private String unitId;
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitId);
+    }
     public Double getTotalInfection() {
         return totalInfection;
     }

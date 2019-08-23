@@ -23,14 +23,14 @@
     </sql>
 
     <select id="findReferralRecord" resultType="com.paladin.qos.service.count.vo.CountReferralVO">
-        SELECT c.id,c.`up_out_number` AS upOutNumber,c.`down_out_number` AS downOutNumber,c.`create_time` as createTime, s.account AS createUserId
+        SELECT c.id,c.`up_out_number` AS upOutNumber,c.`down_out_number` AS downOutNumber,c.`create_time` as createTime,c.unit_id as unitId, s.account AS createUserId
         FROM
         count_referral as c
         LEFT JOIN sys_user s ON c.create_user_id=s.id
         WHERE 1=1
-        <!--<if test="createUserId !=null and createUserId != '' ">-->
-            <!--AND s.account LIKE CONCAT('%',#{createUserId},'%')-->
-        <!--</if>-->
+        <if test="unitId !=null and unitId != '' ">
+            AND unit_id=#{unitId}
+        </if>
         <!--<if test="dateBegin != null and dateBegin!=''">-->
         <!--and create_time <![CDATA[ >= ]]>Date(#{dateBegin})-->
         <!--</if>-->
@@ -47,5 +47,9 @@
         count_referral
         ORDER BY create_time DESC
         limit 1
+    </select>
+
+    <select id="judge" resultType="int">
+        SELECT count(1) FROM count_referral WHERE unit_id=#{unitId} and (DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) ORDER BY create_time desc LIMIT 1;
     </select>
 </mapper>

@@ -9,6 +9,7 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.InfectionExportCondition;
 import com.paladin.qos.model.infectioncomplication.Infection;
+import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.InfectionService;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionDTO;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
@@ -33,11 +34,13 @@ public class InfectionController extends ControllerSupport {
     @Autowired
     private InfectionService infectionService;
 
+    @Autowired
+    private DataUnitService dataUnitService;
+
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = InfectionQuery.class)
 	public String index(Model model) {
-		Boolean canAdd= infectionService.canAdd();
-		model.addAttribute("canAdd",canAdd);
+		model.addAttribute("unit", dataUnitService.findAll());
 		return "/qos/infectioncomplication/infection_index";
 	}
 
@@ -70,6 +73,9 @@ public class InfectionController extends ControllerSupport {
 	public Object save(@Valid InfectionDTO infectionDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
+		}
+		if(!infectionService.canAdd(infectionDTO.getUnitId())){
+			return CommonResponse.getErrorResponse("添加记录未满半年");
 		}
 		String id = UUIDUtil.createUUID();
 		infectionDTO.setId(id);

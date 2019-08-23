@@ -4,7 +4,7 @@
 	<resultMap id="BaseResultMap" type="com.paladin.qos.model.infectioncomplication.Infection">
 		<id column="id" jdbcType="VARCHAR" property="id" />
         <!--医院的对象-->
-        <result column="hospital_id" jdbcType="VARCHAR" property="hospitalId" />
+
 		<result column="total_infection" jdbcType="VARCHAR" property="totalInfection" />
 		<result column="operating_departments_infection" jdbcType="DOUBLE" property="operatingDepartmentsInfection" />
 		<result column="operating_part_infection" jdbcType="DOUBLE" property="operatingPartInfection" />
@@ -18,11 +18,11 @@
 		<result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 		<result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+        <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
 	</resultMap>
 
     <sql id="Base_Column_List">
         id,
-        hospital_id,
         total_infection,
         operating_departments_infection,
         operating_part_infection,
@@ -35,14 +35,14 @@
         create_time,
         create_user_id,
         update_time,
-        update_user_id
+        update_user_id,
+        unit_id
     </sql>
 
 
     <insert id="insert" parameterType="com.paladin.qos.model.infectioncomplication.Infection">
         insert into infection (
         id,
-        hospital_id,
         total_infection,
         operating_departments_infection,
         operating_part_infection,
@@ -55,12 +55,14 @@
         create_time,
         create_user_id,
         update_time,
-        update_user_id)
-        values (#{id,jdbcType=VARCHAR}, #{hospitalId,jdbcType=VARCHAR},
+        update_user_id,
+        unit_id
+        )
+        values (#{id,jdbcType=VARCHAR},
         #{totalInfection,jdbcType=VARCHAR}, #{operatingDepartmentsInfection,jdbcType=DOUBLE}, #{operatingPartInfection,jdbcType=DOUBLE},
         #{operatingRiskInfection,jdbcType=DOUBLE}, #{lungInfection,jdbcType=DOUBLE}, #{newBornInfection,jdbcType=DOUBLE},#{selectiveOperationsInfection,jdbcType=DOUBLE},
         #{bloodInfection,jdbcType=DOUBLE}, #{intensiveCareUnitInfection,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP},
-        #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR})
+        #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR} ,#{unitId,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.paladin.qos.model.infectioncomplication.Infection">
@@ -77,18 +79,19 @@
         create_time =  #{createTime,jdbcType=TIMESTAMP},
         create_user_id = #{createUserId,jdbcType=VARCHAR},
         update_time =  #{updateTime,jdbcType=TIMESTAMP},
-        update_user_id = #{updateUserId,jdbcType=VARCHAR}
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+        unit_id = #{unitId,jdbcType=VARCHAR}
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
     <select id="findInfectRecord" resultType="com.paladin.qos.service.infectioncomplication.vo.InfectionVO">
-        SELECT i.id,i.`total_infection` AS totalInfection,i.`create_time` as createTime, s.account AS createUserId
+        SELECT i.id,i.`total_infection` AS totalInfection,i.`operating_departments_infection` AS operatingDepartmentsInfection,i.`operating_part_infection` AS operatingPartInfection,i.`operating_risk_infection` AS operatingRiskInfection,i.`create_time` as createTime,i.`unit_id` as unitId, s.account AS createUserId
         FROM
         infection as i
         LEFT JOIN sys_user s ON i.create_user_id=s.id
         WHERE 1=1
-        <if test="createUserId !=null and createUserId != '' ">
-            AND s.account LIKE CONCAT('%',#{createUserId},'%')
+        <if test="unitId !=null and unitId != '' ">
+            AND unit_id=#{unitId}
         </if>
         <!--<if test="dateBegin != null and dateBegin!=''">-->
             <!--and create_time <![CDATA[ >= ]]>Date(#{dateBegin})-->
@@ -104,6 +107,7 @@
         SELECT <include refid="Base_Column_List" />
         FROM
         infection
+        WHERE unit_id=#{unitId}
         ORDER BY create_time DESC
         limit 1
     </select>

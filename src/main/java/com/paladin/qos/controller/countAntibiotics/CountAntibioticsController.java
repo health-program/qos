@@ -1,6 +1,7 @@
 package com.paladin.qos.controller.countAntibiotics;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -35,7 +36,7 @@ public class CountAntibioticsController extends ControllerSupport {
 
 	@Autowired
 	private CountAntibioticsService countAntibioticsService;
-	
+
 	@Autowired
 	private DataUnitService dataUnitService;
 
@@ -63,10 +64,36 @@ public class CountAntibioticsController extends ControllerSupport {
 	public Object getDetail(@RequestParam String id, Model model) {
 		return CommonResponse.getSuccessResponse(beanCopy(countAntibioticsService.get(id), new CountAntibioticsVO()));
 	}
-	
+
 	@GetMapping("/add")
 	public String add(){
 	    return "/qos/count_antibiotics/count_antibiotics_add";
+	}
+
+	//报表页面
+    @GetMapping("/data/index")
+    public Object dataIndex(Model model) {
+		model.addAttribute("unit", dataUnitService.findAll());
+		return "/qos/count/antibiotics_data";
+    }
+
+	@RequestMapping(value = "/data/processing", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getAntibioticsData(CountAntibioticsRequest request) {
+
+		String unitId=request.getUnitId();
+
+		Date month=request.getMonth();
+
+//		if (startDate == null) {
+//			return CommonResponse.getFailResponse();
+//		}
+//
+//		if (endDate == null) {
+//			endDate = new Date();
+//		}
+
+		return CommonResponse.getSuccessResponse(countAntibioticsService.getReportByQuery(unitId,month));
 	}
 
 	// 保存

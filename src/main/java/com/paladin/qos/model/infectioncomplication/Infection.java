@@ -10,16 +10,9 @@ public class Infection extends BaseModel{
     @Id
     private String id;
 
-    //todo 医院的对象
-    private String hospitalId;
 
-    public String getHospitalId() {
-        return hospitalId;
-    }
 
-    public void setHospitalId(String hospitalId) {
-        this.hospitalId = hospitalId;
-    }
+
 
     private Double totalInfection;//医院感染总发生率统计
 
@@ -46,6 +39,16 @@ public class Infection extends BaseModel{
     private Date updateTime;
 
     private String updateUserId;
+
+    private String unitId;
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
 
     public String getId() {
         return id;

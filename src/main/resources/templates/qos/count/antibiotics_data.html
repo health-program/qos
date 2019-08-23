@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header"/>
+
+<body>
+<tt:constant enumcode="data-event-type,data-unit-type"/>
+<section class="content-header">
+    <h1>数据展示</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <div class="form-group">
+                    <!--<div class="col-md-2">-->
+                    <!--<select name="" placeholder="医疗机构类别" class="form-control tonto-select-constant">-->
+                    <!--</select>-->
+                    <!--</div>-->
+                    <div class="col-md-2">
+                        <select name="unitId" class="form-control">
+                            <option value="">请选择单位</option>
+                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input name="month" id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
+                    </div>
+
+                    <!--<div class="col-md-2">-->
+                    <!--<input name="startTime" placeholder="请选择月份" autocomplete="off" type="text"-->
+                    <!--class="form-control tonto-datepicker-date" value="2018-01-01">-->
+                    <!--</div>-->
+                    <!--<div class="col-md-2">-->
+                    <!--<input name="endTime" placeholder="请输入结束时间" autocomplete="off" type="text"-->
+                    <!--class="form-control tonto-datepicker-date">-->
+                    <!--</div>-->
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search"
+                                    onclick="table.refresh()"><i class="fa fa-search"></i>查询
+                            </button>
+                            <button type="button" style="width:100px" class="btn btn-default"
+                                    onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-7">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 ">
+
+
+            <div class="col-md-6" style="background: #ffffff;box-shadow: 0 1px 1px rgba(0,0,0,0.1);">
+
+                <div id="dashboardTotalDiv" class="box-body" style="height: 300px;">
+
+                </div>
+            </div>
+            <div class="col-md-6" style="background: #ffffff;box-shadow: 0 1px 1px rgba(0,0,0,0.1)">
+
+                <div id="dashboardDiv" class="box-body" style="height: 300px;">
+
+                </div>
+            </div>
+
+
+            <div class="box box-solid" style="margin-top: 310px;">
+
+
+                <div id="columnarDiv" class="box-body" style="height: 450px">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer"/>
+<script type="text/javascript">
+    var table, rate, sumData, requestParams, sumChart;
+    var sum = 0;
+    var totalSum = 0;
+    var average = 0;
+    var totalAverage = 0;
+    $(function () {
+        laydate.render({
+            elem: '#monthInput',
+            type: 'month'
+        });
+        initTable();
+    });
+
+    function getRate(value, row, index) {
+        if (value)
+            return value.toFixed(2) + "%";
+    }
+
+    var domTotal = document.getElementById("dashboardTotalDiv");
+    var dom = document.getElementById("dashboardDiv");
+    var rateTotal = echarts.init(domTotal);
+    var rate = echarts.init(dom);
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "unitName"},
+                    {title: "住院患者人均使用抗菌药物品种数", field: "varieties"},
+                    {title: "住院患者人均使用抗菌药物费用", field: "averageCost"},
+                    {title: "住院患者使用抗菌药物的百分率", field: "userRate", formatter: getRate},
+                    {title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal", formatter: getRate},
+
+                ]
+            ],
+            url: '/qos/countantibiotics/data/processing',
+            pagination: false,
+            searchbar: '#searchbar',
+            queryParams: function (params) {
+                if (params.unitId!=null || params.month!=null){
+                    sum=0;
+                    totalSum=0;
+                }
+                requestParams = params;
+                debugger;
+                return params;
+            },
+            responseHandler: function (res) {
+                data = res;
+                if (data == 0) {
+                    showChartInfo(rateTotal, '暂无数据显示');
+                    showChartInfo2(rate, '暂无数据显示');
+                    return false;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    var row = data[i];
+
+                    sum += parseFloat(row.userRate);
+
+                    totalSum += parseFloat(row.rateOfTotal);
+                }
+                average = (sum / data.length).toFixed(2);
+                totalAverage = (totalSum / data.length).toFixed(2);
+
+                initRateDashBoard();
+                initColumnarDiv();
+
+                return data;
+
+            }
+        });
+    }
+
+    var showChartInfo = function (rateTotal, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        rateTotal.clear();
+        rateTotal.hideLoading();
+        rateTotal.setOption(msgOption)
+    };
+
+    var showChartInfo2 = function (rate, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        rate.clear();
+        rate.hideLoading();
+        rate.setOption(msgOption)
+    };
+
+    function initRateDashBoard() {
+        option = {
+            title: {
+                text: '住院患者使用抗菌药物百分率'
+            },
+            tooltip: {
+                formatter: "{a} <br/>{b} : {c}%"
+            },
+            toolbox: {
+                feature: {
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            series: [
+                {
+                    name: '住院患者抗菌药物占总费用百分率',
+                    type: 'gauge',
+                    detail: {formatter: '{value}%'},
+                    data: [{value: average, name: ''}]
+                }
+            ]
+        };
+        totalOption = {
+            title: {
+                text: '住院患者抗菌药物占总费用百分率'
+            },
+            tooltip: {
+                formatter: "{a} <br/>{b} : {c}%"
+            },
+            toolbox: {
+                feature: {
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            series: [
+                {
+                    name: '住院患者使用抗菌药物百分率',
+                    type: 'gauge',
+                    detail: {formatter: '{value}%'},
+                    data: [{value: totalAverage, name: ''}]
+                }
+            ]
+        };
+
+        if (option && typeof option === "object") {
+            rateTotal.setOption(totalOption, true);
+            rate.setOption(option, true);
+        }
+    }
+
+
+    function initColumnarDiv() {
+        if (!sumChart) {
+            var dom = document.getElementById("columnarDiv");
+            var sumChart = echarts.init(dom);
+        }
+
+        var hospitalName = [
+            // '昆山市第一人民医院','昆山市中医院','昆山市第二人民医院','昆山市第三人民医院','昆山市第四人民医院','昆山市第六人民医院','昆山市千灯人民医院',
+            // '昆山市周市人民医院','昆山市锦溪人民医院','昆山市巴城人民医院','昆山市花桥人民医院','昆山市淀山湖人民医院','昆山市周庄人民医院'
+        ];
+
+        var varietiesValue = [];
+        var averageCostValue = [];
+        var userRateValue = [];
+        var rateOfTotalValue = [];
+
+        data.forEach(function(item){
+
+            hospitalName.push(item.unitName);
+
+            varietiesValue.push({name:item.unitName,value:item.varieties});
+            averageCostValue.push({name:item.unitName,value:item.averageCost});
+
+            userRateValue.push({name:item.unitName,value:item.userRate});
+            rateOfTotalValue.push({name:item.unitName,value:item.rateOfTotal});
+
+        })
+
+        var	option = {
+            title: {
+                text: '抗菌药物统计分析排名柱状图',
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+
+            grid: {
+                left: '0%',
+                right: '0%',
+                bottom: '5%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval:0,
+                    rotate:25//角度顺时针计算的
+                } ,
+                axisTick : {
+                    alignWithLabel : true
+                },
+                data: hospitalName
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            grid: {
+                bottom: '110px',
+            },
+            series: [
+                {
+                    name: '住院患者人均使用抗菌药物品种数',
+                    type: 'bar',
+                    barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:2,
+                        }
+                    },
+
+                    data: varietiesValue
+                },
+                {
+                    name: '住院患者人均使用抗菌药物费用',
+                    type: 'bar',
+                    barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:3,
+                        }
+                    },
+                    data: averageCostValue
+                },
+                {
+                    name: '住院患者使用抗菌药物的百分率',
+                    type: 'bar',
+                    barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:3,
+                        }
+                    },
+                    data: userRateValue
+                },
+                {
+                    name: '住院患者抗菌药物占总费用百分率',
+                    type: 'bar',
+                    barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:3,
+                        }
+                    },
+                    data: rateOfTotalValue
+                }
+            ],
+            legend: {
+                data: ['住院患者人均使用抗菌药物品种数', '住院患者人均使用抗菌药物费用','住院患者使用抗菌药物的百分率','住院患者抗菌药物占总费用百分率'],
+                bottom:0
+            }
+        };
+        sumChart.setOption(option,true);
+    };
+
+
+</script>
+</body>
+
+</html>

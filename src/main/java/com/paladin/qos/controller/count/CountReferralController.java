@@ -15,6 +15,7 @@ import com.paladin.qos.service.count.CountReferralService;
 import com.paladin.qos.service.count.dto.CountReferralDTO;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
 import com.paladin.qos.service.count.vo.CountReferralVO;
+import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.school.dto.OrgSchoolNameQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,11 +34,12 @@ public class CountReferralController extends ControllerSupport {
     @Autowired
     private CountReferralService countReferralService;
 
+    @Autowired
+    private DataUnitService dataUnitService;
     @GetMapping("/index")
     @QueryInputMethod(queryClass = CountReferral.class)
     public String index(Model model){
-        Boolean canAdd = countReferralService.canAdd();
-        model.addAttribute("canAdd",canAdd);
+        model.addAttribute("unit", dataUnitService.findAll());
         return "/qos/count/count_referral_index";
     }
 
@@ -54,9 +56,10 @@ public class CountReferralController extends ControllerSupport {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
         }
-//        if(orgSchoolNameService.judge(dto.getSchoolFullName()) !=null){
-//            return CommonResponse.getErrorResponse("学校名称已存在");
-//        }
+        int b = countReferralService.judge(dto.getUnitId());
+        if(b>0){
+            return CommonResponse.getErrorResponse("添加记录未满一个月");
+        }
         CountReferral model = beanCopy(dto, new CountReferral());
         String id = UUIDUtil.createUUID();
 
@@ -67,11 +70,21 @@ public class CountReferralController extends ControllerSupport {
         return CommonResponse.getFailResponse();
     }
 
+    @GetMapping("/add")
+    public String add(){
+        return "/qos/count/count_referral_add";
+    }
+
+
     @PostMapping("/update")
     @ResponseBody
     public Object update(@Valid @RequestBody CountReferralDTO countReferralDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
+        }
+        int b = countReferralService.judge(countReferralDTO.getUnitId());
+        if(b>0){
+            return CommonResponse.getErrorResponse("添加记录未满一个月");
         }
         String id = countReferralDTO.getId();
         CountReferral model = beanCopy(countReferralDTO, countReferralService.get(id));

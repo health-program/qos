@@ -4,6 +4,7 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.infectioncomplication.Infection;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,5 +28,5 @@ public interface InfectionMapper extends CustomMapper<Infection>{
         int deleteById (String id);
 
         //查找最近一条记录
-        Infection findRecentlyRecord();
+        Infection findRecentlyRecord(@Param("unitId") String unitId);
 }

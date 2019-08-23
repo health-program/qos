@@ -1,5 +1,7 @@
 package com.paladin.qos.service.count.vo;
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 import java.util.Date;
 
 public class CountReferralVO {
@@ -17,6 +19,20 @@ public class CountReferralVO {
     private Date updateTime;
 
     private String updateUserId;
+
+    private String  unitId;
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitId);
+    }
 
     public String getId() {
         return id;

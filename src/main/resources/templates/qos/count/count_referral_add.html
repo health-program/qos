@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
+<section class="content-header">
+    <h1>双向转诊统计添加</h1>
+    <ol class="breadcrumb">
+        <li><a href="/qos/count/referral/index"><i class="fa fa-table"></i>列表</a></li>
+        <li class="active">新增</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a href="/qos/count/referral/index" class="btn btn-primary btn-block">返回</a>
+</div>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        url: "/qos/count/referral/save",
+        cancelBtn: false,
+        columns: [
+            {title : "本医疗机构向上级医疗机构转出人数",name : "upOutNumber",inputType : "NUMBER"},
+            {title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",inputType : "NUMBER"},
+            { title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
+        ]
+    }
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponment($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功", function() {
+                    window.location = "/qos/count/referral/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+
+</script>
+</body>
+
+</html>

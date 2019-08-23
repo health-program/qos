@@ -14,14 +14,12 @@
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input type="text" name="createUserId" class="form-control" th:value="${query?.createUserId}" placeholder="请输入用户名" >
+                        <select name="unitId" class="form-control">
+                            <option value="">请选择单位</option>
+                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select>
                     </div>
 
-                    <!--<div class="col-md-2">-->
-                        <!--<select name="nature" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.nature}" enumcode="nature-type">-->
-                            <!--<option value="">请选择性质</option>-->
-                        <!--</select>-->
-                    <!--</div>-->
                     <div class="col-md-10">
                         <div class="pull-right" >
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
@@ -63,6 +61,7 @@
             idField: "id",
             columns: [
                 [
+                    { title: "单位", field: "unitName",align: "left"},
                     {title: "医院感染总发生率", field: "totalInfection",formatter: getRate},
                     {title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection",formatter: getRate},
                     {title: "手术部位感染总发生率", field: "operatingPartInfection",formatter: getRate},
@@ -99,17 +98,9 @@
             showRefresh: true
         });
     }
-    var canAdd = $("#canAdd").val();
+
     function add() {
-        // window.location = '/qos/infectioncomplication/infection/add';
-        if(canAdd === 'true'){
             window.location = '/qos/infectioncomplication/infection/add';
-
-        }else{
-
-            $.errorMessage("添加记录未满半年！");
-        }
-
     }
     function getRate(value, row, index){
         if(value)

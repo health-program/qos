@@ -12,7 +12,15 @@ public class CountReferralDTO {
 
     private Integer downOutNumber;
 
+    private String  unitId;
 
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
 
     public String getId() {
         return id;

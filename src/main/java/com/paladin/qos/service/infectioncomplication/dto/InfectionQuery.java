@@ -38,6 +38,16 @@ public class InfectionQuery extends OffsetPage {
 
     private String updateUserId;
 
+    private String unitId;
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
     public Double getTotalInfection() {
         return totalInfection;
     }
