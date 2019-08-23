@@ -1,6 +1,5 @@
 package com.paladin.qos.analysis.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.qos.analysis.DataProcessor;
-import com.paladin.qos.mapper.analysis.NewBabyWeightBetween1001And1800Mapper;
-import com.paladin.qos.mapper.analysis.NewBabyWeightBetween751And1000Mapper;
-import com.paladin.qos.mapper.analysis.NewBabyWeightLessThan750Mapper;
 import com.paladin.qos.mapper.analysis.NewBabyWeightMoreThan1800Mapper;
 
 /**
@@ -25,33 +21,26 @@ public class NewBabyWeightMoreThan1800 extends DataProcessor{
 	private NewBabyWeightMoreThan1800Mapper newBabyWeightMoreThan1800Mapper;
 	
     public static final String EVENT_ID = "10116";
-	
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-	
+		
 	@Override
 	public String getEventId() {
-
 		return EVENT_ID;
 	}
 
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
-
 		Map<String, Object> params = new HashMap<String, Object>();
-		String aa  = format.format(startTime);
-		params.put("startTime", format.format(startTime));
-		params.put("endTime", format.format(endTime));
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		return newBabyWeightMoreThan1800Mapper.getTotalNum(params);
 	}
 
 	@Override
 	public long getEventNum(Date startTime, Date endTime, String unitId) {
-
 		Map<String, Object> params = new HashMap<String, Object>();
-		String aa  = format.format(startTime);
-		params.put("startTime", format.format(startTime));
-		params.put("endTime", format.format(endTime));
+		params.put("startTime", startTime);
+		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		return newBabyWeightMoreThan1800Mapper.getEventNum(params);
 	}
