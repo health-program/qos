@@ -5,10 +5,12 @@ import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
 
+import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
-import com.paladin.qos.service.infectioncomplication.OperationComplicationService;
+import com.paladin.qos.service.data.DataUnitService;
+import com.paladin.qos.service.infectionAndComplication.OperationComplicationService;
+
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
@@ -17,32 +19,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
-import java.io.File;
+import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Iterator;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/qos/operationComplication")
-public class operationComplicationController extends ControllerSupport {
+public class OperationComplicationController extends ControllerSupport {
 
 	@Autowired
 	OperationComplicationService operationComplicationService;
-	
+
+	@Autowired
+	private DataUnitService dataUnitService;
 
 	@GetMapping("/index")
-	public String index(Model model) {
-		 Boolean canAdd=operationComplicationService.canAdd();
-		 model.addAttribute("canAdd",canAdd);
-
-		return "/qos/infectioncomplication/operationComplication_index";
+	public String index(Model model){
+		model.addAttribute("unit", dataUnitService.findAll());
+		return "/qos/infectionAndComplication/operationComplication_index";
 	}
 
 	// 初始化查询所有列表
@@ -55,53 +49,64 @@ public class operationComplicationController extends ControllerSupport {
 	// 新增
 	@RequestMapping("/add")
 	public String add() {
-		return "/qos/infectioncomplication/operationComplication_add";
+		return "/qos/infectionAndComplication/operationComplication_add";
 	}
 
 	@RequestMapping("/save")
 	@ResponseBody
-	public Object save(OperationComplicationVO vo) {
-		try {
-			vo.setId(UUIDUtil.createUUID());
-			return CommonResponse.getSuccessResponse(operationComplicationService.insertInto(vo));
-		} catch (Exception e) {
-			return CommonResponse.getErrorResponse(e.getMessage());
+	public Object save(@Valid OperationComplicationDTO dto, BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			return validErrorHandler(bindingResult);
 		}
+		Boolean canAdd = operationComplicationService.canAdd(dto.getUnitId());
+		if (canAdd) {
+			return CommonResponse.getErrorResponse("添加记录未满半年！");
+		}
+		OperationComplication complication = beanCopy(dto,new OperationComplication());
+		String id = UUIDUtil.createUUID();
+		complication.setId(UUIDUtil.createUUID());
+		if (operationComplicationService.save(complication) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy( operationComplicationService.get(id),new OperationComplicationVO()));
+		}
+		return CommonResponse.getFailResponse();
 	}
 
 	// 查看详情
 	@GetMapping("/detail")
 	public String detail(@RequestParam String id, Model model) {
 		model.addAttribute("id", id);
-		return "/qos/infectioncomplication/operationComplication_detail";
+		return "/qos/infectionAndComplication/operationComplication_detail";
 	}
 
 	@RequestMapping(value = "/get", method = { RequestMethod.POST, RequestMethod.GET })
 	@ResponseBody
 	public Object get(@RequestParam String id) {
-		return CommonResponse.getSuccessResponse(operationComplicationService.queryById(id));
+		return CommonResponse.getSuccessResponse(beanCopy(operationComplicationService.get(id), new OperationComplicationVO()));
 	}
 
 	// 更新
 	@RequestMapping("/update")
 	@ResponseBody
-	public Object update(@RequestBody OperationComplicationDTO dto, BindingResult bindingResult) {
+	public Object update(@RequestBody OperationComplicationDTO dto,BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-
-		return CommonResponse.getSuccessResponse(operationComplicationService.updates(dto));
+		String id = dto.getId();
+		OperationComplication complication = beanCopy(dto,operationComplicationService.get(id));
+		if (operationComplicationService.update(complication) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy(operationComplicationService.get(id),new OperationComplicationVO()));
+		}
+		return CommonResponse.getFailResponse();
 	}
 
 	// 刪除
 	@RequestMapping("/delete")
 	@ResponseBody
 	public Object delete(@RequestParam String id) {
-		return CommonResponse.getSuccessResponse(operationComplicationService.delete(id));
+		return CommonResponse.getSuccessResponse(operationComplicationService.removeByPrimaryKey(id));
 	}
 
 	// 导出
-
 	@RequestMapping(value = "/export")
 	@ResponseBody
 	public Object export(@RequestBody operationComplicationExportCondition condition) {
