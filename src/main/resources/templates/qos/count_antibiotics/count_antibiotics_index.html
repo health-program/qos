@@ -14,8 +14,10 @@
 				<form id="searchbar" class="form-horizontal form-search">
 					<div class="form-group">
 						<div class="col-md-2">
-							<input type="text" name="varieties" class="form-control"
-								th:value="${query?.varieties}" placeholder="住院患者人均使用抗菌药物品种数">
+							<select name="unitId" class="form-control">
+								<option value="">请选择单位</option>
+								<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+								</select>
 						</div>
 
 						<div class="col-md-10">
@@ -50,10 +52,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- 判断这个值是否半年内有效 -->
-		<input type="hidden" id="canAdd" th:value="${canAdd}" />
-
 	</section>
 
 	<div th:include="/common/footer" />
@@ -74,8 +72,9 @@
 							{
 								idField : "id",
 								columns : [ [
-									{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left",formatter : getRate},
-									{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",formatter : getRate},
+									{ title: "单位", field: "unitName",align: "left"},
+									{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left"},
+									{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",formatter : averageCost},
 									{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",formatter : getRate},
 									{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",formatter : getRate},
 									{ title: "创建时间", field: "createTime",align: "left",formatter : "datetime"},
@@ -123,24 +122,14 @@
 							});
 		}
 
-		var canAdd = $("#canAdd").val();
-		function add() {
-	 		if (canAdd == 'true') {
-				window.location = '/qos/operationComplication/add';
- 			} else {
 
-				$.errorMessage("添加记录未满半年！");
-			}
-
-		}
-
-	 
-		 
 		function getRate(value, row, index) {
 			return value + "%";
 		}
+		function averageCost(value, row, index) {
+			return value + "元";
+		}
 
-		 
 		function remove(row) {
 			if (row) {
 				layer.confirm('确定删除吗?', function() {
@@ -152,85 +141,15 @@
 				});
 			}
 		}
-		
-		
-	 	
-		
-		  var content = '<form id="transfers" class="form-horizontal" style="margin-top: 20px;">' +
- 		    '    <label for="name" class="col-xs-4 control-label">住院患者人均使用抗菌药物品种数</label>' +
-		    '    <div class="col-xs-7">' +
-		    '        <input type="text" class="form-control" id="varieties" name="varieties" required="required" placeholder="请输入"></input>' +
-		    '    </div>%' +
-		    '    <div style="width:100%;height:52px;"></div>' +
-		    '    <label for="name" class="col-xs-4 control-label">住院患者人均使用抗菌药物费用</label>' +
-		    '    <div class="col-xs-7">' +
-		    '        <input type="text" class="form-control" id="averageCost" name="averageCost" required="required" placeholder="请输入"></input>' +
-		    '    </div>%' +
-		    '    <div style="width:100%;height:52px;"></div>' +
-		    '    <label for="name" class="col-xs-4 control-label">住院患者使用抗菌药物的百分率</label>' +
-		    '    <div class="col-xs-7">' +
-		    '        <input type="text" class="form-control" id="userRate" name="userRate" required="required" placeholder="请输入"></input>' +
-		    '    </div>%' +
-		    '    <div style="width:100%;height:52px;"></div>' +
-		    '    <label for="name" class="col-xs-4 control-label">住院患者抗菌药物占总费用百分率</label>' +
-		    '    <div class="col-xs-7">' +
-		    '        <input type="text" class="form-control" id="rateOfTotal" name="rateOfTotal" required="required" placeholder="请输入"></input>' +
-		    '    </div>%' +
-  			'<div class="col-sm-5 col-sm-offset-4" style="margin-top: 20px;">' +
-		    '        <a onclick="submit()" type="button" class="btn btn-primary btn-block">确定</a>' +
-		    '    </div>' 
-		    '</form>'; 
-		    
-		    
-		    
-	 
-		    
-			var index;
-		    function add(row) {
-		    	 index = layer.open({
-		             type: 1,
-		             title: '添加',
-		             closeBtn: 1,
-		             maxmin: true, //开启最大化最小化按钮
-		             area: $.getOpenLayerSize(900, 400),
-		             maxmin: false, //开启最大化最小化按钮
-		             content: content,
-		             success: function(){
-		            	 
-		            	
-		             }
-		         });
-		    }
-		    
-		    
-		    function submit() {
-		    	/*  var varieties = $("#varieties").val();
-		    	 if (varieties == null || varieties == '') {
-		             $.errorMessage("住院患者人均使用抗菌药物品种数不能为空");
-		             return;
-		         } */
-		    	 var data = {
-		    		varieties:$("#varieties").val(),
-		    		averageCost:$("#averageCost").val(),
-		    		userRate:$("#userRate").val(),
-		    		rateOfTotal:$("#rateOfTotal").val()
-		    	 } 
-		    	
-		    	 $.postAjax("/qos/countantibiotics/save",data, function(res) {
- 		            $.successMessage("新增成功");
-		            table.refresh();
-		            layer.close(index);
-		        })
-		    }
-		    
-		    
-		    
-		    /*查看详情*/
-		 function detail(row) {
-			window.location = '/qos/countantibiotics/detail'
-					+ (row ? ('?id=' + row.id) : '');
+
+		function add(row) {
+			window.location = '/qos/countantibiotics/add';
 		}
-		    
+
+		/*查看详情*/
+		function detail(row) {
+			window.location = '/qos/countantibiotics/detail'+ (row ? ('?id=' + row.id) : '');
+		}
 	</script>
 </body>
 

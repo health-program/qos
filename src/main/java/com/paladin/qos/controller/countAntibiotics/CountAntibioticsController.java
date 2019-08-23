@@ -1,7 +1,6 @@
 package com.paladin.qos.controller.countAntibiotics;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -17,33 +16,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.countAntibiotics.dto.CountAntibioticsExportCondition;
 import com.paladin.qos.model.countantibiotics.CountAntibiotics;
-import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.service.countantibiotics.CountAntibioticsService;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
-import com.paladin.qos.service.infectionAndComplication.dto.OperationComplicationQueryDTO;
-import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
-import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
+import com.paladin.qos.service.data.DataUnitService;
 
 @Controller
 @RequestMapping("/qos/countantibiotics")
-public class countAntibioticsController extends ControllerSupport {
+public class CountAntibioticsController extends ControllerSupport {
 
 	@Autowired
 	private CountAntibioticsService countAntibioticsService;
+	
+	@Autowired
+	private DataUnitService dataUnitService;
 
 	@GetMapping("/index")
-	public Object index() {
+	public Object index( Model model) {
+	    	model.addAttribute("unit", dataUnitService.findAll());
 		return "/qos/count_antibiotics/count_antibiotics_index";
 	}
 
@@ -65,6 +63,11 @@ public class countAntibioticsController extends ControllerSupport {
 	public Object getDetail(@RequestParam String id, Model model) {
 		return CommonResponse.getSuccessResponse(beanCopy(countAntibioticsService.get(id), new CountAntibioticsVO()));
 	}
+	
+	@GetMapping("/add")
+	public String add(){
+	    return "/qos/count_antibiotics/count_antibiotics_add";
+	}
 
 	// 保存
 	@PostMapping("/save")
@@ -73,19 +76,15 @@ public class countAntibioticsController extends ControllerSupport {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
+		int b = countAntibioticsService.judge(CountAntibioticsDTO.getUnitId());
+		if(b>0){
+		    return CommonResponse.getErrorResponse("添加记录未满一个月");
+		}
 		CountAntibiotics model = beanCopy(CountAntibioticsDTO, new CountAntibiotics());
 		String id = UUIDUtil.createUUID();
-		if (StringUtil.isEmpty(model.getId())) {
-			model.setId(null);
-		}
-		UserSession userSession = UserSession.getCurrentUserSession();
-		String uid = userSession == null ? "" : userSession.getUserId();
-		model.setCreateUserId(uid);
 		model.setId(id);
-		model.setCreateTime(new Date());
 		if (countAntibioticsService.save(model) > 0) {
-			return CommonResponse
-					.getSuccessResponse(beanCopy(countAntibioticsService.get(id), new CountAntibioticsVO()));
+			return CommonResponse.getSuccessResponse(beanCopy(countAntibioticsService.get(id), new CountAntibioticsVO()));
 		}
 		return CommonResponse.getFailResponse();
 	}

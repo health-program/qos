@@ -1,5 +1,7 @@
 package com.paladin.qos.mapper.countantibiotics;
 
+import io.lettuce.core.dynamic.annotation.Param;
+
 import java.util.List;
 
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
@@ -12,5 +14,7 @@ public interface CountAntibioticsMapper extends CustomMapper<CountAntibiotics> {
 	public List<CountAntibioticsVO> selecttoAll(CountAntibioticsDTO query);
 
 	public Object queryById(String id);
+	
+	public int judge(@Param("unitId") String unitId);
 
 }

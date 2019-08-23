@@ -13,14 +13,19 @@ import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 
 @Service
-public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {// @Autowired
+public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
+    
     @Autowired
-	CountAntibioticsMapper CountAntibioticsMapper; 
-	  public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsDTO query){
-	       Page<CountAntibioticsVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
-	       CountAntibioticsMapper.selecttoAll(query);
-	       return new PageResult<>(page);
-	   }
- 
+    CountAntibioticsMapper countAntibioticsMapper;
+
+    public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsDTO query) {
+	Page<CountAntibioticsVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+	countAntibioticsMapper.selecttoAll(query);
+	return new PageResult<>(page);
+    }
+    
+    public int judge(String unitId){
+	return countAntibioticsMapper.judge(unitId);
+    }
 	    
 }

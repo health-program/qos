@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+	<tt:constant enumcode="boolean-type,role-level-type" />
+	
+    <section class="content-header">
+        <h1>抗菌药物使用统计</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/countantibiotics/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+ 		<a href="/qos/countantibiotics/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+	<div th:include="/common/footer" />
+	<script type="text/javascript">
+	
+	var options = {
+	        id: "model",
+	        name: "新增",
+	        url: "/qos/countantibiotics/save",
+	        cancelBtn: false,
+	        columns: [
+					{ title: "住院患者人均使用抗菌药物品种数",align: "left",required: "required",name: "varieties",inputType: "NUMBER"},
+					{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",required: "required",name: "averageCost",inputType: "NUMBER",unit:"元"},
+					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",required: "required",name: "userRate",inputType: "NUMBER",unit:"%"},
+					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",required: "required",name: "rateOfTotal",inputType: "NUMBER",unit:"%"},
+					{ title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
+					]
+						}
+	    $(function() {
+	        var html = generateEditHtml(options);
+	        $(".content").html(html);
+	        $.initComponment($(".content"));
+
+	        var model = new tonto.Model("model", options.columns, {
+	            pattern:"edit",
+	            successCallback:function(){
+	                $.successAlert("保存成功", function() {
+	                    window.location = "/qos/countantibiotics/index";
+	                });
+	            }
+	        });
+	        model.setData(null);
+	    });
+ 	</script>
+</body>
+
+</html>

@@ -2,27 +2,31 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.countantibiotics.CountAntibioticsMapper">
  <!--查看全部 -->
-	<select id="selecttoAll"
-		resultType="com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO">
+	<select id="selecttoAll" resultType="com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO">
 		SELECT
 		c.id,
+		c.unit_id as unitId,
 		c.varieties,
 		c.average_cost AS averageCost,
-		c.user_rate AS
-		userRate,
+		c.user_rate AS userRate,
 		c.rate_of_total AS rateOfTotal,
 		c.create_time AS createTime,
 		c.create_time AS createTime,
 		c.update_time AS updateTime,
-		c.update_user_id AS updateUserId,
-		s.account as createUserId
+		c.update_user_id AS updateUserId
 		FROM
 		count_antibiotics AS c
- 		LEFT JOIN sys_user AS s ON s.id =
-		c.create_user_id
 		WHERE 1 = 1
+		<if test="unitId != null and unitId !='' ">
+			and c.unit_id =#{unitId} 
+		</if>
 		<if test="varieties != null and varieties != '' ">
 			and varieties=#{varieties}
 		</if>
 	</select>
+	
+	<select id="judge" resultType="int">
+	SELECT count(1) FROM count_antibiotics WHERE unit_id=#{unitId} and (DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) ORDER BY create_time desc LIMIT 1;
+	</select>
+	
 </mapper>
