@@ -12,17 +12,22 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.paladin.common.model.syst.SysUser;
 import com.paladin.common.service.syst.SysUserService;
+import com.paladin.framework.core.session.UserSession;
+import com.paladin.qos.core.QosUserSessionFactory;
 
 public class CommonUserRealm extends AuthorizingRealm {
 
+	@Autowired
 	private SysUserService sysUserService;
+	
+	@Autowired
+	private QosUserSessionFactory userSessionFactory;
 
-	public CommonUserRealm(SysUserService sysUserService) {
-		this.sysUserService = sysUserService;
-
+	public CommonUserRealm() {
 		HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
 		hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
 		hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
@@ -56,7 +61,7 @@ public class CommonUserRealm extends AuthorizingRealm {
 		/*
 		 * 获取权限信息:这里没有进行实现， 请自行根据UserInfo,Role,Permission进行实现； 获取之后可以在前端for循环显示所有链接;
 		 */
-		CommonUserSession userSession = new CommonUserSession(sysUser.getId(), username, username);
+		UserSession userSession = userSessionFactory.createSession(sysUser);
 
 		// 加密方式;
 		// 交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现

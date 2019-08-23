@@ -159,5 +159,30 @@ public class SysUserService extends ServiceSupport<SysUser> {
 		user.setLastLoginTime(new Date());
 		sysUserMapper.updateByPrimaryKeySelective(user);
 	}
+	
+	/**
+	 * 重置密码
+	 * 
+	 * @param account
+	 * @return
+	 */
+	public int resetPassword(String account) {
+
+		SysUser sysUser = getUserByAccount(account);
+		if (sysUser == null) {
+			throw new BusinessException("账号异常");
+		}
+
+		String salt = SecureUtil.createSalte();
+		String password = paladinProperties.getDefaultPassword();
+		password = SecureUtil.createPassword(password, salt);
+
+		SysUser updateUser = new SysUser();
+		updateUser.setId(sysUser.getId());
+		updateUser.setSalt(salt);
+		updateUser.setPassword(password);
+
+		return updateSelective(updateUser);
+	}
 
 }

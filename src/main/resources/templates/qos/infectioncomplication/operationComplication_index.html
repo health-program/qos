@@ -14,8 +14,10 @@
 				<form id="searchbar" class="form-horizontal form-search">
 					<div class="form-group">
 						<div class="col-md-2">
-							<input type="text" name="embolism" class="form-control"
-								th:value="${query?.embolism}" placeholder="手术患者并发症发生率">
+							<select name="unitId" class="form-control">
+								<option value="">请选择单位</option>
+								<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+								</select>
 						</div>
 
 						<div class="col-md-10">
@@ -50,10 +52,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- 判断这个值是否半年内有效 -->
-		<input type="hidden" id="canAdd" th:value="${canAdd}" />
-
 	</section>
 
 	<div th:include="/common/footer" />
@@ -74,6 +72,10 @@
 							{
 								idField : "id",
 								columns : [ [
+										{ title: "单位",
+											field: "unitName",
+											align: "left"
+										},
 										{
 											title : "手术患者并发症发生率",
 											align : "center",
@@ -150,18 +152,9 @@
 							});
 		}
 
-		var canAdd = $("#canAdd").val();
 		function add() {
-			/*  window.location = '/qos/operationComplication/add'; */
-			if (canAdd == 'true') {
 				window.location = '/qos/operationComplication/add';
-
-			} else {
-
-				$.errorMessage("添加记录未满半年！");
 			}
-
-		}
 
 		function detail(row) {
 			window.location = '/qos/operationComplication/detail'

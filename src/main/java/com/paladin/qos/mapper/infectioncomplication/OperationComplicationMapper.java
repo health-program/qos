@@ -7,9 +7,13 @@ import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQu
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
 
 
+
+import io.lettuce.core.dynamic.annotation.Param;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
-
+@Service
 public interface OperationComplicationMapper extends CustomMapper<OperationComplication>{
  	public List<OperationComplicationVO> infectIndicationAll(OperationComplicationQueryDTO query);
 
@@ -22,7 +26,7 @@ public interface OperationComplicationMapper extends CustomMapper<OperationCompl
 	public int insertInto(OperationComplicationVO vo);
 
 
-	public OperationComplicationVO findRecentlyRecord();
+	public OperationComplicationVO findRecentlyRecord(@Param("unitId") String uintId);
 }
 
 

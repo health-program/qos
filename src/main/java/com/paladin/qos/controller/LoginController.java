@@ -22,9 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.paladin.common.core.permission.MenuPermission;
 import com.paladin.common.model.org.OrgPermission;
 import com.paladin.common.service.syst.SysUserService;
-import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.core.QosUserSession;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -42,7 +42,7 @@ public class LoginController {
 	@ApiOperation(value = "后台主页面")
 	@GetMapping(value = "/index")
 	public Object main(HttpServletRequest request) {
-		CommonUserSession userSession = CommonUserSession.getCurrentUserSession();
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
 		ModelAndView model = new ModelAndView("/qos/index");
 		model.addObject("name", userSession.getUserName());
 

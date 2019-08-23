@@ -27,13 +27,15 @@ public class SysUser extends UnDeleteBaseModel implements Serializable {
 	 */
 	public final static Integer TYPE_ADMIN = 1;
 	/**
-	 * 应用管理员账号
+	 * 业务用户
 	 */
-	public final static Integer TYPE_APP_ADMIN = 3;
+	public final static Integer TYPE_ORG_USER = 2;
 
 
 	public final static String COLUMN_FIELD_ACCOUNT = "account";
+	public final static String COLUMN_FIELD_USER_ID = "userId";
 
+	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(generator = "UUID")
