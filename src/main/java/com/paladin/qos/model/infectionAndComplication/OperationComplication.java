@@ -1,101 +1,82 @@
 package com.paladin.qos.model.infectionAndComplication;
 
 import javax.persistence.Id;
-import java.util.Date;
 
-public class OperationComplication {
-	 @Id
-	 public String id;
-     public String embolism;
-     public String getId() {
-		return id;
-	}
-     
-    public Date createTime;
-    public String createUserId;
-    public Date updateTime;
-    public String updateUserId;
-	public Date getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-	public String getCreateUserId() {
-		return createUserId;
-	}
-	public void setCreateUserId(String createUserId) {
-		this.createUserId = createUserId;
-	}
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-	public String getUpdateUserId() {
-		return updateUserId;
-	}
-	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String pulmonaryEmbolism;
-     public String venousThrombosis;
-     public String hematoma;
-     public String woundDehiscence;
-     public String suddenDeath;
-     public String operativeComplications;
-     public String anaesthesia;
-	public String getEmbolism() {
-		return embolism;
-	}
-	public void setEmbolism(String embolism) {
-		this.embolism = embolism;
-	}
-	public String getPulmonaryEmbolism() {
-		return pulmonaryEmbolism;
-	}
-	public void setPulmonaryEmbolism(String pulmonaryEmbolism) {
-		this.pulmonaryEmbolism = pulmonaryEmbolism;
-	}
-	public String getVenousThrombosis() {
-		return venousThrombosis;
-	}
-	public void setVenousThrombosis(String venousThrombosis) {
-		this.venousThrombosis = venousThrombosis;
-	}
-	public String getHematoma() {
-		return hematoma;
-	}
-	public void setHematoma(String hematoma) {
-		this.hematoma = hematoma;
-	}
-	public String getWoundDehiscence() {
-		return woundDehiscence;
-	}
-	public void setWoundDehiscence(String woundDehiscence) {
-		this.woundDehiscence = woundDehiscence;
-	}
-	public String getSuddenDeath() {
-		return suddenDeath;
-	}
-	public void setSuddenDeath(String suddenDeath) {
-		this.suddenDeath = suddenDeath;
-	}
-	public String getOperativeComplications() {
-		return operativeComplications;
-	}
-	public void setOperativeComplications(String operativeComplications) {
-		this.operativeComplications = operativeComplications;
-	}
-	public String getAnaesthesia() {
-		return anaesthesia;
-	}
-	public void setAnaesthesia(String anaesthesia) {
-		this.anaesthesia = anaesthesia;
-	}
-     
+import com.paladin.framework.common.BaseModel;
+
+public class OperationComplication extends BaseModel {
+   
+    @Id
+    private String id;
+    private Double embolism;
+    private Double pulmonaryEmbolism;
+    private Double venousThrombosis;
+    private Double hematoma;
+    private Double woundDehiscence;
+    private Double suddenDeath;
+    private Double operativeComplications;
+    private Double anaesthesia;
+    private String unitId;
+    
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public Double getEmbolism() {
+        return embolism;
+    }
+    public void setEmbolism(Double embolism) {
+        this.embolism = embolism;
+    }
+    public Double getPulmonaryEmbolism() {
+        return pulmonaryEmbolism;
+    }
+    public void setPulmonaryEmbolism(Double pulmonaryEmbolism) {
+        this.pulmonaryEmbolism = pulmonaryEmbolism;
+    }
+    public Double getVenousThrombosis() {
+        return venousThrombosis;
+    }
+    public void setVenousThrombosis(Double venousThrombosis) {
+        this.venousThrombosis = venousThrombosis;
+    }
+    public Double getHematoma() {
+        return hematoma;
+    }
+    public void setHematoma(Double hematoma) {
+        this.hematoma = hematoma;
+    }
+    public Double getWoundDehiscence() {
+        return woundDehiscence;
+    }
+    public void setWoundDehiscence(Double woundDehiscence) {
+        this.woundDehiscence = woundDehiscence;
+    }
+    public Double getSuddenDeath() {
+        return suddenDeath;
+    }
+    public void setSuddenDeath(Double suddenDeath) {
+        this.suddenDeath = suddenDeath;
+    }
+    public Double getOperativeComplications() {
+        return operativeComplications;
+    }
+    public void setOperativeComplications(Double operativeComplications) {
+        this.operativeComplications = operativeComplications;
+    }
+    public Double getAnaesthesia() {
+        return anaesthesia;
+    }
+    public void setAnaesthesia(Double anaesthesia) {
+        this.anaesthesia = anaesthesia;
+    }
+    public String getUnitId() {
+        return unitId;
+    }
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+    
 }

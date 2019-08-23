@@ -16,19 +16,11 @@
 				o.operative_complications as operativeComplications,
 				o.anaesthesia,
 				o.create_time as createTime,
-				s.account as  createUserId
-		FROM operation_complication o
-		left join sys_user as s on s.id = o.create_user_id 
-		where 1=1 
-		<if test="embolism != null and embolism != '' ">
-		 and embolism=#{embolism}
+				o.unit_id as unitId
+		FROM operation_complication o where 1=1 
+		<if test="unitId !=null and unitId !='' ">
+			o.unit_id = #{unitId}
 		</if>
-		<if test="pulmonaryEmbolism != null and pulmonaryEmbolism != ''">
-		  and pulmonaryEmbolism=#{pulmonaryEmbolism}
-		 </if>
-		 <if test="createUserId !=null and createUserId != '' ">
-            AND create_user_id LIKE CONCAT('%',#{createUserId},'%')
-        </if>
     </select>
     
     
@@ -44,12 +36,10 @@
 			o.sudden_death AS suddenDeath,
 			o.operative_complications AS operativeComplications,
 			o.anaesthesia,
-			o.create_time AS createTime,
-			s.account AS createUserId
+			o.create_time AS createTime
 		FROM
 			operation_complication as o
-		left join sys_user as s on s.id = o.create_user_id 
-		where 1=1
+		where o.unit_id = #{unitId}
 		ORDER BY
 			o.create_time DESC
 		LIMIT 1 
