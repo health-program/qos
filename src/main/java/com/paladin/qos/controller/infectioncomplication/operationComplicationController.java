@@ -9,7 +9,7 @@ import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
 import com.paladin.qos.service.data.DataUnitService;
-import com.paladin.qos.service.infectionAndComplication.OperationComplicationService;
+import com.paladin.qos.service.infectioncomplication.OperationComplicationService;
 
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
@@ -36,7 +36,7 @@ public class OperationComplicationController extends ControllerSupport {
 	@GetMapping("/index")
 	public String index(Model model){
 		model.addAttribute("unit", dataUnitService.findAll());
-		return "/qos/infectionAndComplication/operationComplication_index";
+		return "/qos/infectioncomplication/operationComplication_index";
 	}
 
 	// 初始化查询所有列表
@@ -49,7 +49,7 @@ public class OperationComplicationController extends ControllerSupport {
 	// 新增
 	@RequestMapping("/add")
 	public String add() {
-		return "/qos/infectionAndComplication/operationComplication_add";
+		return "/qos/infectioncomplication/operationComplication_add";
 	}
 
 	@RequestMapping("/save")
@@ -75,7 +75,7 @@ public class OperationComplicationController extends ControllerSupport {
 	@GetMapping("/detail")
 	public String detail(@RequestParam String id, Model model) {
 		model.addAttribute("id", id);
-		return "/qos/infectionAndComplication/operationComplication_detail";
+		return "/qos/infectioncomplication/operationComplication_detail";
 	}
 
 	@RequestMapping(value = "/get", method = { RequestMethod.POST, RequestMethod.GET })
