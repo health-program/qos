@@ -54,7 +54,6 @@ public class ReturnRateController {
 		if (endDate == null) {
 			endDate = new Date();
 		}
-		//10100";"10110";"10111";"10112";"10113";"10114";"10115";"10116";private String unitId;eventNum;totalNum
 		
 		List<ReturnRate> returnRateList = new ArrayList<ReturnRate>();
 		for(int i=0;i<eventIds.size();i++){
