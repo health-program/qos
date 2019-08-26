@@ -73,7 +73,6 @@ public class DeathRateController {
 				if(eventIds.get(i)=="10112"){
 					aaa.setNewBabyNonOperationDeathEventNum(analysisUnit.getEventNum());
 					aaa.setNewBabyNonOperationDeathTotalNum(analysisUnit.getTotalNum());
-					deathRateList.add(aaa);
 				}
 				if(eventIds.get(i)=="10113"){
 					aaa.setNewBabyWeightOneEventNum(analysisUnit.getEventNum());
@@ -161,7 +160,6 @@ public class DeathRateController {
 			}
 			
 		}
-		System.out.println("zsfdsds"+deathRateList);
 		return CommonResponse.getSuccessResponse(deathRateList);
 	}
 }
