@@ -1,4 +1,4 @@
-package com.paladin.qos.service.infectionAndComplication;
+package com.paladin.qos.service.infectioncomplication;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

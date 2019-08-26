@@ -1,8 +1,6 @@
 package com.paladin.qos.service.count.dto;
 
 
-import java.util.Date;
-
 public class CountReferralDTO {
 
 

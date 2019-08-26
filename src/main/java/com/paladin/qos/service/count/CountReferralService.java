@@ -7,17 +7,11 @@ import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.qos.mapper.count.CountReferralMapper;
 import com.paladin.qos.model.count.CountReferral;
-import com.paladin.qos.model.infectioncomplication.Infection;
-import com.paladin.qos.model.school.OrgSchool;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
-import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Service
 public class CountReferralService extends ServiceSupport<CountReferral> {

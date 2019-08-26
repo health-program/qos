@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.report.ReportDataMapper">
+
+<select id="judgePerinatal" resultType="int">
+	SELECT count(1) FROM report_data WHERE unit_id=#{unitId} and (DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) ORDER BY create_time desc LIMIT 1;
+</select>
+
+<select id="judge" resultType="int">
+SELECT count(1) FROM report_data WHERE type =#{type} and (DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) ORDER BY create_time desc LIMIT 1;
+</select>
+</mapper>

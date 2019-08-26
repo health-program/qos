@@ -8,15 +8,12 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.count.dto.CountReferralExportCondition;
-import com.paladin.qos.controller.school.dto.OrgSchoolNameExportCondition;
 import com.paladin.qos.model.count.CountReferral;
-import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.service.count.CountReferralService;
 import com.paladin.qos.service.count.dto.CountReferralDTO;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
 import com.paladin.qos.service.count.vo.CountReferralVO;
 import com.paladin.qos.service.data.DataUnitService;
-import com.paladin.qos.service.school.dto.OrgSchoolNameQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.text.ParseException;
 
 @Controller
 @RequestMapping("/qos/count/referral")
