@@ -20,6 +20,7 @@ import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
 import com.paladin.qos.service.analysis.data.DataResult;
 import com.paladin.qos.service.analysis.data.DataPointUnit;
+import com.paladin.qos.service.analysis.data.DeathRate;
 
 @Service
 public class AnalysisService {
@@ -170,4 +171,5 @@ public class AnalysisService {
 		return analysisMapper.getAnalysisResultOfUnitGroupByMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
 				TimeUtil.getSerialNumberByDay(endDate));
 	}
+
 }

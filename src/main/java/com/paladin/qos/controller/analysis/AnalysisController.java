@@ -53,6 +53,7 @@ public class AnalysisController {
 	public Object dataIndex() {
 		return "/qos/analysis/index_data";
 	}
+	
 
 	@PostMapping("/data/processed")
 	@ResponseBody
@@ -108,4 +109,5 @@ public class AnalysisController {
 
 		return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, startDate, endDate));
 	}
+	
 }

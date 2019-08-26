@@ -10,6 +10,8 @@ public class AnalysisRequest {
 	private List<String> unitIds;
 	private String eventId;
 	
+	private List<String> eventIds;
+	
 	private int dataType;
 	
 	public Date getStartTime() {
@@ -41,6 +43,12 @@ public class AnalysisRequest {
 	}
 	public void setDataType(int dataType) {
 		this.dataType = dataType;
+	}
+	public List<String> getEventIds() {
+		return eventIds;
+	}
+	public void setEventIds(List<String> eventIds) {
+		this.eventIds = eventIds;
 	}
 	
 	

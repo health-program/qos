@@ -36,4 +36,5 @@ public class AnalysisUnit {
 	public void setTotalNum(long totalNum) {
 		this.totalNum = totalNum;
 	}
+
 }

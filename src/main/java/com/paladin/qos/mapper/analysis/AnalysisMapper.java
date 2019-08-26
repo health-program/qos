@@ -11,6 +11,7 @@ import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
+import com.paladin.qos.service.analysis.data.DeathRate;
 
 public interface AnalysisMapper {
 

@@ -105,4 +105,5 @@
 		GROUP BY `year`, `month`
 	</select>
 	
+	
 </mapper>
