@@ -3,7 +3,6 @@ package com.paladin.qos.model.count;
 import com.paladin.framework.common.BaseModel;
 
 import javax.persistence.Id;
-import java.util.Date;
 
 public class CountReferral extends BaseModel {
 

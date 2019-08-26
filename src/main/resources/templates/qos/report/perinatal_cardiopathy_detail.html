@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+    <tt:constant enumcode="boolean-type,role-level-type" />
+    <section class="content-header">
+        <h1>角色管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/perinatal/cardiopathy/index"><i class="fa fa-list-alt"></i>角色列表</a></li>
+            <li class="active">角色详情</li>
+        </ol>
+    </section>
+    <section class="content">      
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/perinatal/cardiopathy/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/common/footer" />
+    <script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/qos/perinatal/cardiopathy/update?id="+$("#id").val(),
+            columns: [
+				{ title: "单位",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
+				{ title: "围产期心脏病筛查人数", name: "data", inputType: "NUMBER", required:"required" },
+            ]
+        }
+   
+        $.getAjax("/qos/perinatal/cardiopathy/get?id=" + $("#id").val(), function(data) {
+        	var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+           
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

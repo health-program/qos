@@ -1,7 +1,6 @@
 package com.paladin.qos.controller.countAntibiotics;
 
 import java.util.Date;
-import java.util.List;
 
 public class CountAntibioticsRequest {
 
