@@ -16,6 +16,7 @@ import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.model.report.ReportData;
+import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.report.ReportDataService;
 import com.paladin.qos.service.report.dto.ReportDataDTO;
 import com.paladin.qos.service.report.dto.ReportDataQueryDTO;
@@ -32,8 +33,12 @@ public class PerinatalCardiopathyController extends ControllerSupport{
     @Autowired
     private ReportDataService reportDataService;
     
+    @Autowired
+    private DataUnitService dataUnitService;
+    
     @GetMapping("/index")
-    public String index(){
+    public String index(Model model){
+	model.addAttribute("unit", dataUnitService.findAll());
 	return "/qos/report/perinatal_cardiopathy_index";
     }
     

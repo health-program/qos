@@ -10,6 +10,8 @@ import com.paladin.framework.common.QueryType;
 public class ReportDataQueryDTO {
 
     private Integer type;
+    
+    private String unitId;
 
     @QueryCondition(type = QueryType.EQUAL)
     public Integer getType() {
@@ -19,6 +21,14 @@ public class ReportDataQueryDTO {
     public void setType(Integer type) {
         this.type = type;
     }
-    
+
+    @QueryCondition(type = QueryType.EQUAL)
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
     
 }

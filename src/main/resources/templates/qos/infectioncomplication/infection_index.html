@@ -116,7 +116,7 @@
             layer.confirm('确定删除吗?', function () {
                 $.getAjax('/qos/infectioncomplication/infection/delete?id=' + row.id, function () {
                     $.successMessage("删除成功");
-                    window.location = '/qos/infectioncomplication/infection/index';
+                    //window.location = '/qos/infectioncomplication/infection/index';
                     table.refresh();
                 });
             });

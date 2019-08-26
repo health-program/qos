@@ -14,9 +14,6 @@
 </section>
 <section class="content">
 </section>
-<div class="col-sm-2 col-sm-offset-5 btn-back">
-    <a href="/qos/count/referral/index" class="btn btn-primary btn-block">返回</a>
-</div>
 <div th:include="/qos/footer" />
 <script type="text/javascript">
     var options = {
@@ -24,6 +21,13 @@
         name: "新增",
         url: "/qos/count/referral/save",
         cancelBtn: false,
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
         columns: [
             {title : "本医疗机构向上级医疗机构转出人数",name : "upOutNumber",inputType : "NUMBER"},
             {title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",inputType : "NUMBER"},
@@ -34,6 +38,9 @@
     $(function() {
         var html = generateEditHtml(options);
         $(".content").html(html);
+        $("#reply_btn").click(function () {
+            window.location = "/qos/count/referral/index";
+        });
         $.initComponment($(".content"));
 
         var model = new tonto.Model("model", options.columns, {

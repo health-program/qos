@@ -14,9 +14,6 @@
     </section>
     <section class="content">
     </section>
-    <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/qos/org/school/index" class="btn btn-primary btn-block">返回</a>
-    </div>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
     var options = {
@@ -25,6 +22,13 @@
         server: false,
         cancelBtn: false,
         editFormClass: false,
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
         columns: [
 				{ title: "学校名称",isListData:true, name: "parentSchoolId",required: "required", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName',url:"/qos/org/school/name/find/all" },
 				{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
@@ -91,6 +95,9 @@
 					$(function() {
 						var html = generateEditHtml(options);
 						$(".content").html(html);
+						$("#reply_btn").click(function () {
+				            window.location = "/qos/org/school/index";
+				        });
 						$.initComponment($(".content"));
 						model = new tonto.Model("model", options.columns, {
 							pattern : "edit",

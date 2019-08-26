@@ -63,7 +63,7 @@
                     {title: "本医疗机构向上级医疗机构转出人数", field: "upOutNumber"},
                     {title: "本医疗机构向下级医疗机构转出人数", field: "downOutNumber"},
                     {title: "创建时间", field: "createTime",formatter: "datetime"},
-                    {title: "创建人", field: "createUserId"},
+                   /*  {title: "创建人", field: "createUserId"}, */
                     {
                         title: "操作",
                         align: "center",
@@ -110,7 +110,7 @@
             layer.confirm('确定删除吗?', function () {
                 $.getAjax('/qos/count/referral/delete?id=' + row.id, function () {
                     $.successMessage("删除成功");
-                    window.location = '/qos/count/referral/index';
+                   // window.location = '/qos/count/referral/index';
                     table.refresh();
                 });
             });

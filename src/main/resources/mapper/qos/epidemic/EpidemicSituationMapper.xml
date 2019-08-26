@@ -17,7 +17,7 @@
 			1 = 1
 	
 	<if test="incidentUnit !=null and incidentUnit != '' ">
-		AND e.incident_unit  LIKE CONCAT('%',#{incidentUnit},'%')
+		AND n.school_full_name  LIKE CONCAT('%',#{incidentUnit},'%')
 	</if>
 	
 	<if test="reportUnit != null and reportUnit != '' ">

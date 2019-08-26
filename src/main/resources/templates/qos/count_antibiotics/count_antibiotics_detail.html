@@ -18,7 +18,7 @@
     <div class="col-sm-2 col-sm-offset-5 btn-back">
  		<a href="/qos/countantibiotics/index" class="btn btn-primary btn-block">返回</a>
     </div>
-    
+     <input type="hidden" id="id" th:value="${id}" />
 	<div th:include="/common/footer" />
 	<script type="text/javascript">
 	
@@ -29,7 +29,7 @@
 	 	        id: "model",
 	 	        name: "详情",
 	 	        server: false,
-	 	        cancelBtn: false,
+	 	        cancelBtn: true,
 	 	        editFormClass: false,
 	 	        columns: [
 	 	        	{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left",required: "required",name: "varieties",inputType: "NUMBER"},
@@ -42,6 +42,7 @@
 	 					var model;
 
 	 					$(function() {
+	 						debugger;
 	 						var html = generateHtml(options);
 	 						$(".content").html(html);
 	 						$.initComponment($(".content"));
