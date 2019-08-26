@@ -36,33 +36,35 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+           
+         
+                <div class="col-sm-6">
+                <label for="monthInput" class="col-sm-2 control-label">住院死亡率趋势图</label>
+                    <div id="sumChartDiv" class="box-body" style="height: 300px">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
+                        <div class="form-group">
+                            <label for="monthInput" class="col-sm-2 control-label">住院死亡率柱状图</label>
+                           
+                        </div>
+                    </form>
+                    <div id="dayChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                </div>
+ 
+        </div>
+        
+       <div class="row">
+       		 <div class="col-md-12">
                 <div class="box box-solid">
                     <div class="box-body">
                         <table id="dataGrid"></table>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="box box-solid">
-                <label for="monthInput" class="col-sm-2 control-label">住院死亡率趋势图</label>
-                    <div id="sumChartDiv" class="box-body" style="height: 300px">
-                    </div>
-                </div>
-                <div class="box box-solid">
-                    <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
-                        <div class="form-group">
-                            <label for="monthInput" class="col-sm-2 control-label">住院死亡率柱状图</label>
-                            <!-- <div class="col-md-4">
-                                <input id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
-                            </div> -->
-                        </div>
-                    </form>
-                    <div id="dayChartDiv" class="box-body" style="height: 400px">
-                    </div>
-                </div>
-            </div>
-        </div>
+       </div>
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
@@ -180,46 +182,107 @@
                              }
                     	} 
                     },
-                    { title: "住院死亡率", field: "deathRate",
+                    { title: "住院患者出院31天内再住院", field: "deathRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        } 
                     },
-                    { title: "新生儿住院总死亡率", field: "newBabyDeathRate",
+                    { title: "急性心肌梗死再住院率", field: "newBabyDeathRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿手术患者住院死亡率", field: "newBabyOperationDeathRate",
+                    { title: "充血性心力衰竭再住院率", field: "newBabyOperationDeathRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿非手术患者住院死亡率", field: "newBabyNonOperationDeathRate",
+                    { title: "脑出血和脑梗死再住院率", field: "newBabyNonOperationDeathRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿患者出生体重<=750克死亡率", field: "newBabyWeightOneRate",
+                    { title: "创伤性颅脑梗死再住院率", field: "newBabyWeightOneRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿患者出生体重751-1000克死亡率", field: "newBabyWeightTwoRate",
+                    { title: "消化道出血（无病发率）再住院率", field: "newBabyWeightTwoRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿患者出生体重1001-1800克死亡率", field: "newBabyWeightThreeRate",
+                    { title: "累积身体多个部位的损伤再住院率", field: "newBabyWeightThreeRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     },
-                    { title: "新生儿患者出生体重>=1801克死亡率", field: "newBabyWeightFourRate",
+                    { title: "细菌性肺炎（成人、无并发症）再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "细菌性肺炎（成人、无并发症）再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "慢性组赛性肺疾病再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "糖尿病伴短期与长期并发症再住院", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "结节性甲状腺肿再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "急性阑尾炎伴弥漫性腹膜炎及脓肿", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "前列腺增生再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "肾衰竭再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "败血症(成人)再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "高血压病(成人)再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "急性胰腺炎再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "恶性肿瘤术后化疗再住院率", field: "newBabyWeightFourRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "恶性肿瘤维持性化学治疗再住院率", field: "newBabyWeightFourRate",
                     	formatter: function(value, row, index) {
                             return value + "%";
                        }
                     }
+                    
                 ]
             ],
             url: '/qos/analysis/data/deathRate',
@@ -347,7 +410,7 @@
             },
             legend: {
             	
-            	data: ['住院死亡率', '新生儿住院总死亡率','新生儿手术患者住院死亡率','新生儿非手术患者住院死亡率','新生儿患者出生体重<=750克死亡率','新生儿患者出生体重751-1000克死亡率','新生儿患者出生体重1001-1800克死亡率','新生儿患者出生体重>=1801克死亡率'],
+            	data: ['医疗机构', '住院患者出院31天内再住院率','急性心肌梗死再住院率','充血性心力衰竭再住院率','脑出血和脑梗死再住院率','创伤性颅脑损伤再住院率','消化道出血(无并发症)再住院率','累及身体多个部位的损伤再住院率','细菌性肺炎(成人、无并发症)再住','慢性阻塞性肺疾病再住院率','糖尿病伴短期与长期并发症再住院','结节性甲状腺肿再住院率','急性阑尾炎伴弥漫性腹膜炎及脓肿','前列腺增生再住院率','肾衰竭再住院率','败血症(成人)再住院率','高血压病(成人)再住院率','急性胰腺炎再住院率','恶性肿瘤术后化疗再住院率','恶性肿瘤维持性化学治疗再住院率'],
                 bottom:0
             },
             xAxis: {
@@ -384,7 +447,7 @@
                              barBorderRadius:3,
                          }
                      },
-                   name: '新生儿住院总死亡率',
+                   name: '昆山市千灯人民医院',
                    data: newBabyDeathRate},
             	 {  type: 'bar',
               	   barWidth : 5,
@@ -393,7 +456,7 @@
                              barBorderRadius:3,
                          }
                      },
-                     name: '新生儿手术患者住院死亡率',
+                     name: '昆山市第三人民医院',
                      data: newBabyOperationDeathRate},
             	 {  type: 'bar',
                   	 barWidth : 5,
@@ -402,7 +465,7 @@
                                barBorderRadius:3,
                            }
                        },
-                     name: '新生儿非手术患者住院死亡率',
+                     name: '昆山市第一人民医院',
                      data: newBabyNonOperationDeathRate},
             	 {  type: 'bar',
                     	 barWidth : 5,
@@ -411,7 +474,7 @@
                                  barBorderRadius:3,
                              }
                          },
-                     name: '新生儿患者出生体重<=750克死亡率',
+                     name: '昆山市第六人民医院',
                      data: newBabyWeightOneRate},
             	 {  type: 'bar',
                 	 barWidth : 5,
@@ -420,7 +483,7 @@
                              barBorderRadius:3,
                          }
                      },
-                     	name: '新生儿患者出生体重751-1000克死亡率',
+                     	name: '昆山市第四人民医院',
                      data: newBabyWeightTwoRate},
             	 {  type: 'bar',
                	    barWidth : 5,
@@ -429,7 +492,7 @@
                             barBorderRadius:3,
                         }
                     },
-                     	name: '新生儿患者出生体重1001-1800克死亡率',
+                     	name: '昆山市中医医院',
                      data: newBabyWeightThreeRate},
             	 {  type: 'bar',
                 	 barWidth : 5,
@@ -438,8 +501,35 @@
                              barBorderRadius:3,
                          }
                      },
-                     	name: '新生儿患者出生体重>=1801克死亡率',
-                     data: newBabyWeightFourRate}
+                     	name: '昆山市淀山湖人民医院',
+                     data: newBabyWeightFourRate},
+                     {  type: 'bar',
+                    	 barWidth : 5,
+                         itemStyle:{
+                             normal:{
+                                 barBorderRadius:3,
+                             }
+                         },
+                         	name: '昆山市周市人民医院',
+                         data: newBabyWeightFourRate},
+                         {  type: 'bar',
+                        	 barWidth : 5,
+                             itemStyle:{
+                                 normal:{
+                                     barBorderRadius:3,
+                                 }
+                             },
+                             	name: '昆山市巴城人民医院',
+                             data: newBabyWeightFourRate},
+                             {  type: 'bar',
+                            	 barWidth : 5,
+                                 itemStyle:{
+                                     normal:{
+                                         barBorderRadius:3,
+                                     }
+                                 },
+                                 	name: '昆山市周庄人民医院',
+                                 data: newBabyWeightFourRate}
                      
            ]
         });
