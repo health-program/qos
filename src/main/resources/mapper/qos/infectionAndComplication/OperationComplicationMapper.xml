@@ -19,7 +19,7 @@
 				o.unit_id as unitId
 		FROM operation_complication o where 1=1 
 		<if test="unitId !=null and unitId !='' ">
-			o.unit_id = #{unitId}
+			and o.unit_id = #{unitId}
 		</if>
     </select>
     

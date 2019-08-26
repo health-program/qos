@@ -30,9 +30,9 @@
 	        name: "详情",
 	        url:"/qos/family/doctor/personnel/update?id="+$("#id").val(),
 	        columns: [
-				{ title: "姓名", name: "name", inputType: "TEXT" },
-				{ title: "性别", name: "sex", enum: "sex-type", inputType: "SELECT" },
-				{ title: "年龄", name: "age", inputType: "TEXT" },
+				{ title: "姓名", name: "name", required: "required",inputType: "TEXT" },
+				{ title: "性别", name: "sex",required: "required", enum: "sex-type", inputType: "SELECT" },
+				{ title: "年龄", name: "age",required: "required", inputType: "TEXT" },
 				{ title: "学历", name: "oeducation", inputType: "SELECT",enum: "oeducation-type" },
 				{ title: "职称", name: "jobRank", inputType: "SELECT",enum: "job-rank-type" },
 				{ title: "人员类别", name: "personnelCategory", inputType: "SELECT",enum: "personnel-category-type" },

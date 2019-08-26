@@ -15,9 +15,6 @@
     </section>
     <section class="content">
     </section>
-    <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a th:href="@{/qos/family/doctor/team/index?(unitId=${unitId})}" class="btn btn-primary btn-block">返回</a>
-    </div>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
     var options = {
@@ -25,10 +22,17 @@
         cancelBtn: false,
         name: "新增",
         url:"/qos/family/doctor/team/save",
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
         columns: [
-				{ title: "团队名称", name: "teamName", inputType: "TEXT" },
-				{ title: "服务责任小区（自然村）", name: "serviceDistrict", inputType: "TEXTAREA" },
-				{ title: "服务区域常住人口数", name: "servicePopulation", inputType: "TEXT" },
+				{ title: "团队名称", name: "teamName",required: "required", inputType: "TEXT" },
+				{ title: "服务责任小区（自然村）",required: "required", name: "serviceDistrict", inputType: "TEXTAREA" },
+				{ title: "服务区域常住人口数",required: "required", name: "servicePopulation", inputType: "TEXT" },
 				{ title: "经纬度(以逗号隔开)", name: "coordinate", inputType: "TEXT" }
 				]
     }
@@ -37,6 +41,9 @@
     	var unitId=$("#unitId").val();
         var html = generateEditHtml(options);
         $(".content").html(html);
+        $("#reply_btn").click(function () {
+            window.location = "/qos/family/doctor/team/index?unitId="+unitId;
+        });
        	$.initComponment($(".content"));
         options.columns;
         var model = new tonto.Model("model", options.columns, {

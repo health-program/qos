@@ -29,9 +29,9 @@
 	        name: "详情",
 	        url:"/qos/family/doctor/team/update?id="+$("#id").val(),
 	        columns: [
-				{ title: "团队名称", name: "teamName", inputType: "TEXT" },
-				{ title: "服务责任小区（自然村）", name: "serviceDistrict", inputType: "TEXTAREA" },
-				{ title: "服务区域常住人口数", name: "servicePopulation", inputType: "TEXT" },
+				{ title: "团队名称",required: "required", name: "teamName", inputType: "TEXT" },
+				{ title: "服务责任小区（自然村）",required: "required", name: "serviceDistrict", inputType: "TEXTAREA" },
+				{ title: "服务区域常住人口数",required: "required", name: "servicePopulation", inputType: "TEXT" },
 				{ title: "经纬度(以逗号隔开)", name: "coordinate", inputType: "TEXT" }
 				]
 	    }

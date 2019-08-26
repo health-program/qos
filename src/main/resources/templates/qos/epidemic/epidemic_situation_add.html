@@ -14,9 +14,6 @@
     </section>
     <section class="content">
     </section>
-    <div class="col-sm-2 col-sm-offset-5 btn-back">
-    	<a href="/qos/epidemic/index" class="btn btn-primary btn-block">返回</a>
-    </div>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
     var options = {
@@ -24,11 +21,18 @@
         cancelBtn: false,
         name: "新增",
         url: "/qos/epidemic/save",
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
         columns: [
-            { title: "事发单位名称", name: "incidentUnit", inputType: "SELECT-SERVER", multiple: false,url: "/qos/epidemic/find/select"},
-            { title: "报告单位", name: "reportUnit", inputType: "SELECT", enum: "report-unit-type"},
-            { title: "病种分类", name: "sicknessClassify", inputType: "SELECT", enum: "sickness-type" },
-            { title: "区域", name: "region", inputType: "SELECT",enum:"region-type" },
+            { title: "事发单位名称", name: "incidentUnit",required: "required", inputType: "SELECT-SERVER", multiple: false,url: "/qos/epidemic/find/select"},
+            { title: "报告单位", name: "reportUnit", required: "required",inputType: "SELECT", enum: "report-unit-type"},
+            { title: "病种分类", name: "sicknessClassify",required: "required", inputType: "SELECT", enum: "sickness-type" },
+            { title: "区域", name: "region", required: "required",inputType: "SELECT",enum:"region-type" },
             { title: "发病人数(首周)", name: "firstWeek", inputType: "NUMBER" },
             { title: "班级", name: "grade", inputType: "TEXT" },
             { title: "发病人数(累计)", name: "total", inputType: "NUMBER" },
@@ -49,6 +53,9 @@
     $(function() {
     	var html = generateEditHtml(options);
         $(".content").html(html);
+        $("#reply_btn").click(function () {
+            window.location = "/qos/epidemic/index";
+        });
        	$.initComponment($(".content"));
         
         var model = new tonto.Model("model", options.columns, {
