@@ -48,15 +48,7 @@
                 </div>
             </div>
             <div class="box box-solid">
-                <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
-                    <div class="form-group">
-                        <label for="monthInput" class="col-sm-2 control-label">床位占用热力图</label>
-                        <div class="col-md-4">
-                            <input id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
-                        </div>
-                    </div>
-                </form>
-                <div id="dayChartDiv" class="box-body" style="height: 400px">
+                <div id="pieChartDiv" class="box-body" style="height: 400px">
                 </div>
             </div>
         </div>
@@ -131,17 +123,13 @@
                     row.userBedRate = getRate(row);
                 }
                 initSumChart();
-               // initDayChart();
+                initPieChart();
 
                 return sumData;
             }
         });
     }
 
-    function formatRate(value) {
-        if (value)
-            return value.toFixed(2) + "%";
-    }
 
     function initSumChart() {
 
@@ -251,22 +239,66 @@
             }
         };
         sumChart.setOption(option,true);
-
-
-
-
     };
 
-    var heatMapChart;
 
-    function initDayChart() {
-        requestParams.dataType = 1;
-        requestParams.dateSelector = '#monthInput';
 
-        if (!heatMapChart) {
-            heatMapChart = new tonto.Heatmap("dayChartDiv");
+    function initPieChart() {
+        var dom = document.getElementById("pieChartDiv");
+        var pieChart = echarts.init(dom);
+        if (sumData==0){
+            showChartInfo(pieChart, '暂无数据显示');
+            return false;
         }
-        heatMapChart.updateData(requestParams);
+        var sumOpen=0;
+        var sumUse=0;
+        var occupyRate=0;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+           sumOpen+=it.openBedNumber;
+           sumUse+=it.userBedNumber;
+        }
+        var x = sumUse * 100 / sumOpen;
+        occupyRate=x.toFixed(2) * 1;
+
+        var option = {
+            title: {
+                text: '床位占用率',
+            },
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+
+            series: [
+                {
+                    name:'实际床位占用率',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: false,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+
+                    data:[
+                        {value:occupyRate, name:'床位占用率'}
+                    ]
+                }
+            ]
+        };
+
+        pieChart.setOption(option,true);
     }
 
     var showChartInfo = function (sumChart, infoStr) {

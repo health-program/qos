@@ -154,7 +154,7 @@ public class DataUnitController extends ControllerSupport {
 		String dateStr=request.getDate();
 		String yearStr="";
 		String monthStr="";
-		if (StringUtils.isEmpty(dateStr)){
+		if (!StringUtils.isEmpty(dateStr)){
 			String[] arr = dateStr.split("-");
 			yearStr=arr[0];
 			monthStr=arr[1];
