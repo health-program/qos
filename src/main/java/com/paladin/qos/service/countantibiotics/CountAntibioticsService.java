@@ -32,7 +32,6 @@ public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
     }
 
     public List<CountAntibioticsVO> getReportByQuery(String unitId,Date month) {
-//		eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate)
         return countAntibioticsMapper.getReportByQuery(unitId,month);
     }
 

@@ -14,6 +14,17 @@ public class DataUnit {
 	// 备注说明
 	private String note;
 
+	//床位数量
+	private Integer bedNumber;
+
+	public Integer getBedNumber() {
+		return bedNumber;
+	}
+
+	public void setBedNumber(Integer bedNumber) {
+		this.bedNumber = bedNumber;
+	}
+
 	public String getId() {
 		return id;
 	}

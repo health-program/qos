@@ -5,12 +5,10 @@ import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
-
 import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.OperationComplicationService;
-
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
@@ -25,7 +23,7 @@ import java.io.IOException;
 
 @Controller
 @RequestMapping("/qos/operationComplication")
-public class OperationComplicationController extends ControllerSupport {
+public class OperationComplication1Controller extends ControllerSupport {
 
 	@Autowired
 	OperationComplicationService operationComplicationService;

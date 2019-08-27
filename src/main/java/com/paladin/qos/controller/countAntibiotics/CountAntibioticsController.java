@@ -1,6 +1,9 @@
 package com.paladin.qos.controller.countAntibiotics;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.validation.Valid;
@@ -30,6 +33,7 @@ import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 import com.paladin.qos.service.data.DataUnitService;
 
+import org.apache.commons.lang3.StringUtils;
 @Controller
 @RequestMapping("/qos/countantibiotics")
 public class CountAntibioticsController extends ControllerSupport {
@@ -83,15 +87,18 @@ public class CountAntibioticsController extends ControllerSupport {
 
 		String unitId=request.getUnitId();
 
-		Date month=request.getMonth();
+		String monthStr=request.getMonth();
+		Date month=null;
+		if (StringUtils.isNotBlank(monthStr)){
+			monthStr=monthStr+"-01";
+			DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				month=format.parse(monthStr);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 
-//		if (startDate == null) {
-//			return CommonResponse.getFailResponse();
-//		}
-//
-//		if (endDate == null) {
-//			endDate = new Date();
-//		}
 
 		return CommonResponse.getSuccessResponse(countAntibioticsService.getReportByQuery(unitId,month));
 	}
