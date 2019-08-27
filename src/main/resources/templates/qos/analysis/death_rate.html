@@ -13,7 +13,7 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                     <div class="form-group">
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <select name="eventId" class="form-control tonto-select-constant" enumcode="data-event-type">
                             </select>
                         </div>
@@ -21,7 +21,7 @@
                             <input id="startTime" name="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" value="2018-01-01">
                         </div>
                         <div class="col-md-2">
-                            <input name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                            <input id="endTime" name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-6">
                             <div class="pull-right">
@@ -237,16 +237,18 @@
             },
             queryParams: function(params) {
                 requestParams = params;
+                console.log(params);
             return params;
             },
             responseHandler: function(res) {
                 sumData = res || [];
+                console.log(res);
+                console.log(sumData);
                 
               //遍历数组
                 var event1 = 0,total1=0,event2 = 0,total2=0,event3 = 0,total3=0,event4 = 0,total4=0,
                     event5 = 0,total5=0,event6 = 0,total6=0,event7 = 0,total7=0,event8 = 0,total8=0;
                 $.each(sumData,function(n,value) {
-                	console.log(value.newBabyOperationDeathEventNum);
                 	event1+=value.deathEventNum;
                 	total1+=value.deathTotalNum;
                 	event2+=value.newBabyDeathEventNum;
@@ -295,26 +297,29 @@
             }
         });
     }
-    var dataAxis = [],//x轴
     
-    deathRate =[],
-     newBabyDeathRate =[],
-     newBabyOperationDeathRate =[],
-     newBabyNonOperationDeathRate =[],
-     newBabyWeightOneRate =[],
-     newBabyWeightTwoRate =[],
-     newBabyWeightThreeRate =[],
-     newBabyWeightFourRate =[];
+    
+    
     
 
 
     function initDayChart() {
+    	var dataAxis = [],//x轴
+    	deathRate =[],
+        newBabyDeathRate =[],
+        newBabyOperationDeathRate =[],
+        newBabyNonOperationDeathRate =[],
+        newBabyWeightOneRate =[],
+        newBabyWeightTwoRate =[],
+        newBabyWeightThreeRate =[],
+        newBabyWeightFourRate =[];
     	var myChart = echarts.init(document.getElementById('dayChartDiv'));
     	//x轴
     	for (var i = 0; i < sumData.length-1; i++) {
             var it = sumData[i];
             dataAxis.push(it.unitName);
         }
+    	console.log(sumData);
     	for (var i = 0; i < sumData.length-1; i++) {
             var it = sumData[i];
             deathRate.push(it.deathRate);
@@ -328,7 +333,7 @@
         }
     	
     	myChart.setOption({        //加载数据图表
-        	color:['#1e90ff','#f0ffff'],
+        	//color:['#1e90ff','#f0ffff'],
             title: {
                 text: ''
             },
@@ -346,7 +351,7 @@
                 containLabel: true
             },
             legend: {
-            	
+            	type:"scroll",
             	data: ['住院死亡率', '新生儿住院总死亡率','新生儿手术患者住院死亡率','新生儿非手术患者住院死亡率','新生儿患者出生体重<=750克死亡率','新生儿患者出生体重751-1000克死亡率','新生儿患者出生体重1001-1800克死亡率','新生儿患者出生体重>=1801克死亡率'],
                 bottom:0
             },
@@ -365,7 +370,7 @@
             	type: 'value'
             },
             grid: {
-                bottom: '110px',
+                bottom: '80px',
             },
             series: [
             	 {  type: 'bar',
@@ -446,32 +451,31 @@
     	
     }
     
-    var yearMonth=[],
-    deathRate1 =[],
-    newBabyDeathRate1 =[],
-    newBabyOperationDeathRate1 =[],
-    newBabyNonOperationDeathRate1 =[],
-    newBabyWeightOneRate1 =[],
-    newBabyWeightTwoRate1 =[],
-    newBabyWeightThreeRate1 =[],
-    newBabyWeightFourRate1 =[];
+    
     function initSumChart(){
+    	var yearMonth=[],
+        deathRate1 =[],
+        newBabyDeathRate1 =[],
+        newBabyOperationDeathRate1 =[],
+        newBabyNonOperationDeathRate1 =[],
+        newBabyWeightOneRate1 =[],
+        newBabyWeightTwoRate1 =[],
+        newBabyWeightThreeRate1 =[],
+        newBabyWeightFourRate1 =[];
     	 var myChart = echarts.init(document.getElementById('sumChartDiv'));
     	 var it={};
     	 $.ajax({
     	        type: "post",
     	        async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
     	        url: "/qos/analysis/data/getDeathByMonth",   
-    	        data:{"startTime":$("#startTime").val()},
+    	        data:{"startTime":$("#startTime").val(),"endTime":$("#endTime").val()},
     	        dataType: "json",        //返回数据形式为json
     	        success: function (data) {
-    	           console.log(data.result);
     	           if(data.result){
     	           for (var i = 0; i < data.result.length; i++) {
     	        	   var it = data.result[i];
     	               yearMonth.push(it.year+"-"+it.month);
     	           }
-    	           console.log(yearMonth);
     	           
     	           for (var i = 0; i < data.result.length; i++) {
                        var row = data.result[i];
@@ -501,7 +505,7 @@
     	        
     	        
     	       	myChart.setOption({        //加载数据图表
-    	           	color:['#1e90ff','#f0ffff'],
+    	           	//color:['#1e90ff','#f0ffff'],
     	               title: {
     	                   text: ''
     	               },
@@ -512,7 +516,7 @@
     	                   }
     	               },
     	               legend: {
-    	               	
+    	            	type:"scroll",
     	               	data: ['住院死亡率', '新生儿住院总死亡率','新生儿手术患者住院死亡率','新生儿非手术患者住院死亡率','新生儿患者出生体重<=750克死亡率','新生儿患者出生体重751-1000克死亡率','新生儿患者出生体重1001-1800克死亡率','新生儿患者出生体重>=1801克死亡率'],
     	                   bottom:0
     	               },

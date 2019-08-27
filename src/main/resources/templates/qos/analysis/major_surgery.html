@@ -13,7 +13,7 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                     <div class="form-group">
-                        <div class="col-md-2">
+                        <div class="col-md-2" style="display:none">
                             <select name="eventId" class="form-control tonto-select-constant" enumcode="data-event-type">
                             </select>
                         </div>
@@ -21,7 +21,7 @@
                             <input id="startTime" name="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" value="2018-01-01">
                         </div>
                         <div class="col-md-2">
-                            <input name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                            <input id="endTime" name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-6">
                             <div class="pull-right">
@@ -44,21 +44,21 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <div class="box box-solid">
-                <label for="monthInput" class="col-sm-2 control-label">重点手术住院死亡率趋势图</label>
+               <div class="box box-solid">
+                <label for="monthInput" class="col-sm-3 control-label">重点手术住院死亡率趋势图</label>
                     <div id="sumChartDiv" class="box-body" style="height: 300px">
                     </div>
                 </div>
                 <div class="box box-solid">
                     <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
                         <div class="form-group">
-                            <label for="monthInput" class="col-sm-2 control-label">重点手术住院死亡率柱状图</label>
+                            <label for="monthInput" class="col-sm-3 control-label">重点手术住院死亡率柱状图</label>
                             <!-- <div class="col-md-4">
                                 <input id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
                             </div> -->
                         </div>
                     </form>
-                    <div id="dayChartDiv" class="box-body" style="height: 400px">
+                    <div id="dayChartDiv" class="box-body" style="height: 300px">
                     </div>
                 </div>
             </div>
@@ -236,17 +236,18 @@
             }
         });
     }
-    var dataAxis = [],//x轴
     
-    bypassGraftingRate=[],
-    interventionRate=[],
-    replacementRate=[],
-    brainSurgeryRate=[],
-    cesareanRate=[];
     
 
 
     function initDayChart() {
+    	var dataAxis = [],//x轴
+        
+        bypassGraftingRate=[],
+        interventionRate=[],
+        replacementRate=[],
+        brainSurgeryRate=[],
+        cesareanRate=[];
     	var myChart = echarts.init(document.getElementById('dayChartDiv'));
     	//x轴
     	for (var i = 0; i < sumData.length-1; i++) {
@@ -263,7 +264,7 @@
         }
     	
     	myChart.setOption({        //加载数据图表
-        	color:['#1e90ff','#f0ffff'],
+        	//color:['#1e90ff','#f0ffff'],
             title: {
                 text: ''
             },
@@ -281,7 +282,7 @@
                 containLabel: true
             },
             legend: {
-            	
+            	type:"scroll",
             	data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率','髋膝关节置换术死亡率','颅脑手术死亡率','剖宫产死亡率'],
                 bottom:0
             },
@@ -300,7 +301,7 @@
             	type: 'value'
             },
             grid: {
-                bottom: '110px',
+                bottom: '50px',
             },
             series: [
             	 {  type: 'bar',
@@ -354,21 +355,22 @@
     	
     }
     
-    var yearMonth=[],
-    bypassGraftingRate1 =[],
-    interventionRate1 =[],
-    replacementRate1 =[],
-    brainSurgeryRate1 =[],
-    cesareanRate1 =[];
+    
     
     function initSumChart(){
+    	var yearMonth=[],
+        bypassGraftingRate1 =[],
+        interventionRate1 =[],
+        replacementRate1 =[],
+        brainSurgeryRate1 =[],
+        cesareanRate1 =[];
     	 var myChart = echarts.init(document.getElementById('sumChartDiv'));
     	 var it={};
     	 $.ajax({
     	        type: "post",
     	        async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
     	        url: "/qos/analysis/data/getMajorSurgeryByMonth",   
-    	        data:{"startTime":$("#startTime").val()},
+    	        data:{"startTime":$("#startTime").val(),"endTime":$("#endTime").val()},
     	        dataType: "json",        //返回数据形式为json
     	        success: function (data) {
     	           console.log(data.result);
@@ -402,7 +404,7 @@
     	        
     	        
     	       	myChart.setOption({        //加载数据图表
-    	           	color:['#1e90ff','#f0ffff'],
+    	           	//color:['#1e90ff','#f0ffff'],
     	               title: {
     	                   text: ''
     	               },
@@ -413,7 +415,7 @@
     	                   }
     	               },
     	               legend: {
-    	               	
+    	            	   type:"scroll",
     	            	   data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率','髋膝关节置换术死亡率','颅脑手术死亡率','剖宫产死亡率'],
     	                   bottom:0
     	               },
@@ -422,6 +424,15 @@
     	                boundaryGap: false,
     	                
     	               	data: yearMonth
+    	               },
+    	               grid: {
+    	                   left: '0%',
+    	                   right: '0%',
+    	                   bottom: '5%',
+    	                   containLabel: true
+    	               },
+    	               grid: {
+    	                   bottom: '50px',
     	               },
     	               yAxis: {type: 'value'},
     	               series: [
