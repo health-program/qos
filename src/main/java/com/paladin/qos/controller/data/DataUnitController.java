@@ -16,7 +16,6 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -154,7 +154,7 @@ public class DataUnitController extends ControllerSupport {
 		String dateStr=request.getDate();
 		String yearStr="";
 		String monthStr="";
-		if (StringUtils.isNotBlank(dateStr)){
+		if (StringUtils.isEmpty(dateStr)){
 			String[] arr = dateStr.split("-");
 			yearStr=arr[0];
 			monthStr=arr[1];

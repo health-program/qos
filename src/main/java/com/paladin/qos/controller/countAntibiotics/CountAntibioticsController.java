@@ -32,8 +32,9 @@ import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 import com.paladin.qos.service.data.DataUnitService;
+import org.thymeleaf.util.StringUtils;
 
-import org.apache.commons.lang3.StringUtils;
+
 @Controller
 @RequestMapping("/qos/countantibiotics")
 public class CountAntibioticsController extends ControllerSupport {
@@ -89,7 +90,7 @@ public class CountAntibioticsController extends ControllerSupport {
 
 		String monthStr=request.getMonth();
 		Date month=null;
-		if (StringUtils.isNotBlank(monthStr)){
+		if (!StringUtils.isEmpty(monthStr)){
 			monthStr=monthStr+"-01";
 			DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
 			try {
