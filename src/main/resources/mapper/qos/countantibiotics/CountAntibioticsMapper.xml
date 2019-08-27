@@ -48,7 +48,7 @@
 			and c.unit_id =#{unitId}
 		</if>
 		<if test="month != null">
-			and (DATE_FORMAT(c.create_time,'%Y%m') = DATE_FORMAT(month,'%Y%m'))
+			and (DATE_FORMAT(c.create_time,'%Y%m') = DATE_FORMAT(#{month},'%Y%m'))
 		</if>
 	</select>
 </mapper>

@@ -1,7 +1,9 @@
 package com.paladin.qos.controller.data;
 
 import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.controller.countAntibiotics.CountAntibioticsRequest;
 import com.paladin.qos.controller.data.dto.DataUnitExportCondition;
+import com.paladin.qos.controller.data.dto.DataUtilRequest;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.data.dto.DataUnitQuery;
@@ -14,6 +16,7 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 import javax.validation.Valid;
 
@@ -134,4 +139,26 @@ public class DataUnitController extends ControllerSupport {
 			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
 		}
 	}
+
+	//报表页面
+	@GetMapping("/bed/index")
+	public Object dataIndex(Model model) {
+		model.addAttribute("unit", dataUnitService.findAll());
+		return "/qos/data/bed_data_index";
+	}
+
+	@RequestMapping(value = "/bed/processing", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getAntibioticsData(DataUtilRequest request) {
+		String unitId=request.getUnitId();
+		String dateStr=request.getDate();
+		String yearStr="";
+		String monthStr="";
+		if (StringUtils.isNotBlank(dateStr)){
+			String[] arr = dateStr.split("-");
+			yearStr=arr[0];
+			monthStr=arr[1];
+		}
+		return CommonResponse.getSuccessResponse(dataUnitService.getBedReportByQuery(unitId,monthStr,yearStr));
+		}
 }

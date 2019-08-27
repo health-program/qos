@@ -93,9 +93,13 @@
     var average = 0;
     var totalAverage = 0;
     $(function () {
+        var day=new Date();
+        day.setTime(day.getTime());
+        var month = day.getFullYear()+"-" + (day.getMonth()+1);
         laydate.render({
             elem: '#monthInput',
-            type: 'month'
+            type: 'month',
+            value:month
         });
         initTable();
     });
@@ -109,14 +113,15 @@
     var dom = document.getElementById("dashboardDiv");
     var rateTotal = echarts.init(domTotal);
     var rate = echarts.init(dom);
-
+    var dom = document.getElementById("columnarDiv");
+    var sumChart = echarts.init(dom);
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
                     {title: "医疗机构", field: "unitName"},
-                    {title: "住院患者人均使用抗菌药物品种数", field: "varieties"},
+                    {title: "住院患者人均使用抗菌药物品种数", field: "varieties",width:"10px"},
                     {title: "住院患者人均使用抗菌药物费用", field: "averageCost"},
                     {title: "住院患者使用抗菌药物的百分率", field: "userRate", formatter: getRate},
                     {title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal", formatter: getRate},
@@ -132,86 +137,41 @@
                     totalSum=0;
                 }
                 requestParams = params;
-                debugger;
                 return params;
             },
             responseHandler: function (res) {
                 data = res;
-                if (data == 0) {
-                    showChartInfo(rateTotal, '暂无数据显示');
-                    showChartInfo2(rate, '暂无数据显示');
-                    return false;
-                }
+
                 for (var i = 0; i < data.length; i++) {
                     var row = data[i];
-
                     sum += parseFloat(row.userRate);
 
                     totalSum += parseFloat(row.rateOfTotal);
                 }
                 average = (sum / data.length).toFixed(2);
                 totalAverage = (totalSum / data.length).toFixed(2);
-
+                // if (data == 0) {
+                //     showChartInfo(rateTotal, '暂无数据显示');
+                //     showChartInfo2(rate, '暂无数据显示');
+                //     showChartInfo3(sumChart, '暂无数据显示');
+                //      return false;
+                // }
                 initRateDashBoard();
                 initColumnarDiv();
-
                 return data;
 
             }
         });
     }
 
-    var showChartInfo = function (rateTotal, infoStr) {
-        var msgOption = {
-            title: {
-                show: true,
-                textStyle: {
-                    color: 'grey',
-                    fontSize: 20
-                },
-                text: infoStr,
-                left: 'center',
-                top: 'center'
-            },
-            xAxis: {
-                show: false
-            },
-            yAxis: {
-                show: false
-            },
-            series: []
-        };
-        rateTotal.clear();
-        rateTotal.hideLoading();
-        rateTotal.setOption(msgOption)
-    };
 
-    var showChartInfo2 = function (rate, infoStr) {
-        var msgOption = {
-            title: {
-                show: true,
-                textStyle: {
-                    color: 'grey',
-                    fontSize: 20
-                },
-                text: infoStr,
-                left: 'center',
-                top: 'center'
-            },
-            xAxis: {
-                show: false
-            },
-            yAxis: {
-                show: false
-            },
-            series: []
-        };
-        rate.clear();
-        rate.hideLoading();
-        rate.setOption(msgOption)
-    };
 
     function initRateDashBoard() {
+        if(data==0){
+            showChartInfo(rateTotal, '暂无数据显示');
+            showChartInfo2(rate, '暂无数据显示');
+            return false;
+        }
         option = {
             title: {
                 text: '住院患者使用抗菌药物百分率'
@@ -265,9 +225,9 @@
 
 
     function initColumnarDiv() {
-        if (!sumChart) {
-            var dom = document.getElementById("columnarDiv");
-            var sumChart = echarts.init(dom);
+        if (data==0){
+            showChartInfo3(sumChart, '暂无数据显示');
+            return false;
         }
 
         var hospitalName = [
@@ -382,6 +342,83 @@
         sumChart.setOption(option,true);
     };
 
+
+
+    // 没有数据时展示
+    var showChartInfo = function (rateTotal, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        rateTotal.clear();
+        rateTotal.hideLoading();
+        rateTotal.setOption(msgOption)
+    };
+
+    var showChartInfo2 = function (rate, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        rate.clear();
+        rate.hideLoading();
+        rate.setOption(msgOption)
+    };
+
+    var showChartInfo3 = function (rate, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        sumChart.clear();
+        sumChart.hideLoading();
+        sumChart.setOption(msgOption)
+    };
 
 </script>
 </body>

@@ -30,7 +30,7 @@
 	        columns: [
 					{title : "本医疗机构向上级医疗机构转出人数",name : "upOutNumber",inputType : "NUMBER"},
 					{title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",inputType : "NUMBER"},
-
+                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"}
 				     ]
 					}
 					var model, itemId;

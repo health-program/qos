@@ -7,13 +7,13 @@ public class CountAntibioticsRequest {
 
     private String unitId;
 
-    private Date month;
+    private String month;
 
-    public Date getMonth() {
+    public String getMonth() {
         return month;
     }
 
-    public void setMonth(Date month) {
+    public void setMonth(String month) {
         this.month = month;
     }
 
