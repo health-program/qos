@@ -253,6 +253,8 @@
         var sumOpen=0;
         var sumUse=0;
         var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
         for (var i = 0; i < sumData.length; i++) {
             var it = sumData[i];
            sumOpen+=it.openBedNumber;
@@ -260,17 +262,33 @@
         }
         var x = sumUse * 100 / sumOpen;
         occupyRate=x.toFixed(2) * 1;
-
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
         var option = {
-            title: {
-                text: '床位占用率',
-            },
-            color: ['#3398DB'],
+
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
+            title: {
+                text: '床位占用率',
 
+            },
+            color: ['#3398DB','#999999'],
+            graphic: [{ //环形图中间添加文字
+                type: 'text', //通过不同top值可以设置上下显示
+                left: 'center',
+                top: '45%',
+                style: {
+                    text: pieMessage+'\n'+'床位占用率',
+                    textAlign: 'center',
+                    fill: 'black', //文字的颜色
+                    width: 30,
+                    height: 30,
+                    fontSize: 20,
+                    fontFamily: "Microsoft YaHei"
+                }
+            }],
             series: [
                 {
                     name:'实际床位占用率',
@@ -279,25 +297,33 @@
                     avoidLabelOverlap: false,
                     label: {
                         normal: {
-                            show: true,
+                            show: false,
                             position: 'center'
                         },
-                        emphasis: {
-                            show: false,
-                            textStyle: {
-                                fontSize: '30',
-                                fontWeight: 'bold'
-                            }
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
                         }
                     },
-
                     data:[
-                        {value:occupyRate, name:'床位占用率'}
+                        {
+                            value:occupyRate,
+                            name:'实际床位占用率'
+                        },
+                        {
+                            value:remainRate,
+                            name:'',
+                            hoverAnimation:false,
+                            tooltip:{//禁止鼠标悬停显示提示框
+                                        show:false,
+                                    },
+                        }
                     ]
                 }
             ]
         };
-
         pieChart.setOption(option,true);
     }
 
