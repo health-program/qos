@@ -56,7 +56,7 @@ public class DataUnitController extends ControllerSupport {
 	@RequestMapping(value = "/find/select", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object find() {
-		return CommonResponse.getSuccessResponse(dataUnitService.findAll());
+		return CommonResponse.getSuccessResponse(dataUnitService.selectData());
 	}
 
 	@GetMapping("/get")

@@ -1,13 +1,12 @@
 package com.paladin.qos.service.report.vo;
 
-import com.paladin.framework.common.OffsetPage;
 import com.paladin.qos.analysis.DataConstantContainer;
 
 /**   
  * @author MyKite
  * @version 2019年8月23日 下午4:24:42 
  */
-public class ReportDataVO extends OffsetPage{
+public class ReportDataVO{
 
     private String id;
     private Integer type;

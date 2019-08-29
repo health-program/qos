@@ -38,7 +38,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
     
     @GetMapping("/index")
     public String index(Model model){
-	model.addAttribute("unit", dataUnitService.findAll());
+	model.addAttribute("unit", dataUnitService.selectData());
 	return "/qos/report/perinatal_cardiopathy_index";
     }
     
@@ -46,7 +46,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
     @ResponseBody
     public Object findAll(ReportDataQueryDTO query) {
 	query.setType(ReportData.REPORT_DATA_PERINATAL);
-	return CommonResponse.getSuccessResponse(reportDataService.searchPage(query));
+	return CommonResponse.getSuccessResponse(reportDataService.findAll(query));
     }
     
     @PostMapping("/save")

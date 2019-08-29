@@ -22,5 +22,16 @@
         GROUP BY
         u.id
     </select>
+    
+    <select id="selectData" resultType="com.paladin.qos.service.data.vo.DataUnitVO">
+    SELECT d.id,d.`name` from data_unit as d where 1=1
+    <if test="array !=null and array !='' ">
+     and d.id in
+     <foreach collection="array" index="index" item="item"
+            open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </if>
+    </select>
 
 </mapper>
