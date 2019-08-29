@@ -57,9 +57,9 @@ public class OperationComplication1Controller extends ControllerSupport {
 			return validErrorHandler(bindingResult);
 		}
 		Boolean canAdd = operationComplicationService.canAdd(dto.getUnitId());
-//		if (canAdd) {
-//			return CommonResponse.getErrorResponse("添加记录未满半年！");
-//		}
+		if (canAdd) {
+			return CommonResponse.getErrorResponse("添加记录未满半年！");
+		}
 		OperationComplication complication = beanCopy(dto,new OperationComplication());
 		String id = UUIDUtil.createUUID();
 		complication.setId(UUIDUtil.createUUID());
