@@ -129,4 +129,48 @@
       <delete id="deletes">
       		delete from operation_complication where id = #{id}
       </delete>
+
+
+    <select id="operationCount" resultType="com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO">
+        select
+        sum(o.embolism)as embolism,
+        sum(o.pulmonary_embolism)as pulmonaryEmbolism,
+        sum(o.venous_thrombosis)as venousThrombosis,
+        sum(o.hematoma)as hematoma,
+        sum(o.wound_dehiscence)as woundDehiscence,
+        sum(o.sudden_death)as suddenDeath,
+        sum(o.operative_complications)as operativeComplications,
+        sum(o.anaesthesia)as anaesthesia,
+        o.unit_id as unitId
+        from operation_complication as o WHERE 1=1
+        <if test="unitId !=null and unitId !='' ">
+            AND o.unit_id=#{unitId}
+        </if>
+        <if test="date !=null and date !='' ">
+            AND o.create_time LIKE CONCAT(#{date},'%')
+        </if>
+        GROUP BY o.unit_id;
+    </select>
+
+    <select id="operationCountYear" resultType="com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO">
+        SELECT
+        sum(o.embolism)as embolism,
+        sum(o.pulmonary_embolism)as pulmonaryEmbolism,
+        sum(o.venous_thrombosis)as venousThrombosis,
+        sum(o.hematoma)as hematoma,
+        sum(o.wound_dehiscence)as woundDehiscence,
+        sum(o.sudden_death)as suddenDeath,
+        sum(o.operative_complications)as operativeComplications,
+        sum(o.anaesthesia)as anaesthesia,
+        DATE_FORMAT(o.create_time,'%Y') AS date
+        FROM
+        operation_complication AS o where 1=1
+        <if test="date !=null and date !='' ">
+            AND DATE_FORMAT(o.create_time,'%Y') = #{date}
+        </if>
+        <if test="unitId !=null and unitId !='' ">
+            AND o.unit_id=#{unitId}
+        </if>
+        GROUP BY DATE_FORMAT(o.create_time,'%Y');
+    </select>
 </mapper>

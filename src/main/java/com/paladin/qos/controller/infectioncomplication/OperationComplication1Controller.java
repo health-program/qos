@@ -57,9 +57,9 @@ public class OperationComplication1Controller extends ControllerSupport {
 			return validErrorHandler(bindingResult);
 		}
 		Boolean canAdd = operationComplicationService.canAdd(dto.getUnitId());
-		if (canAdd) {
-			return CommonResponse.getErrorResponse("添加记录未满半年！");
-		}
+//		if (canAdd) {
+//			return CommonResponse.getErrorResponse("添加记录未满半年！");
+//		}
 		OperationComplication complication = beanCopy(dto,new OperationComplication());
 		String id = UUIDUtil.createUUID();
 		complication.setId(UUIDUtil.createUUID());
@@ -127,6 +127,23 @@ public class OperationComplication1Controller extends ControllerSupport {
 		} catch (IOException | ExcelWriteException e) {
 			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
 		}
+	}
+
+	@GetMapping("/charts/index")
+	public String chartsIndex() {
+		return "/qos/infectioncomplication/operation_data";
+	}
+
+	@GetMapping("/charts/count")
+	@ResponseBody
+	public Object infectionCount(OperationComplicationQueryDTO query){
+		return CommonResponse.getSuccessResponse(operationComplicationService.operationCount(query));
+	}
+
+	@GetMapping("/charts/count/year")
+	@ResponseBody
+	public Object infectionCountYaer(OperationComplicationQueryDTO query){
+		return CommonResponse.getSuccessResponse(operationComplicationService.operationCountYear(query));
 	}
 
 }

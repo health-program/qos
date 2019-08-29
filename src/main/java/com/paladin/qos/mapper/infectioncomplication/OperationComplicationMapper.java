@@ -2,8 +2,10 @@ package com.paladin.qos.mapper.infectioncomplication;
 
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
+import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
+import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
 
 
@@ -27,6 +29,10 @@ public interface OperationComplicationMapper extends CustomMapper<OperationCompl
 
 
 	public OperationComplicationVO findRecentlyRecord(@Param("unitId") String uintId);
+
+	List<OperationComplicationVO> operationCount(@Param("query")OperationComplicationQueryDTO query);
+
+	List<OperationComplicationVO> operationCountYear(@Param("query")OperationComplicationQueryDTO query);
 }
 
 

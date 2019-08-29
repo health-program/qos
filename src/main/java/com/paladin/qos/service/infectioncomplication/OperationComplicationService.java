@@ -7,7 +7,9 @@ import com.paladin.framework.core.ServiceSupport;
 import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.infectioncomplication.OperationComplicationMapper;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
+import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
+import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -79,6 +82,14 @@ public class OperationComplicationService extends ServiceSupport<OperationCompli
 	}
 	return false;
     }
+
+	public List<OperationComplicationVO> operationCount(OperationComplicationQueryDTO query){
+		return operationComplicationMapper.operationCount(query);
+	}
+
+	public List<OperationComplicationVO> operationCountYear(OperationComplicationQueryDTO query){
+		return operationComplicationMapper.operationCountYear(query);
+	}
 
 }
 
