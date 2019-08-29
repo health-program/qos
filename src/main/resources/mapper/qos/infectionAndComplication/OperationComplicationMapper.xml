@@ -17,7 +17,16 @@
 				o.anaesthesia,
 				o.create_time as createTime,
 				o.unit_id as unitId
-		FROM operation_complication o where 1=1 
+		FROM operation_complication o where 1=1
+
+	   <if test="unitIds !=null">
+		   AND unit_id IN
+		   <foreach collection="unitIds" index="index" item="item"
+					open="(" separator="," close=")">
+			   #{item}
+		   </foreach>
+	   </if>
+
 		<if test="unitId !=null and unitId !='' ">
 			and o.unit_id = #{unitId}
 		</if>

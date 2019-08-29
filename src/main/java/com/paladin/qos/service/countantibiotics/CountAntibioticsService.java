@@ -1,5 +1,7 @@
 package com.paladin.qos.service.countantibiotics;
 
+import com.paladin.qos.core.QosUserSession;
+import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +23,13 @@ public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
     @Autowired
     CountAntibioticsMapper countAntibioticsMapper;
 
-    public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsDTO query) {
+    public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsQuery query) {
 	Page<CountAntibioticsVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        QosUserSession userSession=QosUserSession.getCurrentUserSession();
+        if (!userSession.isAdminRoleLevel()){
+            String[] agencyIds = userSession.getAgencyIds();
+            query.setUnitIds(agencyIds);
+        }
 	countAntibioticsMapper.selecttoAll(query);
 	return new PageResult<>(page);
     }

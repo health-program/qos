@@ -40,7 +40,7 @@ public class InfectionController extends ControllerSupport {
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = InfectionQuery.class)
 	public String index(Model model) {
-		model.addAttribute("unit", dataUnitService.findAll());
+		model.addAttribute("unit", dataUnitService.selectData());
 		return "/qos/infectioncomplication/infection_index";
 	}
 

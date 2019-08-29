@@ -6,6 +6,16 @@ public class OperationComplicationQueryDTO extends  OffsetPage {
     
     private String unitId;
 
+    private String [] unitIds;
+
+    public String[] getUnitIds() {
+        return unitIds;
+    }
+
+    public void setUnitIds(String[] unitIds) {
+        this.unitIds = unitIds;
+    }
+
     public String getUnitId() {
         return unitId;
     }

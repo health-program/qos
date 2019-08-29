@@ -47,13 +47,13 @@ public class CountAntibioticsController extends ControllerSupport {
 
 	@GetMapping("/index")
 	public Object index( Model model) {
-	    	model.addAttribute("unit", dataUnitService.findAll());
+	    	model.addAttribute("unit", dataUnitService.selectData());
 		return "/qos/count_antibiotics/count_antibiotics_index";
 	}
 
 	@RequestMapping(value = "/find/all", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public Object findAll(CountAntibioticsDTO query) {
+	public Object findAll(CountAntibioticsQuery query) {
 		return CommonResponse.getSuccessResponse(countAntibioticsService.searchFindPage(query));
 	}
 

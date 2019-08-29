@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.paladin.common.util.TimeIntervalUtil;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.count.CountReferralMapper;
 import com.paladin.qos.model.count.CountReferral;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
@@ -22,6 +23,11 @@ public class CountReferralService extends ServiceSupport<CountReferral> {
     //分页列表
     public PageResult<InfectionVO> searchFindPage(CountReferralQuery query) {
         Page<InfectionVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        QosUserSession userSession=QosUserSession.getCurrentUserSession();
+        if (!userSession.isAdminRoleLevel()){
+            String[] agencyIds = userSession.getAgencyIds();
+            query.setUnitIds(agencyIds);
+        }
         countReferralMapper.findReferralRecord(query);
         return new PageResult<>(page);
     }

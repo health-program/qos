@@ -35,7 +35,7 @@ public class CountReferralController extends ControllerSupport {
     @GetMapping("/index")
     @QueryInputMethod(queryClass = CountReferral.class)
     public String index(Model model){
-        model.addAttribute("unit", dataUnitService.findAll());
+        model.addAttribute("unit", dataUnitService.selectData());
         return "/qos/count/count_referral_index";
     }
 

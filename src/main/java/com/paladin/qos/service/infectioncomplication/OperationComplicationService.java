@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.infectioncomplication.OperationComplicationMapper;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
@@ -23,7 +24,12 @@ public class OperationComplicationService extends ServiceSupport<OperationCompli
 	OperationComplicationMapper operationComplicationMapper;
 
        public PageResult<OperationComplicationVO> searchFindPage(OperationComplicationQueryDTO query){
-	       Page<OperationComplicationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
+	       Page<OperationComplicationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+		   QosUserSession userSession=QosUserSession.getCurrentUserSession();
+		   if (!userSession.isAdminRoleLevel()){
+			   String[] agencyIds = userSession.getAgencyIds();
+			   query.setUnitIds(agencyIds);
+		   }
 	       operationComplicationMapper.infectIndicationAll(query);
 	       return new PageResult<>(page);
 	   }

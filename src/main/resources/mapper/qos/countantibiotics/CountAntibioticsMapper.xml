@@ -17,6 +17,15 @@
 		FROM
 		count_antibiotics AS c
 		WHERE 1 = 1
+
+		<if test="unitIds !=null">
+			AND unit_id IN
+			<foreach collection="unitIds" index="index" item="item"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+
 		<if test="unitId != null and unitId !='' ">
 			and c.unit_id =#{unitId}
 		</if>

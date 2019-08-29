@@ -42,6 +42,16 @@ public class InfectionQuery extends OffsetPage {
     
     private String date;
 
+    private String [] unitIds;
+
+    public String[] getUnitIds() {
+        return unitIds;
+    }
+
+    public void setUnitIds(String[] unitIds) {
+        this.unitIds = unitIds;
+    }
+
     public String getDate() {
         return date;
     }

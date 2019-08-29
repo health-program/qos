@@ -33,7 +33,7 @@ public class OperationComplication1Controller extends ControllerSupport {
 
 	@GetMapping("/index")
 	public String index(Model model){
-		model.addAttribute("unit", dataUnitService.findAll());
+		model.addAttribute("unit", dataUnitService.selectData());
 		return "/qos/infectioncomplication/operationComplication_index";
 	}
 

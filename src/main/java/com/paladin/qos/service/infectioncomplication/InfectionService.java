@@ -7,7 +7,9 @@ import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
+import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.infectioncomplication.InfectionMapper;
 import com.paladin.qos.model.infectioncomplication.Infection;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionDTO;
@@ -30,8 +32,15 @@ public class InfectionService extends ServiceSupport<Infection> {
     //分页列表
     public PageResult<InfectionVO> searchFindPage(InfectionQuery query) {
         Page<InfectionVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+        QosUserSession userSession=QosUserSession.getCurrentUserSession();
+        if (!userSession.isAdminRoleLevel()){
+            String[] agencyIds = userSession.getAgencyIds();
+            query.setUnitIds(agencyIds);
+        }
+
         infectionMapper.findInfectRecord(query);
         return new PageResult<>(page);
+
     }
 
 
