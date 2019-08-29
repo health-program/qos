@@ -44,6 +44,16 @@ public class InfectionVO {
     private String updateUserId;
 
     private String unitId;
+    
+    private String date;
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getUnitId() {
         return unitId;

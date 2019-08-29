@@ -103,7 +103,25 @@ public class InfectionController extends ControllerSupport {
 	public Object delete(@RequestParam String id) {
 		return CommonResponse.getResponse(infectionService.delete(id));
 	}
-
+	
+	@GetMapping("/charts/index")
+	public String chartsIndex() {
+		return "/qos/infectioncomplication/infection_data";
+	}
+	
+	@GetMapping("/charts/count")
+	@ResponseBody
+	public Object infectionCount(InfectionQuery query){
+	    return CommonResponse.getSuccessResponse(infectionService.infectionCount(query));
+	}
+	
+	@GetMapping("/charts/count/yaer")
+	@ResponseBody
+	public Object infectionCountYaer(InfectionQuery query){
+	    return CommonResponse.getSuccessResponse(infectionService.infectionCountYaer(query));
+	}
+	
+	
 	@PostMapping(value = "/export")
 	@ResponseBody
 	public Object export(@RequestBody InfectionExportCondition condition) {

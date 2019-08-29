@@ -13,11 +13,13 @@ import com.paladin.qos.model.infectioncomplication.Infection;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionDTO;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class InfectionService extends ServiceSupport<Infection> {
@@ -82,5 +84,13 @@ public class InfectionService extends ServiceSupport<Infection> {
             return TimeIntervalUtil.canAdd(infection.getCreateTime(),6);
         }
         return true;
+    }
+    
+    public List<InfectionVO> infectionCount(InfectionQuery query){
+	return infectionMapper.infectionCount(query);
+    }
+    
+    public List<InfectionVO> infectionCountYaer(InfectionQuery query){
+	return infectionMapper.infectionCountYaer(query);
     }
 }

@@ -29,4 +29,8 @@ public interface InfectionMapper extends CustomMapper<Infection>{
 
         //查找最近一条记录
         Infection findRecentlyRecord(@Param("unitId") String unitId);
+        
+        List<InfectionVO> infectionCount(@Param("query")InfectionQuery query);
+        
+        List<InfectionVO> infectionCountYaer(@Param("query")InfectionQuery query);
 }

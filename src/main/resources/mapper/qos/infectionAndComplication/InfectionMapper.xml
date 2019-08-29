@@ -123,5 +123,50 @@
         delete from infection
          where id = #{id,jdbcType=VARCHAR}
     </delete>
+    
+    <select id="infectionCount" resultType="com.paladin.qos.service.infectioncomplication.vo.InfectionVO">
+    select 
+	sum(i.total_infection)as totalInfection,
+	sum(i.operating_departments_infection)as operatingDepartmentsInfection,
+	sum(i.operating_part_infection)as operatingPartInfection,
+	sum(i.operating_risk_infection)as operatingRiskInfection,
+	sum(i.lung_infection)as lungInfection,
+	sum(i.new_born_infection)as newBornInfection,
+	sum(i.selective_operations_infection)as selectiveOperationsInfection,
+	sum(i.blood_infection)as bloodInfection,
+	sum(i.intensive_care_unit_infection)as intensiveCareUnitInfection,
+	i.unit_id as unitId
+	from infection as i WHERE 1=1
+	<if test="unitId !=null and unitId !='' ">
+	 AND i.unit_id=#{unitId} 
+	</if>
+	<if test="date !=null and date !='' ">
+	 AND i.create_time LIKE CONCAT(#{date},'%') 
+	</if>
+	GROUP BY i.unit_id;
+    </select>
+    
+    <select id="infectionCountYaer" resultType="com.paladin.qos.service.infectioncomplication.vo.InfectionVO">
+    SELECT
+	sum(i.total_infection) AS totalInfection,
+	sum(i.operating_departments_infection) AS operatingDepartmentsInfection,
+	sum(i.operating_part_infection) AS operatingPartInfection,
+	sum(i.operating_risk_infection) AS operatingRiskInfection,
+	sum(i.lung_infection) AS lungInfection,
+	sum(i.new_born_infection) AS newBornInfection,
+	sum(i.selective_operations_infection) AS selectiveOperationsInfection,
+	sum(i.blood_infection) AS bloodInfection,
+	sum(i.intensive_care_unit_infection) AS intensiveCareUnitInfection,
+	DATE_FORMAT(i.create_time,'%Y') AS date
+	FROM
+	infection AS i where 1=1 
+	<if test="date !=null and date !='' ">
+	 AND DATE_FORMAT(i.create_time,'%Y') = #{date}
+	</if>
+	<if test="unitId !=null and unitId !='' ">
+	 AND i.unit_id=#{unitId}  
+	</if>
+	GROUP BY DATE_FORMAT(i.create_time,'%Y');
+    </select>
 
 </mapper>
