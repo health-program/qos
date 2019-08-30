@@ -120,8 +120,8 @@
             },
             responseHandler: function(res) {
             	dataVal = res || [];
-                infectionChart1();
-                infectionChart2();
+                operationChart1();
+                operationChart2();
 
                 return dataVal;
             }
@@ -139,7 +139,7 @@
     var dataLegend = ['手术患者并发症发生率', '手术患者手术后肺栓塞发生率','手术患者手术后深静脉血栓发生率', '手术患者手术后出血或血肿发生率',
           			 '手术患者手术伤口裂开发生率', '手术患者手术后猝死发生率', '手术死亡患者手术并发症发生率', '手术患者麻醉并发症发生率'];
    
- 	function infectionChart1(){
+ 	function operationChart1(){
  		if(dataVal){
  			infection1Chart.showLoading({
 		           text: '数据正在努力加载...',
@@ -223,7 +223,7 @@
 		   	          },
 				    series: [
 				        {
-				            name: '手术患者并发症发生率统计',
+				            name: '手术患者并发症发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -233,7 +233,7 @@
 				            },
 				            data: data1
 				        },{
-				            name: '手术患者手术后肺栓塞发生率统计',
+				            name: '手术患者手术后肺栓塞发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -243,7 +243,7 @@
   				            },
 				            data: data2
 				        },{
-				            name: '手术患者手术后深静脉血栓发生率统计',
+				            name: '手术患者手术后深静脉血栓发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -253,7 +253,7 @@
   				            },
 				            data: data3
 				        },{
-				            name: '手术患者手术后出血或血肿发生率统计',
+				            name: '手术患者手术后出血或血肿发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -263,7 +263,7 @@
   				            },
 				            data: data4
 				        },{
-				            name: '手术患者手术伤口裂开发生率统计',
+				            name: '手术患者手术伤口裂开发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -273,7 +273,7 @@
   				            },
 				            data: data5
 				        },{
-				            name: '手术患者手术后猝死发生率统计',
+				            name: '手术患者手术后猝死发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -283,7 +283,7 @@
   				            },
 				            data: data6
 				        },{
-				            name: '手术死亡患者手术并发症发生率统计',
+				            name: '手术死亡患者手术并发症发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -293,7 +293,7 @@
    				            },
 				            data: data7
 				        },{
-				            name: '手术患者麻醉并发症发生率统计',
+				            name: '手术患者麻醉并发症发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -309,7 +309,7 @@
  		infection1Chart.setOption(option1,true);
  	}
  	
-	function infectionChart2(){
+	function operationChart2(){
 		if(dataVal){
 			infection2Chart.showLoading({
 		           text: '数据正在努力加载...',
@@ -415,7 +415,7 @@
 						    ],
 						    series: [
 						        {
-						            name: '手术患者并发症发生率统计',
+						            name: '手术患者并发症发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -430,7 +430,7 @@
 						            areaStyle: {color: '#4a72c9'},
 						            data: data1
 						        },{
-						            name: '手术患者手术后肺栓塞发生率统计',
+						            name: '手术患者手术后肺栓塞发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -445,7 +445,7 @@
 						            areaStyle: {color: '#6071c6'},
 						            data: data2
 						        },{
-						            name: '手术患者手术后深静脉血栓发生率统计',
+						            name: '手术患者手术后深静脉血栓发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -460,7 +460,7 @@
 						            areaStyle: {color: '#78a9f2'},
 						            data: data3
 						        },{
-						            name: '手术患者手术后出血或血肿发生率统计',
+						            name: '手术患者手术后出血或血肿发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -475,7 +475,7 @@
 						            areaStyle: {color: '#a3ccf8'},
 						            data: data4
 						        },{
-						            name: '手术患者手术伤口裂开发生率统计',
+						            name: '手术患者手术伤口裂开发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -490,7 +490,7 @@
 						            areaStyle: {color: '#47b8e2'},
 						            data: data5
 						        },{
-						            name: '手术患者手术后猝死发生率统计',
+						            name: '手术患者手术后猝死发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -505,7 +505,7 @@
 						            areaStyle: {color: '#6087bf'},
 						            data: data6
 						        },{
-						            name: '手术死亡患者手术并发症发生率统计',
+						            name: '手术死亡患者手术并发症发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            areaStyle: {color: '#4a72c9'},
@@ -520,7 +520,7 @@
 						            },
 						            data: data7
 						        },{
-						            name: '手术患者麻醉并发症发生率统计',
+						            name: '手术患者麻醉并发症发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
