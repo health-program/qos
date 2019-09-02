@@ -1,7 +1,8 @@
 package com.paladin.qos.service.countantibiotics;
 
-import com.paladin.qos.core.QosUserSession;
-import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,37 +10,35 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.countantibiotics.CountAntibioticsMapper;
 import com.paladin.qos.model.countantibiotics.CountAntibiotics;
-import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
+import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 
-import java.util.Date;
-import java.util.List;
-
 @Service
-public class CountAntibioticsService  extends ServiceSupport<CountAntibiotics> {
+public class CountAntibioticsService extends ServiceSupport<CountAntibiotics> {
 
-    @Autowired
-    CountAntibioticsMapper countAntibioticsMapper;
+	@Autowired
+	CountAntibioticsMapper countAntibioticsMapper;
 
-    public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsQuery query) {
-	Page<CountAntibioticsVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
-        QosUserSession userSession=QosUserSession.getCurrentUserSession();
-        if (!userSession.isAdminRoleLevel()){
-            String[] agencyIds = userSession.getAgencyIds();
-            query.setUnitIds(agencyIds);
-        }
-	countAntibioticsMapper.selecttoAll(query);
-	return new PageResult<>(page);
-    }
+	public PageResult<CountAntibioticsVO> searchFindPage(CountAntibioticsQuery query) {
+		Page<CountAntibioticsVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		if (!userSession.isAdminRoleLevel()) {
+			String[] agencyIds = userSession.getAgencyIds();
+			query.setUnitIds(agencyIds);
+		}
+		countAntibioticsMapper.selecttoAll(query);
+		return new PageResult<>(page);
+	}
 
-    public int judge(String unitId){
-	return countAntibioticsMapper.judge(unitId);
-    }
+	public int judge(String unitId) {
+		return countAntibioticsMapper.judge(unitId);
+	}
 
-    public List<CountAntibioticsVO> getReportByQuery(String unitId,Date month) {
-        return countAntibioticsMapper.getReportByQuery(unitId,month);
-    }
+	public List<CountAntibioticsVO> getReportByQuery(String unitId, Date month) {
+		return countAntibioticsMapper.getReportByQuery(unitId, month);
+	}
 
 }
