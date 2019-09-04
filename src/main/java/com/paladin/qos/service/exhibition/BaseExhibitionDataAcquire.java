@@ -1,7 +1,6 @@
 package com.paladin.qos.service.exhibition;
 
 import com.paladin.common.util.DateFormatUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,11 +18,6 @@ import java.util.stream.Stream;
  * @create 2019/8/29 15:38
  */
 public  abstract class BaseExhibitionDataAcquire {
-
-    @Autowired
-    private DataCollectionFromRemoteServlet dataCollectionFromRemoteServlet;
-
-
     protected  List <Date> getSearchTimeList(Date startTime, Date endTime, boolean isBtimeDefault) {
         List <Date> list = new ArrayList<>(12);
         LocalDate sTime = dateToLocalDate(startTime,true, isBtimeDefault);
