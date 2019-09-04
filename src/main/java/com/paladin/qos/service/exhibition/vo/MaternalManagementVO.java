@@ -52,6 +52,12 @@ public class MaternalManagementVO {
     /**产后访视*/
     private List<DataDemonstrationVO> postpartumVisit;
 
+    /**叶酸发放人次数*/
+    private Long numberOfFolates;
+
+    /**叶酸发放瓶数*/
+    private Long folicAcidDispensingBottle;
+
     public Long getMalePremaritalCheck() {
         return malePremaritalCheck;
     }
@@ -162,5 +168,21 @@ public class MaternalManagementVO {
 
     public void setPostpartumVisit(List<DataDemonstrationVO> postpartumVisit) {
         this.postpartumVisit = postpartumVisit;
+    }
+
+    public Long getNumberOfFolates() {
+        return numberOfFolates;
+    }
+
+    public void setNumberOfFolates(Long numberOfFolates) {
+        this.numberOfFolates = numberOfFolates;
+    }
+
+    public Long getFolicAcidDispensingBottle() {
+        return folicAcidDispensingBottle;
+    }
+
+    public void setFolicAcidDispensingBottle(Long folicAcidDispensingBottle) {
+        this.folicAcidDispensingBottle = folicAcidDispensingBottle;
     }
 }

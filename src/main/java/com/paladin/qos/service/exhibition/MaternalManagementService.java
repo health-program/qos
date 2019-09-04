@@ -46,6 +46,8 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
         List<DataDemonstrationVO> hepatitisBtestTotal = getHepatitisBtestTotal(defaultDateList, mapper);
         List<DataDemonstrationVO> hepatitisBdeterminesInfectionTotal = getHepatitisBdeterminesInfectionTotal(defaultDateList, mapper);
         List<DataDemonstrationVO> postpartumVisitTotal = getPostpartumVisitTotal(defaultDateList, mapper);
+        long numberOfFolates = getNumberOfFolates(startTime, endTime, mapper);
+        long folicAcidDispensingBottle = getFolicAcidDispensingBottle(startTime, endTime, mapper);
         vo.setPrepregnancyCheck(prepregnancyCheckTotal);
         vo.setMaternalDeath(deathTotal);
         vo.setHighriskMaternal(highriskMaternalTotal);
@@ -56,6 +58,8 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
         vo.setHepatitisBtest(hepatitisBtestTotal);
         vo.setHepatitisBdeterminesInfection(hepatitisBdeterminesInfectionTotal);
         vo.setPostpartumVisit(postpartumVisitTotal);
+        vo.setNumberOfFolates(numberOfFolates);
+        vo.setFolicAcidDispensingBottle(folicAcidDispensingBottle);
         return vo;
     }
 
@@ -102,6 +106,26 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
      */
     public long getPrepregnancyCheckTotal(Date startTime, Date endTime, MaternalManagementMapper mapper) {
         return  mapper.getPrepregnancyCheckTotal(checkStartTime(startTime), endTime);
+    }
+
+    /**
+     * 功能描述: <叶酸发放人次数>
+     * @param startTime
+     * @param endTime
+     * @return  int
+     */
+    public long getNumberOfFolates(Date startTime, Date endTime, MaternalManagementMapper mapper) {
+        return  mapper.getNumberOfFolates(checkStartTime(startTime), endTime);
+    }
+
+    /**
+     * 功能描述: <叶酸发放瓶数>
+     * @param startTime
+     * @param endTime
+     * @return  int
+     */
+    public long getFolicAcidDispensingBottle(Date startTime, Date endTime, MaternalManagementMapper mapper) {
+        return  mapper.getFolicAcidDispensingBottle(checkStartTime(startTime), endTime);
     }
 
     /**
@@ -289,6 +313,8 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
         return list;
     }
 
+
+
     /**
      * 功能描述: <产后访视>
      * @param defaultDateList
@@ -308,7 +334,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
     }
 
     /**
-     * 功能描述: <孕妇建卡>
+     * 功能描述: <孕产妇体检>
      * @param defaultDateList
      * @return  List<DataDemonstrationVO>
      */

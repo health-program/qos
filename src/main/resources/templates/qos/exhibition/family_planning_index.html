@@ -126,6 +126,11 @@
 
 
     function generatorBycsChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/bycs",{ startTime : startTime, endTime : endTime},function (res) {
@@ -147,7 +152,8 @@
             });
             $("#byt").text(bytValueTotal);
             $("#byy").text(byyValueTotal);
-            option = {
+            chart.hideLoading();
+        let    option = {
                 color: ['#3398DB','#6087BF'],
                 tooltip : {
                     trigger: 'axis',
@@ -221,6 +227,11 @@
     }
 
     function generatorYwlcChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/ywlc",{ startTime : startTime, endTime : endTime},function (res) {
@@ -233,6 +244,7 @@
                 total += data.total;
             });
             $("#ywlc").text(total+"人");
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,
@@ -312,6 +324,11 @@
     }
 
     function generatorGnjyChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/gnjy",{ startTime : startTime, endTime : endTime},function (res) {
@@ -333,6 +350,7 @@
             });
             $("#fz").text(fzValueTotal);
             $("#qc").text(qcValueTotal);
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,
@@ -421,6 +439,11 @@
     }
 
     function generatorFyxgChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/fyxg",{ startTime : startTime, endTime : endTime},function (res) {
@@ -433,6 +456,7 @@
                 total += data.total;
             });
             $("#fyxg").text(total+"人");
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,

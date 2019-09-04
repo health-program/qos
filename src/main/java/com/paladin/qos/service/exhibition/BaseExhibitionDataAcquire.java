@@ -1,7 +1,6 @@
 package com.paladin.qos.service.exhibition;
 
 import com.paladin.common.util.DateFormatUtil;
-import com.paladin.qos.service.exhibition.vo.DataDemonstrationVO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
@@ -82,7 +81,7 @@ public  abstract class BaseExhibitionDataAcquire {
     }
 
 
-    public List<DataDemonstrationVO> getDataDemonstrationByMonth(Date startTime, Date endTime, String suffixsql, boolean havePreSql, boolean isBtimeDefault) {
+/*    public List<DataDemonstrationVO> getDataDemonstrationByMonth(Date startTime, Date endTime, String suffixsql, boolean havePreSql, boolean isBtimeDefault) {
         SimpleDateFormat format = DateFormatUtil.getThreadSafeFormat("yyyy-MM");
         List<Date> dateList = getSearchTimeList(startTime,endTime,isBtimeDefault);
         List<DataDemonstrationVO> list = new ArrayList<>(12);
@@ -95,6 +94,6 @@ public  abstract class BaseExhibitionDataAcquire {
             list.add(dataDemonstrationVO);
         }
         return list;
-    }
+    }*/
 
 }

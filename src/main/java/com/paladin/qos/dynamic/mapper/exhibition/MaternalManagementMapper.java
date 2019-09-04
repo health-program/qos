@@ -43,4 +43,8 @@ public interface MaternalManagementMapper {
     long getPostpartumVisitTotal(@Param("date") Date date);
 
     List<MaternalCheckup> getMaternalCheckupData(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    long getNumberOfFolates(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    long getFolicAcidDispensingBottle(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

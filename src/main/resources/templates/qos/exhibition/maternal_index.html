@@ -120,13 +120,13 @@
                                 <div class="form-group" style="margin-bottom: 0">
                                     <label class="col-sm-7 control-label" style="font-size: 25px">发放人次数：</label>
                                     <div class="col-sm-5 no-padding">
-                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold">235</p>
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="ysrs">
                                     </div>
                                 </div>
                                 <div class="form-group" style="margin-bottom: 0">
                                     <label class="col-sm-7 control-label" style="font-size: 25px">发放瓶数：</label>
                                     <div class="col-sm-5 no-padding">
-                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold">307111</p>
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="ysps">
                                     </div>
                                 </div>
                             </form>
@@ -283,6 +283,8 @@
         $.postAjax("/qos/exhibition/maternal/search/all",{startTime : startTime, endTime : endTime},function (res) {
             $("#gwycf").text(getTotalFromAr(res.highriskMaternal));
             $("#yqjc").text(res.prepregnancyCheck);
+            $("#ysrs").text(res.numberOfFolates);
+            $("#ysps").text(res.folicAcidDispensingBottle);
             $("#yfsw").text(getTotalFromAr(res.maternalDeath));
             $("#gja").text(getTotalFromAr(res.cervicalCancerScreening));
             $("#rxa").text(getTotalFromAr(res.breastCancerScreening));
@@ -305,6 +307,11 @@
     }
 
     function generatorHqjcChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/maternal/search/hqjc",{ startTime : startTime, endTime : endTime},function (res) {
@@ -312,6 +319,7 @@
             if (res) {
                 chartData.push({value:res.malePremaritalCheck,name:"男"},{value:res.femalePremaritalCheck,name:"女"})
             }
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,
@@ -482,6 +490,11 @@
     }
 
     function generatorYfscChartChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/maternal/search/yfsc",{  startTime : startTime, endTime : endTime}, function (res) {
@@ -494,6 +507,7 @@
                 total += data.total;
             });
             $("#yfscTotal").text(total + "人次");
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,
@@ -511,8 +525,6 @@
                     }
                 }
             };
-
-            let yearMonthData = getYearMonthData();
             option = {
                 color: ['#3398DB'],
                 tooltip: {
@@ -574,6 +586,11 @@
     }
 
     function generatorFnscChartChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/maternal/search/fnb",{ startTime : startTime, endTime : endTime},function (res) {
@@ -586,6 +603,7 @@
                 total += data.total;
             });
             $("#fnbTotal").text(total + "人次");
+            chart.hideLoading();
             var labelOption = {
                 normal: {
                     show: true,
@@ -603,8 +621,6 @@
                     }
                 }
             };
-
-            let yearMonthData = getYearMonthData();
             option = {
                 color: ['#3398DB'],
                 tooltip: {

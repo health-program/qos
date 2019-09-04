@@ -111,8 +111,7 @@
     </select>
 
 
-
-    <!--孕妇建卡-->
+    <!--孕产妇体检-->
     <select id="getMaternalCheckupData" resultType="com.paladin.qos.dynamic.model.exhibition.MaternalCheckup">
     SELECT
         ISNULL( a.cJcdwmc, b.cJcdwmc ) AS agencyName,
@@ -154,5 +153,23 @@
         ) b ON a.cJcdwbh = b.cJcdwbh
     ORDER BY
         agencyNo ASC
+    </select>
+
+    <!--叶酸发放人次数-->
+    <select id="getNumberOfFolates" resultType="long">
+        SELECT COUNT( 1 ) AS total
+        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        <if test="endTime != null">
+            AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
+        </if>
+    </select>
+
+    <!--叶酸发放瓶数-->
+    <select id="getFolicAcidDispensingBottle" resultType="long">
+        SELECT  COALESCE (SUM(iDycffsl ),0) AS total
+        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        <if test="endTime != null">
+            AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
+        </if>
     </select>
 </mapper>
