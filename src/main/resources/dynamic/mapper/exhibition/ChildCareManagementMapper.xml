@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.exhibition.ChildCareManagementMapper">
+
+    <!--婴幼儿死亡人数-->
+    <select id="getInfantDeathTotal" resultType="long">
+         SELECT  COUNT (1) AS total FROM   Etsw  WHERE datediff( month, dswrq, #{date} ) = 0
+    </select>
+
+    <!--新生儿出生缺陷人数-->
+    <select id="getNeonatalBirthDefectsTotal" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxsecsqx  WHERE datediff( month, dcsrq, #{date} ) = 0
+    </select>
+
+    <!--新生儿疾病筛查人数-->
+    <select id="getNeonatalDiseaseScreeningTotal" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Jbsc  WHERE datediff( month, dCxrq, #{date} ) = 0
+    </select>
+
+    <!--儿童建卡人数-->
+    <select id="getChildCardTotal" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Etmain  WHERE datediff( month, dJcrq, #{date} ) = 0
+    </select>
+
+    <!--女性新生儿分娩数-->
+    <select id="getFemaleNewbornChildbirthTotal" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE datediff( month, dCsrq, #{date} ) = 0 AND cXb = '女'
+    </select>
+
+
+    <!--男性新生儿分娩数-->
+    <select id="getMaleNewbornChildbirthTotal" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE datediff( month, dCsrq, #{date} ) = 0 AND cXb = '男'
+    </select>
+
+    <!--儿童入园健康检查数-->
+    <select id="getChildHealthCheckTotal" resultType="long">
+        SELECT  COUNT(1)   AS total FROM  etry  WHERE datediff( month, ddate, #{date}) = 0
+    </select>
+
+    <!--婴幼儿先天性心脏病-->
+    <select id="getInfantCongenitalHeartDisease"
+            resultType="com.paladin.qos.dynamic.model.exhibition.InfantCongenitalHeartDisease">
+        SELECT
+        cJcdwbh AS agencyNo,
+        COUNT ( 1 ) AS heartDiseaseTotal,
+        cJcdwmc AS agencyName
+    FROM
+        KsXtxxtb
+    WHERE
+        cJcdwbh != '' AND dindate > #{startTime}
+        <if test="endDate != null">
+            AND  dindate <![CDATA[<= ]]> #{endDate}
+        </if>
+    GROUP BY
+        cJcdwbh,
+        cJcdwmc
+    ORDER BY
+        agencyNo ASC
+    </select>
+
+    <!--儿童健康体检-->
+    <select id="getChildHealthCheckup"
+            resultType="com.paladin.qos.dynamic.model.exhibition.ChildHealthCheckup">
+        SELECT
+            cJcdwbh AS agencyNo,
+            COUNT ( 1 ) AS childHealthCheckup,
+            cJcdwmc AS agencyName
+        FROM
+            etperson
+        WHERE
+            cJcdwbh != '' AND ddate > #{startTime}
+        <if test="endDate != null">
+            AND  ddate <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY
+            cJcdwbh, cJcdwmc ORDER BY agencyNo ASC;
+    </select>
+
+    <!--婴幼儿视力-->
+    <select id="getInfantVisionTotal" resultType="com.paladin.qos.dynamic.model.exhibition.InfantVision">
+        SELECT
+            cJcdwbh AS agencyNo,COUNT ( 1 ) AS infantVisionTotal, cJcdwmc AS agencyName
+        FROM  slsc WHERE  cJcdwbh != '' AND dJcrq > #{startTime}
+        <if test="endDate != null">
+            AND  dJcrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ORDER BY agencyNo ASC;
+    </select>
+
+</mapper>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="searchData()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="margin-left: 5px;margin-right: 5px">
+        <div class="col-md-7">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding: 2px 0 2px 5px;">
+                            <h3 class="box-title" style="letter-spacing: 3px">高危孕产妇人数</h3>
+                        </div>
+                        <div class="box-body no-padding" style="height: 35px">
+                            <p style="text-align: center;font-size: 25px;color: #44b7d3;font-weight: bold" id="gwycf">
+                        </div>
+                    </div>
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding: 2px 0 2px 5px;">
+                            <h3 class="box-title" style="letter-spacing: 3px">孕前检查人次数</h3>
+                        </div>
+                        <div class="box-body no-padding" style="height: 35px">
+                            <p style="text-align: center;font-size: 25px;color: #44b7d3;font-weight: bold" id="yqjc">
+                        </div>
+                    </div>
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding: 2px 0 2px 5px;">
+                            <h3 class="box-title" style="letter-spacing: 3px">产后访视人次数</h3>
+                        </div>
+                        <div class="box-body no-padding" style="height: 35px">
+                            <p style="text-align: center;font-size: 25px;color: #44b7d3;font-weight: bold" id="chfs">
+                        </div>
+                    </div>
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding: 2px 0 2px 5px;">
+                            <h3 class="box-title" style="letter-spacing: 3px">孕产妇死亡人数</h3>
+                        </div>
+                        <div class="box-body no-padding" style="height: 35px">
+                            <p style="text-align: center;font-size: 25px;color: #44b7d3;font-weight: bold" id="yfsw">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding-left: 0">
+                    <div class="box box-solid">
+                        <div class="box-header with-border" style="padding-bottom: 3px">
+                            <h3 class="box-title" style="letter-spacing: 3px">婚前检查</h3>
+                        </div>
+                        <div id="hqjcChartDiv" class="box-body " style="height: 225px;padding: 0 0 10px 0">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" style="padding-left: 0">
+                    <div class="box box-solid">
+                        <div class="box-header with-border"  style="padding-bottom: 3px">
+                            <h3 class="box-title" style="letter-spacing: 3px">孕妇建卡</h3>
+                        </div>
+                        <div id="yfjkChartDiv" class="box-body" style="height: 225px;padding: 0 0 10px 0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid" style="margin-bottom: 10px">
+                        <div class="box-header with-border" style="padding-top: 5px">
+                            <h3 class="box-title" style="letter-spacing: 3px">产妇筛查数</h3>
+                            <p class="box-title" style="padding-left: 300px;color: #44b7d3;font-weight: bold;font-size: 25px" id="yfscTotal">
+                        </div>
+                        <div id="yfscChartDiv" class="box-body no-padding" style="height: 240px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border" style="padding-top: 5px;padding-bottom: 5px">
+                            <h3 class="box-title" style="letter-spacing: 3px">妇女病检查</h3>
+                            <p class="box-title" style="padding-left: 300px;color: #44b7d3;font-weight: bold;font-size: 25px" id="fnbTotal">
+                        </div>
+                        <div id="fnscChartDiv" class="box-body no-padding" style="height: 240px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 no-padding">
+            <div class="row">
+                <div class="col-md-6" style="padding-right: 5px">
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding-top: 3px">
+                            <h3 class="box-title" style="letter-spacing: 3px">叶酸发放</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <form class="form-horizontal">
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-7 control-label" style="font-size: 25px">发放人次数：</label>
+                                    <div class="col-sm-5 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold">235</p>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-7 control-label" style="font-size: 25px">发放瓶数：</label>
+                                    <div class="col-sm-5 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold">307111</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="padding-left: 5px">
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div class="box-header with-border" style="padding-top: 3px">
+                            <h3 class="box-title" style="letter-spacing: 3px">两癌筛查</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <form class="form-horizontal">
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-8 control-label" style="font-size: 25px">宫颈癌筛查数：</label>
+                                    <div class="col-sm-4 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="gja">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-8 control-label" style="font-size: 25px">乳腺癌筛查数：</label>
+                                    <div class="col-sm-4 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="rxa">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border no-pad-top">
+                            <h3 class="box-title" style="letter-spacing: 3px">母婴阻塞</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <form class="form-horizontal">
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0">梅毒检测数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold" id="mdjc">
+                                    </div>
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0;padding-left: 0">艾滋病检测数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold">0
+                                    </div>
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0">乙肝检测数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold" id="ygjc">
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0">
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0">感染人次数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold" id="mdgr">
+                                    </div>
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0;padding-left: 0">感染人次数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold">0</p>
+                                    </div>
+                                    <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0">感染人次数:</label>
+                                    <div class="col-sm-2 no-padding">
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold" id="yggr">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid" style="margin-bottom: 10px">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" style="letter-spacing: 3px">孕产妇体检</h3>
+                        </div>
+                        <div class="box-body" style="height: 240px;overflow: auto">
+                            <table id="ycftjDataGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" style="letter-spacing: 3px">围产期心脏病筛查</h3>
+                        </div>
+                        <div class="box-body" style="height: 240px;overflow: auto">
+                                <table id="wcqDataGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var data, ycfTable;
+    $(function () {
+        initMaternalManagementData();
+        generatorHqjcChart(hqjcChart);
+        generatorYfjkChartChart(yfjkChart);
+        generatorYfscChartChart(yfscChart);
+        generatorFnscChartChart(fnscChart);
+        initYcftjDataGrid();
+    });
+
+    function searchData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        if (!startTime && !endTime) {
+            return;
+        }
+        if (startTime && endTime) {
+            let split = startTime.split("-");
+            let split1 = endTime.split("-");
+            let starttime = new Date(split[0], split[1], split[2]);
+            let endtime  = new Date(split1[0], split1[1], split1[2]);
+            if (starttime.getTime() >= endtime.getTime()) {
+                $.errorMessage("请输入正确的时间区间");
+            }
+        }
+        initMaternalManagementData();
+        generatorHqjcChart(hqjcChart);
+        generatorYfscChartChart(yfscChart);
+        generatorFnscChartChart(fnscChart);
+        ycfTable.refresh();
+
+    }
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        hqjcChart.resize();
+        yfjkChart.resize();
+        yfscChart.resize();
+        fnscChart.resize();
+    });
+
+    var hqjcChart = echarts.init(document.getElementById('hqjcChartDiv'));
+
+    var yfjkChart = echarts.init(document.getElementById('yfjkChartDiv'));
+
+    var yfscChart = echarts.init(document.getElementById('yfscChartDiv'));
+
+    var fnscChart = echarts.init(document.getElementById('fnscChartDiv'));
+
+    function initMaternalManagementData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/all",{startTime : startTime, endTime : endTime},function (res) {
+            $("#gwycf").text(getTotalFromAr(res.highriskMaternal));
+            $("#yqjc").text(res.prepregnancyCheck);
+            $("#yfsw").text(getTotalFromAr(res.maternalDeath));
+            $("#gja").text(getTotalFromAr(res.cervicalCancerScreening));
+            $("#rxa").text(getTotalFromAr(res.breastCancerScreening));
+            $("#mdjc").text(getTotalFromAr(res.syphilisTest));
+            $("#mdgr").text(getTotalFromAr(res.syphilisInfection));
+            $("#ygjc").text(getTotalFromAr(res.hepatitisBtest));
+            $("#yggr").text(getTotalFromAr(res.hepatitisBdeterminesInfection));
+            $("#chfs").text(getTotalFromAr(res.postpartumVisit));
+        })
+    }
+
+    function getTotalFromAr(data) {
+        let total = 0;
+        if (data) {
+            data.forEach(function (d) {
+                total += d.total
+            })
+        }
+        return total;
+    }
+
+    function generatorHqjcChart(chart) {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/hqjc",{ startTime : startTime, endTime : endTime},function (res) {
+            let chartData = [];
+            if (res) {
+                chartData.push({value:res.malePremaritalCheck,name:"男"},{value:res.femalePremaritalCheck,name:"女"})
+            }
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position:'inner', //标签的位置
+                    textStyle : {
+                        fontStyle : 'italic',
+                        fontWeight : 'bold' ,
+                        fontFamily : 'Microsoft YaHei',
+                        fontSize : 15   //文字的字体大小
+                    },
+                    formatter: '{b}：\n {c}个 ({d}%)'
+                }
+            };
+            option = {
+                color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}个 ({d}%)"
+                },
+                series: [
+                    {
+                        name: '性别',
+                        type: 'pie',
+                        radius : '95%',
+                        center: ['50%', '50%'],
+                        barGap: 0,
+                        label:labelOption,
+                        data: chartData,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorYfjkChartChart(chart) {
+        var data = [
+            {value:6000, name:'孕妇建卡数'},
+            {value:2075, name:'早孕建卡数'}
+        ];
+        let total = 0;
+        data.forEach(res => {
+            total += res.value;
+        });
+        let percentage;
+        for (let item of data) {
+            if (item.name === '早孕建卡数')
+                percentage = Math.round(item.value / total * 10000) / 100.00 + '%';
+        }
+        option = {
+            title: {
+                text: ['{name|早孕建卡率}'].join('\n'),
+                subtext: percentage,
+                top: '30%',
+                left:'50%',
+                textAlign: 'center',
+                textStyle: {
+                    rich: {
+                        name: {
+                            color: '#67E0E3',
+                            lineHeight: 20,
+                            fontSize: '22'
+                        }
+                    }
+                },
+                subtextStyle: {
+                    fontSize: '25',
+                    fontWeight: 'bold'
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b} : {c}个 ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                top: 'bottom',
+                bottom : 5 ,
+                formatter:  function(name){
+                    var target;
+                    for (var i = 0, l = data.length; i < l; i++) {
+                        if (data[i].name === name) {
+                            target = data[i].value;
+                        }
+
+                    }
+                    return name + ' ' + target + '个';
+                }
+            },
+            series: [
+                {
+                    name:'孕妇建卡',
+                    type:'pie', //环形图的type和饼图相同
+                    radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
+                    center: ['50%', '40%'],
+                    avoidLabelOverlap: false,
+                    color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
+                    hoverAnimation : false,
+                    label: {
+                        normal: {
+                            // 此处重点，设置为显示
+                            show: true,
+                            position: 'center',
+                            formatter: '{b}\n{c}',
+                            align: 'center',
+                            verticalAlign: 'middle',
+                            // 此处重点，字体大小设置为0
+                            textStyle: {
+                                fontSize: '0'
+                            }
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '20',
+                                fontWeight: 'bold'
+                            },
+                            // 同步样式
+                            formatter: function (params) {
+                                return `{tTitle|${params.name}}\n{tSubTitle|${params.value}个}`
+                            },
+                            rich: {
+                                tTitle: {
+                                    fontSize: '22',
+                                    fontWeight: 'bold',
+                                    lineHeight: 40
+                                },
+                                tSubTitle: {
+                                    fontSize: '25',
+                                    fontWeight: 'bold',
+                                    lineHeight: 30
+                                }
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:data
+                }
+            ]
+        };
+        chart.setOption(option);
+        chart.on('mouseover', { seriesName: '孕妇建卡' }, params => {
+            chart.setOption({
+                title: {
+                    show: false
+                }
+            })
+        });
+        chart.on('mouseout', { seriesName: '孕妇建卡' }, params => {
+            chart.setOption({
+                title: {
+                    show: true
+                }
+            })
+        });
+
+    }
+
+    function generatorYfscChartChart(chart) {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/yfsc",{  startTime : startTime, endTime : endTime}, function (res) {
+            let dataValue = [];
+            let timeValue = [];
+            let total = 0;
+            res.forEach(function (data) {
+                dataValue.push(data.total);
+                timeValue.push(data.searchTime);
+                total += data.total;
+            });
+            $("#yfscTotal").text(total + "人次");
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+
+            let yearMonthData = getYearMonthData();
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;筛查人数: '
+                            + params[0].data + '(位)<br/>'
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 5,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                grid: {
+                    left: '2%',
+                    right: '1%',
+                    bottom: '10%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'筛查人数(位)'
+                    }
+                ],
+                series: [
+                    {
+                        name: '筛查人数',
+                        type: 'bar',
+                        barWidth: '70%',
+                        label: labelOption,
+                        barGap: 0,
+                        data: dataValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorFnscChartChart(chart) {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/fnb",{ startTime : startTime, endTime : endTime},function (res) {
+            let dataValue = [];
+            let timeValue = [];
+            let total = 0;
+            res.forEach(function (data) {
+                dataValue.push(data.total);
+                timeValue.push(data.searchTime);
+                total += data.total;
+            });
+            $("#fnbTotal").text(total + "人次");
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+
+            let yearMonthData = getYearMonthData();
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;检查人数: '
+                            + params[0].data + '(位)<br/>'
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 5,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                grid: {
+                    left: '2%',
+                    right: '1%',
+                    bottom: '10%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'检查人数(位)'
+                    }
+                ],
+                series: [
+                    {
+                        name: '检查人数',
+                        type: 'line',
+                        smooth: true,
+                        label: labelOption,
+                        barGap: 0,
+                        data: dataValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+
+    }
+
+    function initYcftjDataGrid() {
+        ycfTable = $.createTable("#ycftjDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "孕产妇体检人数", align: "center", formatter:function (value, row, index) {
+                            return row.firstExaminationTimes + row.cycleExaminationTimes;
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                return sum + (row['firstExaminationTimes'] + row['cycleExaminationTimes']);
+                            }, 0);
+                            return result;
+                        }},
+                    {title: "初检人数", field: "firstExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "周期检查人数", field: "cycleExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
+
+                ]
+            ],
+            url: '/qos/exhibition/maternal/search/yftj',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar'
+        });
+    }
+
+    function sumTotalFormatterModal(data) {
+        field = this.field;
+        var result = data.reduce(function(sum, row) {
+            return sum + (row[field]);
+        }, 0);
+        return result;
+    }
+
+    function getYearMonthData() {
+        var result = [];
+        for (var i = 12; i >0; i--) {
+            var d = new Date();
+            d.setDate(1);
+            d.setMonth(d.getMonth() - i);
+            var m = d.getMonth() + 1;
+
+            m = m < 10 ? "0" + m : m;
+            //在这里可以自定义输出的日期格式
+            result.push(d.getFullYear() + "-" + m);
+            //result.push(d.getFullYear() + "年" + m + '月');
+        }
+        return result;
+    }
+
+    function getTableDatas() {
+        let data = [];
+        let row = {};
+        row["cycleExaminationTimes"] = 136;
+        row["firstExaminationTimes"] = 240;
+        row["agencyName"] = '昆山市淀山湖人民医院';
+        data.push(row);
+        let row1 = {};
+        row1["cycleExaminationTimes"] = 369;
+        row1["firstExaminationTimes"] = 111;
+        row1["agencyName"] = '昆山市巴城人民医院';
+        data.push(row1);
+        let row2 = {};
+        row2["cycleExaminationTimes"] = 213;
+        row2["firstExaminationTimes"] = 121;
+        row2["agencyName"] = '昆山市第一人民医院';
+        data.push(row2);
+        let row3 = {};
+        row3["cycleExaminationTimes"] = 342;
+        row3["firstExaminationTimes"] = 123;
+        row3["agencyName"] = '昆山市第二人民医院';
+        data.push(row3);
+        let row4 = {};
+        row4["cycleExaminationTimes"] = 34;
+        row4["firstExaminationTimes"] = 123;
+        row4["agencyName"] = '昆山市第三人民医院';
+        data.push(row4);
+        let row5 = {};
+        row5["cycleExaminationTimes"] = 154;
+        row5["firstExaminationTimes"] = 123;
+        row5["agencyName"] = '昆山市第四人民医院';
+        data.push(row5);
+        return data;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

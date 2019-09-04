@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="searchData() "><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="padding: 5px;margin: 5px">
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div class="box-header with-border" >
+                    <h3 class="box-title" style="letter-spacing: 3px">儿童建卡人数</h3>
+                </div>
+                <div class="box-body" style="height: 110px">
+                    <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="etjk">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border" >
+                    <h3 class="box-title" style="letter-spacing: 3px">新生儿疾病筛查人数</h3>
+                </div>
+                <div class="box-body" style="height: 110px">
+                    <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="jbsc">
+                    </p>
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border" >
+                    <h3 class="box-title" style="letter-spacing: 3px">新生儿出生缺陷人数</h3>
+                </div>
+                <div class="box-body" style="height: 110px">
+                    <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="csqx">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border" >
+                    <h3 class="box-title" style="letter-spacing: 3px">儿童入园健康检查数</h3>
+                </div>
+                <div class="box-body" style="height: 110px">
+                    <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="etry">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border" >
+                    <h3 class="box-title" style="letter-spacing: 3px">婴幼儿死亡人数</h3>
+                </div>
+                <div class="box-body" style="height: 110px">
+                    <p style="text-align: center;font-size: 40px;color: #44b7d3;font-weight: bold" id="yesw">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3" style="padding-left: 0">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">新生儿分娩数</h3>
+                </div>
+                <div id="xsefmChartDiv" class="box-body " style="height: 370px">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">新生儿听力筛查</h3>
+                </div>
+                <div id="xsetlChartDiv" class="box-body " style="height: 370px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding-left: 0">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">儿童健康体检</h3>
+                </div>
+                <div class="box-body" style="height: 230px;overflow: auto">
+                    <table id="etjkDataGrid"></table>
+                </div>
+            </div>
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">婴幼儿视力筛查</h3>
+                </div>
+                <div class="box-body" style="height: 230px;overflow: auto">
+                    <table id="yeslDataGrid"></table>
+                </div>
+            </div>
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">婴幼儿先天性心脏病筛查</h3>
+                </div>
+                <div class="box-body" style="height: 230px;overflow: auto">
+                    <table id="yexzbDataGrid"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var xzbTable,EttjTable,yeslTable;
+    $(function () {
+        initChildCareManagement();
+        generatorXsefmChart(xsefmChart);
+        generatorXsetlChart(xsetlChart);
+        initEtjkDataGrid();
+        initYeslDataGrid();
+        initYexzbDataGrid();
+    });
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        xsefmChart.resize();
+        xsetlChart.resize();
+    });
+
+    var xsefmChart = echarts.init(document.getElementById('xsefmChartDiv'));
+    var xsetlChart = echarts.init(document.getElementById('xsetlChartDiv'));
+
+    function searchData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        if (!startTime && !endTime) {
+            return;
+        }
+        if (startTime && endTime) {
+            let split = startTime.split("-");
+            let split1 = endTime.split("-");
+            let starttime = new Date(split[0], split[1], split[2]);
+            let endtime  = new Date(split1[0], split1[1], split1[2]);
+            if (starttime.getTime() >= endtime.getTime()) {
+                $.errorMessage("请输入正确的时间区间");
+            }
+        }
+        initChildCareManagement();
+        generatorXsefmChart(xsefmChart);
+        generatorXsetlChart(xsetlChart);
+        xzbTable.refresh();
+        EttjTable.refresh();
+        yeslTable.refresh();
+    }
+
+    function initChildCareManagement() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/child/search/all",{startTime : startTime, endTime : endTime},function (res) {
+            $("#etjk").text(getTotalFromAr(res.childCard));
+            $("#jbsc").text(getTotalFromAr(res.neonatalDiseaseScreening));
+            $("#csqx").text(getTotalFromAr(res.neonatalBirthDefects));
+            $("#yesw").text(getTotalFromAr(res.infantDeath));
+            $("#etry").text(getTotalFromAr(res.childHealthCheck));
+        })
+    }
+    function getTotalFromAr(data) {
+        let total = 0;
+        if (data) {
+            data.forEach(function (d) {
+                total += d.total
+            })
+        }
+        return total;
+    }
+
+    function generatorXsefmChart(chart) {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/child/search/xsrfm",{startTime : startTime, endTime : endTime},function (res) {
+            let chartData = [];
+            if (res) {
+                chartData.push({value:getTotalFromAr(res.maleNewbornChildbirth),name:"男性"},{value:getTotalFromAr(res.femaleNewbornChildbirth),name:"女性"})
+            }
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position:'inner', //标签的位置
+                    textStyle : {
+                        fontStyle : 'italic',
+                        fontWeight : 'bold' ,
+                        fontFamily : 'Microsoft YaHei',
+                        fontSize : 20   //文字的字体大小
+                    },
+                    formatter: '{b}：\n {c}个 ({d}%)'
+                }
+            };
+            option = {
+                color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}个 ({d}%)"
+                },
+                series: [
+                    {
+                        name: '性别',
+                        type: 'pie',
+                        radius : '95%',
+                        center: ['50%', '50%'],
+                        barGap: 0,
+                        label:labelOption,
+                        data: chartData,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorXsetlChart(chart) {
+        var data = [
+            {value:8075, name:'新生儿听力筛查人数'},
+            {value:125, name:'未筛查人数'}
+        ];
+        let total = 0;
+        data.forEach(res => {
+            total += res.value;
+        });
+        let percentage;
+        for (let item of data) {
+            if (item.name === '新生儿听力筛查人数')
+                percentage = Math.round(item.value / total * 10000) / 100.00 + '%';
+        }
+        option = {
+            title: {
+                text: ['{name|筛查率}'].join('\n'),
+                subtext: percentage,
+                top: '25%',
+                left:'50%',
+                textAlign: 'center',
+                textStyle: {
+                    rich: {
+                        name: {
+                            color: '#67E0E3',
+                            lineHeight: 50,
+                            fontWeight: 'bold',
+                            fontSize: '50'
+                        }
+                    }
+                },
+                subtextStyle: {
+                    fontSize: '40',
+                    fontWeight: 'bold',
+                    lineHeight: 35
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{b} : {c}个 ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                top: 'bottom',
+                bottom : 5 ,
+                formatter:  function(name){
+                    var target;
+                    for (var i = 0, l = data.length; i < l; i++) {
+                        if (data[i].name === name) {
+                            target = data[i].value;
+                        }
+
+                    }
+                    return name + ' ' + target + '个';
+                }
+            },
+            series: [
+                {
+                    name:'新生儿听力筛查',
+                    type:'pie', //环形图的type和饼图相同
+                    radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
+                    center: ['50%', '40%'],
+                    avoidLabelOverlap: false,
+                    color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
+                    hoverAnimation : false,
+                    label: {
+                        normal: {
+                            // 此处重点，设置为显示
+                            show: true,
+                            position: 'center',
+                            formatter: '{b}\n{c}',
+                            align: 'center',
+                            verticalAlign: 'middle',
+                            // 此处重点，字体大小设置为0
+                            textStyle: {
+                                fontSize: '0'
+                            }
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '20',
+                                fontWeight: 'bold'
+                            },
+                            // 同步样式
+                            formatter: function (params) {
+                                return `{tTitle|${params.name}}\n{tSubTitle|${params.value}个}`
+                            },
+                            rich: {
+                                tTitle: {
+                                    fontSize: '22',
+                                    fontWeight: 'bold',
+                                    lineHeight: 50
+                                },
+                                tSubTitle: {
+                                    fontSize: '35',
+                                    fontWeight: 'bold',
+                                    lineHeight: 35
+                                }
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:data
+                }
+            ]
+        };
+        chart.setOption(option);
+        chart.on('mouseover', { seriesName: '新生儿听力筛查' }, params => {
+            chart.setOption({
+                title: {
+                    show: false
+                }
+            })
+        });
+        chart.on('mouseout', { seriesName: '新生儿听力筛查' }, params => {
+            chart.setOption({
+                title: {
+                    show: true
+                }
+            })
+        });
+    }
+
+    function initEtjkDataGrid() {
+        EttjTable = $.createTable("#etjkDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "儿童体检人次数", field: "childHealthCheckup", align: "center",footerFormatter: sumTotalFormatterModal},
+
+                ]
+            ],
+            url: '/qos/exhibition/child/search/ettj',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar'
+        });
+    }
+
+    function initYeslDataGrid() {
+        yeslTable = $.createTable("#yeslDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "婴幼儿视力筛查人次数", field: "infantVisionTotal", align: "center",footerFormatter: sumTotalFormatterModal},
+
+                ]
+            ],
+            url: '/qos/exhibition/child/search/yesl',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar'
+        });
+    }
+
+    function initYexzbDataGrid() {
+        xzbTable = $.createTable("#yexzbDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "婴幼儿先天性心脏病筛查人次数", field: "heartDiseaseTotal", align: "center",footerFormatter: sumTotalFormatterModal},
+
+                ]
+            ],
+            url: '/qos/exhibition/child/search/xzb',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar'
+        });
+    }
+
+    function sumTotalFormatterModal(data) {
+        field = this.field;
+        var result = data.reduce(function(sum, row) {
+            return sum + (row[field]);
+        }, 0);
+        return result;
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
