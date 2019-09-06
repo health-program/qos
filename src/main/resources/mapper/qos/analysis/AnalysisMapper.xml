@@ -105,5 +105,25 @@
 		GROUP BY `year`, `month`
 	</select>
 	
+	<select id="countTotalNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       sum(total_num) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		GROUP BY unit_id
+	</select>
 	
+	<select id="countEventNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       sum(event_num) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		GROUP BY unit_id
+	</select>
+	
+
 </mapper>

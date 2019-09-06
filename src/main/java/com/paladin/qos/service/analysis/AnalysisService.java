@@ -13,6 +13,7 @@ import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
 import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.analysis.data.DataPointDay;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
@@ -169,6 +170,30 @@ public class AnalysisService {
 	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, String unitId, Date startDate, Date endDate) {
 		return analysisMapper.getAnalysisResultOfUnitGroupByMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
 				TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按医院获取时间段内样本数之和
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countTotalNumByUnit(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按医院获取时间段内事件数之和
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 }

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.analysis.data.DataPointDay;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
@@ -32,5 +33,9 @@ public interface AnalysisMapper {
 	List<AnalysisMonth> getAnalysisResultGroupByMonth(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
 	List<AnalysisMonth> getAnalysisResultOfUnitGroupByMonth(@Param("eventId") String eventId, @Param("unitId") String unitId,  @Param("start") int start, @Param("end") int end);
+
+	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId,  @Param("start") int start, @Param("end") int end);
+
+	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId,  @Param("start") int start, @Param("end") int end);
 
 }
