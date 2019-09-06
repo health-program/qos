@@ -31,6 +31,9 @@ public class ChildCareManagementVO {
     /**儿童入园健康检查数*/
     private List<DataDemonstrationVO> childHealthCheck;
 
+    /**新生儿听力人数*/
+    private List<DataDemonstrationVO> newbornHearing;
+
     public List<DataDemonstrationVO> getMaleNewbornChildbirth() {
         return maleNewbornChildbirth;
     }
@@ -85,5 +88,13 @@ public class ChildCareManagementVO {
 
     public void setChildHealthCheck(List<DataDemonstrationVO> childHealthCheck) {
         this.childHealthCheck = childHealthCheck;
+    }
+
+    public List<DataDemonstrationVO> getNewbornHearing() {
+        return newbornHearing;
+    }
+
+    public void setNewbornHearing(List<DataDemonstrationVO> newbornHearing) {
+        this.newbornHearing = newbornHearing;
     }
 }

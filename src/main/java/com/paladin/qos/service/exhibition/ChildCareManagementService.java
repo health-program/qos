@@ -2,7 +2,9 @@ package com.paladin.qos.service.exhibition;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
+import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.ChildCareManagementMapper;
+import com.paladin.qos.dynamic.model.exhibition.ChildCareOrgData;
 import com.paladin.qos.dynamic.model.exhibition.ChildHealthCheckup;
 import com.paladin.qos.dynamic.model.exhibition.InfantCongenitalHeartDisease;
 import com.paladin.qos.dynamic.model.exhibition.InfantVision;
@@ -22,14 +24,14 @@ import java.util.List;
  * @create 2019/8/28 9:20
  */
 @Service
-public class ChildCareManagementService extends BaseExhibitionDataAcquire{
+public class ChildCareManagementService extends BaseExhibitionDataAcquire {
 
     @Autowired
     private SqlSessionContainer sqlSessionContainer;
 
     public ChildCareManagementVO searchAllNumberData(AnalysisRequest request) {
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         List<Date> defaultDateList = getSearchTimeList(startTime,endTime,true);
@@ -51,13 +53,15 @@ public class ChildCareManagementService extends BaseExhibitionDataAcquire{
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         List<Date> defaultDateList = getSearchTimeList(startTime,endTime,true);
         List<DataDemonstrationVO> maleNewbornChildbirthTotal = getMaleNewbornChildbirthTotal(defaultDateList, mapper);
         List<DataDemonstrationVO> femaleNewbornChildbirthTotal = getFemaleNewbornChildbirthTotal(defaultDateList, mapper);
+        List<DataDemonstrationVO> newbornHearingTotal = getNewbornHearingTotal(defaultDateList, mapper);
         ChildCareManagementVO vo = new ChildCareManagementVO();
         vo.setMaleNewbornChildbirth(maleNewbornChildbirthTotal);
         vo.setFemaleNewbornChildbirth(femaleNewbornChildbirthTotal);
+        vo.setNewbornHearing(newbornHearingTotal);
         return vo;
     }
 
@@ -188,7 +192,7 @@ public class ChildCareManagementService extends BaseExhibitionDataAcquire{
      */
     public List<InfantCongenitalHeartDisease> getInfantCongenitalHeartDisease(Date startDate, Date endDate) {
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         return mapper.getInfantCongenitalHeartDisease(checkStartTime(startDate),endDate);
     }
 
@@ -199,7 +203,7 @@ public class ChildCareManagementService extends BaseExhibitionDataAcquire{
      */
     public List<ChildHealthCheckup> getChildHealthCheckup(Date startDate, Date endDate) {
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         return mapper.getChildHealthCheckup(checkStartTime(startDate),endDate);
     }
 
@@ -210,8 +214,39 @@ public class ChildCareManagementService extends BaseExhibitionDataAcquire{
      */
     public List<InfantVision> getInfantVisionTotal(Date startDate, Date endDate) {
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         return mapper.getInfantVisionTotal(checkStartTime(startDate),endDate);
     }
+
+
+
+    /**
+     * 功能描述: <新生儿听力人数>
+     * @param defaultDateList
+     * @return  List<DataDemonstrationVO>
+     */
+    public List<DataDemonstrationVO> getNewbornHearingTotal(List<Date> defaultDateList, ChildCareManagementMapper mapper) {
+        List<DataDemonstrationVO> list = new ArrayList<>(12);
+        DataDemonstrationVO dataDemonstrationVO;
+        for (Date date : defaultDateList) {
+            long total = mapper.getNewbornHearingTotal(date);
+            dataDemonstrationVO = new DataDemonstrationVO();
+            dataDemonstrationVO.setTotal(total);
+            list.add(dataDemonstrationVO);
+        }
+        return list;
+    }
+
+    /**
+     * 功能描述: <儿童保健按机构统计>
+     * @param defaultDateList
+     * @return  List<DataDemonstrationVO>
+     */
+    public List<ChildCareOrgData> getChildCareDataByOrg(Date startDate, Date endDate) {
+        ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+        return mapper.getChildCareDataByOrg(checkStartTime(startDate),endDate);
+    }
+
 
 }

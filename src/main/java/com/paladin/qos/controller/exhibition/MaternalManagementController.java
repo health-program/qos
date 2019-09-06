@@ -25,6 +25,11 @@ public class MaternalManagementController {
         return "/qos/exhibition/maternal_index";
     }
 
+    @GetMapping("/org/index")
+    public Object processOrgIndex() {
+        return "/qos/exhibition/maternal_org_index";
+    }
+
     @PostMapping("/search/all")
     @ResponseBody
     public  Object searchAll(AnalysisRequest request) {
@@ -53,6 +58,18 @@ public class MaternalManagementController {
     @ResponseBody
     public  Object searchYftj(AnalysisRequest request) {
         return CommonResponse.getSuccessResponse(maternalManagementService.getMaternalCheckupData(request.getStartTime(),request.getEndTime()));
+    }
+
+    @RequestMapping(value = "/search/yfjk", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public  Object searchYfjk(AnalysisRequest request) {
+        return CommonResponse.getSuccessResponse(maternalManagementService.getBuildCardNumber(request.getStartTime(),request.getEndTime()));
+    }
+
+    @RequestMapping(value = "/search/org", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public  Object searchOrg(AnalysisRequest request) {
+        return CommonResponse.getSuccessResponse(maternalManagementService.getMaternalDataByOrg(request.getStartTime(),request.getEndTime()));
     }
 
 }

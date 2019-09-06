@@ -3,6 +3,7 @@ package com.paladin.qos.service.exhibition;
 import com.paladin.common.util.DateFormatUtil;
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
+import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.FamilyPlanningManagementMapper;
 import com.paladin.qos.service.exhibition.vo.DataDemonstrationVO;
 import com.paladin.qos.service.exhibition.vo.FamilyPlanningManagementVO;
@@ -30,7 +31,7 @@ public class FamilyPlanningManagementService extends BaseExhibitionDataAcquire{
 
     public FamilyPlanningManagementVO getContraceptivemeasuresTotal(AnalysisRequest request) {
         FamilyPlanningManagementMapper mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
@@ -44,7 +45,7 @@ public class FamilyPlanningManagementService extends BaseExhibitionDataAcquire{
 
     public FamilyPlanningManagementVO getIntrauterineDeviceTotal(AnalysisRequest request) {
         FamilyPlanningManagementMapper mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
@@ -103,7 +104,7 @@ public class FamilyPlanningManagementService extends BaseExhibitionDataAcquire{
      */
     public List<DataDemonstrationVO> getMedicalAbortionTotal(Date startTime, Date endTime) {
         FamilyPlanningManagementMapper mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
         List<DataDemonstrationVO> list = new ArrayList<>(12);
         DataDemonstrationVO dataDemonstrationVO;
@@ -125,7 +126,7 @@ public class FamilyPlanningManagementService extends BaseExhibitionDataAcquire{
      */
     public List<DataDemonstrationVO> getNegativePressureSuctionTotal(Date startTime, Date endTime) {
         FamilyPlanningManagementMapper mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
         List<DataDemonstrationVO> list = new ArrayList<>(12);
         DataDemonstrationVO dataDemonstrationVO;
