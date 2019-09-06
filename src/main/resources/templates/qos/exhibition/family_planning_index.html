@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="searchData()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="padding: 5px">
+        <div class="col-md-6">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">避孕措施发放数量</h3>
+                    <div class="box-title" style="padding-left: 150px">
+                        <p class="box-title" style="font-weight: bold" >避孕药：<h1 class="box-title" style=";color: #44b7d3;font-weight: bold;font-size: 20px" id="byy"></h1>
+                        <p class="box-title" style="font-weight: bold;padding-left: 40px" >避孕套：<h1 class="box-title" style=";color: #44b7d3;font-weight: bold;font-size: 20px" id="byt"></h1>
+                    </div>
+                </div>
+                <div id="bycsChartDiv" class="box-body" style="height: 370px">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">药物流产人数</h3>
+                    <div class="box-title" style="padding-left: 250px">
+                        <p class="box-title" style="color: #44b7d3;font-weight: bold;font-size: 25px" id="ywlc">
+                    </div>
+                </div>
+                <div id="ywlcChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding-left: 0">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">宫内节育器人次数</h3>
+                    <div class="box-title" style="padding-left: 200px">
+                        <p class="box-title" style="font-weight: bold" >放置：<h1 class="box-title" style=";color: #44b7d3;font-weight: bold;font-size: 20px" id="fz"></h1>
+                        <p class="box-title" style="font-weight: bold;padding-left: 40px" >取出：<h1 class="box-title" style=";color: #44b7d3;font-weight: bold;font-size: 20px" id="qc"></h1>
+                    </div>
+                </div>
+                <div id="gnjyChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">负压吸宫人数</h3>
+                    <div class="box-title" style="padding-left: 250px">
+                        <p class="box-title" style="color: #44b7d3;font-weight: bold;font-size: 25px" id="fyxg">
+                    </div>
+                </div>
+                <div id="fyxgChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    $(function () {
+        generatorBycsChart(bycsChart);
+        generatorYwlcChart(ywlcChart);
+        generatorGnjyChart(gnjyChart);
+        generatorFyxgChart(fyxgChart);
+    });
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        ywlcChart.resize();
+        ywlcChart.resize();
+        gnjyChart.resize();
+        fyxgChart.resize();
+
+    });
+
+    function searchData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        if (!startTime && !endTime) {
+            return;
+        }
+        if (startTime && endTime) {
+            let split = startTime.split("-");
+            let split1 = endTime.split("-");
+            let starttime = new Date(split[0], split[1], split[2]);
+            let endtime  = new Date(split1[0], split1[1], split1[2]);
+            if (starttime.getTime() >= endtime.getTime()) {
+                $.errorMessage("请输入正确的时间区间");
+            }
+        }
+
+        generatorBycsChart(bycsChart);
+        generatorYwlcChart(ywlcChart);
+        generatorGnjyChart(gnjyChart);
+        generatorFyxgChart(fyxgChart);
+    }
+
+    var bycsChart = echarts.init(document.getElementById('bycsChartDiv'));
+
+    var ywlcChart = echarts.init(document.getElementById('ywlcChartDiv'));
+
+    var gnjyChart = echarts.init(document.getElementById('gnjyChartDiv'));
+
+    var fyxgChart = echarts.init(document.getElementById('fyxgChartDiv'));
+
+
+
+    function generatorBycsChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/family/search/bycs",{ startTime : startTime, endTime : endTime},function (res) {
+            let bytData = res.condomDistribution;
+            let byyData = res.birthControlPills;
+            let byyValue = [];
+            let bytValue = [];
+            let timeValue = [];
+            let byyValueTotal = 0;
+            let bytValueTotal = 0;
+            bytData.forEach(function (d) {
+                bytValue.push(~d.total+1);
+                bytValueTotal += d.total;
+                timeValue.push(d.searchTime)
+            });
+            byyData.forEach(function (d) {
+                byyValue.push(d.total);
+                byyValueTotal += d.total;
+            });
+            $("#byt").text(bytValueTotal);
+            $("#byy").text(byyValueTotal);
+            chart.hideLoading();
+        let    option = {
+                color: ['#3398DB','#6087BF'],
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;发放数量: <br/>'
+                            + params[0].seriesName + ':'+params[0].data+'粒<br/>'
+                            + params[1].seriesName + ':'+ Math.abs(params[1].data)+'个<br/>'
+                    }
+                },
+                legend: {
+                    top: 'bottom',
+                    data:[ '避孕套','避孕药']
+                },
+                grid: {
+                    top: '5%',
+                    left: '1%',
+                    right: '2%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'value',
+                        position : 'top',
+                        axisLabel:{
+                            formatter: function (data) {
+                                return (Math.abs(data));
+                            }
+                        }
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'category',
+                        axisTick : {show: false},
+                        data : timeValue
+                    }
+                ],
+                series : [
+                    {
+                        name:'避孕药',
+                        type:'bar',
+                        barWidth: '90%',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true
+                            }
+                        },
+                        data:byyValue
+                    },
+                    {
+                        name:'避孕套',
+                        type:'bar',
+                        barWidth: '90%',
+                        stack: '总量',
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter:function(v){return Math.abs(v.data)}
+                            }
+                        },
+                        data:bytValue
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorYwlcChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/family/search/ywlc",{ startTime : startTime, endTime : endTime},function (res) {
+            let dataValue = [];
+            let timeValue = [];
+            let total = 0;
+            res.forEach(function (data) {
+                dataValue.push(data.total);
+                timeValue.push(data.searchTime);
+                total += data.total;
+            });
+            $("#ywlc").text(total+"人");
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;流产人数: '
+                            + params[0].data + '(位)<br/>'
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 5,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                grid: {
+                    left: '2%',
+                    right: '1%',
+                    top: '15%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'流产人数(位)'
+                    }
+                ],
+                series: [
+                    {
+                        name: '流产人数',
+                        type: 'line',
+                        smooth: true,
+                        label: labelOption,
+                        barGap: 0,
+                        data: dataValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorGnjyChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/family/search/gnjy",{ startTime : startTime, endTime : endTime},function (res) {
+            let fzData = res.intrauterineDevicePlacement;
+            let qcData = res.intrauterineDeviceRemoval;
+            let fzValue = [];
+            let qcValue = [];
+            let timeValue = [];
+            let fzValueTotal = 0;
+            let qcValueTotal = 0;
+            fzData.forEach(function (d) {
+                fzValue.push(d.total);
+                fzValueTotal += d.total;
+                timeValue.push(d.searchTime)
+            });
+            qcData.forEach(function (d) {
+                qcValue.push(d.total);
+                qcValueTotal += d.total;
+            });
+            $("#fz").text(fzValueTotal);
+            $("#qc").text(qcValueTotal);
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            option = {
+                color: ['#3398DB','#6087BF'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;宫内节育器人次数: <br/>'
+                            + params[0].seriesName + ':'+params[0].data+'位<br/>'
+                            + params[1].seriesName + ':'+ Math.abs(params[1].data)+'位<br/>'
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 5,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '1%',
+                    top: '15%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'bottom',
+                    data:[ '放置', '取出']
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'宫内节育器人数(位)'
+                    }
+                ],
+                series: [
+                    {
+                        name: '放置',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: fzValue
+                    },{
+                        name: '取出',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: qcValue
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+    function generatorFyxgChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/family/search/fyxg",{ startTime : startTime, endTime : endTime},function (res) {
+            let dataValue = [];
+            let timeValue = [];
+            let total = 0;
+            res.forEach(function (data) {
+                dataValue.push(data.total);
+                timeValue.push(data.searchTime);
+                total += data.total;
+            });
+            $("#fyxg").text(total+"人");
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 15,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            option = {
+                color: ['#3398DB','#6087BF'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '月&nbsp;负压吸宫人数: '
+                            + params[0].data + '(位)<br/>'
+                    }
+                },
+                toolbox: {
+                    show: true,
+                    right: 5,
+                    feature: {
+                        mark: { show: true },
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '1%',
+                    top: '15%',
+                    containLabel: true
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'负压吸宫人数(位)'
+                    }
+                ],
+                series: [
+                    {
+                        name:'负压吸宫人数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: dataValue
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+
+    }
+
+    function getYearMonthData() {
+        var result = [];
+        for (var i = 12; i >0; i--) {
+            var d = new Date();
+            d.setDate(1);
+            d.setMonth(d.getMonth() - i);
+            var m = d.getMonth() + 1;
+
+            m = m < 10 ? "0" + m : m;
+            //在这里可以自定义输出的日期格式
+            result.push(d.getFullYear() + "-" + m);
+            //result.push(d.getFullYear() + "年" + m + '月');
+        }
+        return result;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -3,15 +3,15 @@ paladin:
   dynamic:
     mybatis:
       mapper-location: classpath:dynamic/mapper/**/*.xml
-      type-aliases-package: com.paladin.demo.dynamic.model
+      type-aliases-package: com.paladin.qos.dynamic.model
     source[0]:
       name: mysql
       url: jdbc:mysql://localhost:3306/qos?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
       username: root
     source[1]:
       name: sqlserver
-      url: jdbc:sqlserver://172.16.11.35:1433;DatabaseName=test
-      username: sa
-      password: 123456     
+      url: jdbc:sqlserver://192.168.31.52:1433;database=wcdbsz
+      username: jswj
+      password: jswj2019
       
   

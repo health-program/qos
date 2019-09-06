@@ -55,6 +55,7 @@
 	      </snapshots>
 	    </repository>
 	  </repositories>
+
 	<!-- Add Spring repositories -->
 	<!-- (you don't need this if you are using a .RELEASE version) -->
 	<!-- <repositories> <repository> <id>spring-snapshots</id> <url>https://repo.spring.io/snapshot</url> 

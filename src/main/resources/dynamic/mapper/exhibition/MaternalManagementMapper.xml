@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper">
+
+    <!--男性婚前检查-->
+    <select id="getMalePremaritalCheckTotal" resultType="long">
+        SELECT COUNT( 1 ) AS total
+        FROM hjM_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate > #{ startTime }
+       <if test="endTime != null">
+           AND dInDate <![CDATA[<= ]]>#{ endTime }
+      </if>
+    </select>
+
+    <!--女性婚前检查-->
+    <select id="getFemalePremaritalCheckTotal" resultType="long">
+        SELECT COUNT( 1 ) AS total
+        FROM hjF_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate > #{ startTime }
+        <if test="endTime != null">
+            AND dInDate <![CDATA[<= ]]>#{ endTime }
+        </if>
+    </select>
+
+    <!--孕前检查人次数-->
+    <select id="getPrepregnancyCheckTotal" resultType="long">
+         SELECT SUM
+        ( total )
+    FROM
+        (
+        SELECT COUNT
+            ( 1 ) AS total
+        FROM
+            hjM_Hqjc
+        WHERE
+            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate > #{ startTime }
+        <if test="endTime != null">
+            AND dInDate <![CDATA[<= ]]>#{ endTime }
+        </if>
+             UNION ALL
+        SELECT COUNT
+            ( 1 ) AS total
+        FROM
+            hjF_Hqjc
+        WHERE
+            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate > #{ startTime }
+        <if test="endTime != null">
+            AND dInDate <![CDATA[<= ]]>#{ endTime }
+        </if>
+        ) c
+    </select>
+
+    <!--产妇筛查数-->
+    <select id="getMaternalScreeningTotal" resultType="long">
+        SELECT  COUNT (1) AS total  FROM  yfyzqcqscsqb  WHERE datediff( month, dkdrq, #{date} ) = 0
+    </select>
+
+    <!--高危孕产妇人数-->
+    <select id="getHighriskMaternalTotal" resultType="long">
+        SELECT  COUNT (1) AS total  FROM  yfgwys  WHERE datediff( month, dindate, #{date} ) = 0
+    </select>
+
+    <!--孕产妇死亡人数-->
+    <select id="getMaternalDeathTotal" resultType="long">
+        SELECT  COUNT (1) AS total  FROM   Yfsw  WHERE datediff( month, dSwsj, #{date} ) = 0
+    </select>
+
+    <!--两癌筛查-宫颈癌筛查-->
+    <select id="getCervicalCancerScreeningTotal" resultType="long">
+        SELECT  COUNT (1) AS total  FROM   Gjajcga_2015  WHERE datediff( month, dindate, #{date} ) = 0
+    </select>
+
+    <!--两癌筛查-乳腺癌筛查-->
+    <select id="getBreastCancerScreeningTotal" resultType="long">
+        SELECT  COUNT (1) AS total  FROM   Rxascdjb_2015  WHERE datediff( month, dindate, #{date} ) = 0
+    </select>
+
+    <!--母婴阻断-梅毒检测人数-->
+    <select id="getSyphilisTestTotal" resultType="long">
+        SELECT COALESCE (SUM(E6),0)  +  COALESCE (SUM(E7),0) AS total FROM Yfmdygmycbgzybb WHERE  iYear = DATEPART(yyyy, #{date}) AND iMonth =  DATEPART(m, #{date})
+    </select>
+
+    <!--母婴阻断-梅毒感染人数-->
+    <select id="getSyphilisInfectionTotal" resultType="long">
+        SELECT COALESCE (SUM(E9) ,0)  AS total  FROM  Yfmdygmycbgzybb WHERE  iYear = DATEPART(yyyy, #{date}) AND iMonth =  DATEPART(m, #{date})
+    </select>
+
+
+    <!--母婴阻断-乙肝检测人数-->
+    <select id="getHepatitisBtestTotal" resultType="long">
+        SELECT  COALESCE (SUM(E11) ,0) + COALESCE (SUM(E12),0) AS  total  FROM Yfmdygmycbgzybb WHERE  iYear = DATEPART(yyyy, #{date}) AND iMonth =  DATEPART(m, #{date})
+    </select>
+
+
+    <!--母婴阻断-乙肝确定感染人次数-->
+    <select id="getHepatitisBdeterminesInfectionTotal" resultType="long">
+        SELECT COALESCE (SUM(E14)  ,0)  AS total  FROM  Yfmdygmycbgzybb WHERE  iYear = DATEPART(yyyy, #{date}) AND iMonth =  DATEPART(m, #{date})
+    </select>
+
+
+    <!--妇女病筛查-->
+    <select id="getWomenDiseaseScreeningTotal" resultType="long">
+        SELECT   COUNT (1) AS total  FROM  Fnbjcxx   WHERE datediff( month, dindate, #{date} ) = 0
+    </select>
+
+    <!--产后访视-->
+    <select id="getPostpartumVisitTotal" resultType="long">
+        SELECT SUM(total) FROM(
+        SELECT  COUNT(1) AS total FROM yfchfs WHERE   datediff( month, dFsrq, #{date} ) = 0
+        UNION ALL
+        SELECT  COUNT(1) AS total FROM yfxsefs WHERE   datediff( month, dFsrq, #{date} ) = 0
+        ) c
+    </select>
+
+
+    <!--孕产妇体检-->
+    <select id="getMaternalCheckupData" resultType="com.paladin.qos.dynamic.model.exhibition.MaternalCheckup">
+    SELECT
+        ISNULL( a.cJcdwmc, b.cJcdwmc ) AS agencyName,
+        ISNULL( a.cJcdwbh, b.cJcdwbh ) AS agencyNo,
+        ISNULL( a.total, 0 ) AS firstExaminationTimes,
+        ISNULL( b.total1, 0 ) AS cycleExaminationTimes
+    FROM
+        (
+        SELECT
+            cJcdwbh,
+            COUNT ( 1 ) AS total,
+            cJcdwmc
+        FROM
+            Yfcz
+        WHERE
+            cJcdwbh != '' AND  dCzrq > #{startDate}
+            <if test="endDate != null">
+                AND  dCzrq <![CDATA[<= ]]> #{endDate}
+            </if>
+        GROUP BY
+            cJcdwbh,
+            cJcdwmc
+        ) a
+        FULL JOIN (
+        SELECT
+            cJcdwbh,
+            COUNT ( 1 ) AS total1,
+            cJcdwmc
+        FROM
+            yffz
+        WHERE
+            cJcdwbh != '' AND  dFzrq > #{startDate}
+            <if test="endDate != null">
+                AND  dFzrq <![CDATA[<= ]]> #{endDate}
+            </if>
+        GROUP BY
+            cJcdwbh,
+            cJcdwmc
+        ) b ON a.cJcdwbh = b.cJcdwbh
+    ORDER BY
+        agencyNo ASC
+    </select>
+
+    <!--叶酸发放人次数-->
+    <select id="getNumberOfFolates" resultType="long">
+        SELECT COUNT( 1 ) AS total
+        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        <if test="endTime != null">
+            AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
+        </if>
+    </select>
+
+    <!--叶酸发放瓶数-->
+    <select id="getFolicAcidDispensingBottle" resultType="long">
+        SELECT  COALESCE (SUM(iDycffsl ),0) AS total
+        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        <if test="endTime != null">
+            AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
+        </if>
+    </select>
+</mapper>
