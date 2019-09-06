@@ -5,7 +5,7 @@ paladin:
       mapper-location: classpath:dynamic/mapper/**/*.xml
       type-aliases-package: com.paladin.qos.dynamic.model
     source[0]:
-      name: sqlserver
+      name: fuyou
       url: jdbc:sqlserver://172.16.11.35:1433;database=wcdbsz
       username: sa
       password: 123456

@@ -172,4 +172,50 @@
             AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
         </if>
     </select>
+
+    <!--孕妇建卡数-->
+    <select id="getPregnantWomenBuildCardNumber" resultType="long">
+        SELECT COUNT(1) AS total FROM YfMain WHERE  datediff(month,dJcrq,#{date})=0
+    </select>
+
+    <!--早孕建卡数-->
+    <select id="getEarlyPregnancyCardNumber" resultType="long">
+        SELECT COUNT(1) AS total FROM YfMain WHERE iJcyz <![CDATA[< ]]>13  AND   datediff(month,dJcrq,#{date})=0
+    </select>
+
+
+    <select id="getMaternalDataByOrg" resultType="com.paladin.qos.dynamic.model.exhibition.MaternalOrgData">
+        SELECT COALESCE ( c.cJcdwmc, d.cJcdwmc, e.cJcdwmc ) AS agencyName,COALESCE ( c.cJcdwbh, d.cJcdwbh, e.cJcdwbh ) AS agencyNo,
+        ISNULL( c.total, 0 ) AS zyjk,ISNULL( d.total, 0 ) AS yfjk,ISNULL( e.total, 0 ) AS yffs
+        FROM
+        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE cJcdwbh != '' AND dJcrq > #{startDate}
+         <if test="endDate != null">
+        AND dJcrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ) c
+        FULL JOIN
+        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE iJcyz <![CDATA[< ]]> 13  AND  cJcdwbh != '' AND dJcrq > #{startDate}
+        <if test="endDate != null">
+            AND dJcrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc) d
+        ON c.cJcdwbh = d.cJcdwbh
+        FULL JOIN
+        (SELECT ISNULL( a.cJcdwmc, b.cJcdwmc ) AS cJcdwmc,ISNULL( a.cJcdwbh, b.cJcdwbh ) AS cJcdwbh, ISNULL(a.total, 0) + ISNULL(b.total, 0) AS total FROM
+        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfchfs WHERE  cJcdwbh != '' AND dFsrq > #{startDate}
+        <if test="endDate != null">
+            AND dFsrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ) a
+        FULL JOIN
+        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE  cJcdwbh != '' AND dFsrq > #{startDate}
+        <if test="endDate != null">
+            AND dFsrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ) b
+        ON a.cJcdwbh = b.cJcdwbh) e  ON d.cJcdwbh = e.cJcdwbh   ORDER BY agencyNo ASC
+    </select>
+
+
+
 </mapper>

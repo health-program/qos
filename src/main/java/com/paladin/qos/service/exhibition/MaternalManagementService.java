@@ -3,8 +3,10 @@ package com.paladin.qos.service.exhibition;
 import com.paladin.common.util.DateFormatUtil;
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
+import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper;
 import com.paladin.qos.dynamic.model.exhibition.MaternalCheckup;
+import com.paladin.qos.dynamic.model.exhibition.MaternalOrgData;
 import com.paladin.qos.service.exhibition.vo.DataDemonstrationVO;
 import com.paladin.qos.service.exhibition.vo.MaternalManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
 
     public MaternalManagementVO searchAllNumberData(AnalysisRequest request) {
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         List<Date> defaultDateList = getSearchTimeList(startTime,endTime,true);
@@ -66,7 +68,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
 
     public MaternalManagementVO searchPremaritalCheckTotal(AnalysisRequest request) {
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         Date startTime = request.getStartTime();
         Date endTime = request.getEndTime();
         MaternalManagementVO vo = new MaternalManagementVO();
@@ -134,7 +136,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
      * @return  List<DataDemonstrationVO>
      */
     public List<DataDemonstrationVO> getMaternalScreeningTotal(Date startTime, Date endTime) {
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
         List<DataDemonstrationVO> list = new ArrayList<>(12);
@@ -156,7 +158,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
      * @return  List<DataDemonstrationVO>
      */
     public List<DataDemonstrationVO> getWomenDiseaseScreeningTotal(Date startTime, Date endTime) {
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         List<Date> dateList = getSearchTimeList(startTime,endTime,false);
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
         List<DataDemonstrationVO> list = new ArrayList<>(12);
@@ -339,10 +341,65 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
      * @return  List<DataDemonstrationVO>
      */
     public List<MaternalCheckup> getMaternalCheckupData(Date startDate, Date endDate) {
-        sqlSessionContainer.setCurrentDataSource("sqlserver");
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
         return mapper.getMaternalCheckupData(checkStartTime(startDate),endDate);
     }
+
+
+    public MaternalManagementVO getBuildCardNumber(Date startDate, Date endDate) {
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+        MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
+        List<Date> dateList = getSearchTimeList(startDate,endDate,false);
+        MaternalManagementVO maternalManagementVO = new MaternalManagementVO();
+        List<DataDemonstrationVO> pregnantWomenBuildCardNumber = getPregnantWomenBuildCardNumber(dateList, mapper);
+        List<DataDemonstrationVO> earlyPregnancyCardNumber = getEarlyPregnancyCardNumber(dateList, mapper);
+        maternalManagementVO.setPregnantWomenBuildCardNumber(pregnantWomenBuildCardNumber);
+        maternalManagementVO.setEarlyPregnancyCardNumber(earlyPregnancyCardNumber);
+        return maternalManagementVO;
+    }
+
+
+    /**
+     * 功能描述: <孕妇建卡数>
+     * @param dateList
+     * @return  List<DataDemonstrationVO>
+     */
+    public List<DataDemonstrationVO> getPregnantWomenBuildCardNumber(List<Date> dateList, MaternalManagementMapper mapper) {
+        List<DataDemonstrationVO> list = new ArrayList<>(12);
+        DataDemonstrationVO dataDemonstrationVO;
+        for (Date date : dateList) {
+            long total = mapper.getPregnantWomenBuildCardNumber(date);
+            dataDemonstrationVO = new DataDemonstrationVO();
+            dataDemonstrationVO.setTotal(total);
+            list.add(dataDemonstrationVO);
+        }
+        return list;
+    }
+
+    /**
+     * 功能描述: <早孕建卡数>
+     * @param dateList
+     * @return  List<DataDemonstrationVO>
+     */
+    public List<DataDemonstrationVO> getEarlyPregnancyCardNumber(List<Date> dateList, MaternalManagementMapper mapper) {
+        List<DataDemonstrationVO> list = new ArrayList<>(12);
+        DataDemonstrationVO dataDemonstrationVO;
+        for (Date date : dateList) {
+            long total = mapper.getEarlyPregnancyCardNumber(date);
+            dataDemonstrationVO = new DataDemonstrationVO();
+            dataDemonstrationVO.setTotal(total);
+            list.add(dataDemonstrationVO);
+        }
+        return list;
+    }
+
+    public List<MaternalOrgData> getMaternalDataByOrg(Date startDate, Date endDate) {
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+        MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
+        return mapper.getMaternalDataByOrg(checkStartTime(startDate), endDate);
+    }
+
 
 
 }

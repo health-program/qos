@@ -1,6 +1,7 @@
 package com.paladin.qos.dynamic.mapper.exhibition;
 
 import com.paladin.qos.dynamic.model.exhibition.MaternalCheckup;
+import com.paladin.qos.dynamic.model.exhibition.MaternalOrgData;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
@@ -47,4 +48,10 @@ public interface MaternalManagementMapper {
     long getNumberOfFolates(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
     long getFolicAcidDispensingBottle(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
+
+    long getPregnantWomenBuildCardNumber(@Param("date") Date date);
+
+    long getEarlyPregnancyCardNumber(@Param("date") Date date);
+
+    List<MaternalOrgData> getMaternalDataByOrg(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 }

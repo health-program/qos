@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
+                            <option value="">请选择医疗机构</option>
+                            </select>
+                        </div>
+                         <div class="col-md-2">
+                            <input id="createTime" name="date" placeholder="请选择时间" autocomplete="off" type="text" class="form-control" value="">
+                        </div> 
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="dataReslut()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+	            <div class="nav-tabs-custom">
+		            <ul class="nav nav-tabs">
+		                <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
+		                <li class=""><a href="#mz" data-toggle="tab" aria-expanded="false">门诊统计</a></li>
+		                <li class=""><a href="#zy" data-toggle="tab" aria-expanded="false">住院统计</a></li>
+		            </ul>
+		            <div class="tab-content">
+			            <div class="tab-pane active" id="hz">
+				            <div class="box-solid">
+								<table id="dataGrid1"></table>
+							</div>
+			            </div>
+			            <div class="tab-pane" id="mz">
+							<div class="box-solid">
+								<table id="dataGrid2"></table>
+							</div>            
+			            </div>
+			            <div class="tab-pane" id="zy">
+							<div class="box-solid">
+								<table id="dataGrid3"></table>
+							</div>            
+			            </div>
+		            </div>
+	            </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="drugsChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="drugFeeChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+  //<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		drugChart.resize();
+		drugFeeChart.resize();
+	});
+	
+    var $table1 = $('#dataGrid1');
+    var $table2 = $('#dataGrid2');
+    var $table3 = $('#dataGrid3');
+    $(function() {
+    	dataReslut();
+    	
+    	 laydate.render({
+             elem: '#createTime',
+             type: 'month',
+             max:'nowTime',
+             value:''
+         });
+    });
+    
+    function dataReslut(){
+    	var unitId = $("#unitId").val();
+    	var date = $("#createTime").val();
+    	$.post("/qos/medication/find?unitId="+unitId+"&date="+date,function(res){
+        	var sumData = res.result || [];
+        	 var arr = [];
+        	 for (var i = 0; i < sumData.length; i++) {
+                 if (i == 0) arr.push(sumData[i]);
+                 b = false;
+                 if (arr.length > 0 && i > 0) {
+                   for (var j = 0; j < arr.length; j++) {
+                     if (arr[j].unitId == sumData[i].unitId) {
+                   	  if(sumData[i].oPDCount != 0)arr[j].oPDCount = sumData[i].oPDCount;
+                   	  if(sumData[i].oPDMoney != 0)arr[j].oPDMoney = sumData[i].oPDMoney;
+                   	  
+                   	  var oPDMoney = sumData[i].oPDMoney;
+                   	  var oPDCount = arr[j].oPDCount;
+                   	  if(oPDMoney != 0 && oPDCount !=0)
+                   		  	arr[j].oPDAverageMoney = (oPDMoney/oPDCount).toFixed(2);
+                   	  
+                   	  if(sumData[i].inPatientCount != 0)arr[j].inPatientCount = sumData[i].inPatientCount;
+                   	  if(sumData[i].inPatientMoney != 0)arr[j].inPatientMoney = sumData[i].inPatientMoney;
+                   	  
+                   	  var inPatientMoney = sumData[i].inPatientMoney;
+                   	  var inPatientCount = arr[j].inPatientCount;
+                   	  
+                   	  if(inPatientMoney != 0 && inPatientCount != 0)
+                   		  arr[j].inPatietAverageMoney = (inPatientMoney/inPatientCount).toFixed(2);
+                   	  
+                   	  var oPDDrugCount = sumData[i].oPDDrugCount;
+                   	  if(oPDDrugCount !=0)arr[j].oPDDrugCount=oPDDrugCount;
+                   	  
+                   	  if(oPDDrugCount != 0 && oPDCount !=0)
+                   		 arr[j].oPDDrugAvg = (oPDDrugCount/oPDCount).toFixed(0);
+                   	  
+                   	  var inPatientDrugCount = sumData[i].inPatientDrugCount;
+                   	  if(inPatientDrugCount !=0)arr[j].inPatientDrugCount=inPatientDrugCount;
+                   	  
+                   	 if(inPatientCount != 0 && inPatientDrugCount !=0)
+                   		 arr[j].inPatientDrugAvg = (inPatientDrugCount/inPatientCount).toFixed(0);
+                   	  
+                   	  if(sumData[i].inPersonCount != 0)arr[j].inPersonCount = sumData[i].inPersonCount;
+                   	  if(sumData[i].outPersonCount != 0)arr[j].outPersonCount = sumData[i].outPersonCount;
+                       b = true;
+                     }
+                   }
+                   if (!b) {
+                     arr.push(sumData[i]);
+                   }
+                 }
+               }
+        	dataValue = arr;
+        	buildTable1(arr);
+        	buildTable2(arr);
+        	buildTable3(arr);
+        })
+    }
+    
+	function buildTable1(arr){
+		
+		 columns= [
+              { title: "医疗机构", field: "unitName" },
+              { title: "就医总人次", field: "total" },
+              { title: "就医患者使用药品数", field: "drugNum"},
+              { title: "就医人均使用药品数", field: "drugAvgCount" },
+              { title: "就医患者药品总费用(元)", field: "totalMoney" },
+              { title: "每次就诊人均药费(元)", field: "averageMoney" }
+           ]
+		var datas = [];
+		for (var i = 0; i < arr.length; i++) {
+			 row = {};
+			 row['unitName'] = arr[i].unitName;
+			 var tatal = arr[i].oPDCount + arr[i].inPatientCount;
+			 row['total'] = tatal;
+			 var totalMoney = (arr[i].oPDMoney + arr[i].inPatientMoney).toFixed(2);
+			 row['totalMoney'] = (totalMoney <=0?0:totalMoney);
+			 if(tatal !=0 && totalMoney !=0){
+				 row['averageMoney'] = (totalMoney/tatal).toFixed(2);
+			 }else{
+				 row['averageMoney'] = 0;
+			 }
+			 
+			 var drugNum = arr[i].oPDDrugCount + arr[i].inPatientDrugCount;
+			 row['drugNum'] = drugNum;
+			 
+			 if(tatal !=0 && drugNum !=0){
+				 row['drugAvgCount'] = (drugNum/tatal).toFixed(0);
+			 }else{
+				 row['drugAvgCount'] = 0;
+			 }
+			 
+			 datas.push(row);
+		}
+        $table1.bootstrapTable('destroy').bootstrapTable({
+            columns: columns,
+            data: datas,
+        });
+        chart1(datas);
+        chart2(datas);
+  	}
+	
+	function buildTable2(arr){
+		columns= [
+	               	{ title: "医疗机构", field: "unitName" },
+                    { title: "门急诊人次", field: "oPDCount" },
+                    { title: "门急诊使用药品数", field: "oPDDrugCount" },
+                    { title: "门急诊人均使用药品数", field: "oPDDrugAvg" },
+                    { title: "门急诊药品总费用(元)", field: "oPDMoney" },
+                    { title: "门急诊每次人均药费(元)", field: "oPDAverageMoney" }
+	            ]
+	        $table2.bootstrapTable('destroy').bootstrapTable({
+	            columns: columns,
+	            data: arr,
+	        });
+	}
+
+	function buildTable3(arr){
+		columns= [
+					{ title: "医疗机构", field: "unitName"},
+					{ title: "住院人次", field: "inPatientCount"},
+					{ title: "住院患者使用药品数", field: "inPatientDrugCount" },
+					{ title: "住院人均使用药品数", field: "inPatientDrugAvg" },
+					{ title: "住院药品总费用(元)", field: "inPatientMoney" },
+					{ title: "住院每次人均药费(元)", field: "inPatietAverageMoney" }
+	            ]
+	        $table3.bootstrapTable('destroy').bootstrapTable({
+	            columns: columns,
+	            data: arr,
+	        });
+	}
+
+   
+    var drugChart = echarts.init(document.getElementById('drugsChartDiv'));
+    var drugFeeChart = echarts.init(document.getElementById('drugFeeChartDiv'));
+    
+    function chart1(datas){
+    	if(datas){
+    		drugChart.showLoading({
+ 	           text: '数据正在努力加载...',
+ 	           textStyle: { fontSize : 30 , color: '#444' },
+ 	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+ 	       	}); 
+    		
+    		var xAxis = [],series = [];
+    		datas.sort(compare('drugAvgCount'));
+    		for(var i=0;i<datas.length;i++){
+    			xAxis.push(datas[i].unitName);
+    			series.push({name:datas[i].unitName,value:datas[i].drugAvgCount});
+    		}
+    		drugChart.hideLoading();
+    	}
+    	var option = {
+    			title: {
+			        text: '人均使用药品数排名',
+			    },
+    			color : [ '#3398DB' ],
+    			tooltip : {
+    				trigger : 'axis',
+    				axisPointer : { // 坐标轴指示器，坐标轴触发有效
+    					type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+    				}
+    			},
+    			 toolbox: {
+      		        feature: {
+      		            saveAsImage: {}
+      		        }
+      		    },
+    			grid : {
+    				left : '3%',
+    				right : '4%',
+    				bottom : '3%',
+    				containLabel : true
+    			},
+    			xAxis : [ 
+    			          {
+    				type : 'category',
+    				data : xAxis,
+    				 axisLabel: {
+    		                 interval:0,
+    		                 rotate:50//角度顺时针计算的
+    		                } ,
+    				axisTick : {
+    					alignWithLabel : true
+    				}
+    			} 
+    			],
+    			yAxis : [ 
+    			          {
+    				type : 'value'
+    			}
+    			],
+    			series : [ {
+    				name : '人数',
+    				type : 'bar',
+    					barWidth:20,
+    				data : series
+    			} ]
+    		};
+    	drugChart.setOption(option,true);
+    }
+    
+    function chart2(datas){
+    	if(datas){
+    		drugFeeChart.showLoading({
+  	           text: '数据正在努力加载...',
+  	           textStyle: { fontSize : 30 , color: '#444' },
+  	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+  	       	});
+    		
+    		var xAxis = [],series = [];
+    		datas.sort(compare('averageMoney'));
+    		for(var i=0;i<datas.length;i++){
+    			xAxis.push(datas[i].unitName);
+    			series.push({name:datas[i].unitName,value:datas[i].averageMoney});
+    		}
+    		
+    		drugFeeChart.hideLoading();
+    	}
+    	var option = {
+    			title: {
+			        text: '人均药费排名',
+			    },
+    			color : [ '#3398DB' ],
+    			tooltip : {
+    				trigger : 'axis',
+    				axisPointer : { // 坐标轴指示器，坐标轴触发有效
+    					type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+    				}
+    			},
+    			 toolbox: {
+      		        feature: {
+      		            saveAsImage: {}
+      		        }
+      		    },
+    			grid : {
+    				left : '3%',
+    				right : '4%',
+    				bottom : '3%',
+    				containLabel : true
+    			},
+    			xAxis : [ 
+    			          {
+    				type : 'category',
+    				data : xAxis,
+    				 axisLabel: {
+    		                 interval:0,
+    		                 rotate:50//角度顺时针计算的
+    		                } ,
+    				axisTick : {
+    					alignWithLabel : true
+    				}
+    			} 
+    			],
+    			yAxis : [ 
+    			          {
+    				type : 'value'
+    			}
+    			],
+    			series : [ {
+    				name : '每次就诊人均药费(元)',
+    				type : 'bar',
+    					barWidth:20,
+    				data : series
+    			} ]
+    		};
+    	drugFeeChart.setOption(option,true);
+    }
+    
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return value2 - value1;
+        }
+    }
+    
+    
+	//]]>
+    </script>
+</body>
+
+</html>

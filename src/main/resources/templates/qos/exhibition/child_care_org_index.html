@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="margin: 2px">
+        <div class="col-md-6" style="padding-left: 5px;padding-right: 2px">
+            <div class="box box-solid">
+                <div class="box-body" style="max-height: 860px;overflow: auto">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding-left: 0;padding-right: 5px">
+            <div class="row">
+                <div class="col-md-6" style="padding-right: 3px">
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div id="xseChartDiv" class="box-body" style="height: 300px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="padding-left: 3px">
+                    <div class="box box-solid" style="margin-bottom: 5px">
+                        <div id="jksChartDiv" class="box-body" style="height: 300px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div id="orgChartDiv" class="box-body " style="height: 550px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var table,dataVal;
+    $(function () {
+        initDataGrid();
+    });
+
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        orgChart.resize();
+        xseChart.resize();
+        jksChart.resize();
+    });
+
+    var orgChart = echarts.init(document.getElementById('orgChartDiv'));
+    var xseChart = echarts.init(document.getElementById('xseChartDiv'));
+    var jksChart = echarts.init(document.getElementById('jksChartDiv'));
+
+    function generatorJksChart(chart) {
+        let jks = 0;
+        if (dataVal) {
+            dataVal.forEach(data => {
+                jks += data.jks
+            });
+        }
+        var dataStyle = {
+            normal: {
+                label: {show:false},
+                labelLine: {show:false}
+            }
+        };
+        var placeHolderStyle = {
+            normal : {
+                color: 'rgba(0,0,0,0)',
+                label: {show:false},
+                labelLine: {show:false}
+            },
+            emphasis : {
+                color: 'rgba(0,0,0,0)'
+            }
+        };
+        option = {
+            title: {
+                text: '儿童建卡数',
+                subtext: jks,
+                x: 'center',
+                y: '38%',
+                textStyle : {
+                    color : '#44B7D3',
+                    fontFamily : '微软雅黑',
+                    fontSize : 30,
+                    fontWeight : 'bolder'
+                },
+                subtextStyle: {
+                    color : '#44B7D3',
+                    fontSize: 35,
+                    lineHeight: 30,
+                }
+            },
+            tooltip : {
+                show: false,
+                formatter: "{b} : {c}位 ({d}%)"
+            },
+            series : [
+                {
+                    name:'儿童建卡数',
+                    type:'pie',
+                    color: [ '#44B7D3'], //环形图每块的颜色
+                    clockWise:false,
+                    radius : [100, 140],
+                    itemStyle : dataStyle,
+                    data:[
+                        {
+                            value:jks,
+                            name:'儿童建卡数'
+                        },
+                        {
+                            value:jks * 0.2,
+                            name:'invisible',
+                            itemStyle : placeHolderStyle
+                        }
+                    ]
+                }
+            ]
+        };
+        chart.setOption(option,true);
+    }
+
+    function generatorXseChart(chart) {
+        let xsr = 0;
+        if (dataVal) {
+            dataVal.forEach(data => {
+                xsr += data.xses
+            });
+        }
+        var dataStyle = {
+            normal: {
+                label: {show:false},
+                labelLine: {show:false}
+            }
+        };
+        var placeHolderStyle = {
+            normal : {
+                color: 'rgba(0,0,0,0)',
+                label: {show:false},
+                labelLine: {show:false}
+            },
+            emphasis : {
+                color: 'rgba(0,0,0,0)'
+            }
+        };
+        option = {
+            title: {
+                text: '新生儿数',
+                subtext: xsr,
+                x: 'center',
+                y: '38%',
+                textStyle : {
+                    color : '#44B7D3',
+                    fontFamily : '微软雅黑',
+                    fontSize : 30,
+                    fontWeight : 'bolder'
+                },
+                subtextStyle: {
+                    color : '#44B7D3',
+                    fontSize: 35,
+                    lineHeight: 30,
+                }
+            },
+            tooltip : {
+                show: false,
+                formatter: "{b} : {c}位 ({d}%)"
+            },
+            series : [
+                {
+                    name:'新生儿数',
+                    type:'pie',
+                    color: [ '#44B7D3'], //环形图每块的颜色
+                    clockWise:false,
+                    radius : [100, 140],
+                    itemStyle : dataStyle,
+                    data:[
+                        {
+                            value:xsr,
+                            name:'新生儿数'
+                        },
+                        {
+                            value:xsr * 0.2,
+                            name:'invisible',
+                            itemStyle : placeHolderStyle
+                        }
+                    ]
+                }
+            ]
+        };
+        chart.setOption(option,true);
+    }
+    function generatorOrgChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let data0= [] ,data1=[],data2=[],orgData=[];
+        if (dataVal) {
+            dataVal.forEach(data => {
+                orgData.push(data.agencyName);
+                data0.push({name:data.agencyName,value:data.fss});
+                data1.push({name:data.agencyName,value:data.xses});
+                data2.push({name:data.agencyName,value:data.jks});
+            });
+
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            let  option = {
+                color: ['#3398DB','#6087BF','#6071C6'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        console.log(params)
+                        return params[0].name + '<br/>'
+                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
+                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
+                            + params[2].seriesName + ':'+params[2].data.value+'位<br/>'
+                    }
+                },
+                grid: {
+                    left: '0%',
+                    right: '0%',
+                    top: '5%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'bottom',
+                    data:[ '新生儿访视数', '新生儿数','儿童建卡数']
+                },
+                calculable: true,
+                dataZoom: [   {
+                    start:0,//默认为0
+                    end: 18,
+                    type: 'slider',
+                    show: true,
+                    xAxisIndex: [0],
+                    handleSize: 8,//滑动条的 左右2个滑动条的大小
+                    height: 10,//组件高度
+                    left: "center", //左边的距离
+                    bottom:40,
+                    handleColor: '#ddd',//h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                        //给第一个设置0，第四个设置1，就是垂直渐变
+                        offset: 0,
+                        color: '#1eb5e5'
+                    }, {
+                        offset: 1,
+                        color: '#5ccbb1'
+                    }]),
+                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                    showDataShadow: false,//是否显示数据阴影 默认auto
+                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
+                },
+                    //下面这个属性是里面拖到
+                    {
+                        type: 'inside',
+                        show: true,
+                        xAxisIndex: [0],
+                        start: 0,//默认为1
+                        end: 50
+                    }],
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: orgData,
+                        axisLabel: {
+                            interval:0,
+                            rotate:50//角度顺时针计算的
+                        } ,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '新生儿访视数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data0
+                    },{
+                        name: '新生儿数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data1
+                    },{
+                        name: '儿童建卡数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data2
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        }
+    }
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "新生儿访视数", field: "fss", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "新生儿数", field: "xses", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "儿童建卡数", field: "jks", align: "center",footerFormatter: sumTotalFormatterModal},
+
+                ]
+            ],
+            url: '/qos/exhibition/child/search/org',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar',
+            responseHandler: function(res) {
+                dataVal = res || [];
+                generatorXseChart(xseChart);
+                generatorJksChart(jksChart);
+                generatorOrgChart(orgChart);
+                return dataVal;
+            }
+
+        });
+    }
+
+    function sumTotalFormatterModal(data) {
+        field = this.field;
+        var result = data.reduce(function(sum, row) {
+            return sum + (row[field]);
+        }, 0);
+        return result;
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
