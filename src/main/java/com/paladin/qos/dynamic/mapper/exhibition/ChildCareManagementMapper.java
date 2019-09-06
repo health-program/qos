@@ -1,5 +1,6 @@
 package com.paladin.qos.dynamic.mapper.exhibition;
 
+import com.paladin.qos.dynamic.model.exhibition.ChildCareOrgData;
 import com.paladin.qos.dynamic.model.exhibition.ChildHealthCheckup;
 import com.paladin.qos.dynamic.model.exhibition.InfantCongenitalHeartDisease;
 import com.paladin.qos.dynamic.model.exhibition.InfantVision;
@@ -35,4 +36,8 @@ public interface ChildCareManagementMapper {
     List<ChildHealthCheckup> getChildHealthCheckup(@Param("startTime") Date startTime, @Param("endDate") Date endDate);
 
     List<InfantVision> getInfantVisionTotal(@Param("startTime") Date startTime, @Param("endDate") Date endDate);
+
+    long getNewbornHearingTotal(@Param("date") Date date);
+
+    List<ChildCareOrgData> getChildCareDataByOrg(@Param("startTime") Date startTime, @Param("endDate") Date endDate);
 }

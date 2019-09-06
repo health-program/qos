@@ -58,6 +58,12 @@ public class MaternalManagementVO {
     /**叶酸发放瓶数*/
     private Long folicAcidDispensingBottle;
 
+    /**孕妇建卡数*/
+    private List<DataDemonstrationVO> pregnantWomenBuildCardNumber;
+
+    /**早孕建卡数*/
+    private List<DataDemonstrationVO> earlyPregnancyCardNumber;
+
     public Long getMalePremaritalCheck() {
         return malePremaritalCheck;
     }
@@ -184,5 +190,21 @@ public class MaternalManagementVO {
 
     public void setFolicAcidDispensingBottle(Long folicAcidDispensingBottle) {
         this.folicAcidDispensingBottle = folicAcidDispensingBottle;
+    }
+
+    public List<DataDemonstrationVO> getPregnantWomenBuildCardNumber() {
+        return pregnantWomenBuildCardNumber;
+    }
+
+    public void setPregnantWomenBuildCardNumber(List<DataDemonstrationVO> pregnantWomenBuildCardNumber) {
+        this.pregnantWomenBuildCardNumber = pregnantWomenBuildCardNumber;
+    }
+
+    public List<DataDemonstrationVO> getEarlyPregnancyCardNumber() {
+        return earlyPregnancyCardNumber;
+    }
+
+    public void setEarlyPregnancyCardNumber(List<DataDemonstrationVO> earlyPregnancyCardNumber) {
+        this.earlyPregnancyCardNumber = earlyPregnancyCardNumber;
     }
 }

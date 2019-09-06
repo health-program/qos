@@ -88,4 +88,33 @@
         GROUP BY cJcdwbh,cJcdwmc ORDER BY agencyNo ASC;
     </select>
 
+    <!--新生儿听力人数-->
+    <select id="getNewbornHearingTotal" resultType="long">
+        SELECT COUNT(1) AS total FROM  Tlsc  WHERE datediff( month, dJcrq, #{date} ) = 0
+    </select>
+
+
+    <select id="getChildCareDataByOrg" resultType="com.paladin.qos.dynamic.model.exhibition.ChildCareOrgData">
+        SELECT COALESCE ( a.cJcdwmc, b.cJcdwmc, c.cJcdwmc ) AS agencyName,
+        COALESCE ( a.cJcdwbh, b.cJcdwbh, c.cJcdwbh ) AS agencyNo,
+        ISNULL( a.total, 0 ) AS fss,ISNULL( b.total, 0 ) AS xses,ISNULL( c.total, 0 ) AS jks
+        FROM
+        ( SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE cJcdwbh != '' AND dFsrq > #{startTime}
+        <if test="endDate != null">
+            AND dFsrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc) a
+        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Yfxseqk WHERE cJcdwbh != '' AND dCsrq > #{startTime}
+        <if test="endDate != null">
+            AND dCsrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ) b ON a.cJcdwbh = b.cJcdwbh
+        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Etmain WHERE cJcdwbh != '' AND dJcrq > #{startTime}
+        <if test="endDate != null">
+            AND dJcrq <![CDATA[<= ]]> #{endDate}
+        </if>
+        GROUP BY cJcdwbh,cJcdwmc ) c ON b.cJcdwbh = c.cJcdwbh
+        ORDER BY agencyNo ASC
+    </select>
+
 </mapper>

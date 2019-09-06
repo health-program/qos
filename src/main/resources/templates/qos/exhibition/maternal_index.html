@@ -27,7 +27,7 @@
             </form>
         </div>
     </div>
-    <div class="row" style="margin-left: 5px;margin-right: 5px">
+    <div class="row" style="margin-left: 1px;margin-right: 5px">
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-4">
@@ -363,130 +363,137 @@
     }
 
     function generatorYfjkChartChart(chart) {
-        var data = [
-            {value:6000, name:'孕妇建卡数'},
-            {value:2075, name:'早孕建卡数'}
-        ];
-        let total = 0;
-        data.forEach(res => {
-            total += res.value;
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
         });
-        let percentage;
-        for (let item of data) {
-            if (item.name === '早孕建卡数')
-                percentage = Math.round(item.value / total * 10000) / 100.00 + '%';
-        }
-        option = {
-            title: {
-                text: ['{name|早孕建卡率}'].join('\n'),
-                subtext: percentage,
-                top: '30%',
-                left:'50%',
-                textAlign: 'center',
-                textStyle: {
-                    rich: {
-                        name: {
-                            color: '#67E0E3',
-                            lineHeight: 20,
-                            fontSize: '22'
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/yfjk",{ startTime : startTime, endTime : endTime},function (res) {
+            let total = getTotalFromAr(res.pregnantWomenBuildCardNumber);
+            let earlyPregnancyCardNumber = getTotalFromAr(res.earlyPregnancyCardNumber);
+            let data = [];
+            data.push({value:total-earlyPregnancyCardNumber, name:'非早孕建卡数' },{value:earlyPregnancyCardNumber, name:'早孕建卡数'});
+            let percentage;
+            for (let item of data) {
+                if (item.name === '早孕建卡数')
+                    percentage = (Math.round(item.value / total * 10000) / 100.00).toFixed(2) + '%';
+            }
+            chart.hideLoading();
+            option = {
+                title: {
+                    text: ['{name|早孕建卡率}'].join('\n'),
+                    subtext: percentage,
+                    top: '30%',
+                    left:'48%',
+                    textAlign: 'center',
+                    textStyle: {
+                        rich: {
+                            name: {
+                                color: '#37A2DA',
+                                lineHeight: 20,
+                                fontSize: '25',
+                                fontWeight: 'bold',
+                            }
                         }
+                    },
+                    subtextStyle: {
+                        fontSize: '22',
+                        fontWeight: 'bold',
+                        color: '#37A2DA',
                     }
                 },
-                subtextStyle: {
-                    fontSize: '25',
-                    fontWeight: 'bold'
-                }
-            },
-            tooltip: {
-                trigger: 'item',
-                formatter: "{b} : {c}个 ({d}%)"
-            },
-            legend: {
-                orient: 'vertical',
-                top: 'bottom',
-                bottom : 5 ,
-                formatter:  function(name){
-                    var target;
-                    for (var i = 0, l = data.length; i < l; i++) {
-                        if (data[i].name === name) {
-                            target = data[i].value;
-                        }
-
-                    }
-                    return name + ' ' + target + '个';
-                }
-            },
-            series: [
-                {
-                    name:'孕妇建卡',
-                    type:'pie', //环形图的type和饼图相同
-                    radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
-                    center: ['50%', '40%'],
-                    avoidLabelOverlap: false,
-                    color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
-                    hoverAnimation : false,
-                    label: {
-                        normal: {
-                            // 此处重点，设置为显示
-                            show: true,
-                            position: 'center',
-                            formatter: '{b}\n{c}',
-                            align: 'center',
-                            verticalAlign: 'middle',
-                            // 此处重点，字体大小设置为0
-                            textStyle: {
-                                fontSize: '0'
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}个 ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    top: 'bottom',
+                    bottom : 5 ,
+                    formatter:  function(name){
+                        var target;
+                        for (var i = 0, l = data.length; i < l; i++) {
+                            if (data[i].name === name) {
+                                target = data[i].value;
                             }
-                        },
-                        emphasis: {
-                            show: true,
-                            textStyle: {
-                                fontSize: '20',
-                                fontWeight: 'bold'
+
+                        }
+                        return name + ' ' + target + '个';
+                    }
+                },
+                series: [
+                    {
+                        name:'孕妇建卡',
+                        type:'pie', //环形图的type和饼图相同
+                        radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
+                        center: ['50%', '40%'],
+                        avoidLabelOverlap: false,
+                        color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
+                        hoverAnimation : false,
+                        label: {
+                            normal: {
+                                // 此处重点，设置为显示
+                                show: true,
+                                position: 'center',
+                                formatter: '{b}\n{c}',
+                                align: 'center',
+                                verticalAlign: 'middle',
+                                // 此处重点，字体大小设置为0
+                                textStyle: {
+                                    fontSize: '0'
+                                }
                             },
-                            // 同步样式
-                            formatter: function (params) {
-                                return `{tTitle|${params.name}}\n{tSubTitle|${params.value}个}`
-                            },
-                            rich: {
-                                tTitle: {
-                                    fontSize: '22',
-                                    fontWeight: 'bold',
-                                    lineHeight: 40
+                            emphasis: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '15'
                                 },
-                                tSubTitle: {
-                                    fontSize: '25',
-                                    fontWeight: 'bold',
-                                    lineHeight: 30
+                                // 同步样式
+                                formatter: function (params) {
+                                    return `{tTitle|${params.name}}\n{tSubTitle|${params.value}个}`
+                                },
+                                rich: {
+                                    tTitle: {
+                                        fontSize: '20',
+                                        fontWeight: 'bold',
+                                        lineHeight: 40
+                                    },
+                                    tSubTitle: {
+                                        fontSize: '25',
+                                        fontWeight: 'bold',
+                                        lineHeight: 30
+                                    }
                                 }
                             }
-                        }
-                    },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:data
-                }
-            ]
-        };
-        chart.setOption(option);
-        chart.on('mouseover', { seriesName: '孕妇建卡' }, params => {
-            chart.setOption({
-                title: {
-                    show: false
-                }
-            })
-        });
-        chart.on('mouseout', { seriesName: '孕妇建卡' }, params => {
-            chart.setOption({
-                title: {
-                    show: true
-                }
-            })
-        });
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:data
+                    }
+                ]
+            };
+            chart.setOption(option);
+            chart.on('mouseover', { seriesName: '孕妇建卡' }, params => {
+                chart.setOption({
+                    title: {
+                        show: false
+                    }
+                })
+            });
+            chart.on('mouseout', { seriesName: '孕妇建卡' }, params => {
+                chart.setOption({
+                    title: {
+                        show: true
+                    }
+                })
+            });
 
+        });
     }
 
     function generatorYfscChartChart(chart) {

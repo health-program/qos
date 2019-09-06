@@ -25,6 +25,11 @@ public class ChildCareManagementController {
         return "/qos/exhibition/child_care_index";
     }
 
+    @GetMapping("/org/index")
+    public Object processOrgIndex() {
+        return "/qos/exhibition/child_care_org_index";
+    }
+
     @PostMapping("/search/xsrfm")
     @ResponseBody
     public  Object searchXsrfm(AnalysisRequest request) {
@@ -53,6 +58,13 @@ public class ChildCareManagementController {
     @ResponseBody
     public  Object searchYesl(AnalysisRequest request) {
         return CommonResponse.getSuccessResponse(childCareManagementService.getInfantVisionTotal(request.getStartTime(),request.getEndTime()));
+    }
+
+
+    @RequestMapping(value = "/search/org", method = { RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public  Object searchOrg(AnalysisRequest request) {
+        return CommonResponse.getSuccessResponse(childCareManagementService.getChildCareDataByOrg(request.getStartTime(),request.getEndTime()));
     }
 
 }
