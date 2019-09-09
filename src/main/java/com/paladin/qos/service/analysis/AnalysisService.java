@@ -1,12 +1,17 @@
 package com.paladin.qos.service.analysis;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
@@ -20,6 +25,7 @@ import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
 import com.paladin.qos.service.analysis.data.DataResult;
+import com.paladin.qos.service.analysis.data.ValidateResult;
 import com.paladin.qos.service.analysis.data.DataPointUnit;
 
 @Service
@@ -194,6 +200,62 @@ public class AnalysisService {
 	 */
 	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate) {
 		return analysisMapper.countEventNumByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 验证处理的数据
+	 * 
+	 * @param eventId
+	 * @param unitId
+	 * @return
+	 */
+	public ValidateResult validateProcessedData(String eventId, String unitId) {
+		List<Integer> nums = analysisMapper.getSerialNumbers(eventId, unitId);
+		ValidateResult result = new ValidateResult();
+		result.setEventId(eventId);
+		result.setUnitId(unitId);
+
+		if (nums != null && nums.size() > 0) {
+			int size = nums.size();
+			int first = nums.get(0);
+			int last = nums.get(size - 1);
+
+			SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+			Date firstDay;
+			Date lastDay;
+			try {
+				firstDay = format.parse(String.valueOf(first));
+				lastDay = format.parse(String.valueOf(last));
+			} catch (ParseException e) {
+				throw new BusinessException(e);
+			}
+
+			List<Integer> losts = new ArrayList<>();
+
+			HashSet<Integer> set = new HashSet<>();
+			for (Integer num : nums) {
+				set.add(num);
+			}
+
+			Calendar c = Calendar.getInstance();
+			c.setTime(firstDay);
+
+			long lastTime = lastDay.getTime();
+
+			do {
+				c.add(Calendar.DAY_OF_MONTH, 1);
+				int sn = TimeUtil.getSerialNumberByDay(c);
+				if (!set.contains(sn)) {
+					losts.add(sn);
+				}
+			} while (c.getTimeInMillis() > lastTime);
+
+			result.setFirstDay(first);
+			result.setLastDay(last);
+			result.setLostDays(losts);
+		}
+		
+		return result;
 	}
 
 }

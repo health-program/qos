@@ -35,31 +35,16 @@ public class AnalysisController {
 		return "/qos/analysis/index_process";
 	}
 
-	@PostMapping("/process")
-	@ResponseBody
-	public Object process(AnalysisRequest request) {
-
-		List<Unit> units = DataConstantContainer.getUnitList();
-		List<String> unitIds = new ArrayList<>();
-		for (Unit unit : units) {
-			unitIds.add(unit.getId());
-		}
-
-		dataProcessContainer.processData(request.getStartTime(), request.getEndTime(), unitIds, request.getEventId());
-		return CommonResponse.getSuccessResponse();
-	}
-
 	@GetMapping("/data/index")
 	public Object dataIndex() {
 		return "/qos/analysis/index_data";
 	}
 	
-
 	@PostMapping("/data/processed")
 	@ResponseBody
 	public Object getProcessData(AnalysisRequest request) {
 		int dataType = request.getDataType();
-		String eventId = request.getEventId();
+		String eventId = request.getEventIds().get(0);
 		List<String> unitIds = request.getUnitIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
@@ -95,7 +80,7 @@ public class AnalysisController {
 	@RequestMapping(value = "/data/processing", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getAnaysisData(AnalysisRequest request) {
-		String eventId = request.getEventId();
+		String eventId = request.getEventIds().get(0);
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 

@@ -32,10 +32,13 @@ public interface AnalysisMapper {
 
 	List<AnalysisMonth> getAnalysisResultGroupByMonth(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
-	List<AnalysisMonth> getAnalysisResultOfUnitGroupByMonth(@Param("eventId") String eventId, @Param("unitId") String unitId,  @Param("start") int start, @Param("end") int end);
+	List<AnalysisMonth> getAnalysisResultOfUnitGroupByMonth(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("start") int start,
+			@Param("end") int end);
 
-	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId,  @Param("start") int start, @Param("end") int end);
+	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
-	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId,  @Param("start") int start, @Param("end") int end);
+	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+
+	List<Integer> getSerialNumbers(@Param("eventId") String eventId, @Param("unitId") String unitId);
 
 }

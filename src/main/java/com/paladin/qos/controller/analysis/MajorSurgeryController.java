@@ -32,7 +32,6 @@ public class MajorSurgeryController {
 	@RequestMapping(value = "/data/majorSurgery", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getDeathRate(AnalysisRequest request) {
-		String eventId = request.getEventId();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 		List<String> eventIds = new ArrayList<String>();
@@ -42,7 +41,7 @@ public class MajorSurgeryController {
 		eventIds.add("12103");
 		eventIds.add("12104");
 
-		if (startDate == null || eventId == null || eventId.length() == 0) {
+		if (startDate == null) {
 			return CommonResponse.getFailResponse();
 		}
 

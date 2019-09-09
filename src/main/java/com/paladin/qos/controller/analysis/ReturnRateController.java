@@ -32,7 +32,6 @@ public class ReturnRateController {
 	@RequestMapping(value = "/data/returnRate", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getReturnRate(AnalysisRequest request) {
-		String eventId = request.getEventId();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 		List<String> eventIds = new ArrayList<String>();
@@ -56,7 +55,7 @@ public class ReturnRateController {
 		eventIds.add("11117");
 		eventIds.add("11118");
 
-		if (startDate == null || eventId == null || eventId.length() == 0) {
+		if (startDate == null) {
 			return CommonResponse.getFailResponse();
 		}
 

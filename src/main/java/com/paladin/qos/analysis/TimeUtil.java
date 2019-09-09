@@ -77,6 +77,10 @@ public class TimeUtil {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 
+		return getSerialNumberByDay(c);
+	}
+
+	public static int getSerialNumberByDay(Calendar c) {
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);

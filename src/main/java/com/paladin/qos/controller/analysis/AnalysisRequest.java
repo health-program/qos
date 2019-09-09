@@ -8,8 +8,6 @@ public class AnalysisRequest {
 	private Date startTime;
 	private Date endTime;
 	private List<String> unitIds;
-	private String eventId;
-	
 	private List<String> eventIds;
 	
 	private int dataType;
@@ -32,12 +30,6 @@ public class AnalysisRequest {
 	public void setUnitIds(List<String> unitIds) {
 		this.unitIds = unitIds;
 	}
-	public String getEventId() {
-		return eventId;
-	}
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
 	public int getDataType() {
 		return dataType;
 	}
@@ -50,6 +42,5 @@ public class AnalysisRequest {
 	public void setEventIds(List<String> eventIds) {
 		this.eventIds = eventIds;
 	}
-	
 	
 }

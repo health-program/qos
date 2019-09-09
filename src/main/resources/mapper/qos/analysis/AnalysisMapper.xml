@@ -125,5 +125,11 @@
 		GROUP BY unit_id
 	</select>
 	
+	<select id="getSerialNumbers" resultType="Integer">
+		SELECT serial_number
+		FROM data_processed_day
+		WHERE unit_id=#{unitId}
+		AND event_id=#{eventId}
+	</select>
 
 </mapper>

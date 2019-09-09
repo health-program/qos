@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    
+    <section class="content-header">
+        <h1>数据处理异常</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                	<div class="form-group">
+	                    <div class="col-md-12">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>
+	                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+					{ title: "事件", field: "eventId" },		
+					{ title: "医院", field: "unitId" },			
+					{ title: "处理日期", field: "processDay" ,formatter: "date" },					
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/data/process/exception/find/page',
+            searchbar: '#searchbar',
+            exportUrl: '/qos/data/process/exception/export',
+            showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function detail(row) {
+        window.location = '/qos/data/process/exception/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    </script>
+</body>
+
+</html>
