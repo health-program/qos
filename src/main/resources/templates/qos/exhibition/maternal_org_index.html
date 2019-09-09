@@ -86,6 +86,10 @@
                 jks += data.zyjk
             });
         }
+        if (jks === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
         var dataStyle = {
             normal: {
                 label: {show:false},
@@ -156,6 +160,10 @@
                 yffs += data.yffs
             });
         }
+        if (yffs === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
         var dataStyle = {
             normal: {
                 label: {show:false},
@@ -225,6 +233,10 @@
             effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
         });
         let data0= [] ,data1=[],data2=[],orgData=[];
+        if (dataVal.length === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
         if (dataVal) {
             dataVal.forEach(data => {
                 orgData.push(data.agencyName);
@@ -251,6 +263,14 @@
                     }
                 }
             };
+            var isShowScroll = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end;// 显示百分之多少的数据量，默认全部
+            if(orgData.length >10 ){
+                dataZoom_end = 100/(orgData.length/10);
+                isShowScroll = true;
+            }else{
+                dataZoom_end = 100;
+            }
             let  option = {
                 color: ['#3398DB','#6087BF','#6071C6'],
                 tooltip: {
@@ -279,9 +299,9 @@
                 calculable: true,
                 dataZoom: [   {
                     start:0,//默认为0
-                    end: 20,
+                    end: dataZoom_end,
                     type: 'slider',
-                    show: true,
+                    show: isShowScroll,
                     xAxisIndex: [0],
                     handleSize: 8,//滑动条的 左右2个滑动条的大小
                     height: 10,//组件高度
@@ -392,12 +412,37 @@
         });
     }
 
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
     function sumTotalFormatterModal(data) {
         field = this.field;
         var result = data.reduce(function(sum, row) {
             return sum + (row[field]);
         }, 0);
-        return result;
+        return result === 0 ? '0' : result;
     }
     /*]]>*/
 </script>

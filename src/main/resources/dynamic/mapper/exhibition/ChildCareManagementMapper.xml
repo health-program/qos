@@ -19,7 +19,7 @@
 
     <!--儿童建卡人数-->
     <select id="getChildCardTotal" resultType="long">
-        SELECT  COUNT (1) AS total FROM   Etmain  WHERE datediff( month, dJcrq, #{date} ) = 0
+        SELECT  COUNT (1) AS total   FROM  Etmain  WHERE datediff( month, dJcrq, #{date} ) = 0
     </select>
 
     <!--女性新生儿分娩数-->
@@ -48,7 +48,7 @@
     FROM
         KsXtxxtb
     WHERE
-        cJcdwbh != '' AND dindate > #{startTime}
+        cJcdwbh != '' AND dindate >= #{startTime}
         <if test="endDate != null">
             AND  dindate <![CDATA[<= ]]> #{endDate}
         </if>
@@ -69,7 +69,7 @@
         FROM
             etperson
         WHERE
-            cJcdwbh != '' AND ddate > #{startTime}
+            cJcdwbh != '' AND ddate >= #{startTime}
         <if test="endDate != null">
             AND  ddate <![CDATA[<= ]]> #{endDate}
         </if>
@@ -81,7 +81,7 @@
     <select id="getInfantVisionTotal" resultType="com.paladin.qos.dynamic.model.exhibition.InfantVision">
         SELECT
             cJcdwbh AS agencyNo,COUNT ( 1 ) AS infantVisionTotal, cJcdwmc AS agencyName
-        FROM  slsc WHERE  cJcdwbh != '' AND dJcrq > #{startTime}
+        FROM  slsc WHERE  cJcdwbh != '' AND dJcrq >= #{startTime}
         <if test="endDate != null">
             AND  dJcrq <![CDATA[<= ]]> #{endDate}
         </if>
@@ -99,17 +99,17 @@
         COALESCE ( a.cJcdwbh, b.cJcdwbh, c.cJcdwbh ) AS agencyNo,
         ISNULL( a.total, 0 ) AS fss,ISNULL( b.total, 0 ) AS xses,ISNULL( c.total, 0 ) AS jks
         FROM
-        ( SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE cJcdwbh != '' AND dFsrq > #{startTime}
+        ( SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE cJcdwbh != '' AND dFsrq >= #{startTime}
         <if test="endDate != null">
             AND dFsrq <![CDATA[<= ]]> #{endDate}
         </if>
         GROUP BY cJcdwbh,cJcdwmc) a
-        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Yfxseqk WHERE cJcdwbh != '' AND dCsrq > #{startTime}
+        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Yfxseqk WHERE cJcdwbh != '' AND dCsrq >= #{startTime}
         <if test="endDate != null">
             AND dCsrq <![CDATA[<= ]]> #{endDate}
         </if>
         GROUP BY cJcdwbh,cJcdwmc ) b ON a.cJcdwbh = b.cJcdwbh
-        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Etmain WHERE cJcdwbh != '' AND dJcrq > #{startTime}
+        FULL JOIN ( SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM Etmain WHERE cJcdwbh != '' AND dJcrq >= #{startTime}
         <if test="endDate != null">
             AND dJcrq <![CDATA[<= ]]> #{endDate}
         </if>

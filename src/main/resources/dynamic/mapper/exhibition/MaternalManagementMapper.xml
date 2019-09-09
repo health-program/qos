@@ -5,7 +5,7 @@
     <!--男性婚前检查-->
     <select id="getMalePremaritalCheckTotal" resultType="long">
         SELECT COUNT( 1 ) AS total
-        FROM hjM_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate > #{ startTime }
+        FROM hjM_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate >= #{ startTime }
        <if test="endTime != null">
            AND dInDate <![CDATA[<= ]]>#{ endTime }
       </if>
@@ -14,7 +14,7 @@
     <!--女性婚前检查-->
     <select id="getFemalePremaritalCheckTotal" resultType="long">
         SELECT COUNT( 1 ) AS total
-        FROM hjF_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate > #{ startTime }
+        FROM hjF_Hqjc  WHERE ihjyj = 0 AND bvisible = 1  AND dInDate >= #{ startTime }
         <if test="endTime != null">
             AND dInDate <![CDATA[<= ]]>#{ endTime }
         </if>
@@ -31,7 +31,7 @@
         FROM
             hjM_Hqjc
         WHERE
-            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate > #{ startTime }
+            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate >= #{ startTime }
         <if test="endTime != null">
             AND dInDate <![CDATA[<= ]]>#{ endTime }
         </if>
@@ -41,7 +41,7 @@
         FROM
             hjF_Hqjc
         WHERE
-            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate > #{ startTime }
+            ihjyj IN ( 1, 2 ) AND bvisible = 1 AND dInDate >= #{ startTime }
         <if test="endTime != null">
             AND dInDate <![CDATA[<= ]]>#{ endTime }
         </if>
@@ -127,7 +127,7 @@
         FROM
             Yfcz
         WHERE
-            cJcdwbh != '' AND  dCzrq > #{startDate}
+            cJcdwbh != '' AND  dCzrq >= #{startDate}
             <if test="endDate != null">
                 AND  dCzrq <![CDATA[<= ]]> #{endDate}
             </if>
@@ -143,7 +143,7 @@
         FROM
             yffz
         WHERE
-            cJcdwbh != '' AND  dFzrq > #{startDate}
+            cJcdwbh != '' AND  dFzrq >= #{startDate}
             <if test="endDate != null">
                 AND  dFzrq <![CDATA[<= ]]> #{endDate}
             </if>
@@ -158,7 +158,7 @@
     <!--叶酸发放人次数-->
     <select id="getNumberOfFolates" resultType="long">
         SELECT COUNT( 1 ) AS total
-        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        FROM Csqyslqffdjb  WHERE  dDyclfsj >= #{ startTime }
         <if test="endTime != null">
             AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
         </if>
@@ -167,7 +167,7 @@
     <!--叶酸发放瓶数-->
     <select id="getFolicAcidDispensingBottle" resultType="long">
         SELECT  COALESCE (SUM(iDycffsl ),0) AS total
-        FROM Csqyslqffdjb  WHERE  dDyclfsj > #{ startTime }
+        FROM Csqyslqffdjb  WHERE  dDyclfsj >= #{ startTime }
         <if test="endTime != null">
             AND dDyclfsj <![CDATA[<= ]]>#{ endTime }
         </if>
@@ -188,13 +188,13 @@
         SELECT COALESCE ( c.cJcdwmc, d.cJcdwmc, e.cJcdwmc ) AS agencyName,COALESCE ( c.cJcdwbh, d.cJcdwbh, e.cJcdwbh ) AS agencyNo,
         ISNULL( c.total, 0 ) AS zyjk,ISNULL( d.total, 0 ) AS yfjk,ISNULL( e.total, 0 ) AS yffs
         FROM
-        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE cJcdwbh != '' AND dJcrq > #{startDate}
+        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE cJcdwbh != '' AND dJcrq >= #{startDate}
          <if test="endDate != null">
         AND dJcrq <![CDATA[<= ]]> #{endDate}
         </if>
         GROUP BY cJcdwbh,cJcdwmc ) c
         FULL JOIN
-        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE iJcyz <![CDATA[< ]]> 13  AND  cJcdwbh != '' AND dJcrq > #{startDate}
+        (SELECT cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM YfMain WHERE iJcyz <![CDATA[< ]]> 13  AND  cJcdwbh != '' AND dJcrq >= #{startDate}
         <if test="endDate != null">
             AND dJcrq <![CDATA[<= ]]> #{endDate}
         </if>
@@ -202,13 +202,13 @@
         ON c.cJcdwbh = d.cJcdwbh
         FULL JOIN
         (SELECT ISNULL( a.cJcdwmc, b.cJcdwmc ) AS cJcdwmc,ISNULL( a.cJcdwbh, b.cJcdwbh ) AS cJcdwbh, ISNULL(a.total, 0) + ISNULL(b.total, 0) AS total FROM
-        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfchfs WHERE  cJcdwbh != '' AND dFsrq > #{startDate}
+        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfchfs WHERE  cJcdwbh != '' AND dFsrq >= #{startDate}
         <if test="endDate != null">
             AND dFsrq <![CDATA[<= ]]> #{endDate}
         </if>
         GROUP BY cJcdwbh,cJcdwmc ) a
         FULL JOIN
-        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE  cJcdwbh != '' AND dFsrq > #{startDate}
+        (SELECT  cJcdwbh,COUNT ( 1 ) AS total,cJcdwmc FROM yfxsefs WHERE  cJcdwbh != '' AND dFsrq >= #{startDate}
         <if test="endDate != null">
             AND dFsrq <![CDATA[<= ]]> #{endDate}
         </if>

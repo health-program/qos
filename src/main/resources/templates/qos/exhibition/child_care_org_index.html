@@ -86,6 +86,10 @@
                 jks += data.jks
             });
         }
+        if (jks === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
         var dataStyle = {
             normal: {
                 label: {show:false},
@@ -151,24 +155,28 @@
 
     function generatorXseChart(chart) {
         let xsr = 0;
-        if (dataVal) {
-            dataVal.forEach(data => {
-                xsr += data.xses
-            });
+          if (dataVal) {
+              dataVal.forEach(data => {
+                  xsr += data.xses
+              });
+          }
+        if (xsr === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
         }
         var dataStyle = {
             normal: {
-                label: {show:false},
-                labelLine: {show:false}
+                label: {show: false},
+                labelLine: {show: false}
             }
         };
         var placeHolderStyle = {
-            normal : {
+            normal: {
                 color: 'rgba(0,0,0,0)',
-                label: {show:false},
-                labelLine: {show:false}
+                label: {show: false},
+                labelLine: {show: false}
             },
-            emphasis : {
+            emphasis: {
                 color: 'rgba(0,0,0,0)'
             }
         };
@@ -178,45 +186,45 @@
                 subtext: xsr,
                 x: 'center',
                 y: '38%',
-                textStyle : {
-                    color : '#44B7D3',
-                    fontFamily : '微软雅黑',
-                    fontSize : 30,
-                    fontWeight : 'bolder'
+                textStyle: {
+                    color: '#44B7D3',
+                    fontFamily: '微软雅黑',
+                    fontSize: 30,
+                    fontWeight: 'bolder'
                 },
                 subtextStyle: {
-                    color : '#44B7D3',
+                    color: '#44B7D3',
                     fontSize: 35,
                     lineHeight: 30,
                 }
             },
-            tooltip : {
+            tooltip: {
                 show: false,
                 formatter: "{b} : {c}位 ({d}%)"
             },
-            series : [
+            series: [
                 {
-                    name:'新生儿数',
-                    type:'pie',
-                    color: [ '#44B7D3'], //环形图每块的颜色
-                    clockWise:false,
-                    radius : [100, 140],
-                    itemStyle : dataStyle,
-                    data:[
+                    name: '新生儿数',
+                    type: 'pie',
+                    color: ['#44B7D3'], //环形图每块的颜色
+                    clockWise: false,
+                    radius: [100, 140],
+                    itemStyle: dataStyle,
+                    data: [
                         {
-                            value:xsr,
-                            name:'新生儿数'
+                            value: xsr,
+                            name: '新生儿数'
                         },
                         {
-                            value:xsr * 0.2,
-                            name:'invisible',
-                            itemStyle : placeHolderStyle
+                            value: xsr * 0.2,
+                            name: 'invisible',
+                            itemStyle: placeHolderStyle
                         }
                     ]
                 }
             ]
         };
-        chart.setOption(option,true);
+        chart.setOption(option, true);
     }
     function generatorOrgChart(chart) {
         chart.showLoading({
@@ -225,6 +233,10 @@
             effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
         });
         let data0= [] ,data1=[],data2=[],orgData=[];
+        if (dataVal.length === 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
         if (dataVal) {
             dataVal.forEach(data => {
                 orgData.push(data.agencyName);
@@ -234,6 +246,14 @@
             });
 
             chart.hideLoading();
+            var isShowScroll = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end;// 显示百分之多少的数据量，默认全部
+            if(orgData.length >10 ){
+                dataZoom_end = 100/(orgData.length/10);
+                isShowScroll = true;
+            }else{
+                dataZoom_end = 100;
+            }
             var labelOption = {
                 normal: {
                     show: true,
@@ -259,7 +279,6 @@
                         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     },
                     formatter: function (params) {
-                        console.log(params)
                         return params[0].name + '<br/>'
                             + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
                             + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
@@ -279,9 +298,9 @@
                 calculable: true,
                 dataZoom: [   {
                     start:0,//默认为0
-                    end: 18,
+                    end: dataZoom_end,
                     type: 'slider',
-                    show: true,
+                    show: isShowScroll,
                     xAxisIndex: [0],
                     handleSize: 8,//滑动条的 左右2个滑动条的大小
                     height: 10,//组件高度
@@ -392,12 +411,37 @@
         });
     }
 
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
     function sumTotalFormatterModal(data) {
         field = this.field;
         var result = data.reduce(function(sum, row) {
             return sum + (row[field]);
         }, 0);
-        return result;
+        return result === 0 ? '0' : result;
     }
     /*]]>*/
 </script>

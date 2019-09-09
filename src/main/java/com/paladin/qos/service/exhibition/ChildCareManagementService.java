@@ -1,6 +1,7 @@
 package com.paladin.qos.service.exhibition;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.ChildCareManagementMapper;
@@ -243,9 +244,13 @@ public class ChildCareManagementService extends BaseExhibitionDataAcquire {
      * @return  List<DataDemonstrationVO>
      */
     public List<ChildCareOrgData> getChildCareDataByOrg(Date startDate, Date endDate) {
+        Date date = checkStartTime(startDate);
+        if (endDate != null &&  date.after(endDate)) {
+            throw new BusinessException("请选择正确的日期区间");
+        }
         ChildCareManagementMapper mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return mapper.getChildCareDataByOrg(checkStartTime(startDate),endDate);
+        return mapper.getChildCareDataByOrg(date,endDate);
     }
 
 

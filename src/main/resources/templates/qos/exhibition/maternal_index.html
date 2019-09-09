@@ -256,6 +256,7 @@
         }
         initMaternalManagementData();
         generatorHqjcChart(hqjcChart);
+        generatorYfjkChartChart(yfjkChart);
         generatorYfscChartChart(yfscChart);
         generatorFnscChartChart(fnscChart);
         ycfTable.refresh();
@@ -412,6 +413,7 @@
                     orient: 'vertical',
                     top: 'bottom',
                     bottom : 5 ,
+                    selectedMode: false,
                     formatter:  function(name){
                         var target;
                         for (var i = 0, l = data.length; i < l; i++) {
@@ -722,7 +724,7 @@
         var result = data.reduce(function(sum, row) {
             return sum + (row[field]);
         }, 0);
-        return result;
+        return result === 0 ? '0' : result;
     }
 
     function getYearMonthData() {

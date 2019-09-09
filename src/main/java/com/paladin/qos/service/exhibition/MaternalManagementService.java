@@ -2,6 +2,7 @@ package com.paladin.qos.service.exhibition;
 
 import com.paladin.common.util.DateFormatUtil;
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper;
@@ -395,9 +396,13 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
     }
 
     public List<MaternalOrgData> getMaternalDataByOrg(Date startDate, Date endDate) {
+        Date date = checkStartTime(startDate);
+        if (endDate != null &&  date.after(endDate)) {
+            throw new BusinessException("请选择正确的日期区间");
+        }
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
         MaternalManagementMapper mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
-        return mapper.getMaternalDataByOrg(checkStartTime(startDate), endDate);
+        return mapper.getMaternalDataByOrg(date, endDate);
     }
 
 
