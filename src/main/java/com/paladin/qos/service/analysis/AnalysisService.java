@@ -248,7 +248,7 @@ public class AnalysisService {
 				if (!set.contains(sn)) {
 					losts.add(sn);
 				}
-			} while (c.getTimeInMillis() > lastTime);
+			} while (c.getTimeInMillis() < lastTime);
 
 			result.setFirstDay(first);
 			result.setLastDay(last);

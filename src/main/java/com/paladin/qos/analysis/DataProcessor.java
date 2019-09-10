@@ -30,9 +30,19 @@ public abstract class DataProcessor {
 	 * 
 	 * @return
 	 */
-//	public int getTimeGranularity() {
-//		return TIME_GRANULARITY_DAY;
-//	}
+	// public int getTimeGranularity() {
+	// return TIME_GRANULARITY_DAY;
+	// }
+
+	/**
+	 * 获取调度计划日期，非执行该方法的日期，而是生成哪一天的数据，一般或昨天
+	 * 
+	 * @return
+	 */
+	public Date getScheduleDate() {
+		Date yesterday = new Date(System.currentTimeMillis() - TimeUtil.MILLIS_IN_DAY);
+		return TimeUtil.toDayTime(yesterday);
+	}
 
 	/**
 	 * 处理数据，开始结束时间应当已经处理过（按照timeType），例如开始时间2019-8-13 00:00:00，结束时间为2019-8-14
@@ -44,7 +54,7 @@ public abstract class DataProcessor {
 	 * @param unitId
 	 * @return
 	 */
-	public RateMetadata processByDay(int timeType, Date startTime, Date endTime, String unitId) {
+	public RateMetadata processByDay(Date startTime, Date endTime, String unitId) {
 
 		Calendar c = Calendar.getInstance();
 		c.setTime(startTime);
@@ -62,7 +72,7 @@ public abstract class DataProcessor {
 		metadata.setEventNum(eventNum);
 		metadata.setTotalNum(totalNum);
 		metadata.setUnitValue(unitId);
-		metadata.setTimeType(timeType);
+		metadata.setTimeType(DataProcessor.TIME_GRANULARITY_DAY);
 		metadata.setYear(year);
 		metadata.setMonth(month);
 		metadata.setDay(day);

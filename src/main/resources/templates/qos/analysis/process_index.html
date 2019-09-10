@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+        <h1>数据处理管理</h1>
+    </section>
+    <section class="content">
+        <div id="processForm">
+        </div>
+        <div class="box box-widget">
+            <div class="box-header no-border">
+                <h3 class="box-title">数据处理进度</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" onclick="getProgess()" class="btn btn-box-tool"><i class="fa fa-refresh"></i></button>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="progress-group">
+                    <span id="progressText" class="progress-text"></span>
+                    <span id="progressNumber" class="progress-number"></span>
+                    <div class="progress">
+                        <div id="progressBar" class="progress-bar progress-bar-aqua" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="processValidate">
+        </div>
+        <div class="box box-widget">
+            <div class="box-header no-border">
+                <h3 class="box-title">数据校验结果</h3>
+            </div>
+            <div class="box-body">
+                <dl class="dl-horizontal">
+                </dl>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        submitBtnName: '开始处理',
+        name: "数据处理",
+        url: "/qos/analysis/data/process",
+        columns: [
+            { title: "事件", name: "eventIds", inputType: "SELECT", multiple: true, enum: "data-event-type", required: "required" },
+            { title: "医院", name: "unitIds", inputType: "SELECT", multiple: true, enum: "data-unit-type", required: "required" },
+            { title: "开始时间", name: "startTime", inputType: "DATE", required: "required" },
+            { title: "结束时间", name: "endTime", inputType: "DATE" }
+        ]
+    }
+
+    var options_validate = {
+        id: "validate",
+        cancelBtn: false,
+        submitBtnName: '数据校验',
+        name: "数据校验",
+        url: "/qos/analysis/data/validate",
+        columns: [
+            { title: "事件", name: "eventId", inputType: "SELECT", enum: "data-event-type", required: "required" },
+            { title: "医院", name: "unitId", inputType: "SELECT", enum: "data-unit-type", required: "required" }
+        ]
+    }
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $("#processForm").html(html);
+        $.initComponment($("#processForm"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern: "edit",
+            successCallback: function() {
+                $.successAlert("数据开始处理", function() {
+                    getProgess();
+                });
+            }
+        });
+        model.setData(null);
+
+
+        html = generateEditHtml(options_validate);
+        $("#processValidate").html(html);
+        $.initComponment($("#processValidate"));
+
+        var validate = new tonto.Model("validate", options_validate.columns, {
+            pattern: "edit",
+            successCallback: function(result) {
+                $.successAlert("数据校验结束", function() {
+                    viewValidate(result);
+                });
+            }
+        });
+        validate.setData(null);
+    });
+
+    function getProgess() {
+        $.getAjax("/qos/analysis/data/process/status", function(result) {
+            var status = result.status,
+                progressBar = $("#progressBar"),
+                progressNumber = $("#progressNumber"),
+                progressText = $("#progressText"),
+                c = result.current,
+                t = result.total;
+
+            if (status == -1) {
+                progressText.html("数据<b>空闲</b>");
+                progressBar.css("width", "0%");
+                progressNumber.html("");
+            } else if (status == 1) {
+                if (c && t) {
+                    var r = c / t;
+                    r = r.toFixed(2);
+                    r *= 100;
+                    progressText.html("数据<b>处理中</b>");
+                    progressBar.css("width", r + "%");
+                    progressNumber.html("<b>" + c + "</b>/" + t);
+                } else {
+                    progressText.html("数据<b>处理中</b>");
+                    progressBar.css("width", "0");
+                    progressNumber.html("<b>" + c + "</b>/" + t);
+                }
+
+                setTimeout(getProgess, 500);
+            } else if (status == 2) {
+                progressText.html("数据<b>处理完成</b>");
+                progressBar.css("width", "100%");
+                progressNumber.html("<b>" + c + "</b>/" + t);
+            }
+        })
+    }
+
+
+    function viewValidate(result) {
+
+        var html = '<dt>数据时间跨度</dt>';
+        html += '<dd>' + result.firstDay + '-' + result.lastDay + '</dd>';
+        html += '<dt>数据缺失时间</dt><dd>';
+
+        var losts = result.lostDays;
+        if (losts) {
+            for (var i = 0; i < losts.length; i++) {
+                html += losts[i] + ',';
+            }
+        }
+
+        html += '</dd>';
+
+        $(".dl-horizontal").html(html);
+
+        //html += '<div class="col-sm-3"><a href="javascript:repair()"><i class="fa fa-wrench"></i>&nbsp;'++'</a></div>'
+    }
+
+    function repair() {
+        $.successAlert("修复功能还未开发");
+    }
+    </script>
+</body>
+
+</html>

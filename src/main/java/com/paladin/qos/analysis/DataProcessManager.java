@@ -34,10 +34,6 @@ public class DataProcessManager {
 	 * 处理计划，处理前一天的数据
 	 */
 	public void processSchedule() {
-		Date yesterday = new Date(System.currentTimeMillis() - TimeUtil.MILLIS_IN_DAY);
-		Date start = TimeUtil.toDayTime(yesterday);
-		Date end = new Date(start.getTime() + TimeUtil.MILLIS_IN_DAY);
-
 		List<Event> events = DataConstantContainer.getEventList();
 		List<Unit> units = DataConstantContainer.getUnitList();
 
@@ -48,6 +44,9 @@ public class DataProcessManager {
 			if (dataProcessor == null) {
 				logger.error("处理数据失败！未找到事件[" + eventId + ":" + event.getName() + "]对应的数据处理器");
 			} else {
+				Date start = dataProcessor.getScheduleDate();
+				Date end = new Date(start.getTime() + TimeUtil.MILLIS_IN_DAY);
+
 				for (Unit unit : units) {
 					String unitId = unit.getId();
 					processDataForOneDay(start, end, unitId, dataProcessor);
@@ -64,64 +63,16 @@ public class DataProcessManager {
 	 * @param unitIds
 	 * @param eventId
 	 */
-	public void processData(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
-
-		if (startTime == null || endTime == null || unitIds == null || unitIds.size() == 0 || eventIds == null || eventIds.size() == 0) {
-			return;
-		}
-
-		// 检查医院与事件ID正确性
-		List<String> checkedUnitIds = new ArrayList<>(unitIds.size());
-		List<String> checkedEventIds = new ArrayList<>(eventIds.size());
-
-		for (String unitId : unitIds) {
-			if (DataConstantContainer.getUnit(unitId) != null) {
-				checkedUnitIds.add(unitId);
-			}
-		}
-
-		for (String eventId : eventIds) {
-			if (DataConstantContainer.getEvent(eventId) != null) {
-				checkedEventIds.add(eventId);
-			}
-		}
-		
-		if(checkedUnitIds.size() == 0 || checkedEventIds.size() == 0) {
-			return;
-		}
-
-		startTime = TimeUtil.toDayTime(startTime);
-		endTime = TimeUtil.toDayTime(endTime);
-
-		long startMillis = startTime.getTime();
-		long endMillis = endTime.getTime();
-
-		if (startMillis > endMillis) {
-			return;
-		}
-
-		while (startMillis <= endMillis) {
-			Date start = new Date(startMillis);
-			startMillis += TimeUtil.MILLIS_IN_DAY;
-			Date end = new Date(startMillis);
-
-			for (String eventId : checkedEventIds) {
-				DataProcessor processor = dataProcessContainer.getDataProcessor(eventId);
-				if (processor == null) {
-					logger.error("处理数据失败！未找到事件[" + eventId + "]对应的数据处理器");
-				} else {
-					for (String unitId : checkedUnitIds) {
-						processDataForOneDay(start, end, unitId, processor);
-					}
-				}
-			}
-		}
+	public Processor processData(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
+		Processor processor = new Processor();
+		processor.process(startTime, endTime, unitIds, eventIds);
+		return processor;
 	}
 
 	// 处理一天的数据
 	private void processDataForOneDay(Date start, Date end, String unitId, DataProcessor processor) {
 		try {
-			RateMetadata rateMetadata = processor.processByDay(DataProcessor.TIME_GRANULARITY_DAY, start, end, unitId);
+			RateMetadata rateMetadata = processor.processByDay(start, end, unitId);
 			if (rateMetadata != null) {
 				saveProcessedDataForDay(rateMetadata);
 			}
@@ -204,4 +155,174 @@ public class DataProcessManager {
 		return (int) (r / 10);
 	}
 
+	/**
+	 * 用于记录处理过程
+	 * @author TontoZhou
+	 * @since 2019年9月10日
+	 */
+	public class Processor {
+
+		private int current = 0;
+		private int total = 0;
+		private boolean finished = false;
+
+		private void process(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
+
+			if (startTime == null || endTime == null || unitIds == null || unitIds.size() == 0 || eventIds == null || eventIds.size() == 0) {
+				return;
+			}
+
+			// 检查医院与事件ID正确性
+			List<String> checkedUnitIds = new ArrayList<>(unitIds.size());
+			List<String> checkedEventIds = new ArrayList<>(eventIds.size());
+
+			for (String unitId : unitIds) {
+				if (DataConstantContainer.getUnit(unitId) != null) {
+					checkedUnitIds.add(unitId);
+				}
+			}
+
+			for (String eventId : eventIds) {
+				if (DataConstantContainer.getEvent(eventId) != null) {
+					checkedEventIds.add(eventId);
+				}
+			}
+
+			if (checkedUnitIds.size() == 0 || checkedEventIds.size() == 0) {
+				return;
+			}
+
+			startTime = TimeUtil.toDayTime(startTime);
+			endTime = TimeUtil.toDayTime(endTime);
+
+			long startMillis = startTime.getTime();
+			long endMillis = endTime.getTime();
+
+			if (startMillis > endMillis) {
+				return;
+			}
+
+			total = (int) ((endMillis - startMillis) / TimeUtil.MILLIS_IN_DAY + 1);
+			total = total * checkedEventIds.size() * checkedUnitIds.size();
+
+			while (startMillis <= endMillis) {
+				Date start = new Date(startMillis);
+				startMillis += TimeUtil.MILLIS_IN_DAY;
+				Date end = new Date(startMillis);
+
+				for (String eventId : checkedEventIds) {
+					DataProcessor processor = dataProcessContainer.getDataProcessor(eventId);
+					if (processor == null) {
+						logger.error("处理数据失败！未找到事件[" + eventId + "]对应的数据处理器");
+					} else {
+						for (String unitId : checkedUnitIds) {
+							processDataForOneDay(start, end, unitId, processor);
+							current++;
+						}
+					}
+				}
+			}
+
+			finished = true;
+		}
+
+		public int getCurrent() {
+			return current;
+		}
+
+		public int getTotal() {
+			return total;
+		}
+
+		public boolean isFinished() {
+			return finished;
+		}
+	}
+
+	// ---------------------------------------------------------------------
+	//
+	// 由于处理数据可能时间较长，所以使用线程处理，并轮休查询进度
+	//
+	// ---------------------------------------------------------------------
+
+	private ProcessThread processThread;
+
+	public synchronized boolean processDataByThread(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
+		if (processThread != null && processThread.isAlive()) {
+			return false;
+		} else {
+			processThread = new ProcessThread(startTime, endTime, unitIds, eventIds);
+			processThread.start();
+			return true;
+		}
+	}
+
+	public ProcessStatus getProcessDataStatus() {
+		if (processThread.processor == null) {
+			return new ProcessStatus(0, 0, ProcessStatus.STATUS_NON);
+		} else {
+			Processor p = processThread.processor;
+			return new ProcessStatus(p.total, p.current, processThread.finished ? ProcessStatus.STATUS_PROCESSED : ProcessStatus.STATUS_PROCESSING);
+		}
+	}
+
+	public static class ProcessStatus {
+
+		public final static int STATUS_NON = -1;
+		public final static int STATUS_PROCESSING = 1;
+		public final static int STATUS_PROCESSED = 2;
+
+		private int total;
+		private int current;
+		private int status;
+
+		public ProcessStatus(int total, int current, int status) {
+			this.total = total;
+			this.current = current;
+			this.status = status;
+		}
+
+		public int getTotal() {
+			return total;
+		}
+
+		public int getCurrent() {
+			return current;
+		}
+
+		public int getStatus() {
+			return status;
+		}
+
+	}
+
+	private class ProcessThread extends Thread {
+
+		private Date startTime;
+		private Date endTime;
+		private List<String> unitIds;
+		private List<String> eventIds;
+
+		private Processor processor;
+		@SuppressWarnings("unused")
+		private boolean finished;
+
+		private ProcessThread(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
+			this.startTime = startTime;
+			this.endTime = endTime;
+			this.unitIds = unitIds;
+			this.eventIds = eventIds;
+			this.finished = false;
+			this.processor = new Processor();
+		}
+
+		public void run() {
+			try {
+				processor.process(startTime, endTime, unitIds, eventIds);
+			} finally {
+				finished = true;
+			}
+		}
+	}
+	
 }

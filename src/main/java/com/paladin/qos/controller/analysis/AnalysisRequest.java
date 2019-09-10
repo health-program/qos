@@ -7,6 +7,9 @@ public class AnalysisRequest {
 	
 	private Date startTime;
 	private Date endTime;
+	private String unitId;
+	private String eventId;
+	
 	private List<String> unitIds;
 	private List<String> eventIds;
 	
@@ -41,6 +44,18 @@ public class AnalysisRequest {
 	}
 	public void setEventIds(List<String> eventIds) {
 		this.eventIds = eventIds;
+	}
+	public String getUnitId() {
+		return unitId;
+	}
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
+	}
+	public String getEventId() {
+		return eventId;
+	}
+	public void setEventId(String eventId) {
+		this.eventId = eventId;
 	}
 	
 }
