@@ -24,4 +24,17 @@ public interface FamilyPlanningManagementMapper {
 
     long getIntrauterineDeviceRemovalTotal(@Param("date") Date date);
 
+    long getCondomDistributionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getBirthControlPillsNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getMedicalAbortionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNegativePressureSuctionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getIntrauterineDevicePlacementNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getIntrauterineDeviceRemovalNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+
 }
