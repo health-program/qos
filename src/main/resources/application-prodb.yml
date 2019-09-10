@@ -1,0 +1,14 @@
+paladin:
+  dynamic-datasource-enabled: 'true'
+  dynamic:
+    mybatis:
+      mapper-location: classpath:dynamic/mapper/**/*.xml
+      type-aliases-package: com.paladin.qos.dynamic.model
+    source[0]:
+      name: fuyou
+      url: jdbc:sqlserver://10.1.1.36:1044;database=wcdbsz
+      username: jswj
+      password: jswj2019
+
+      
+  

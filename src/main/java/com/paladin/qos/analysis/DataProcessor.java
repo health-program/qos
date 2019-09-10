@@ -31,7 +31,7 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	// public int getTimeGranularity() {
-	// return TIME_GRANULARITY_DAY;
+	// 		return TIME_GRANULARITY_DAY;
 	// }
 
 	/**

@@ -5,6 +5,7 @@ import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.FamilyPlanningManagementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -14,27 +15,36 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 15:29
  */
+@Component
 public class MedicalAbortionTotal extends DataProcessor {
 
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13101";
+	public static final String EVENT_ID = "13101";
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        FamilyPlanningManagementMapper mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return  mapper.getMedicalAbortionNumber(startTime, endTime, unitId);
-    }
+	private FamilyPlanningManagementMapper mapper;
 
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	public FamilyPlanningManagementMapper getMapper() {
+		if (mapper == null) {
+			mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
+		}
+		return mapper;
+	}
+
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+		return getMapper().getMedicalAbortionNumber(startTime, endTime, unitId);
+	}
+
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }
