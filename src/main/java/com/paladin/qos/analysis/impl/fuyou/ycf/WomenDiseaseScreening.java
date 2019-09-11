@@ -15,7 +15,6 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 11:10
  */
-
 @Component
 public class WomenDiseaseScreening extends FuyouDataProcessor {
     @Autowired

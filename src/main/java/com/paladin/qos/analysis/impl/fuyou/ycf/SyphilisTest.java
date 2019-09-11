@@ -15,7 +15,6 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 11:02
  */
-
 @Component
 public class SyphilisTest extends FuyouDataProcessor {
     @Autowired
