@@ -14,6 +14,9 @@ public class DataUnitVO {
 	// 妇幼编码
 	private String fuyouCode;
 
+	// 工位编码
+	private String gongweiCode;
+
 	// 父级
 	private String parentId;
 
@@ -25,6 +28,9 @@ public class DataUnitVO {
 
 	// 床位数量
 	private Integer bedNumber;
+
+	// 数据库CODE
+	private String dbCode;
 
 	public Integer getBedNumber() {
 		return bedNumber;
@@ -88,6 +94,22 @@ public class DataUnitVO {
 
 	public void setOrderNum(Integer orderNum) {
 		this.orderNum = orderNum;
+	}
+
+	public String getDbCode() {
+		return dbCode;
+	}
+
+	public void setDbCode(String dbCode) {
+		this.dbCode = dbCode;
+	}
+
+	public String getGongweiCode() {
+		return gongweiCode;
+	}
+
+	public void setGongweiCode(String gongweiCode) {
+		this.gongweiCode = gongweiCode;
 	}
 
 }

@@ -24,6 +24,9 @@ public class DataUnit {
 	// 妇幼编码
 	private String fuyouCode;
 	
+	// 工位编码
+	private String gongweiCode;
+	
 	// 父级
 	private String parentId;
 	
@@ -32,6 +35,9 @@ public class DataUnit {
 	
 	// 排序号
 	private Integer orderNum;
+	
+	// 数据库CODE
+	private String dbCode;
 
 	//床位数量
 	private Integer bedNumber;
@@ -98,6 +104,22 @@ public class DataUnit {
 
 	public void setOrderNum(Integer orderNum) {
 		this.orderNum = orderNum;
+	}
+
+	public String getDbCode() {
+		return dbCode;
+	}
+
+	public void setDbCode(String dbCode) {
+		this.dbCode = dbCode;
+	}
+
+	public String getGongweiCode() {
+		return gongweiCode;
+	}
+
+	public void setGongweiCode(String gongweiCode) {
+		this.gongweiCode = gongweiCode;
 	}
 
 }
