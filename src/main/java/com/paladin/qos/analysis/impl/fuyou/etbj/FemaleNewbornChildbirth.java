@@ -15,7 +15,6 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 19:38
  */
-
 @Component
 public class FemaleNewbornChildbirth extends FuyouDataProcessor {
     @Autowired

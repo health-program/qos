@@ -15,7 +15,6 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 19:42
  */
-
 @Component
 public class NeonatalBirthDefects extends FuyouDataProcessor {
     @Autowired
