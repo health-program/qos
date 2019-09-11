@@ -68,7 +68,6 @@
 		GROUP BY `year`, `month`, `week_month`
 	</select>
 	
-	
 	<select id="getAnalysisResultGroupByUnit" resultType="com.paladin.qos.service.analysis.data.AnalysisUnit">
 		SELECT unit_id AS unitId,
 	       SUM(event_num) AS eventNum,
@@ -77,6 +76,9 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		<if test="unitType != 0">
+		  AND unit_type=#{unitType}
+        </if>
 		GROUP BY `unit_id`
 	</select>
 	
@@ -89,6 +91,9 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		<if test="unitType != 0">
+		  AND unit_type=#{unitType}
+        </if>
 		GROUP BY `year`, `month`
 	</select>
 	
@@ -112,6 +117,9 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
 		GROUP BY unit_id
 	</select>
 	
@@ -122,6 +130,9 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		<if test="unitType != 0">
+		  AND unit_type=#{unitType}
+        </if>
 		GROUP BY unit_id
 	</select>
 	

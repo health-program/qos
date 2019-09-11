@@ -38,6 +38,9 @@ public class DataProcessedDay {
 	
 	// 机构单位ID
 	private String unitId;
+	
+	// 机构类型
+	private Integer unitType;
 
 	// 样本总数
 	private Long totalNum;
@@ -142,6 +145,14 @@ public class DataProcessedDay {
 
 	public void setSerialNumber(Integer serialNumber) {
 		this.serialNumber = serialNumber;
+	}
+
+	public Integer getUnitType() {
+		return unitType;
+	}
+
+	public void setUnitType(Integer unitType) {
+		this.unitType = unitType;
 	}
 
 

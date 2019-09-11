@@ -56,6 +56,13 @@ public class AnalysisController {
 		}
 	}
 
+	@PostMapping("/data/process/schedule")
+	@ResponseBody
+	public Object processDataSchedule() {
+		dataProcessManager.processSchedule();
+		return CommonResponse.getSuccessResponse();
+	}
+
 	@GetMapping("/data/process/status")
 	@ResponseBody
 	public Object getProcessDataStatus() {
@@ -88,7 +95,6 @@ public class AnalysisController {
 	public Object getProcessedDataByInstalments(AnalysisRequest request) {
 		int dataType = request.getDataType();
 		String eventId = request.getEventId();
-		List<String> unitIds = request.getUnitIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
@@ -104,15 +110,11 @@ public class AnalysisController {
 		DataResult result = null;
 
 		if (dataType == AnalysisService.DATA_TYPE_DAY) {
-			result = analysisService.getDataOfDay(eventId, unitIds, startDate, endDate);
+			result = analysisService.getDataSetOfDay(eventId, startDate, endDate);
 		} else if (dataType == AnalysisService.DATA_TYPE_MONTH) {
-			result = analysisService.getDataOfMonth(eventId, unitIds, startDate, endDate);
+			result = analysisService.getDataSetOfMonth(eventId, startDate, endDate);
 		} else if (dataType == AnalysisService.DATA_TYPE_YEAR) {
-			result = analysisService.getDataOfYear(eventId, unitIds, TimeUtil.getYear(startDate), TimeUtil.getYear(endDate));
-		} else if (dataType == AnalysisService.DATA_TYPE_WEEK_MONTH) {
-			result = analysisService.getDataOfWeekYear(eventId, unitIds, TimeUtil.getYear(startDate), TimeUtil.getYear(endDate));
-		} else if (dataType == AnalysisService.DATA_TYPE_WEEK_YEAR) {
-			result = analysisService.getDataOfWeekMonth(eventId, unitIds, startDate, endDate);
+			result = analysisService.getDataSetOfYear(eventId, TimeUtil.getYear(startDate), TimeUtil.getYear(endDate));
 		} else {
 			return CommonResponse.getFailResponse();
 		}

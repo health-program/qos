@@ -28,16 +28,20 @@ public interface AnalysisMapper {
 	List<DataPointWeekMonth> getDataPointOfWeekMonth(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("start") int start,
 			@Param("end") int end);
 
-	List<AnalysisUnit> getAnalysisResultGroupByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+	List<AnalysisUnit> getAnalysisResultGroupByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end);
 
-	List<AnalysisMonth> getAnalysisResultGroupByMonth(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+	List<AnalysisMonth> getAnalysisResultGroupByMonth(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end);
 
 	List<AnalysisMonth> getAnalysisResultOfUnitGroupByMonth(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("start") int start,
 			@Param("end") int end);
 
-	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end);
 
-	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end);
 
 	List<Integer> getSerialNumbers(@Param("eventId") String eventId, @Param("unitId") String unitId);
 

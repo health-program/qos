@@ -5,6 +5,7 @@ import com.paladin.qos.analysis.impl.fuyou.FuyouDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -14,6 +15,7 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 10:50
  */
+@Component
 public class PrepregnancyCheck extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;
