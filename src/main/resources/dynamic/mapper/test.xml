@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.DisplayMapper" >
+	
+	<!-- 门诊人次数 -->
+	<select id="getOutpatientNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as outpatientNumber from phis_webhis.V_OPR_REGISTER where REGLEVLCODE <![CDATA[!=]]> '5'
+		group by orgcode
+	</select>
+	
+	<!-- 急诊人次数 -->
+	<select id="getEmergencyNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as emergencyNumber from phis_webhis.V_OPR_REGISTER where REGLEVLCODE = '5'
+		group by orgcode
+	</select>
+	
+	<!-- 门急诊总人数 -->
+	<select id="getPatientsNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as patientsNumber from phis_webhis.V_OPR_REGISTER where REGSTATUS = '0'
+		group by orgcode
+	</select>
+	
+	<!-- 处方数量 -->
+	<select id="getPrescriptionNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as prescriptionNumber from phis_webhis.V_OPM_RECIPE_INFO where PRESSTATUS = '2' and CHARSTATUS = '2'
+		group by orgcode
+	</select>
+	
+	<!-- 处方总额 -->
+	<select id="getPrescriptionMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,sum(TOTCOST) as prescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO where PRESSTATUS = '2' and CHARSTATUS = '2'
+		group by orgcode
+	</select>
+	
+	<!-- 最大处方金额 -->
+	<select id="getMaxPrescriptionMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,MAX(TOTCOST) as maxPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO where PRESSTATUS = '2' and CHARSTATUS = '2'
+		group by orgcode
+	</select>
+	
+	<!-- 最小处方金额 -->
+	<select id="getMinPrescriptionMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,MIN(TOTCOST) a minPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO where PRESSTATUS = '2' and CHARSTATUS = '2'
+		group by orgcode
+	</select>
+	
+	<!-- 平均处方金额 -->
+	<select id="getAvgPrescriptionMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,round(AVG(TOTCOST),2) as avgPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO where PRESSTATUS = '2' and CHARSTATUS = '2'
+		group by orgcode
+	</select>
+	
+	<!-- 医疗收入 -->
+	<select id="getMedicalMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,SUM(TOTCOST) as medicalMoney from phis_webhis.V_OPB_FEEDETAIL where ITEMSTATUS = '0' and ISDRUG = '0'
+	</select>
+	
+	<!-- 药品收入 -->
+	<select id="getDrugMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,SUM(TOTCOST) as drugMoney from phis_webhis.V_OPB_FEEDETAIL where ITEMSTATUS = '0' and ISDRUG = '1'
+		group by orgcode
+	</select>
+	
+	<!-- 其他收入收入 -->
+	<select id="getOtherMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,SUM(TOTCOST) as otherMoney from phis_webhis.V_OPB_FEEDETAIL where ITEMSTATUS = '0' and ISDRUG not in ('0','1')
+		group by orgcode
+	</select>
+	
+	<!-- 合计总收入 -->
+	<select id="getTotalMoney" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,SUM(TOTCOST) as totalMoney from phis_webhis.V_OPB_FEEDETAIL where ITEMSTATUS = '0'
+		group by orgcode
+	</select>
+	
+	<!-- 出诊医生数-->
+	<select id="getVisitDoctorNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode, count(distinct(DOCTCODE)) as visitDoctorNumber from phis_webhis.V_OPM_RECIPE_INFO 
+		group by orgcode
+	</select>
+	
+	<!-- 医生平均门急诊量-->
+	<select id="getAverageNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,round(count(*)/count(distinct(DOCTCODE)),2) as averageNumber from phis_webhis.V_OPM_RECIPE_INFO 
+              where PRESSTATUS = '1' or PRESSTATUS = '2'
+              group by orgcode
+	</select>
+	
+	<!-- 住院人次-->
+	<select id="getInhospitalNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as inhospitalNumber from phis_webhis.V_IPR_INPATIENTINFO
+		group by orgcode
+	</select>
+	
+	<!-- 出院人次-->
+	<select id="getOuthospitalNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(OUT_DATE) as outhospitalNumber from phis_webhis.V_IPR_INPATIENTINFO 
+		group by orgcode
+	</select>
+	
+	<!-- 在院人次-->
+	<select id="getOnhospitalNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(INSTATE) as onhospitalNumber from phis_webhis.V_IPR_INPATIENTINFO where INSTATE in ('R','I')
+		group by orgcode
+	</select>
+	
+	<!-- 额定床位-->
+	<select id="getRatedBedNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as ratedBedNumber from phis_webhis.V_COM_BEDINFO
+		group by orgcode
+	</select>
+	
+	<!-- 使用床位-->
+	<select id="getBedInUseNumber" resultType="com.paladin.qos.dynamic.model.CountEntity">
+		select orgcode,count(*) as bedInUseNumber from phis_webhis.V_INR_RECEIVEINFO 
+		group by orgcode
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
