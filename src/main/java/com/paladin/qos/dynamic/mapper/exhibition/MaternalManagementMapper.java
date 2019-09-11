@@ -49,9 +49,54 @@ public interface MaternalManagementMapper {
 
     long getFolicAcidDispensingBottle(@Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
-    long getPregnantWomenBuildCardNumber(@Param("date") Date date);
+    long getPregnantWomenBuildCardTotal(@Param("date") Date date);
 
-    long getEarlyPregnancyCardNumber(@Param("date") Date date);
+    long getEarlyPregnancyCardTotal(@Param("date") Date date);
 
     List<MaternalOrgData> getMaternalDataByOrg(@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+
+
+    long getMalePremaritalCheckNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getFemalePremaritalCheckNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getPrepregnancyCheckNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getMaternalScreeningNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getHighriskMaternalNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getMaternalDeathNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getCervicalCancerScreeningNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getBreastCancerScreeningNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getSyphilisTestNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getSyphilisInfectionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getHepatitisBtestNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getHepatitisBdeterminesInfectionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getWomenDiseaseScreeningNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getMaternalVisitNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNewbornVisitNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getFirstExaminationTimesNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getCycleExaminationTimesNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNumberOfFolatesNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getFolicAcidDispensingBottleNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getPregnantWomenBuildCardNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getEarlyPregnancyCardNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
 }

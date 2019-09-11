@@ -370,7 +370,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
         List<DataDemonstrationVO> list = new ArrayList<>(12);
         DataDemonstrationVO dataDemonstrationVO;
         for (Date date : dateList) {
-            long total = mapper.getPregnantWomenBuildCardNumber(date);
+            long total = mapper.getPregnantWomenBuildCardTotal(date);
             dataDemonstrationVO = new DataDemonstrationVO();
             dataDemonstrationVO.setTotal(total);
             list.add(dataDemonstrationVO);
@@ -387,7 +387,7 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
         List<DataDemonstrationVO> list = new ArrayList<>(12);
         DataDemonstrationVO dataDemonstrationVO;
         for (Date date : dateList) {
-            long total = mapper.getEarlyPregnancyCardNumber(date);
+            long total = mapper.getEarlyPregnancyCardTotal(date);
             dataDemonstrationVO = new DataDemonstrationVO();
             dataDemonstrationVO.setTotal(total);
             list.add(dataDemonstrationVO);

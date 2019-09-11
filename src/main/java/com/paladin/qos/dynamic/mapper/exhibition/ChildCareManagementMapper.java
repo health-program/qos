@@ -40,4 +40,29 @@ public interface ChildCareManagementMapper {
     long getNewbornHearingTotal(@Param("date") Date date);
 
     List<ChildCareOrgData> getChildCareDataByOrg(@Param("startTime") Date startTime, @Param("endDate") Date endDate);
+
+
+
+
+    long getInfantDeathNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNeonatalBirthDefectsNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNeonatalDiseaseScreeningNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getChildCardNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getFemaleNewbornChildbirthNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getMaleNewbornChildbirthNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getChildHealthCheckNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getInfantCongenitalHeartDiseaseNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getChildHealthCheckupNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getInfantVisionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
+
+    long getNewbornHearingNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("code") String code);
 }

@@ -52,7 +52,16 @@
 
     <!--避孕药发放数量-->
     <select id="getBirthControlPillsNumber" resultType="long">
-        SELECT  COALESCE (SUM(iByy1) ,0) +COALESCE (SUM(iByy2) ,0)+COALESCE (SUM(iByy3) ,0)+COALESCE (SUM(iByy4) ,0)+COALESCE (SUM(iByy5) ,0)+COALESCE (SUM(iByy6) ,0)  AS total FROM  JsQjffdjbRk   WHERE datediff( month, dindate, #{date} ) = 0
+        SELECT  COALESCE (SUM(iByy1) ,0) +COALESCE (SUM(iByy2) ,0)+COALESCE (SUM(iByy3) ,0)+COALESCE (SUM(iByy4) ,0)+COALESCE (SUM(iByy5) ,0)+COALESCE (SUM(iByy6) ,0)  AS total FROM  JsQjffdjbRk   WHERE 1 = 1
+        <if test="startTime != null">
+            AND dIndate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dIndate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
     <!--药物流产人数-->
@@ -71,20 +80,44 @@
 
     <!--负压吸宫人数-->
     <select id="getNegativePressureSuctionNumber" resultType="long">
-        SELECT   COUNT( 1 ) AS total FROM  JsFyxgQgsjlb  WHERE datediff( month, dindate, #{startTime} ) = 0
+        SELECT   COUNT( 1 ) AS total FROM  JsFyxgQgsjlb  WHERE 1 = 1
+        <if test="startTime != null">
+            AND dIndate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dIndate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
 
     <!--宫内节育器放置-->
     <select id="getIntrauterineDevicePlacementNumber" resultType="long">
-        SELECT   COUNT( 1 ) AS total FROM  JsGnjyqFzssjl  WHERE datediff( month, dindate, #{startTime}  ) = 0
+        SELECT   COUNT( 1 ) AS total FROM  JsGnjyqFzssjl  WHERE 1 = 1
+        <if test="startTime != null">
+            AND dIndate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dIndate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
-
 
     <!--宫内节育器取出-->
     <select id="getIntrauterineDeviceRemovalNumber" resultType="long">
-        SELECT   COUNT( 1 ) AS total FROM  JsGnjyqSsjl  WHERE datediff( month, dindate, #{startTime} ) = 0
+        SELECT   COUNT( 1 ) AS total FROM  JsGnjyqSsjl  WHERE 1 = 1
+        <if test="startTime != null">
+            AND dIndate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dIndate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
-
-
 </mapper>

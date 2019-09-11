@@ -7,9 +7,35 @@
          SELECT  COUNT (1) AS total FROM   Etsw  WHERE datediff( month, dswrq, #{date} ) = 0
     </select>
 
+    <select id="getInfantDeathNumber" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Etsw  WHERE  1 = 1
+        <if test="startTime != null">
+            AND dswrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dswrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
+
     <!--新生儿出生缺陷人数-->
     <select id="getNeonatalBirthDefectsTotal" resultType="long">
         SELECT  COUNT (1) AS total FROM   Yfxsecsqx  WHERE datediff( month, dcsrq, #{date} ) = 0
+    </select>
+
+    <select id="getNeonatalBirthDefectsNumber" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxsecsqx  WHERE  1 = 1
+        <if test="startTime != null">
+            AND dcsrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dcsrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
     <!--新生儿疾病筛查人数-->
@@ -17,9 +43,35 @@
         SELECT  COUNT (1) AS total FROM   Jbsc  WHERE datediff( month, dCxrq, #{date} ) = 0
     </select>
 
+    <select id="getNeonatalDiseaseScreeningNumber" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Jbsc  WHERE 1 = 1
+        <if test="startTime != null">
+            AND dCxrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dCxrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
+
     <!--儿童建卡人数-->
     <select id="getChildCardTotal" resultType="long">
         SELECT  COUNT (1) AS total   FROM  Etmain  WHERE datediff( month, dJcrq, #{date} ) = 0
+    </select>
+
+    <select id="getChildCardNumber" resultType="long">
+        SELECT  COUNT (1) AS total   FROM  Etmain  WHERE 1 = 1
+        <if test="startTime != null">
+            AND dJcrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dJcrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
     <!--女性新生儿分娩数-->
@@ -27,15 +79,53 @@
         SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE datediff( month, dCsrq, #{date} ) = 0 AND cXb = '女'
     </select>
 
+    <select id="getFemaleNewbornChildbirthNumber" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE cXb = '女'
+        <if test="startTime != null">
+            AND dCsrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dCsrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
 
     <!--男性新生儿分娩数-->
     <select id="getMaleNewbornChildbirthTotal" resultType="long">
         SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE datediff( month, dCsrq, #{date} ) = 0 AND cXb = '男'
     </select>
 
+    <select id="getMaleNewbornChildbirthNumber" resultType="long">
+        SELECT  COUNT (1) AS total FROM   Yfxseqk  WHERE  cXb = '男'
+        <if test="startTime != null">
+            AND dCsrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dCsrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
+
     <!--儿童入园健康检查数-->
     <select id="getChildHealthCheckTotal" resultType="long">
         SELECT  COUNT(1)   AS total FROM  etry  WHERE datediff( month, ddate, #{date}) = 0
+    </select>
+
+    <select id="getChildHealthCheckNumber" resultType="long">
+        SELECT  COUNT(1)   AS total FROM  etry  WHERE  1 = 1
+        <if test="startTime != null">
+            AND ddate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  ddate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
     <!--婴幼儿先天性心脏病-->
@@ -45,18 +135,31 @@
         cJcdwbh AS agencyNo,
         COUNT ( 1 ) AS heartDiseaseTotal,
         cJcdwmc AS agencyName
-    FROM
+        FROM
         KsXtxxtb
-    WHERE
+        WHERE
         cJcdwbh != '' AND dindate >= #{startTime}
         <if test="endDate != null">
             AND  dindate <![CDATA[<= ]]> #{endDate}
         </if>
-    GROUP BY
+        GROUP BY
         cJcdwbh,
         cJcdwmc
-    ORDER BY
+        ORDER BY
         agencyNo ASC
+    </select>
+
+    <select id="getInfantCongenitalHeartDiseaseNumber"  resultType="long">
+        SELECT  COUNT ( 1 ) AS heartDiseaseTotal FROM  KsXtxxtb  WHERE cJcdwbh != ''
+        <if test="startTime != null">
+            AND dindate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dindate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
     <!--儿童健康体检-->
@@ -77,6 +180,19 @@
             cJcdwbh, cJcdwmc ORDER BY agencyNo ASC;
     </select>
 
+    <select id="getChildHealthCheckupNumber"  resultType="long">
+        SELECT  COUNT ( 1 ) AS childHealthCheckup FROM etperson WHERE cJcdwbh != ''
+        <if test="startTime != null">
+            AND ddate >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  ddate <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
+
     <!--婴幼儿视力-->
     <select id="getInfantVisionTotal" resultType="com.paladin.qos.dynamic.model.exhibition.InfantVision">
         SELECT
@@ -88,9 +204,35 @@
         GROUP BY cJcdwbh,cJcdwmc ORDER BY agencyNo ASC;
     </select>
 
+    <select id="getInfantVisionNumber" resultType="com.paladin.qos.dynamic.model.exhibition.InfantVision">
+        SELECT COUNT ( 1 ) AS infantVisionTotal   FROM  slsc WHERE  cJcdwbh != ''
+        <if test="startTime != null">
+            AND dJcrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dJcrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
+    </select>
+
     <!--新生儿听力人数-->
     <select id="getNewbornHearingTotal" resultType="long">
         SELECT COUNT(1) AS total FROM  Tlsc  WHERE datediff( month, dJcrq, #{date} ) = 0
+    </select>
+
+    <select id="getNewbornHearingNumber" resultType="long">
+        SELECT COUNT(1) AS total FROM  Tlsc  WHERE  1 = 1
+        <if test="startTime != null">
+            AND dJcrq >=  #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND  dJcrq <![CDATA[<= ]]> #{endTime}
+        </if>
+        <if test="code != null">
+            AND  cJcdwbh = #{code}
+        </if>
     </select>
 
 
