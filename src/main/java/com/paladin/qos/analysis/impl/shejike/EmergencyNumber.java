@@ -9,7 +9,6 @@ import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.mapper.shejike.EmergencyNumberMapper;
-import com.paladin.qos.mapper.shejike.OutpatientNumberMapper;
 
 /**
  * 急诊人次数
