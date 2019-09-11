@@ -14,6 +14,8 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 10:53
  */
+
+@Component
 public class HighriskMaternal extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

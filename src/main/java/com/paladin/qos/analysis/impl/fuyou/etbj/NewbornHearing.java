@@ -14,6 +14,8 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 19:48
  */
+
+@Component
 public class NewbornHearing extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

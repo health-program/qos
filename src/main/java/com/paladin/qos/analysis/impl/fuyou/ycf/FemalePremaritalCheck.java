@@ -14,6 +14,9 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 10:45
  */
+
+
+@Component
 public class FemalePremaritalCheck extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

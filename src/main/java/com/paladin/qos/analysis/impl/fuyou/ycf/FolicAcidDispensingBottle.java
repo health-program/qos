@@ -14,6 +14,9 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 11:17
  */
+
+
+@Component
 public class FolicAcidDispensingBottle extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

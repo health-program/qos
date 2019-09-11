@@ -14,6 +14,9 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 19:45
  */
+
+
+@Component
 public class InfantCongenitalHeartDisease extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

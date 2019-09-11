@@ -14,6 +14,9 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/11 10:59
  */
+
+
+@Component
 public class CervicalCancerScreening extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;

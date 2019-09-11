@@ -14,6 +14,8 @@ import java.util.Date;
  * @author Huangguochen
  * @create 2019/9/10 19:44
  */
+
+@Component
 public class ChildHealthCheck extends FuyouDataProcessor {
     @Autowired
     private SqlSessionContainer sqlSessionContainer;
