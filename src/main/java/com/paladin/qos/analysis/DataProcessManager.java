@@ -14,6 +14,7 @@ import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.model.data.DataProcessException;
 import com.paladin.qos.model.data.DataProcessedDay;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.data.DataProcessExceptionService;
 import com.paladin.qos.service.data.DataProcessedDayService;
 
@@ -189,22 +190,24 @@ public class DataProcessManager {
 			}
 
 			// 检查医院与事件ID正确性
-			List<String> checkedUnitIds = new ArrayList<>(unitIds.size());
-			List<String> checkedEventIds = new ArrayList<>(eventIds.size());
+			List<Unit> checkedUnits = new ArrayList<>(unitIds.size());
+			List<Event> checkedEvents = new ArrayList<>(eventIds.size());
 
 			for (String unitId : unitIds) {
-				if (DataConstantContainer.getUnit(unitId) != null) {
-					checkedUnitIds.add(unitId);
+				Unit unit = DataConstantContainer.getUnit(unitId);
+				if (unit != null) {
+					checkedUnits.add(unit);
 				}
 			}
 
 			for (String eventId : eventIds) {
-				if (DataConstantContainer.getEvent(eventId) != null) {
-					checkedEventIds.add(eventId);
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					checkedEvents.add(event);
 				}
 			}
 
-			if (checkedUnitIds.size() == 0 || checkedEventIds.size() == 0) {
+			if (checkedUnits.size() == 0 || checkedEvents.size() == 0) {
 				return;
 			}
 
@@ -219,20 +222,35 @@ public class DataProcessManager {
 			}
 
 			total = (int) ((endMillis - startMillis) / TimeUtil.MILLIS_IN_DAY + 1);
-			total = total * checkedEventIds.size() * checkedUnitIds.size();
+			total = total * checkedEvents.size() * checkedUnits.size();
 
 			while (startMillis <= endMillis) {
 				Date start = new Date(startMillis);
 				startMillis += TimeUtil.MILLIS_IN_DAY;
 				Date end = new Date(startMillis);
 
-				for (String eventId : checkedEventIds) {
+				for (Event event : checkedEvents) {
+					String eventId = event.getId();
+					int targetType = event.getTargetType();
 					DataProcessor processor = dataProcessContainer.getDataProcessor(eventId);
 					if (processor == null) {
 						logger.error("处理数据失败！未找到事件[" + eventId + "]对应的数据处理器");
 					} else {
-						for (String unitId : checkedUnitIds) {
-							processDataForOneDay(start, end, unitId, processor);
+						for (Unit unit : checkedUnits) {
+							int unitType = unit.getType();
+
+							// 如果事件目标数据范围和单位类型不一致，则不处理
+							if (targetType == DataEvent.TARGET_TYPE_ALL) {
+
+							} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL && unitType != DataUnit.TYPE_HOSPITAL) {
+								continue;
+							} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY && unitType != DataUnit.TYPE_COMMUNITY) {
+								continue;
+							} else {
+								continue;
+							}
+
+							processDataForOneDay(start, end, unit.getId(), processor);
 							current++;
 						}
 					}

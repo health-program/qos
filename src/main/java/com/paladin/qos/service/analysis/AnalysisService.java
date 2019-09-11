@@ -232,7 +232,7 @@ public class AnalysisService {
 	}
 
 	/**
-	 * 按医院分组统计时间段内事件
+	 * 按所有单位分组获取时间段内某事件的发生概率
 	 * 
 	 * @param eventId
 	 * @param startDate
@@ -240,11 +240,24 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		return analysisMapper.getAnalysisResultGroupByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
-	 * 按时间分组统计时间段内所有医院事件
+	 * 按某类型单位分组获取时间段内某事件的发生概率
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.getAnalysisResultGroupByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月分组获取时间段内所有单位某事件的发生概率
 	 * 
 	 * @param eventId
 	 * @param startDate
@@ -252,12 +265,26 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByMonth(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		return analysisMapper.getAnalysisResultGroupByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月分组获取时间段内所有单位某事件的发生概率
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.getAnalysisResultGroupByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
 	 * 
-	 * 按时间分组统计时间段内某医院事件
+	 * 按月分组获取时间段内某单位某事件的发生概率
 	 * 
 	 * @param eventId
 	 * @param unitId
@@ -271,7 +298,7 @@ public class AnalysisService {
 	}
 
 	/**
-	 * 按医院获取时间段内样本数之和
+	 * 获取时间段内所有单位某事件的总数
 	 * 
 	 * @param eventId
 	 * @param startDate
@@ -279,11 +306,24 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countTotalNumByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		return analysisMapper.countTotalNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
-	 * 按医院获取时间段内事件数之和
+	 * 获取时间段内某类型单位某事件的总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countTotalNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 获取时间段内所有单位某事件的事件总数
 	 * 
 	 * @param eventId
 	 * @param startDate
@@ -291,7 +331,20 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByUnit(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		return analysisMapper.countEventNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 获取时间段内某类型单位某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countEventNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
