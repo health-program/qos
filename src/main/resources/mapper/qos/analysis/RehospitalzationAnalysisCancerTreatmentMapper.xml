@@ -5,8 +5,10 @@
 	<select id="getTotalNum" parameterType="Map" resultType="Long">
 		  select count(*) from outhospitalrecord
 		  <where>
-				OHREC_DREC = '1'
-	            and IHD_DIS_CODE in (select major_code from classify_code_disease where major_code = 'Z51.103')
+				<!-- OHREC_DREC = '1'
+	            and IHD_DIS_CODE in (select major_code from classify_code_disease where major_code = 'Z51.103') -->
+	            OHREC_DREC = '1'
+	            and IHD_DIS_CODE = 'Z51.103'
 				<if test="startTime != null and startTime !='' ">
 					and OUT_HP_DT <![CDATA[>=]]> #{startTime}
 				</if>
@@ -22,7 +24,7 @@
 	<select id="getEventNum" parameterType="Map" resultType="Long">
 	SELECT count(*) FROM outhospitalrecord a
 	where a.OHREC_DREC = '1'
-	and a.IHD_DIS_CODE in (select major_code from classify_code_disease where major_code = 'Z51.103')
+	and a.IHD_DIS_CODE = 'Z51.103'
 		<if test="startTime != null and startTime !='' ">
 			and a.OUT_HP_DT <![CDATA[>=]]> #{startTime}
 		</if>

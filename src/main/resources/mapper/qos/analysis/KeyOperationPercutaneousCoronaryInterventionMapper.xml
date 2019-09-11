@@ -15,10 +15,17 @@
 		on
 		a.HP_S_NO = c.HP_S_NO
 		<where>
-		a.OPERATION_CODE in (select major_code from classify_code_operation where major_code like '36.05%' or 
-		major_code like '36.06%' or major_code like '36.07%')
-		and 
-			(b.AGE_YEAR <![CDATA[>=]]>18 or c.AGE_YEAR <![CDATA[>=]]>18)
+			<!-- a.OPERATION_CODE in (select major_code from classify_code_operation 
+				where major_code like '36.05%' or major_code like '36.06%' or major_code 
+				like '36.07%') and -->
+			a.OPERATION_CODE in ('36.0601',
+			'36.0602',
+			'36.0600',
+			'36.0700',
+			'36.0701')
+			and
+			(b.AGE_YEAR <![CDATA[>=]]>18
+			or c.AGE_YEAR <![CDATA[>=]]>18)
 			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
@@ -41,12 +48,16 @@
 		left join
 		ed_cmedical_home_page_record c
 		on a.HP_S_NO = c.HP_S_NO
-		
+
 		<where>
 			a.OHREC_DREC = '2' and
-			a.OPERATION_CODE in (select major_code from classify_code_operation where major_code like '36.05%' or 
-		major_code like '36.06%' or major_code like '36.07%')
-			and (b.AGE_YEAR <![CDATA[>=]]>18 or c.AGE_YEAR <![CDATA[>=]]>18)
+			a.OPERATION_CODE in ('36.0601',
+			'36.0602',
+			'36.0600',
+			'36.0700',
+			'36.0701')
+			and (b.AGE_YEAR <![CDATA[>=]]>18
+			or c.AGE_YEAR <![CDATA[>=]]>18)
 			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
