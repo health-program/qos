@@ -1,7 +1,6 @@
 package com.paladin.qos.analysis.impl.fuyou;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.FamilyPlanningManagementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.Date;
  * @create 2019/9/10 15:29
  */
 @Component
-public class MedicalAbortionTotal extends DataProcessor {
+public class MedicalAbortionTotal extends FuyouDataProcessor {
 
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;

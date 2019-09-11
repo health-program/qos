@@ -24,6 +24,16 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	public abstract String getEventId();
+	
+	/**
+	 * 获取对应医院ID，适用于不同数据库，如果返回null，则表示不需要处理
+	 * 
+	 * @param unitId
+	 * @return
+	 */
+	public String getMappingUnitId(String unitId) {
+		return unitId;
+	} 
 
 	/**
 	 * 处理时间粒度
@@ -52,10 +62,15 @@ public abstract class DataProcessor {
 	 * @param startTime
 	 * @param endTime
 	 * @param unitId
-	 * @return
+	 * @return 如果返回null表示不处理
 	 */
 	public RateMetadata processByDay(Date startTime, Date endTime, String unitId) {
 
+		String mappingUnitId = getMappingUnitId(unitId);
+		if(mappingUnitId == null || mappingUnitId.length() == 0) {
+			return null;
+		}
+		
 		Calendar c = Calendar.getInstance();
 		c.setTime(startTime);
 
@@ -65,8 +80,8 @@ public abstract class DataProcessor {
 		int weekYear = c.get(Calendar.WEEK_OF_YEAR);
 		int weekMonth = c.get(Calendar.WEEK_OF_MONTH);
 
-		long totalNum = getTotalNum(startTime, endTime, unitId);
-		long eventNum = getEventNum(startTime, endTime, unitId);
+		long totalNum = getTotalNum(startTime, endTime, mappingUnitId);
+		long eventNum = getEventNum(startTime, endTime, mappingUnitId);
 
 		RateMetadata metadata = new RateMetadata();
 		metadata.setEventNum(eventNum);
