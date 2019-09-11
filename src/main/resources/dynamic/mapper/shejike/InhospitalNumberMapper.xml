@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.shejike.InhospitalNumberMapper">
+
+	<select id="getTotalNum" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_IPR_INPATIENTINFO a
+		<where> 
+		     1=1
+			<!-- <if test="startTime != null and startTime !='' ">
+				and a.REGDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.REGDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if> -->
+		</where>
+	</select>
+
+
+</mapper>

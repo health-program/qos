@@ -1,45 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.paladin.qos.mapper.analysis.RehospitalzationAnalysisMyocardialInfarctionMapper">
+<mapper
+	namespace="com.paladin.qos.mapper.analysis.RehospitalzationAnalysisMyocardialInfarctionMapper">
 
 	<select id="getTotalNum" parameterType="Map" resultType="Long">
-		  select count(*) from outhospitalrecord
-		  <where>
-				OHREC_DREC = '1'
-	            and  IHD_DIS_CODE in (select major_code from classify_code_disease where major_code like 'I21%' or major_code like 'I22%')
-				<if test="startTime != null and startTime !='' ">
-					and OUT_HP_DT <![CDATA[>=]]> #{startTime}
-				</if>
-				<if test="endTime != null and endTime !='' ">
-					and OUT_HP_DT <![CDATA[<]]> #{endTime}
-				</if>
-				<if test="unitId != null and unitId !='' ">
-					and ORGAN_CODE  =  #{unitId}
-				</if>
-		  </where>
+		select count(*) from outhospitalrecord
+		<where>
+			<!-- OHREC_DREC = '1' and IHD_DIS_CODE in (select major_code from classify_code_disease 
+				where major_code like 'I21%' or major_code like 'I22%') -->
+			OHREC_DREC = '1'
+			and IHD_DIS_CODE in ('I21.901',
+			'I21.207',
+			'I21.206',
+			'I21.212',
+			'I21.204',
+			'I21.000',
+			'I21.001',
+			'I21.210',
+			'I21.103',
+			'I21.200',
+			'I21.003',
+			'I21.401',
+			'I21.211',
+			'I22.900',
+			'I22.800',
+			'I21.004',
+			'I21.208',
+			'I21.400',
+			'I21.106',
+			'I21.100',
+			'I22.000',
+			'I22.100',
+			'I21.104',
+			'I21.002',
+			'I21.900',
+			'I21.213',
+			'I21.105',
+			'I21.303',
+			'I21.302',
+			'I21.300',
+			'I21.205')
+			<if test="startTime != null and startTime !='' ">
+				and OUT_HP_DT <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and OUT_HP_DT <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and ORGAN_CODE = #{unitId}
+			</if>
+		</where>
 	</select>
-	
+
 	<select id="getEventNum" parameterType="Map" resultType="Long">
-	SELECT count(*) FROM outhospitalrecord a
-	where a.OHREC_DREC = '1'
-	and a.IHD_DIS_CODE in (select major_code from classify_code_disease where major_code like 'I21%' or major_code like 'I22%')
+		SELECT count(*) FROM outhospitalrecord a
+		where a.OHREC_DREC = '1'
+		and
+		a.IHD_DIS_CODE in ('I21.901',
+		'I21.207',
+		'I21.206',
+		'I21.212',
+		'I21.204',
+		'I21.000',
+		'I21.001',
+		'I21.210',
+		'I21.103',
+		'I21.200',
+		'I21.003',
+		'I21.401',
+		'I21.211',
+		'I22.900',
+		'I22.800',
+		'I21.004',
+		'I21.208',
+		'I21.400',
+		'I21.106',
+		'I21.100',
+		'I22.000',
+		'I22.100',
+		'I21.104',
+		'I21.002',
+		'I21.900',
+		'I21.213',
+		'I21.105',
+		'I21.303',
+		'I21.302',
+		'I21.300',
+		'I21.205')
 		<if test="startTime != null and startTime !='' ">
-			and a.OUT_HP_DT <![CDATA[>=]]> #{startTime}
+			and a.OUT_HP_DT <![CDATA[>=]]>
+			#{startTime}
 		</if>
 		<if test="endTime != null and endTime !='' ">
-			and a.OUT_HP_DT <![CDATA[<]]> #{endTime}
+			and a.OUT_HP_DT <![CDATA[<]]>
+			#{endTime}
 		</if>
 		<if test="unitId != null and unitId !='' ">
-			and ORGAN_CODE  =  #{unitId}
+			and ORGAN_CODE = #{unitId}
 		</if>
-	AND EXISTS (
-	SELECT * FROM outhospitalrecord b
-	WHERE
-	b.CARDNO = a.CARDNO
-	AND b.OUT_HP_DT <![CDATA[!=]]> a.OUT_HP_DT
-	and a.OUT_HP_DT <![CDATA[>=]]> date_add(b.IN_HP_DT, INTERVAL - 31 DAY) 
-	and a.OUT_HP_DT <![CDATA[<]]> DATE(b.IN_HP_DT)
-	
-	)
+		AND EXISTS (
+		SELECT * FROM outhospitalrecord b
+		WHERE
+		b.CARDNO = a.CARDNO
+		AND b.OUT_HP_DT <![CDATA[!=]]>
+		a.OUT_HP_DT
+		and a.OUT_HP_DT <![CDATA[>=]]>
+		date_add(b.IN_HP_DT, INTERVAL - 31 DAY)
+		and a.OUT_HP_DT <![CDATA[<]]>
+		DATE(b.IN_HP_DT)
+
+		)
 	</select>
 </mapper>
