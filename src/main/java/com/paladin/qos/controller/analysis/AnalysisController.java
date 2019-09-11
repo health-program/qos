@@ -1,5 +1,6 @@
 package com.paladin.qos.controller.analysis;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.DataProcessManager;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.service.analysis.AnalysisService;
@@ -49,6 +52,22 @@ public class AnalysisController {
 			endDate = new Date();
 		}
 
+		if (unitIds == null || unitIds.size() == 0) {
+			List<Unit> units = DataConstantContainer.getUnitList();
+			unitIds = new ArrayList<>();
+			for (Unit unit : units) {
+				unitIds.add(unit.getId());
+			}
+		}
+		
+		if (unitIds == null || unitIds.size() == 0) {
+			List<Unit> units = DataConstantContainer.getUnitList();
+			unitIds = new ArrayList<>();
+			for (Unit unit : units) {
+				unitIds.add(unit.getId());
+			}
+		}
+		
 		if (dataProcessManager.processDataByThread(startDate, endDate, unitIds, eventIds)) {
 			return CommonResponse.getSuccessResponse();
 		} else {

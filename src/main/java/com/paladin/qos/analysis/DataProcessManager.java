@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.model.data.DataEvent;
@@ -96,6 +97,7 @@ public class DataProcessManager {
 		} catch (Exception ex) {
 			logger.error("处理数据失败！日期：" + start + "，事件：" + processor.getEventId() + "，医院：" + unitId, ex);
 			DataProcessException exception = new DataProcessException();
+			exception.setId(UUIDUtil.createUUID());
 			exception.setCreateTime(new Date());
 			exception.setEventId(processor.getEventId());
 			exception.setException(ex.getMessage());
@@ -240,17 +242,11 @@ public class DataProcessManager {
 							int unitType = unit.getType();
 
 							// 如果事件目标数据范围和单位类型不一致，则不处理
-							if (targetType == DataEvent.TARGET_TYPE_ALL) {
-
-							} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL && unitType != DataUnit.TYPE_HOSPITAL) {
-								continue;
-							} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY && unitType != DataUnit.TYPE_COMMUNITY) {
-								continue;
-							} else {
-								continue;
+							if (targetType == DataEvent.TARGET_TYPE_ALL || (targetType == DataEvent.TARGET_TYPE_HOSPITAL && unitType == DataUnit.TYPE_HOSPITAL)
+									|| (targetType == DataEvent.TARGET_TYPE_COMMUNITY && unitType == DataUnit.TYPE_COMMUNITY)) {
+								processDataForOneDay(start, end, unit.getId(), processor);
 							}
-
-							processDataForOneDay(start, end, unit.getId(), processor);
+							
 							current++;
 						}
 					}

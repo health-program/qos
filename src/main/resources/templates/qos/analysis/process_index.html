@@ -49,8 +49,10 @@
         name: "数据处理",
         url: "/qos/analysis/data/process",
         columns: [
-            { title: "事件", name: "eventIds", inputType: "SELECT", multiple: true, enum: "data-event-type", required: "required" },
-            { title: "医院", name: "unitIds", inputType: "SELECT", multiple: true, enum: "data-unit-type", required: "required" },
+            { title: "事件", name: "eventIds", inputType: "SELECT", multiple: true, enum: "data-event-type" },
+            { title: "医院", name: "unitIds", inputType: "SELECT", multiple: true, enum: "data-unit-type" },
+            { title: "事件输入", name: "eventIdInput", inputType: "TEXTAREA" },
+            { title: "医院输入", name: "unitIdInput", inputType: "TEXTAREA" },
             { title: "开始时间", name: "startTime", inputType: "DATE", required: "required" },
             { title: "结束时间", name: "endTime", inputType: "DATE" }
         ]
@@ -75,6 +77,35 @@
 
         var model = new tonto.Model("model", options.columns, {
             pattern: "edit",
+            beforeSubmit: function(formData) {
+                var es = $('[name="eventIdInput"]').val();
+                var us = $('[name="unitIdInput"]').val();
+
+                if (es) {
+                    es = es.split(",");
+                    es.forEach(function(a) {
+                        formData.push({
+                            name: "eventIds",
+                            value: a,
+                            type: "text",
+                            required: false
+                        });
+                    });
+                }
+
+                if (us) {
+                    us = us.split(",");
+                    us.forEach(function(a) {
+                        formData.push({
+                            name: "unitIds",
+                            value: a,
+                            type: "text",
+                            required: false
+                        });
+                    });
+                }
+
+            },
             successCallback: function() {
                 $.successAlert("数据开始处理", function() {
                     getProgess();
