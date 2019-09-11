@@ -9,6 +9,14 @@ paladin:
       url: jdbc:sqlserver://10.1.1.36:1044;database=wcdbsz
       username: jswj
       password: jswj2019
-
-      
+	source[1]:
+      name: gongwei
+      url: jdbc:oracle://10.9.0.165:1521;database=ksdaga
+      username: phis_wj
+      password: phis_wj
+  	source[2]:
+      name: jcyl
+      url: jdbc:oracle://10.9.0.12:1521;database=ksdaga
+      username: phis_wj
+      password: 123456    
   
