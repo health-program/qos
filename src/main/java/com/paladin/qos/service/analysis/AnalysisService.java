@@ -16,6 +16,7 @@ import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
@@ -72,39 +73,109 @@ public class AnalysisService {
 
 	// ----------------------------------->查找某事件单个或所有医院在时间段内按时间粒度统计<-----------------------------------
 
-	/** 获取医院，如果为空则全部 */
-	private List<Unit> getUnits(List<String> unitIds) {
-		List<Unit> units = null;
-
-		if (unitIds == null) {
-			// 获取所有
-			units = DataConstantContainer.getUnitList();
-		} else {
-			units = new ArrayList<>();
-			for (String unitId : unitIds) {
-				Unit unit = DataConstantContainer.getUnit(unitId);
-				if (unit != null) {
-					units.add(unit);
-				}
-			}
+	private List<Unit> getUnitByType(int unitType) {
+		if (unitType == DataUnit.TYPE_HOSPITAL) {
+			return DataConstantContainer.getHospitalList();
+		} else if (unitType == DataUnit.TYPE_COMMUNITY) {
+			return DataConstantContainer.getCommunityList();
+		} else if (unitType == DataUnit.TYPE_STATION) {
+			return DataConstantContainer.getStationList();
 		}
-
-		return units;
+		return null;
 	}
 
 	// 查找多个或所有医院时，可改为在SQL中处理，暂时为遍历医院一个个查找
 
-	public DataResult<DataPointDay> getDataOfDay(String eventId, List<String> unitIds, Date startDate, Date endDate) {
-		List<Unit> units = getUnits(unitIds);
+	/**
+	 * 获取某事件在时间段内所有单位的日统计数据集合（按天统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointDay> getDataSetOfDay(String eventId, Date startDate, Date endDate) {
+		// TODO 可优化为直接查数据库
+		return getDataSetOfDay(eventId, DataConstantContainer.getUnitList(), startDate, endDate);
+	}
+
+	/**
+	 * 获取某事件在时间段内某类型单位（医院、社区、站）的日统计数据集合（按天统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointDay> getDataSetOfDay(String eventId, int unitType, Date startDate, Date endDate) {
+		// TODO 可优化为直接查数据库，通过unit_type
+		return getDataSetOfDay(eventId, getUnitByType(unitType), startDate, endDate);
+	}
+
+	/**
+	 * 获取某事件在时间段内某些单位的日统计数据集合（按天统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param units
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointDay> getDataSetOfDay(String eventId, List<Unit> units, Date startDate, Date endDate) {
+		if (units == null) {
+			return null;
+		}
+
 		List<DataPointUnit<DataPointDay>> unitPoints = new ArrayList<>(units.size());
 		for (Unit unit : units) {
 			unitPoints.add(getDataPointUnitOfDay(eventId, unit.getId(), startDate, endDate));
 		}
+
 		return new DataResult<DataPointDay>(eventId, DATA_TYPE_DAY, unitPoints);
 	}
 
-	public DataResult<DataPointMonth> getDataOfMonth(String eventId, List<String> unitIds, Date startDate, Date endDate) {
-		List<Unit> units = getUnits(unitIds);
+	/**
+	 * 获取某事件在时间段内所有单位的月统计数据集合（按月统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, Date startDate, Date endDate) {
+		// TODO 可优化为直接查数据库
+		return getDataSetOfMonth(eventId, DataConstantContainer.getUnitList(), startDate, endDate);
+	}
+
+	/**
+	 * 获取某事件在时间段内某类型单位（医院、社区、站）的月统计数据集合（按月统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, int unitType, Date startDate, Date endDate) {
+		// TODO 可优化为直接查数据库
+		return getDataSetOfMonth(eventId, getUnitByType(unitType), startDate, endDate);
+	}
+
+	/**
+	 * 获取某事件在时间段内某些单位的月统计数据集合（按月统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param units
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, List<Unit> units, Date startDate, Date endDate) {
+		if (units == null) {
+			return null;
+		}
+
 		List<DataPointUnit<DataPointMonth>> unitPoints = new ArrayList<>(units.size());
 		for (Unit unit : units) {
 			unitPoints.add(getDataPointUnitOfMonth(eventId, unit.getId(), startDate, endDate));
@@ -112,31 +183,52 @@ public class AnalysisService {
 		return new DataResult<DataPointMonth>(eventId, DATA_TYPE_MONTH, unitPoints);
 	}
 
-	public DataResult<DataPointYear> getDataOfYear(String eventId, List<String> unitIds, int startYear, int endYear) {
-		List<Unit> units = getUnits(unitIds);
+	/**
+	 * 获取某事件在时间段内所有单位的年统计数据集合（按年统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int startYear, int endYear) {
+		// TODO 可优化为直接查数据库
+		return getDataSetOfYear(eventId, DataConstantContainer.getUnitList(), startYear, endYear);
+	}
+
+	/**
+	 * 获取某事件在时间段内某类型单位（医院、社区、站）的年统计数据集合（按年统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int unitType, int startYear, int endYear) {
+		// TODO 可优化为直接查数据库
+		return getDataSetOfYear(eventId, getUnitByType(unitType), startYear, endYear);
+	}
+
+	/**
+	 * 获取某事件在时间段内某些单位的年统计数据集合（按年统计的数据集合，可用于按天统计的热力图、柱状图）
+	 * 
+	 * @param eventId
+	 * @param units
+	 * @param startYear
+	 * @param endYear
+	 * @return
+	 */
+	public DataResult<DataPointYear> getDataSetOfYear(String eventId, List<Unit> units, int startYear, int endYear) {
+		if (units == null) {
+			return null;
+		}
+
 		List<DataPointUnit<DataPointYear>> unitPoints = new ArrayList<>(units.size());
 		for (Unit unit : units) {
 			unitPoints.add(getDataPointUnitOfYear(eventId, unit.getId(), startYear, endYear));
 		}
 		return new DataResult<DataPointYear>(eventId, DATA_TYPE_YEAR, unitPoints);
-	}
-
-	public DataResult<DataPointWeekYear> getDataOfWeekYear(String eventId, List<String> unitIds, int startYear, int endYear) {
-		List<Unit> units = getUnits(unitIds);
-		List<DataPointUnit<DataPointWeekYear>> unitPoints = new ArrayList<>(units.size());
-		for (Unit unit : units) {
-			unitPoints.add(getDataPointUnitOfWeekYear(eventId, unit.getId(), startYear, endYear));
-		}
-		return new DataResult<DataPointWeekYear>(eventId, DATA_TYPE_WEEK_YEAR, unitPoints);
-	}
-
-	public DataResult<DataPointWeekMonth> getDataOfWeekMonth(String eventId, List<String> unitIds, Date startDate, Date endDate) {
-		List<Unit> units = getUnits(unitIds);
-		List<DataPointUnit<DataPointWeekMonth>> unitPoints = new ArrayList<>(units.size());
-		for (Unit unit : units) {
-			unitPoints.add(getDataPointUnitOfWeekMonth(eventId, unit.getId(), startDate, endDate));
-		}
-		return new DataResult<DataPointWeekMonth>(eventId, DATA_TYPE_WEEK_MONTH, unitPoints);
 	}
 
 	/**
@@ -254,7 +346,7 @@ public class AnalysisService {
 			result.setLastDay(last);
 			result.setLostDays(losts);
 		}
-		
+
 		return result;
 	}
 

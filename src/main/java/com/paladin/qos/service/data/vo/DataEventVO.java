@@ -8,6 +8,12 @@ public class DataEventVO {
 
 	// 事件名称
 	private String name;
+	
+	// 事件类型，概率 or 总数
+	private Integer eventType;
+	
+	// 数据目标类型， 医院 or 社区 or 所有
+	private Integer targetType;
 
 	// 
 	private String content;
@@ -45,6 +51,22 @@ public class DataEventVO {
 
 	public void setEnabled(Integer enabled) {
 		this.enabled = enabled;
+	}
+
+	public Integer getEventType() {
+		return eventType;
+	}
+
+	public void setEventType(Integer eventType) {
+		this.eventType = eventType;
+	}
+
+	public Integer getTargetType() {
+		return targetType;
+	}
+
+	public void setTargetType(Integer targetType) {
+		this.targetType = targetType;
 	}
 
 }

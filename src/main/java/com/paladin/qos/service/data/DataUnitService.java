@@ -16,20 +16,20 @@ import java.util.List;
 @Service
 public class DataUnitService extends ServiceSupport<DataUnit> {
 
-    @Autowired
-    private DataUnitMapper dataUnitMapper;
+	@Autowired
+	private DataUnitMapper dataUnitMapper;
 
-    public List<BedReportVO> getBedReportByQuery(String unitId, String month,String year) {
-        return dataUnitMapper.getBedReportByQuery(unitId,month,year);
-    }
-    
-    public List<DataUnitVO> selectData(){
-	QosUserSession session = QosUserSession.getCurrentUserSession();
-	String[] ids = null;
-	if(!session.isAdminRoleLevel()){
-	    String[] agencyIds = session.getAgencyIds();
-	    ids = agencyIds;
+	public List<BedReportVO> getBedReportByQuery(String unitId, String month, String year) {
+		return dataUnitMapper.getBedReportByQuery(unitId, month, year);
 	}
-	return dataUnitMapper.selectData(ids);
-    }
+
+	public List<DataUnitVO> selectData() {
+		QosUserSession session = QosUserSession.getCurrentUserSession();
+		String[] ids = null;
+		if (!session.isAdminRoleLevel()) {
+			String[] agencyIds = session.getAgencyIds();
+			ids = agencyIds;
+		}
+		return dataUnitMapper.selectData(ids);
+	}
 }

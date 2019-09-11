@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
+import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.model.data.DataProcessException;
 import com.paladin.qos.model.data.DataProcessedDay;
 import com.paladin.qos.service.data.DataProcessExceptionService;
@@ -35,15 +36,30 @@ public class DataProcessManager {
 	 */
 	public void processSchedule() {
 		List<Event> events = DataConstantContainer.getEventList();
-		List<Unit> units = DataConstantContainer.getUnitList();
 
 		for (Event event : events) {
 			String eventId = event.getId();
+			int targetType = event.getTargetType();
+
 			DataProcessor dataProcessor = dataProcessContainer.getDataProcessor(eventId);
 
 			if (dataProcessor == null) {
 				logger.error("处理数据失败！未找到事件[" + eventId + ":" + event.getName() + "]对应的数据处理器");
 			} else {
+
+				List<Unit> units = null;
+
+				if (targetType == DataEvent.TARGET_TYPE_ALL) {
+					units = DataConstantContainer.getUnitList();
+				} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL) {
+					units = DataConstantContainer.getHospitalList();
+				} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY) {
+					units = DataConstantContainer.getCommunityList();
+				} else {
+					logger.error("处理数据失败！事件[" + eventId + ":" + event.getName() + "]找不到对应的数据范围类型[targetType:" + targetType + "]");
+					continue;
+				}
+
 				Date start = dataProcessor.getScheduleDate();
 				Date end = new Date(start.getTime() + TimeUtil.MILLIS_IN_DAY);
 
@@ -127,19 +143,18 @@ public class DataProcessManager {
 		long totalNum = rateMetadata.getTotalNum();
 		long eventNum = rateMetadata.getEventNum();
 
-		model.setUnitId(rateMetadata.getUnitValue());
+		Unit unit = DataConstantContainer.getUnit(unitId);
+
+		model.setUnitId(unitId);
+		model.setUnitType(unit.getType());
+
 		model.setTotalNum(totalNum);
 		model.setEventNum(eventNum);
 		model.setRate(getRate(totalNum, eventNum));
 
-		try {
-			if (!dataProcessedDayService.updateOrSave(model)) {
-				logger.error("持久化日粒度数据错误！[ID：" + id + "，事件ID：" + eventId + "]");
-			}
-		} catch (Exception e) {
-			logger.error("持久化日粒度数据错误！[ID：" + id + "，事件ID：" + eventId + "]", e);
+		if (!dataProcessedDayService.updateOrSave(model)) {
+			throw new RuntimeException("持久化日粒度数据失败！");
 		}
-
 	}
 
 	// 获取概率
@@ -157,6 +172,7 @@ public class DataProcessManager {
 
 	/**
 	 * 用于记录处理过程
+	 * 
 	 * @author TontoZhou
 	 * @since 2019年9月10日
 	 */
@@ -304,7 +320,6 @@ public class DataProcessManager {
 		private List<String> eventIds;
 
 		private Processor processor;
-		@SuppressWarnings("unused")
 		private boolean finished;
 
 		private ProcessThread(Date startTime, Date endTime, List<String> unitIds, List<String> eventIds) {
@@ -324,5 +339,5 @@ public class DataProcessManager {
 			}
 		}
 	}
-	
+
 }

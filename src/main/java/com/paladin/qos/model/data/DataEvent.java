@@ -4,12 +4,25 @@ import javax.persistence.Id;
 
 public class DataEvent {
 
+	public static final int EVENT_TYPE_RATE = 1;
+	public static final int EVENT_TYPE_COUNT = 2;
+	
+	public static final int TARGET_TYPE_ALL = 1;
+	public static final int TARGET_TYPE_HOSPITAL = 2;
+	public static final int TARGET_TYPE_COMMUNITY = 3;
+	
 	// 
 	@Id
 	private String id;
 
 	// 事件名称
 	private String name;
+	
+	// 事件类型，概率 or 总数
+	private Integer eventType;
+	
+	// 数据目标类型， 医院 or 社区 or 所有
+	private Integer targetType;
 
 	// 
 	private String content;
@@ -47,6 +60,22 @@ public class DataEvent {
 
 	public void setEnabled(Integer enabled) {
 		this.enabled = enabled;
+	}
+
+	public Integer getTargetType() {
+		return targetType;
+	}
+
+	public void setTargetType(Integer targetType) {
+		this.targetType = targetType;
+	}
+
+	public Integer getEventType() {
+		return eventType;
+	}
+
+	public void setEventType(Integer eventType) {
+		this.eventType = eventType;
 	}
 
 }
