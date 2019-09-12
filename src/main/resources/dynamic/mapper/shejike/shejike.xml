@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.shejike.SheJiKeMapper">
+    <!-- 门诊人次数 -->
+	<select id="getOutpatientNumber" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_OPR_REGISTER 
+		<where> 
+		REGLEVLCODE <![CDATA[!=]]> '5'
+		and REGSTATUS = '0'
+			<if test="startTime != null and startTime !='' ">
+				and a.REGDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.REGDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 急诊人次数 -->
+	<select id="getEmergencyNumber" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_OPR_REGISTER a
+		<where> 
+		REGLEVLCODE = '5'
+		and REGSTATUS = '0'
+			<if test="startTime != null and startTime !='' ">
+				and a.REGDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.REGDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 门急诊总人数 -->
+    <select id="getPatientsNumber" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_OPR_REGISTER a
+		<where> 
+		a.REGSTATUS = '0''
+			<if test="startTime != null and startTime !='' ">
+				and a.REGDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.REGDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 出诊医生数 -->
+	<select id="getVisitDoctorNumber" parameterType="Map" resultType="Long">
+		select count(distinct(DOCTCODE)) from phis_webhis.V_OPM_RECIPE_INFO a
+		
+		<where> 
+		     where a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.DRAWTIME <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.DRAWTIME <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 医生平均门急诊量 -->
+	<select id="getAverageNumber" parameterType="Map" resultType="Long">
+		select round(count(*)/count(distinct(DOCTCODE)),2) as from phis_webhis.V_OPM_RECIPE_INFO  a
+             
+		<where> 
+		     where a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.DRAWTIME <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.DRAWTIME <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 康复服务数 -->
+	
+	<!-- 住院人次数 -->
+	<select id="getInhospitalNumber" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_IPR_INPATIENTINFO a
+		<where> 
+		     1=1
+			 <if test="startTime != null and startTime !='' ">
+				and a.INDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.INDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 出院人次数 -->
+    <select id="getOuthospitalNumber" parameterType="Map" resultType="Long">
+		select count(OUT_DATE) from phis_webhis.V_IPR_INPATIENTINFO a
+		
+		<where> 
+		 1=1
+		    <if test="startTime != null and startTime !='' ">
+				and a.OUT_DATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.OUT_DATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 在院人数 -->
+	<select id="getOnhospitalNumber" parameterType="Map" resultType="Long">
+		select count(INSTATE) from phis_webhis.V_IPR_INPATIENTINFO a 
+		
+		<where> 
+		     a.INSTATE in ('R','I')
+		    <if test="startTime != null and startTime !='' ">
+				and a.INDATE <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.INDATE <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 额定床位 -->
+	<select id="getRatedBedNumber" parameterType="Map" resultType="Long">
+		select count(*) from phis_webhis.V_COM_BEDINFO a
+		
+	</select>
+	
+	<!-- 使用床位 -->
+	<select id="getBedInUseNumber" parameterType="Map" resultType="Long">
+		select count(*)  from phis_webhis.V_INR_RECEIVEINFO a
+		
+		<where> 
+		     1=1
+		    <if test="startTime != null and startTime !='' ">
+				and a.INTIME <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.INTIME <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 病床总天数 -->
+	<select id="getBedTotalDays" parameterType="Map" resultType="Long">
+		select count(1) 
+	    from phis_webhis.v_com_bedinfo b
+	    where    b.isused = '0'
+	</select>
+	
+	<!-- 病床使用天数 -->
+	<select id="getBedInUseDays" parameterType="Map" resultType="Long">
+	
+	</select>
+	
+</mapper>

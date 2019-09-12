@@ -11,16 +11,17 @@ import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
- * 出院人次数
+ * 病床使用率（病床使用天数/总天数）
  * @author FM
  *
  */
 @Component
-public class OuthospitalNumber extends DataProcessor{
+public class BedInUseDaysRate extends DataProcessor{
+
 	@Autowired
     private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "14002";
+    public static final String EVENT_ID = "13005";
 
     private SheJiKeMapper mapper;
 
@@ -39,11 +40,16 @@ public class OuthospitalNumber extends DataProcessor{
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getOuthospitalNumber(startTime, endTime, unitId);
+        long totalBed = getMapper().getBedTotalDays(startTime, endTime, unitId);//获取总床位数
+        //时间相减（天数）
+        int days = (int)((endTime.getTime() - startTime.getTime()) / (1000*3600*24));
+        long total = totalBed*days;
+        return total;
     }
 
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
+    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        return  getMapper().getBedInUseDays(startTime, endTime, unitId);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
-import com.paladin.qos.mapper.shejike.PatientsNumberMapper;
+import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 门急诊总人数
@@ -22,11 +22,11 @@ public class PatientsNumber extends DataProcessor{
 
     public static final String EVENT_ID = "13003";
 
-    private PatientsNumberMapper mapper;
+    private SheJiKeMapper mapper;
 
-    public PatientsNumberMapper getMapper() {
+    public SheJiKeMapper getMapper() {
         if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(PatientsNumberMapper.class);
+            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
         }
         return mapper;
     }
@@ -39,7 +39,7 @@ public class PatientsNumber extends DataProcessor{
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getTotalNum(startTime, endTime, unitId);
+        return  getMapper().getPatientsNumber(startTime, endTime, unitId);
     }
 
     @Override
