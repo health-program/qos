@@ -10,8 +10,8 @@ import com.paladin.qos.analysis.DataConstantContainer.Unit;
  */
 public abstract class GongWeiDataProcessor extends DataProcessor{
 	
-    public String getMappingUnitId(String unitId) {		
+    public String getMappingUnitId(String unitId) { 		
 	Unit unit = DataConstantContainer.getUnit(unitId);
 	return unit == null ? null : unit.getSource().getGongweiCode();	
-} 
+    } 
 }
