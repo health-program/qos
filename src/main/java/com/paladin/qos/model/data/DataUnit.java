@@ -8,8 +8,8 @@ public class DataUnit {
 	public final static int TYPE_HOSPITAL = 1;
 	/** 社区 */
 	public final static int TYPE_COMMUNITY = 2;
-	/** 社区站 */
-	public final static int TYPE_STATION = 3;
+	
+	
 	
 	// 
 	@Id
@@ -26,9 +26,6 @@ public class DataUnit {
 	
 	// 工位编码
 	private String gongweiCode;
-	
-	// 父级
-	private String parentId;
 	
 	// 备注说明
 	private String note;
@@ -80,14 +77,6 @@ public class DataUnit {
 
 	public void setType(Integer type) {
 		this.type = type;
-	}
-
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
 	}
 
 	public String getFuyouCode() {

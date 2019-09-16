@@ -78,9 +78,8 @@ public class AnalysisService {
 			return DataConstantContainer.getHospitalList();
 		} else if (unitType == DataUnit.TYPE_COMMUNITY) {
 			return DataConstantContainer.getCommunityList();
-		} else if (unitType == DataUnit.TYPE_STATION) {
-			return DataConstantContainer.getStationList();
-		}
+		} 
+		
 		return null;
 	}
 

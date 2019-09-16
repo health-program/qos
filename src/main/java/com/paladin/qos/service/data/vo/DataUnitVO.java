@@ -17,9 +17,6 @@ public class DataUnitVO {
 	// 工位编码
 	private String gongweiCode;
 
-	// 父级
-	private String parentId;
-
 	// 备注说明
 	private String note;
 
@@ -70,14 +67,6 @@ public class DataUnitVO {
 
 	public void setType(Integer type) {
 		this.type = type;
-	}
-
-	public String getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
 	}
 
 	public String getFuyouCode() {
