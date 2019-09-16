@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-unit-type" />
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
+                            <option value="">请选择医疗机构</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+		<div class="row">
+			<div class="col-md-7">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row">
+							<div class="col-md-4">
+								<div class="box box-solid">
+									<div id="ndfwyxlylChart" class="box-body" style="height: 300px"></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="box box-solid">
+									<div id="qyjgmzjzlChart" class="box-body" style="height: 300px"></div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="box box-solid">
+									<div id="qyysmzjzlChart" class="box-body" style="height: 300px"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="box-body">
+								<table id="dataGrid"></table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div id="qyjmzxjzrcsChart" class="box-body" style="height: 400px"></div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div id="qyjmjtysjzzsChart" class="box-body" style="height: 400px"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+    <div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+  	//<![CDATA[
+	//图表自适应大小      
+	 window.addEventListener("resize", function() {
+		ndfwyxlylChart.resize();
+		qyjgmzjzlChart.resize();
+		qyysmzjzlChart.resize();
+		qyjmzxjzrcsChart.resize();
+		qyjmjtysjzzsChart.resize();
+	});
+    
+    
+    var table, dataVal, requestParams;
+    $(function() {
+    	
+    	ndfwyxlylChartMethod();
+    	qyjgmzjzlChartMethod();
+    	qyysmzjzlChartMethod();
+    	qyjmzxjzrcsChartMethod();
+    	qyjmjtysjzzsChartMethod();
+    	
+         laydate.render({
+             elem: '#createTime',
+             type: 'year',
+             max:'nowTime',
+             value:''
+         });
+        initTable();
+    });
+    var currentElement;
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { checkbox: true }, 
+                    { title: "医疗机构", field: "unitName" },
+                    { title: "年度服务有效履约率", field: "totalInfection" , formatter: getRate},
+                    { title: "签约居民中心就诊人次数", field: "operatingDepartmentsInfection" , formatter: getRate},
+                    { title: "签约居民就诊总次数", field: "operatingPartInfection" , formatter: getRate},
+                    { title: "签约机构门诊就诊率", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "签约居民家庭医生就诊率", field: "lungInfection" , formatter: getRate},
+                    { title: "签约居民中心就诊总次数", field: "newBornInfection" , formatter: getRate},
+                    { title: "签约医生门诊就诊率", field: "newBornInfection" , formatter: getRate}
+                ]
+            ],
+            url: '',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+                console.log(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	dataVal = res || [];
+                return dataVal;
+            }
+        });
+    }
+    
+    function getRate(value, row, index) {
+        if (value)
+        return value.toFixed(2) + "%";
+    }
+    
+    var qyjmzxjzrcsChart = echarts.init(document.getElementById('qyjmzxjzrcsChart'));
+    function qyjmzxjzrcsChartMethod(){
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : {            
+    		            type : 'shadow'        
+    		        }
+    		    },
+    		    legend: {
+    		        data:['签约居民中心就诊人次数']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		            axisLabel: {
+    		                interval:0,
+    		                rotate:70//角度顺时针计算的
+    		                } ,
+    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    
+    		    series : [
+    		        {
+    		            name:'签约居民中心就诊人次数',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:[]
+    		        }
+    		    ]
+    		};
+    	qyjmzxjzrcsChart.setOption(option,true);
+    }
+    
+    
+    var qyjmjtysjzzsChart = echarts.init(document.getElementById('qyjmjtysjzzsChart'));
+    function qyjmjtysjzzsChartMethod(){
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : { 
+    		            type : 'shadow' 
+    		        }
+    		    },
+    		    legend: {
+    		        data:['签约居民家庭医生就诊总数']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		            axisLabel: {
+    		                interval:0,
+    		                rotate:70//角度顺时针计算的
+    		                } ,
+    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'签约居民家庭医生就诊总数',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:[]
+    		        }
+    		    ]
+    		};
+    	qyjmjtysjzzsChart.setOption(option,true);
+    }
+   
+    var ndfwyxlylChart = echarts.init(document.getElementById('ndfwyxlylChart'));
+    function ndfwyxlylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'年度服务有效履约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 15,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'年度服务有效履约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'年度服务有效履约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	ndfwyxlylChart.setOption(option,true);
+    }
+    
+    var qyjgmzjzlChart = echarts.init(document.getElementById('qyjgmzjzlChart'));
+    function qyjgmzjzlChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'签约机构门诊就诊率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 15,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'签约机构门诊就诊率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'签约机构门诊就诊率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	qyjgmzjzlChart.setOption(option,true);
+    } 
+    
+    var qyysmzjzlChart = echarts.init(document.getElementById('qyysmzjzlChart'));
+    function qyysmzjzlChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'签约医生门诊就诊率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 15,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'签约医生门诊就诊率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'签约医生门诊就诊率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	qyysmzjzlChart.setOption(option,true);
+    } 
+
+  	//]]>
+    </script>
+</body>
+
+</html>

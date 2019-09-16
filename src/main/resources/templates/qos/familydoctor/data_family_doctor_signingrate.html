@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-unit-type" />
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
+                            <option value="">请选择医疗机构</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+		<div class="row">
+			<div class="col-md-7">
+				<div class="row">
+					<div class="col-md-12">
+					<div class="box box-solid">
+						<div id="qylChart" class="box-body" style="height: 400px"></div>
+					</div>
+					</div>
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="box-body">
+								<table id="dataGrid"></table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="row">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="cjrqqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="gxyhzqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="tnbhzqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+					</div> 
+					<div class="row">
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="ycfqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="zsetqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="lnrqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+					</div> 
+					<div class="row">
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="yzjszahzqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="fjhhzqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="box box-solid">
+								<div id="jbscgwryqylChart" class="box-body" style="height: 250px"></div>
+							</div>
+						</div>
+					</div> 
+				</div>
+			</div>
+		</div>
+	</section>
+    <div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+  	//<![CDATA[
+	//图表自适应大小      
+	 window.addEventListener("resize", function() {
+		qylChart.resize();
+		cjrqqylChart.resize();
+	    tnbhzqylChart.resize();
+	    gxyhzqylChart.resize();
+	    ycfqylChart.resize();
+	    zsetqylChart.resize();
+	    lnrqylChart.resize();
+	    yzjszahzqylChart.resize();
+	    fjhhzqylChart.resize();
+	    jbscgwryqylChart.resize();
+	});
+    
+    
+    var table, dataVal, requestParams;
+    $(function() {
+    	qylChartMethod();
+    	cjrqqylChartMethod();
+    	tnbhzqylChartMethod();
+    	gxyhzqylChartMethod();
+    	ycfqylChartMethod();
+    	zsetqylChartMethod();
+    	lnrqylChartMethod();
+    	yzjszahzqylChartMethod();
+    	fjhhzqylChartMethod();
+    	jbscgwryqylChartMethod();
+    	
+         laydate.render({
+             elem: '#createTime',
+             type: 'year',
+             max:'nowTime',
+             value:''
+         });
+        initTable(); 
+    });
+    var currentElement;
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { checkbox: true }, 
+                    { title: "医疗机构", field: "unitName" },
+                    { title: "残疾人群签约率", field: "totalInfection" , formatter: getRate},
+                    { title: "高血压患者签约率", field: "operatingDepartmentsInfection" , formatter: getRate},
+                    { title: "糖尿病患者签约率", field: "operatingPartInfection" , formatter: getRate},
+                    { title: "孕产妇签约率", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "0-6周岁儿童签约率", field: "lungInfection" , formatter: getRate},
+                    { title: "65周岁及以上老年人签约率", field: "newBornInfection" , formatter: getRate},
+                    { title: "严重精神障碍患者签约率", field: "newBornInfection" , formatter: getRate},
+                    { title: "肺结核患者签约率", field: "newBornInfection" , formatter: getRate},
+                    { title: "疾病筛查高危人员签约率", field: "newBornInfection" , formatter: getRate}
+                ]
+            ],
+            url: '',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+                console.log(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	dataVal = res || [];
+                return dataVal;
+            }
+        });
+    }
+    
+    function getRate(value, row, index) {
+        if (value)
+        return value.toFixed(2) + "%";
+    }
+    
+    var dataLegend = ['残疾人群签约率', '高血压患者签约率','糖尿病患者签约率', '孕产妇签约率','0-6周岁儿童签约率', '65周岁及以上老年人签约率', '严重精神障碍患者签约率', '肺结核患者签约率','疾病筛查高危人员签约率'];
+    
+    var qylChart= echarts.init(document.getElementById('qylChart'));
+    function qylChartMethod(){
+    		    var	option = {
+   				    tooltip: {
+   				        trigger: 'axis',
+   				        axisPointer: {
+   				            type: 'shadow'
+   				        }
+   				    },
+   				    legend: {
+   				        data: dataLegend,
+   				        type: 'scroll',
+   				        orient: 'horizontal',
+   				        right: 10,
+   				        top: 350,
+   				        bottom: 20,
+   				    },
+   				    toolbox: {
+   				        show : true,
+   				        feature : {
+   				            restore : {show: true},
+   				            saveAsImage : {show: true}
+   				        }
+   				    },
+   				    grid: {
+   				        left: '0%',
+   				        right: '0%',
+   				        bottom: '0%',
+   				        containLabel: true
+   				    },
+   				    xAxis: {
+   				        type: 'category',
+   				        axisLabel: {
+    		                interval:0,
+    		                rotate:30//角度顺时针计算的
+    		                } ,
+   				    	axisTick : {
+   							alignWithLabel : true
+   						},
+   				         data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心']
+   				    },
+   				    yAxis: {
+   				        type: 'value',
+   				        axisLabel: {
+   		                    show:true,
+   		                    formatter: '{value}%',//给Y轴数值添加百分号
+   		                }
+   				    },
+   		   	    	     grid: {
+   		   	              bottom: '110px',
+   		   	          },
+    		    series : [
+					{
+					    name: '残疾人群签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#4a72c9'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '高血压患者签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#6071c6'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '糖尿病患者签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#78a9f2'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '孕产妇签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#a3ccf8'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '0-6周岁儿童签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#47b8e2'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '65周岁及以上老年人签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#6087bf'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '严重精神障碍患者签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#4a72c9'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '肺结核患者签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#6071c6'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+					{
+					    name: '疾病筛查高危人员签约率',
+					    type: 'bar',
+					    barWidth : 4,
+					    itemStyle : {
+					       normal : {
+							color: '#78a9f2'
+					       }
+					    },
+					    data: ['30','43','50','23','33','31','42','23','15','19','35','23','26','45','33']
+					},
+    		    ]
+    		};
+    	qylChart.setOption(option,true);
+    }
+   
+    var cjrqqylChart = echarts.init(document.getElementById('cjrqqylChart'));
+    function cjrqqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'残疾人群签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'残疾人群签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'残疾人群签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	cjrqqylChart.setOption(option,true);
+    }
+
+    var gxyhzqylChart = echarts.init(document.getElementById('gxyhzqylChart'));
+    function gxyhzqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'高血压患者签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'高血压患者签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'高血压患者签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	gxyhzqylChart.setOption(option,true);
+    } 
+ 
+    var tnbhzqylChart = echarts.init(document.getElementById('tnbhzqylChart'));
+    function tnbhzqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'糖尿病患者签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'糖尿病患者签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'糖尿病患者签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	tnbhzqylChart.setOption(option,true);
+    } 
+    
+    var ycfqylChart = echarts.init(document.getElementById('ycfqylChart'));
+    function ycfqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'孕产妇签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'孕产妇签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'孕产妇签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	ycfqylChart.setOption(option,true);
+    } 
+    
+    var zsetqylChart = echarts.init(document.getElementById('zsetqylChart'));
+    function zsetqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'0~6周岁儿童签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'0~6周岁儿童签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'0~6周岁儿童签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	zsetqylChart.setOption(option,true);
+    } 
+    
+    var lnrqylChart = echarts.init(document.getElementById('lnrqylChart'));
+    function lnrqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'65周岁及以上老年人签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'65周岁及以上老年人签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'65周岁及以上老年人签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	lnrqylChart.setOption(option,true);
+    } 
+    
+    var yzjszahzqylChart = echarts.init(document.getElementById('yzjszahzqylChart'));
+    function yzjszahzqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'严重精神障碍患者签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'严重精神障碍患者签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'严重精神障碍患者签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	yzjszahzqylChart.setOption(option,true);
+    } 
+
+    var fjhhzqylChart = echarts.init(document.getElementById('fjhhzqylChart'));
+    function fjhhzqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'肺结核患者签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'肺结核患者签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'肺结核患者签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	fjhhzqylChart.setOption(option,true);
+    } 
+    
+    var jbscgwryqylChart = echarts.init(document.getElementById('jbscgwryqylChart'));
+    function jbscgwryqylChartMethod(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'疾病筛查高危人员签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'疾病筛查高危人员签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'疾病筛查高危人员签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	jbscgwryqylChart.setOption(option,true);
+    } 
+    
+  	//]]>
+    </script>
+</body>
+
+</html>

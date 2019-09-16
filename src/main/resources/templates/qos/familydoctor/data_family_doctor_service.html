@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-unit-type" />
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
+                            <option value="">请选择医疗机构</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="jkglfwbqysChart" class="box-body" style="height: 350px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="qygxhfwsChart" class="box-body" style="height: 350px">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+        <div class="col-md-9">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+			<div class="col-md-3">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box box-solid">
+					<div id="jkglqylChart" class="box-body" style="height: 210px">
+					</div>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="box box-solid">
+					<div id="gxhfwqylChart" class="box-body" style="height: 210px">
+					</div>
+					</div>
+				</div>
+			</div>
+			</div>
+		</div>
+    </section>
+    <div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+  	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		jkglqylChart.resize();
+		gxhfwqylChart.resize();
+		jkglfwbqysChart.resize();
+		qygxhfwsChart.resize();
+	});
+    
+    
+    var table, dataVal, requestParams;
+    $(function() {
+    	
+    	jkglqylChart1();
+    	gxhfwqylChart1();
+    	jkglfwbqysChart1();
+    	qygxhfwsChart1();
+    	
+         laydate.render({
+             elem: '#createTime',
+             type: 'year',
+             max:'nowTime',
+             value:''
+         });
+        initTable();
+    });
+    var currentElement;
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { checkbox: true }, 
+                    { title: "医疗机构", field: "unitName" },
+                    { title: "签约健康管理服务包签约数", field: "totalInfection" , formatter: getRate},
+                    { title: "就签居民数", field: "operatingDepartmentsInfection" , formatter: getRate},
+                    { title: "综全健康管理服务包签约率", field: "operatingPartInfection" , formatter: getRate},
+                    { title: "签约个性化服务数", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "签约总数", field: "lungInfection" , formatter: getRate},
+                    { title: "个性化服务签约率", field: "newBornInfection" , formatter: getRate}
+                ]
+            ],
+            url: '',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+                console.log(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	dataVal = res || [];
+                return dataVal;
+            }
+        });
+    }
+    
+    function getRate(value, row, index) {
+        if (value)
+        return value.toFixed(2) + "%";
+    }
+    
+    var jkglfwbqysChart = echarts.init(document.getElementById('jkglfwbqysChart'));
+    function jkglfwbqysChart1(){
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : {            
+    		            type : 'shadow'        
+    		        }
+    		    },
+    		    legend: {
+    		        data:['签约健康管理服务包签约数']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		            axisLabel: {
+    		                interval:0,
+    		                rotate:50//角度顺时针计算的
+    		                } ,
+    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'签约健康管理服务包签约数',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:[]
+    		        }
+    		    ]
+    		};
+    	jkglfwbqysChart.setOption(option,true);
+    }
+    
+    
+    var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
+    function qygxhfwsChart1(){
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : { 
+    		            type : 'shadow' 
+    		        }
+    		    },
+    		    legend: {
+    		        data:['签约个性化服务数']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		            axisLabel: {
+    		                interval:0,
+    		                rotate:50//角度顺时针计算的
+    		                } ,
+    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'签约个性化服务数',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:[]
+    		        }
+    		    ]
+    		};
+    	qygxhfwsChart.setOption(option,true);
+    }
+   
+    var jkglqylChart = echarts.init(document.getElementById('jkglqylChart'));
+    function jkglqylChart1(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                title: {
+                    text: '综合健康管理',
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'服务包签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'综合健康管理服务包签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'综合健康管理服务包签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	jkglqylChart.setOption(option,true);
+    }
+    
+    var gxhfwqylChart = echarts.init(document.getElementById('gxhfwqylChart'));
+    function gxhfwqylChart1(){
+    	var option = {
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+                },
+                title: {
+                    text: '个性化服务签约率',
+                },
+                color: ['#3398DB','#999999'],
+                graphic: [{ //环形图中间添加文字
+                    type: 'text', //通过不同top值可以设置上下显示
+                    left: 'center',
+                    top: '45%',
+                    style: {
+                        text: '90%'+'\n'+'个性化服务签约率',
+                        textAlign: 'center',
+                        fill: 'black', //文字的颜色
+                        width: 30,
+                        height: 30,
+                        fontSize: 10,
+                        fontFamily: "Microsoft YaHei"
+                    }
+                }],
+                series: [
+                    {
+                        name:'个性化服务签约率',
+                        type:'pie',
+                        radius: ['50%', '70%'],
+                        avoidLabelOverlap: false,
+                        label: {
+                            normal: {
+                                show: false,
+                                position: 'center'
+                            },
+
+                        },
+                        labelLine: {
+                            normal: {
+                                show: false
+                            }
+                        },
+                        data:[
+                            {
+                                value:'90',
+                                name:'个性化服务签约率'
+                            },
+                            {
+                                value:'10',
+                                name:'',
+                                hoverAnimation:false,
+                                tooltip:{
+                                      show:false,
+                                },
+                            }
+                        ]
+                    }
+                ]
+            };
+    	gxhfwqylChart.setOption(option,true);
+    }
+
+  	//]]>
+    </script>
+</body>
+
+</html>
