@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="data-event-type,data-unit-type" />
+<section class="content-header">
+    <h1>高血压高血糖情况报表</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <select name="unitId" class="form-control">
+                            <option value="">请选择辖区</option>
+                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endDate" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div id="pieChartDiv1" class="box-body" style="height: 250px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div id="pieChartDiv2" class="box-body" style="height: 250px;">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div id="pieChartDiv3" class="box-body" style="height: 250px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="box box-solid">
+                <div id="pieChartDiv4" class="box-body" style="height: 250px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="box box-solid">
+                <div id="barChart1" class="box-body" style="height: 300px"></div>
+            </div>
+            <div class="box box-solid">
+                <div id="barChart2" class="box-body" style="height: 300px"></div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    var table, sumChart, dayChart, sumData, requestParams;
+    $(function() {
+        var day=new Date();
+        day.setTime(day.getTime());
+        var month = day.getFullYear()+"-" + (day.getMonth()+1);
+        laydate.render({
+            elem: '#dateInput',
+            type: 'month',
+            value:month
+        });
+        initTable();
+    });
+
+    function getRate(e,t) {
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+
+    function getPercent(value){
+        if(value)
+            return value+"%";
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "辖区", field: "managedCenter" },
+                    { title: "高血压患病数", field: "pressureNumber" },
+                    { title: "高血压管理数", field: "pressureManageNumber" },
+                    { title: "管理人群血压控制率", field: "pressureControlRate",formatter: getPercent},
+                    { title: "高血压患者规范管理率", field: "pressureManageRate" ,formatter: getPercent},
+                    { title: "糖尿病患病数", field: "sugarNumber"},
+                    { title: "糖尿病管理数", field: "sugarManageNumber"},
+                    { title: "管理人群血糖控制率", field: "sugarControlRate",formatter: getPercent},
+                    { title: "糖尿病患者规范管理率", field: "sugarManageRate",formatter: getPercent}
+                ]
+            ],
+            url: '/qos/exhibition/pressureSugar/search/all',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+                sumData = res || [];
+                for (var i = 0; i < sumData.length; i++) {
+                    var row = sumData[i];
+                    row.pressureControlRate=getRate(row.pressureRecentReach,row.pressureNumber);
+                    row.pressureManageRate=getRate(row.pressureManageNumber,row.pressureNumber);
+                    row.sugarControlRate = getRate(row.sugarRecentReach,row.sugarNumber);
+                    row.sugarManageRate = getRate(row.sugarManageNumber,row.sugarNumber);
+                }
+                initPieChart1();
+                initPieChart2();
+                initPieChart3();
+                initPieChart4();
+                initColumnDiv1();
+                initColumnDiv2();
+                return sumData;
+            }
+        });
+    }
+    function initPieChart(pieChar,pieName,sumUse,sumOpen) {
+        if (sumData==0){
+            showChartInfo(pieChar, '暂无数据显示');
+            return false;
+        }
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        var x = sumUse * 100 / sumOpen;
+        occupyRate=x.toFixed(2) * 1;
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
+
+        var option = {
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            color: ['#3398DB','#999999'],
+            graphic: [{ //环形图中间添加文字
+                type: 'text', //通过不同top值可以设置上下显示
+                left: 'center',
+                top: '45%',
+                style: {
+                    text: pieMessage+'\n'+pieName,
+                    textAlign: 'center',
+                    fill: 'black', //文字的颜色
+                    width: 60,
+                    height: 60,
+                    fontSize: 15,
+                    fontFamily: "Microsoft YaHei"
+                }
+            }],
+            series: [
+                {
+                    name:pieName,
+                    type:'pie',
+                    radius: ['50%', '80%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {
+                            value:occupyRate,
+                            name:pieName
+                        },
+                        {
+                            value:remainRate,
+                            name:'',
+                            hoverAnimation:false,
+                            tooltip:{//禁止鼠标悬停显示提示框
+                                show:false,
+                            },
+                        }
+                    ]
+                }
+            ]
+        };
+        pieChar.setOption(option,true);
+    };
+
+    function initPieChart1() {
+        var dom = document.getElementById("pieChartDiv1");
+        var pieChart1 = echarts.init(dom);
+        var pieName="高血压规范管理率";
+        var sumOpen=0;
+        var sumUse=0;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.pressureNumber;
+            sumUse+=it.pressureManageNumber;
+        }
+        initPieChart(pieChart1,pieName,sumUse,sumOpen);
+    }
+
+
+    function initPieChart2() {
+        var dom = document.getElementById("pieChartDiv2");
+        var pieChart2 = echarts.init(dom);
+        var pieName="血压控制率";
+        var sumOpen=0;
+        var sumUse=0;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.pressureNumber;
+            sumUse+=it.pressureRecentReach;
+        }
+        initPieChart(pieChart2,pieName,sumUse,sumOpen);
+    }
+
+    function initPieChart3() {
+        var dom = document.getElementById("pieChartDiv3");
+        var pieChart3 = echarts.init(dom);
+        var pieName="糖尿病规范管理率";
+        var sumOpen=0;
+        var sumUse=0;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.sugarNumber;
+            sumUse+=it.sugarManageNumber;
+        }
+        initPieChart(pieChart3,pieName,sumUse,sumOpen);
+    }
+
+    function initPieChart4() {
+        var dom = document.getElementById("pieChartDiv4");
+        var pieChart4 = echarts.init(dom);
+        var pieName="血糖控制率";
+        var sumOpen=0;
+        var sumUse=0;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.sugarNumber;
+            sumUse+=it.sugarRecentReach;
+        }
+        initPieChart(pieChart4,pieName,sumUse,sumOpen);
+    }
+
+    function initColumnDiv(barChart,divName,managedName,
+    number,manageNumber,columnName1,columnName2) {
+        if (sumData==0){
+            showChartInfo(barChart, '暂无数据显示');
+            return false;
+        }
+        var	option = {
+            title: {
+                text: divName,
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+
+            grid: {
+                left: '0%',
+                right: '0%',
+                bottom: '5%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval:0,
+                    rotate:25//角度顺时针计算的
+                } ,
+                axisTick : {
+                    alignWithLabel : true
+                },
+                data: managedName
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            grid: {
+                bottom: '55px',
+            },
+            series: [
+                {
+                    name:columnName1,
+                    type: 'bar',
+                    barWidth : 10,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:2,
+                            color: '#4a72c9'
+                        }
+                    },
+
+                    data: number
+                },
+                {
+                    name: columnName2,
+                    type: 'bar',
+                    barWidth : 10,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:3,
+                            color: '#999999'
+                        }
+                    },
+                    data: manageNumber
+                }
+            ],
+            legend: {
+                data: [columnName1, columnName2],
+                bottom:0
+            }
+        };
+        barChart.setOption(option,true);
+    };
+
+    function initColumnDiv1() {
+        var dom = document.getElementById("barChart1");
+        var barChart1 = echarts.init(dom);
+        var managedName = [];
+        var pressureNumberValue = [];
+        var pressureManageNumberValue = [];
+        sumData.forEach(function(item){
+            managedName.push(item.managedCenter);
+            pressureNumberValue.push({name:item.mamanagedCenter,value:item.pressureNumber});
+            pressureManageNumberValue.push({name:item.mamanagedCenter,value:item.pressureManageNumber});
+        })
+        var divName="辖区高血压管理柱状图";
+        var columnName1="高血压患病数";
+        var columnName2="高血压管理数";
+        initColumnDiv(barChart1,divName,managedName,pressureNumberValue,pressureManageNumberValue,columnName1,columnName2);
+    }
+    function initColumnDiv2() {
+        var dom = document.getElementById("barChart2");
+        var barChart2 = echarts.init(dom);
+        var managedName = [];
+        var sugarNumberValue = [];
+        var sugarManageNumberValue = [];
+        sumData.forEach(function(item){
+            managedName.push(item.managedCenter);
+            sugarNumberValue.push({name:item.mamanagedCenter,value:item.sugarNumber});
+            sugarManageNumberValue.push({name:item.mamanagedCenter,value:item.sugarManageNumber});
+        })
+        var divName="辖区糖尿病管理排名柱状图";
+        var columnName1="糖尿病患病数";
+        var columnName2="糖尿病管理数";
+        initColumnDiv(barChart2,divName,managedName,sugarNumberValue,sugarManageNumberValue,columnName1,columnName2);
+    }
+
+
+    var showChartInfo = function (sumChart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        sumChart.clear();
+        sumChart.hideLoading();
+        sumChart.setOption(msgOption)
+    };
+</script>
+</body>
+
+</html>

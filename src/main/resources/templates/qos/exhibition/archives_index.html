@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="data-event-type,data-unit-type" />
+<section class="content-header">
+    <h1>辖区建档情况报表</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <select name="unitId" class="form-control">
+                            <option value="">请选择辖区</option>
+                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endDate" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="box box-solid">
+                <div id="pieChartDiv1" class="box-body" style="height: 300px">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div id="pieChartDiv2" class="box-body" style="height: 300px">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    var table, sumChart, dayChart, sumData, requestParams;
+    $(function() {
+        var day=new Date();
+        day.setTime(day.getTime());
+        var month = day.getFullYear()+"-" + (day.getMonth()+1);
+        laydate.render({
+            elem: '#dateInput',
+            type: 'month',
+            value:month
+        });
+        initTable();
+    });
+
+    function getActiveRate(row) {
+        var e = row.activeArchivesNumber,
+            t = row.peopleNumber;
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+
+    function getPublicRate(row) {
+        var e = row.publicArchivesNumber,
+            t = row.activeArchivesNumber;
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "辖区", field: "managedCenter" },
+                    { title: "常驻居民数", field: "peopleNumber" },
+                    { title: "活动健康档案数", field: "activeArchivesNumber" },
+                    { title: "建档率", field: "createArchivesRate" ,
+                        formatter: function(value, row, index) {
+                            return value + "%";
+                        }},
+                    { title: "审核公开的健康档案数", field: "publicArchivesNumber" },
+                    { title: "档案公开率", field: "publicArchivesRate",
+                        formatter: function(value, row, index) {
+                            return value + "%";
+                        }}
+                ]
+            ],
+            url: '/qos/exhibition/archives/search/all',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+                sumData = res || [];
+                for (var i = 0; i < sumData.length; i++) {
+                    var row = sumData[i];
+                    row.createArchivesRate = getActiveRate(row);
+                    row.publicArchivesRate = getPublicRate(row);
+                }
+
+                initPieChart1();
+                initPieChart2();
+
+                return sumData;
+            }
+        });
+    }
+
+
+    function initPieChart1() {
+        if (!sumChart) {
+            var dom = document.getElementById("pieChartDiv1");
+            var pieChart1 = echarts.init(dom);
+
+        }
+        if (sumData==0){
+            showChartInfo(pieChart1, '暂无数据显示');
+            return false;
+        }
+
+        var sumOpen=0;
+        var sumUse=0;
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.peopleNumber;
+            sumUse+=it.activeArchivesNumber;
+        }
+        var x = sumUse * 100 / sumOpen;
+        occupyRate=x.toFixed(2) * 1;
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
+
+        var option = {
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            // title: {
+            //     text: '建档率',
+            //
+            // },
+            color: ['#3398DB','#999999'],
+            graphic: [{ //环形图中间添加文字
+                type: 'text', //通过不同top值可以设置上下显示
+                left: 'center',
+                top: '45%',
+                style: {
+                    text: pieMessage+'\n'+'建档率',
+                    textAlign: 'center',
+                    fill: 'black', //文字的颜色
+                    width: 30,
+                    height: 30,
+                    fontSize: 20,
+                    fontFamily: "Microsoft YaHei"
+                }
+            }],
+            series: [
+                {
+                    name:'建档率',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {
+                            value:occupyRate,
+                            name:'建档率'
+                        },
+                        {
+                            value:remainRate,
+                            name:'',
+                            hoverAnimation:false,
+                            tooltip:{//禁止鼠标悬停显示提示框
+                                show:false,
+                            },
+                        }
+                    ]
+                }
+            ]
+        };
+        pieChart1.setOption(option,true);
+    };
+
+
+
+    function initPieChart2() {
+        var dom = document.getElementById("pieChartDiv2");
+        var pieChart2 = echarts.init(dom);
+        if (sumData==0){
+            showChartInfo(pieChart2, '暂无数据显示');
+            return false;
+        }
+        var sumOpen=0;
+        var sumUse=0;
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.activeArchivesNumber;
+            sumUse+=it.publicArchivesNumber;
+        }
+        var x = sumUse * 100 / sumOpen;
+        occupyRate=x.toFixed(2) * 1;
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
+
+        var option = {
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            // title: {
+            //     text: '档案公开率',
+            //
+            // },
+            color: ['#3398DB','#999999'],
+            graphic: [{ //环形图中间添加文字
+                type: 'text', //通过不同top值可以设置上下显示
+                left: 'center',
+                top: '45%',
+                style: {
+                    text: pieMessage+'\n'+'档案公开率',
+                    textAlign: 'center',
+                    fill: 'black', //文字的颜色
+                    width: 30,
+                    height: 30,
+                    fontSize: 20,
+                    fontFamily: "Microsoft YaHei"
+                }
+            }],
+            series: [
+                {
+                    name:'档案公开率',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {
+                            value:occupyRate,
+                            name:'档案公开率'
+                        },
+                        {
+                            value:remainRate,
+                            name:'',
+                            hoverAnimation:false,
+                            tooltip:{//禁止鼠标悬停显示提示框
+                                show:false,
+                            },
+                        }
+                    ]
+                }
+            ]
+        };
+        pieChart2.setOption(option,true);
+    }
+
+    var showChartInfo = function (sumChart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        sumChart.clear();
+        sumChart.hideLoading();
+        sumChart.setOption(msgOption)
+    };
+</script>
+</body>
+
+</html>

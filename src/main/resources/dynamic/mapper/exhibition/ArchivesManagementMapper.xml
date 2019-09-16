@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.exhibition.ArchivesManagementMapper">
+
+    <!--活动档案数-->
+    <select id="getArchivesTotal" resultType="com.paladin.qos.dynamic.model.exhibition.Archives">
+        select a.managedcentercode as managedCenter,a.ac as activeArchivesNumber,p.pc as publicArchivesNumber
+        (
+        (select managedcentercode,count(managedcentercode)ac from phis_chss.v_fha_person_main where stateid=1
+        <if test="startDate != null">
+            AND  createdtime <![CDATA[>= ]]> #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND  createdtime <![CDATA[<= ]]> #{endDate}
+        </if>
+        group by managedcentercode)a
+        join
+        (select managedcentercode,count(managedcentercode)pc from phis_chss.v_fha_person_main where stateid=1
+        and verify=1
+        <if test="startDate != null">
+            AND  createdtime <![CDATA[>= ]]> #{startDate}
+        </if>
+        <if test="endDate != null">
+            AND  createdtime <![CDATA[<= ]]> #{endDate}
+        </if>
+        group by managedcentercode)p
+        on a.managedcentercode=p.managedcentercode
+        )
+    </select>
+
+
+</mapper>
+
