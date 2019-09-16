@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2" style="display:none">
+                            <select name="eventId" class="form-control tonto-select-constant" enumcode="data-event-type">
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input id="startTime" name="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" value="2018-01-01">
+                        </div>
+                        <div class="col-md-2">
+                            <input id="endTime" name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+           
+         
+                <div class="col-sm-6">
+                <div class="box box-solid">
+                <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
+                        <div class="form-group">
+                            <label for="monthInput" class="col-sm-3 control-label"></label>
+                           
+                        </div>
+                    </form>
+                    <div id="sumChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                <div class="box box-solid">
+                    <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
+                        <div class="form-group">
+                            <label for="monthInput" class="col-sm-3 control-label"></label>
+                           
+                        </div>
+                    </form>
+                    <div id="dayChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                <div class="box box-solid">
+                    <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
+                        <div class="form-group">
+                            <label for="monthInput" class="col-sm-3 control-label"></label>
+                           
+                        </div>
+                    </form>
+                    <div id="dayChartDiv" class="box-body" style="height: 400px">
+                    </div>
+                    </div>
+                </div>
+ 
+        </div>
+        
+       <div class="row">
+       		 <div class="col-md-12">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+       </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table, sumChart, dayChart, sumData, requestParams;
+    $(function() {
+        initTable();
+    });
+     //1.静脉输液率
+    function getIntravenousRate(row) {
+        var e = row.intravenousEventNum,//静脉输液数
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+    //2.激素使用率
+    function getHormoneRate(row) {
+        var e = row.hormoneEventNum,
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+    //3.抗菌药物使用率
+    function getAntiDrugRate(row) {
+        var e = row.antiDrugEventNum,
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+    //4.一联抗生素使用率
+    function getOneRate(row) {
+        var e = row.oneEventNum,
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+    //5.二联抗生素使用率
+    function getTwoRate(row) {
+        var e = row.twoEventNum,
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+    //6.三联抗生素使用率
+    function getThreeRate(row) {
+        var e = row.threeEventNum,
+            t = row.totalNum;//总数
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1;
+    }
+   
+    
+    
+    
+
+    var currentElement;
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { checkbox: true },
+                    { title: "医疗机构", field: "unitName",
+                    	formatter: function(value, row, index) {
+                             if(value=="0"){
+                            	 return "总计";
+                             }else{
+                            	 return value;
+                             }
+                    	} 
+                    },
+                    { title: "处方数量", field: "recipeCount",
+                    	formatter: function(value, row, index) {
+                            return value ;
+                       } 
+                    },
+                    { title: "处方总额", field: "recipeMoney",
+                    	formatter: function(value, row, index) {
+                            return value ";
+                       }
+                    },
+                    { title: "最大处方金额", field: "maxRecipeMoney",
+                    	formatter: function(value, row, index) {
+                            return value ;
+                       }
+                    },
+                    { title: "最小处方金额", field: "minRecipeMoney",
+                    	formatter: function(value, row, index) {
+                            return value ;
+                       }
+                    },
+                    { title: "平均处方金额", field: "avgRecipeMoney",
+                    	formatter: function(value, row, index) {
+                            return value ;
+                       }
+                    },
+                    { title: "门诊中医处方数占比", field: "medicineRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "门诊中药饮片占比", field: "drugRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "门诊中医非药物治疗处方占比", field: "nonDrugRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "静脉输液率", field: "intravenousRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "激素使用率", field: "hormoneRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "抗菌药物使用率", field: "antiDrugRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "一联抗生素使用率", field: "oneRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "二联抗生素使用率", field: "twoRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    },
+                    { title: "三联抗生素使用率", field: "threeRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    }、
+                    
+                ]
+            ],
+            url: '/qos/analysis/data/returnRate',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");									
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+                console.log(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+            return params;
+            },
+            responseHandler: function(res) {
+                sumData = res || [];
+                
+              //遍历数组
+                var event1 = 0,total1=0,event2 = 0,total2=0,event3 = 0,total3=0,event4 = 0,total4=0,
+                    event5 = 0,total5=0,event6 = 0,total6=0,event7 = 0,total7=0,event8 = 0,total8=0,
+                    event9 = 0,total9=0,event10 = 0,total10=0,event11 = 0,total11=0,event12 = 0,total12=0,
+                    event13= 0,total13=0,event14 = 0,total14=0,event15 = 0,total15=0,event16 = 0,total16=0,
+                    event17 = 0,total17=0,event18 = 0,total18=0,event19 = 0,total19=0;
+                    
+                $.each(sumData,function(n,value) {
+                	event1+=value.within31DaysEventNum;
+                	total1+=value.within31DaysTotalNum;
+                	event2+=value.infarctionEventNum;
+                	total2+=value.infarctionTotalNum;
+                	event3+=value.heartFailureEventNum;
+                	total3+=value.heartFailureTotalNum;
+                	event4+=value.brainBleedingEventNum;
+                	total4+=value.brainBleedingTotalNum;
+                	event5+=value.brainInjuryEventNum;
+                	total5+=value.brainInjuryTotalNum;
+                	event6+=value.gastrointestinalBleedingEventNum;
+                	total6+=value.gastrointestinalBleedingTotalNum;
+                	event7+=value.bodyDamageEventNum;
+                	total7+=value.bodyDamageTotaltNum;
+                	event8+=value.pneumoniaEventNum;
+                	total8+=value.pneumoniaTotalNum;
+                	event9+=value.lungDiseaseEventNum;
+                	total9+=value.lungDiseaseTotalNum;
+                	
+                	event10+=value.diabetesEventNum;
+                	total10+=value.diabetesTotalNum;
+                	event11+=value.goiterEventNum;
+                	total11+=value.goiterTotalNum;
+                	event12+=value.appendicitisEventNum;
+                	total12+=value.appendicitisTotalNum;
+                	
+                	event13+=value.prostateEventNum;
+                	total13+=value.prostateTotalNum;
+                	event14+=value.kidneyFailureEventNum;
+                	total14+=value.kidneyFailureTotalNum;
+                	
+                	event15+=value.bloodPoisoningEventNum;
+                	total15+=value.bloodPoisoningTotalNum;
+                	event16+=value.hypertensionEventNum;
+                	total16+=value.hypertensionTotalNum;
+                	event17+=value.pancreatitisEventNum;
+                	total17+=value.pancreatitisTotalNum;
+                	event18+=value.cancerEventNum;
+                	total18+=value.cancerTotalNum;
+                	event19+=value.malignantTumorEventNum;
+                	total19+=value.malignantTumorTotalNum;
+                }
+                )
+                
+                var deathEntity={};
+
+                deathEntity.unitName = '0'; 
+                deathEntity.within31DaysEventNum=event1;  deathEntity.within31DaysTotalNum=total1;  deathEntity.infarctionEventNum = event2; deathEntity.infarctionTotalNum = total2
+                deathEntity.heartFailureEventNum=event3;  deathEntity.heartFailureTotalNum=total3;  deathEntity.brainBleedingEventNum = event4; deathEntity.brainBleedingTotalNum = total4;
+                deathEntity.brainInjuryEventNum=event5;  deathEntity.brainInjuryTotalNum=total5;  deathEntity.gastrointestinalBleedingEventNum = event6; deathEntity.gastrointestinalBleedingTotalNum = total6;
+                deathEntity.bodyDamageEventNum=event7;  deathEntity.bodyDamageTotaltNum=total7;  deathEntity.pneumoniaEventNum = event8; deathEntity.pneumoniaTotalNum = total8;
+                
+                deathEntity.lungDiseaseEventNum=event9;  deathEntity.lungDiseaseTotalNum=total9;  deathEntity.diabetesEventNum = event10; deathEntity.diabetesTotalNum = total10;
+                
+                deathEntity.goiterEventNum=event11;  deathEntity.goiterTotalNum=total11;  deathEntity.appendicitisEventNum = event12; deathEntity.appendicitisTotalNum = total12;
+                
+                deathEntity.prostateEventNum=event13;  deathEntity.prostateTotalNum=total13;  deathEntity.kidneyFailureEventNum = event14; deathEntity.kidneyFailureTotalNum = total14;
+                
+                deathEntity.bloodPoisoningEventNum=event15;  deathEntity.bloodPoisoningTotalNum=total15;  deathEntity.hypertensionEventNum = event16; deathEntity.hypertensionTotalNum = total16;
+                
+                deathEntity.pancreatitisEventNum=event17;  deathEntity.pancreatitisTotalNum=total17;  deathEntity.cancerEventNum = event18; deathEntity.cancerTotalNum = total18;
+                
+                deathEntity.malignantTumorEventNum=event19;  deathEntity.malignantTumorTotalNum=total19;  
+                sumData.push(deathEntity);
+                
+                
+                for (var i = 0; i < sumData.length; i++) {
+                    var row = sumData[i];
+                    row.within31DaysRate = getWithin31DaysRate(row);
+                    row.infarctionRate = getInfarctionRate(row);
+                    row.heartFailureRate = getHeartFailureRate(row);
+                    row.brainBleedingRate = getBrainBleedingRate(row);
+                    row.brainInjuryRate = getBrainInjuryRate(row);
+                    row.gastrointestinalBleedingRate = getGastrointestinalBleedingRate(row);
+                    row.bodyDamageRate = getBodyDamageRate(row);
+                    row.pneumoniaRate = getPneumoniaRate(row);
+                    
+                    row.lungDiseaseRate = getLungDiseaseRate(row);
+                    row.diabetesRate = getDiabetesRate(row);
+                    row.goiterRate = getGoiterRate(row);
+                    row.appendicitisRate = getAppendicitisRate(row);
+                    row.prostateRate = getProstateRate(row);
+                    row.kidneyFailureRate = getKidneyFailureRate(row);
+                    row.bloodPoisoningRate = getBloodPoisoningRate(row);
+                    row.hypertensionRate = getHypertensionRate(row);
+                    row.pancreatitisRate = getPancreatitisRate(row);
+                    row.cancerRate = getCancerRate(row);
+                    row.malignantTumorRate = getMalignantTumorRate(row);
+                    
+                }
+                
+                initDayChart();
+                initSumChart();
+                return sumData;
+            }
+        });
+    }
+    
+    
+    function initDayChart() {
+    	var dataAxis = [],//x轴
+        
+        within31DaysRate =[],                         lungDiseaseRate=[],    
+        infarctionRate =[],                           diabetesRate=[],              
+        heartFailureRate =[],                         goiterRate=[],                      
+        brainBleedingRate =[],                        appendicitisRate =[],                     
+        brainInjuryRate =[],                          prostateRate=[],                             
+        gastrointestinalBleedingRate =[],             kidneyFailureRate =[],                               
+        bodyDamageRate =[],                           bloodPoisoningRate=[],                                        
+        pneumoniaRate =[],                            hypertensionRate  =[],                                
+                                                      pancreatitisRate=[],
+                                                      cancerRate =[],                                             
+                                                      malignantTumorRate  =[];
+    	var myChart = echarts.init(document.getElementById('dayChartDiv'));
+    	//x轴
+    	for (var i = 0; i < sumData.length-1; i++) {
+            var it = sumData[i];
+            dataAxis.push(it.unitName);
+        }
+    	for (var i = 0; i < sumData.length-1; i++) {
+            var it = sumData[i];
+            within31DaysRate.push(it.within31DaysRate);
+            infarctionRate.push(it.infarctionRate);
+            lungDiseaseRate.push(it.lungDiseaseRate);
+            diabetesRate.push(it.diabetesRate);
+            heartFailureRate.push(it.heartFailureRate);
+            goiterRate.push(it.goiterRate);
+            brainBleedingRate.push(it.brainBleedingRate);
+            appendicitisRate.push(it.appendicitisRate);
+            
+            brainInjuryRate.push(it.brainInjuryRate);
+            prostateRate.push(it.prostateRate);
+            gastrointestinalBleedingRate.push(it.gastrointestinalBleedingRate);
+            kidneyFailureRate.push(it.kidneyFailureRate);
+            bodyDamageRate.push(it.bodyDamageRate);
+            bloodPoisoningRate.push(it.bloodPoisoningRate);
+            pneumoniaRate.push(it.pneumoniaRate);
+            hypertensionRate.push(it.hypertensionRate);
+            pancreatitisRate.push(it.pancreatitisRate);
+            cancerRate.push(it.cancerRate);
+            malignantTumorRate.push(it.malignantTumorRate);
+        }
+    	
+    	myChart.setOption({        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: { 
+            	trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            
+            grid: {
+                left: '0%',
+                right: '0%',
+                bottom: '5%',
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['住院患者出院31天内再住院率','急性心肌梗死再住院率','充血性心力衰竭再住院率','脑出血和脑梗死再住院率'],
+                bottom:0
+            },
+            xAxis: {
+            	type: 'category',
+                axisLabel: {
+                    interval:0,
+                    rotate:25//角度顺时针计算的
+                } ,
+                axisTick : {
+                    alignWithLabel : true
+                },
+            	data: dataAxis,
+            },
+            yAxis: {
+            	type: 'value'
+            },
+            grid: {
+                bottom: '110px',
+            },
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '住院患者出院31天内再住院率',
+                data: within31DaysRate},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                   name: '急性心肌梗死再住院率',
+                   data: infarctionRate},
+            	 {  type: 'bar',
+              	   barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     name: '充血性心力衰竭再住院率',
+                     data: heartFailureRate},
+            	 {  type: 'bar',
+                  	 barWidth : 5,
+                       itemStyle:{
+                           normal:{
+                               barBorderRadius:3,
+                           }
+                       },
+                     name: '脑出血和脑梗死再住院率',
+                     data: brainBleedingRate}
+                     
+           ]
+        });
+    	
+    }
+    
+    
+    function initSumChart(){
+    	var yearMonth=[],
+        within31DaysRate1 =[],                         lungDiseaseRate1=[],    
+        infarctionRate1 =[],                           diabetesRate1=[],              
+        heartFailureRate1 =[],                         goiterRate1=[],                      
+        brainBleedingRate1 =[],                        appendicitisRate1 =[],                     
+        brainInjuryRate1 =[],                          prostateRate1=[],                             
+        gastrointestinalBleedingRate1 =[],             kidneyFailureRate1 =[],                               
+        bodyDamageRate1 =[],                           bloodPoisoningRate1=[],                                        
+        pneumoniaRate1 =[],                            hypertensionRate1  =[],                                
+                                                      pancreatitisRate1=[],
+                                                      cancerRate1 =[],                                             
+                                                      malignantTumorRate1  =[];
+    	 var myChart = echarts.init(document.getElementById('sumChartDiv'));
+    	 var it={};
+    	 $.ajax({
+    	        type: "post",
+    	        async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+    	        url: "/qos/analysis/data/getReturnDateByMonth",   
+    	        data:{"startTime":$("#startTime").val(),"endTime":$("#endTime").val()},
+    	        dataType: "json",        //返回数据形式为json
+    	        success: function (data) {
+    	           console.log(data.result);
+    	           if(data.result){
+    	           for (var i = 0; i < data.result.length; i++) {
+    	        	   var it = data.result[i];
+    	               yearMonth.push(it.year+"-"+it.month);
+    	           }
+    	           console.log(yearMonth);
+    	           
+    	           for (var i = 0; i < data.result.length; i++) {
+                       var row = data.result[i];
+                       row.within31DaysRate = getWithin31DaysRate(row);
+                       row.infarctionRate = getInfarctionRate(row);
+                       row.heartFailureRate = getHeartFailureRate(row);
+                       row.brainBleedingRate = getBrainBleedingRate(row);
+                       row.brainInjuryRate = getBrainInjuryRate(row);
+                       row.gastrointestinalBleedingRate = getGastrointestinalBleedingRate(row);
+                       row.bodyDamageRate = getBodyDamageRate(row);
+                       row.pneumoniaRate = getPneumoniaRate(row);
+                       
+                       row.lungDiseaseRate = getLungDiseaseRate(row);
+                       row.diabetesRate = getDiabetesRate(row);
+                       row.goiterRate = getGoiterRate(row);
+                       row.appendicitisRate = getAppendicitisRate(row);
+                       row.prostateRate = getProstateRate(row);
+                       row.kidneyFailureRate = getKidneyFailureRate(row);
+                       row.bloodPoisoningRate = getBloodPoisoningRate(row);
+                       row.hypertensionRate = getHypertensionRate(row);
+                       row.pancreatitisRate = getPancreatitisRate(row);
+                       row.cancerRate = getCancerRate(row);
+                       row.malignantTumorRate = getMalignantTumorRate(row);
+                       
+                       
+                   } 
+    	           
+    	        for (var i = 0; i < data.result.length; i++) {
+    	               var it = data.result[i];
+    	               within31DaysRate1.push(it.within31DaysRate);
+    	               infarctionRate1.push(it.infarctionRate);
+    	               heartFailureRate1.push(it.heartFailureRate);
+    	               brainBleedingRate1.push(it.brainBleedingRate);
+    	               brainInjuryRate1.push(it.brainInjuryRate);
+    	               gastrointestinalBleedingRate1.push(it.gastrointestinalBleedingRate);
+    	               bodyDamageRate1.push(it.bodyDamageRate);
+    	               pneumoniaRate1.push(it.pneumoniaRate);
+    	               
+    	               lungDiseaseRate1.push(it.lungDiseaseRate);
+    	               diabetesRate1.push(it.diabetesRate);
+    	               goiterRate1.push(it.goiterRate);
+    	               appendicitisRate1.push(it.appendicitisRate);
+    	               
+    	               prostateRate1.push(it.prostateRate);
+    	               kidneyFailureRate1.push(it.kidneyFailureRate);
+    	               bloodPoisoningRate1.push(it.bloodPoisoningRate);
+    	               hypertensionRate1.push(it.hypertensionRate);
+    	               pancreatitisRate1.push(it.pancreatitisRate);
+    	               cancerRate1.push(it.cancerRate);
+    	               malignantTumorRate1.push(it.malignantTumorRate);
+    	           }
+    	       	console.log(within31DaysRate1);
+    	        
+    	        
+    	       	myChart.setOption({        //加载数据图表
+    	        	//color:['#1e90ff','#f0ffff'],
+    	            title: {
+    	                text: ''
+    	            },
+    	            tooltip: { 
+    	            	trigger: 'axis',
+    	                axisPointer: {
+    	                    type: 'shadow'
+    	                }
+    	            },
+    	            
+    	            grid: {
+    	                left: '0%',
+    	                right: '0%',
+    	                bottom: '5%',
+    	                containLabel: true
+    	            },
+    	            legend: {
+    	            	type:"scroll",
+    	               	data: ['住院患者出院31天内再住院率', '急性心肌梗死再住院率','充血性心力衰竭再住院率','脑出血和脑梗死再住院率','创伤性颅脑梗死再住院率','消化道出血（无病发率）再住院率',
+    	               	       '累积身体多个部位的损伤再住院率','细菌性肺炎（成人、无并发症）再住院率','慢性组赛性肺疾病再住院率','糖尿病伴短期与长期并发症再住院','结节性甲状腺肿再住院率','急性阑尾炎伴弥漫性腹膜炎及脓肿',
+    	               	       '前列腺增生再住院率','肾衰竭再住院率','败血症(成人)再住院率','高血压病(成人)再住院率','急性胰腺炎再住院率','恶性肿瘤术后化疗再住院率','恶性肿瘤维持性化学治疗再住院率'],
+    	                   bottom:0
+    	               },
+    	            xAxis: {
+    	            	type: 'category',
+    	                axisLabel: {
+    	                    interval:0,
+    	                    rotate:25//角度顺时针计算的
+    	                } ,
+    	                axisTick : {
+    	                    alignWithLabel : true
+    	                },
+    	            	data: yearMonth,
+    	            },
+    	            yAxis: {
+    	            	type: 'value'
+    	            },
+    	            grid: {
+    	                bottom: '110px',
+    	            },
+    	            series: [
+        	               	 {  type: 'line',
+        	               		areaStyle: {},
+        	                   label:{
+        	                   	normal:{
+        	                   	show:true,            //显示数字
+        	                   	position: 'top'        //这里可以自己选择位置
+        	                   	}
+        	                   	},
+        	                   name: '住院患者出院31天内再住院率',
+        	                   data: within31DaysRate1},
+        	               	 {  type: 'line',
+        	                	   areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                      name: '急性心肌梗死再住院率',
+        	                      data: infarctionRate1},
+        	               	 {  type: 'line',
+        	                    	  areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        name: '充血性心力衰竭再住院率',
+        	                        data: heartFailureRate1},
+        	               	 {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        name: '脑出血和脑梗死再住院率',
+        	                        data: brainBleedingRate1},
+        	               	 {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        name: '创伤性颅脑梗死再住院率',
+        	                        data: brainInjuryRate1},
+        	               	 {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '消化道出血（无病发率）再住院率',
+        	                        data: gastrointestinalBleedingRate1},
+        	               	 {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '累积身体多个部位的损伤再住院率',
+        	                        data: bodyDamageRate1},
+        	               	 {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '细菌性肺炎（成人、无并发症）再住院率',
+        	                        data: pneumoniaRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '慢性组赛性肺疾病再住院率',
+        	                        data: lungDiseaseRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '糖尿病伴短期与长期并发症再住院',
+        	                        data: diabetesRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '结节性甲状腺肿再住院率',
+        	                        data: goiterRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '急性阑尾炎伴弥漫性腹膜炎及脓肿',
+        	                        data: appendicitisRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '前列腺增生再住院率',
+        	                        data: prostateRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '肾衰竭再住院率',
+        	                        data: kidneyFailureRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '败血症(成人)再住院率',
+        	                        data: bloodPoisoningRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '高血压病(成人)再住院率',
+        	                        data: hypertensionRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '急性胰腺炎再住院率',
+        	                        data: pancreatitisRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '恶性肿瘤术后化疗再住院率',
+        	                        data: cancerRate1},
+        	                        
+        	                        {  type: 'line',
+        	                        	areaStyle: {},
+        	                        label:{
+        	                        	normal:{
+        	                        	show:true,            //显示数字
+        	                        	position: 'top'        //这里可以自己选择位置
+        	                        	}
+        	                        	},
+        	                        	name: '恶性肿瘤维持性化学治疗再住院率',
+        	                        data: malignantTumorRate1}
+
+                         ]
+    	        });
+    	           }
+    	        },
+    	        error: function (errorMsg) {
+    	            //请求失败时执行该函数
+    	            myChart.hideLoading();
+    	        }
+    	    })
+    };
+    </script>
+</body>
+
+</html>

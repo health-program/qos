@@ -164,7 +164,13 @@
 	<!-- 额定床位 -->
 	<select id="getRatedBedNumber" parameterType="Map" resultType="Long">
 		select count(*) from phis_webhis.V_COM_BEDINFO a
-		
+		<where> 
+		     1=1
+		    
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
 	</select>
 	
 	<!-- 使用床位 -->
@@ -192,11 +198,499 @@
 		select count(1) 
 	    from phis_webhis.v_com_bedinfo b
 	    where    b.isused = '0'
+	    and ORGCODE = #{unitId}
 	</select>
 	
 	<!-- 病床使用天数 -->
 	<select id="getBedInUseDays" parameterType="Map" resultType="Long">
-	
+	select
+                     sum(Trunc(To_Date(a.enddate,
+                                             'yyyy-mm-dd') + 1) -
+                               Trunc(To_Date(a.begindate,
+                                             'yyyy-mm-dd'))) 
+                          
+                           bed
+                from (select orgcode,
+                             to_char(indate, 'yyyy-mm-dd') indate,
+                             to_char(out_date, 'yyyy-mm-dd') out_date,
+                             INHOSNO,
+                             case
+                               when to_char(indate, 'yyyy-mm-dd') <![CDATA[>]]> to_char(#{endTime}, 'yyyy-mm-dd') then to_char(#{endTime}, 'yyyy-mm-dd')
+                               when to_char(indate, 'yyyy-mm-dd') <![CDATA[>=]]>
+                                    to_char(#{startTime}, 'yyyy-mm-dd') then
+                                to_char(indate, 'yyyy-mm-dd')
+                               else
+                                to_char(#{startTime}, 'yyyy-mm-dd')
+                             end as begindate,
+                             case
+                               when to_char(out_date, 'yyyy-mm-dd') <![CDATA[<]]>
+                                    'to_char(#{startTime}, 'yyyy-mm-dd') then
+                                to_char(#{startTime}, 'yyyy-mm-dd')
+                               when to_char(out_date, 'yyyy-mm-dd') <![CDATA[<=]]>
+                                    to_char(#{endTime}, 'yyyy-mm-dd') then
+                                to_char(out_date, 'yyyy-mm-dd')
+                               else
+                                to_char(#{endTime}, 'yyyy-mm-dd')
+                             end as enddate
+                        from phis_webhis.v_ipr_inpatientinfo
+                            where 1=1
+                            and ORGCODE = #{unitId}
 	</select>
 	
+	<!-- 合计总收入 -->
+	<select id="getTotalMoney" parameterType="Map" resultType="double">
+	 select round(SUM(TOTCOST),2) as totalMoney from phis_webhis.V_OPB_FEEDETAIL a
+	 <where> 
+		      ITEMSTATUS = '0'
+		    <if test="startTime != null and startTime !='' ">
+				and a.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.createtime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 医疗收入 -->
+	<select id="getMedicalMoney" parameterType="Map" resultType="double">
+	 select round(SUM(TOTCOST),2) as medicalMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 <where> 
+		      ITEMSTATUS = '0' and ISDRUG = '0'
+		    <if test="startTime != null and startTime !='' ">
+				and a.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.createtime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 药品收入 -->
+	<select id="getDrugMoney" parameterType="Map" resultType="double">
+	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 <where> 
+		       ITEMSTATUS = '0' and ISDRUG = '1'
+		    <if test="startTime != null and startTime !='' ">
+				and a.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.createtime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 其他收入 -->
+	<select id="getOtherMoney" parameterType="Map" resultType="double">
+	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 <where> 
+		      ITEMSTATUS = '0' and ISDRUG not in ('0','1')
+		    <if test="startTime != null and startTime !='' ">
+				and a.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.createtime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 处方数量 -->
+	<select id="getPrescriptionNumber" parameterType="Map" resultType="long">
+		select count(*) as prescriptionNumber from phis_webhis.V_OPM_RECIPE_INFO a
+		
+		<where> 
+		       PRESSTATUS = '2' and CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 处方总额 -->
+	<select id="getPrescriptionMoney" parameterType="Map" resultType="double">
+		select round(sum(TOTCOST),2) as prescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO a
+		
+		<where> 
+		        a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 最大处方金额 -->
+	<select id="getMaxPrescriptionMoney" parameterType="Map" resultType="double">
+		select round(MAX(TOTCOST),2) as maxPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO a
+		
+		<where> 
+		        a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 最小处方金额 -->
+	<select id="getMinPrescriptionMoney" parameterType="Map" resultType="double">
+		select round(MIN(TOTCOST),2) a minPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO a
+		<where> 
+		        a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 平均处方金额 -->
+	<select id="getAvgPrescriptionMoney" parameterType="Map" resultType="double">
+		select round(AVG(TOTCOST),2) as avgPrescriptionMoney from phis_webhis.V_OPM_RECIPE_INFO a
+		<where> 
+		        a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 门诊中医处方占比 -->
+	<select id="getTotalChineseMedicinePrescription" parameterType="Map" resultType="long">
+		select count(a.recipeid) from phis_webhis.v_opm_recipe_info a
+       
+         <where> 
+		        a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	<select id="getEventChineseMedicinePrescription" parameterType="Map" resultType="long">
+		select count(t.recipeid) as zycf
+                from phis_webhis.v_opm_recipe_info a
+              
+         <where> 
+		          a.BUSITYPE in ('2' ,'8' )
+                 and a.PRESSTATUS = '2'        
+                 and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 门诊中药饮片占比 -->
+	<select id="getEventChineseDrinkMedicine" parameterType="Map" resultType="long">
+		select count(t.recipeid) as zycf
+                from phis_webhis.v_opm_recipe_info a
+               
+         <where> 
+		         a.BUSITYPE ='2'
+                 and a.PRESSTATUS = '2'        
+                 and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 门诊中药非药物治疗处方占比 -->
+	<select id="getEventNonChineseMedicinePrescription" parameterType="Map" resultType="long">
+		select count(t.recipeid) as zycf
+                from phis_webhis.v_opm_recipe_info a
+              
+         <where> 
+		          a.BUSITYPE ='8'
+                 and a.PRESSTATUS = '2'        
+                 and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 静脉输液率 -->
+	
+	<!-- 激素使用率 -->
+	<select id="getTotalHormone" parameterType="Map" resultType="long">
+		select count(a.recipeid) from phis_webhis.v_opm_recipe_info a
+        
+        <where> 
+		         a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and a.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and a.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and a.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	<select id="getEventHormone" parameterType="Map" resultType="long">
+		 select count(RECIPEID) as jssyl
+                from phis_webhis.V_OPM_RECIPE_INFO t1
+                 
+              
+             <where> 
+		          RECIPEID in
+                     (select t.recipeid
+                        from phis_webhis.V_OPB_FEEDETAIL t
+                       where (t.ITEMID, t.orgcode) in
+                             (select DRUG.DRUGID, DRUG.ORGCODE
+                                from phis_webhis.pha_druginfo DRUG
+                               where drugcode like '113%')) 
+                 and t1.PRESSTATUS = '2'
+                 and t1.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and t1.opertime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and t1.opertime <![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and t1.ORGCODE = #{unitId}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 抗菌药物使用率 -->
+	<select id="getTotalAntiDrug" parameterType="Map" resultType="double">
+		select 
+                   round(sum(b.totcost),2)
+                           
+                from phis_webhis.v_opb_feedetail b
+               
+           <where> 
+		          
+                  b.ITEMSTATUS = 0
+		    <if test="startTime != null and startTime !='' ">
+				and b.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and b.createtime<![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and b.ORGCODE = #{unitId}
+			</if>
+			</where>
+	</select>
+	<select id="getEventAntiDrug" parameterType="Map" resultType="double">
+		select 
+                     round(sum(case
+                                 when c.isantibiotic = '1' then
+                                  b.totcost
+                                 else
+                                  0
+                               end),2)
+                           
+                from phis_webhis.v_opb_feedetail b, phis_webhis.v_pha_drug c
+               
+              <where> 
+		          
+                  b.itemid = c.drugid(+)
+                 and b.ITEMSTATUS = 0
+		    <if test="startTime != null and startTime !='' ">
+				and b.createtime <![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and b.createtime<![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and b.ORGCODE = #{unitId}
+			</if>
+			</where>
+	</select>
+	
+	<!-- 一联抗生素使用率 -->
+	<select id="getTotalRecipe" parameterType="Map" resultType="long">
+	select count(r.recipeid) recipeall
+                from opm_recipe_info r
+              
+           <where> 
+                  r.PRESSTATUS = '2'
+                 and r.CHARSTATUS = '2'
+		    <if test="startTime != null and startTime !='' ">
+				and  r.Opertime<![CDATA[>=]]>
+				#{startTime}
+			</if>
+			<if test="endTime != null and endTime !='' ">
+				and  r.Opertime<![CDATA[<]]>
+				#{endTime}
+			</if>
+			<if test="unitId != null and unitId !='' ">
+				and r.ORGCODE = #{unitId}
+			</if>
+			</where>
+     </select>
+     <select id="getEventOneAntiDrug" parameterType="Map" resultType="long">
+     select 
+                     count(case
+                             when kss.kss = '1' then
+                              kss.kss
+                           end) as ylkss
+                from (select t.recipeid, count(recipeid) as kss
+                        from phis_webhis.v_opb_feedetail t
+                       where t.ITEMID in
+                             (select DRUG.DRUGID
+                                from phis_webhis.v_pha_drug DRUG
+                               where DRUG.ISANTIBIOTIC = 1)
+                         AND t.createtime between #{startTime} and #{endTime}
+                          and orgcode = #{unitId}
+                       group by recipeid) kss
+                left join phis_webhis.v_OPM_RECIPE_INFO info
+                  on kss.recipeid = info.recipeid
+               where 1=1
+                 AND info.Opertime between #{startTime} and #{endTime}
+                 and orgcode = #{unitId}  
+                 and info.PRESSTATUS = '2'
+                 and info.CHARSTATUS = '2'
+     </select>
+	<!-- 二联抗生素使用率 -->
+	<select id="getEventTwoAntiDrug" parameterType="Map" resultType="long">
+     select 
+                     count(case
+                             when kss.kss = '2' then
+                              kss.kss
+                           end) as ylkss
+                from (select t.recipeid, count(recipeid) as kss
+                        from phis_webhis.v_opb_feedetail t
+                       where t.ITEMID in
+                             (select DRUG.DRUGID
+                                from phis_webhis.v_pha_drug DRUG
+                               where DRUG.ISANTIBIOTIC = 1)
+                         AND t.createtime between #{startTime} and #{endTime}
+                          and orgcode = #{unitId}
+                       group by recipeid) kss
+                left join phis_webhis.v_OPM_RECIPE_INFO info
+                  on kss.recipeid = info.recipeid
+               where 1=1
+                 AND info.Opertime between #{startTime} and #{endTime}
+                 and orgcode = #{unitId}  
+                 and info.PRESSTATUS = '2'
+                 and info.CHARSTATUS = '2'
+     </select>
+	<!-- 三联抗生素使用率 -->
+	<select id="getEventThreeAntiDrug" parameterType="Map" resultType="long">
+     select 
+                     count(case
+                             when kss.kss = '3' then
+                              kss.kss
+                           end) as ylkss
+                from (select t.recipeid, count(recipeid) as kss
+                        from phis_webhis.v_opb_feedetail t
+                       where t.ITEMID in
+                             (select DRUG.DRUGID
+                                from phis_webhis.v_pha_drug DRUG
+                               where DRUG.ISANTIBIOTIC = 1)
+                         AND t.createtime between #{startTime} and #{endTime}
+                          and orgcode = #{unitId}
+                       group by recipeid) kss
+                left join phis_webhis.v_OPM_RECIPE_INFO info
+                  on kss.recipeid = info.recipeid
+               where 1=1
+                 AND info.Opertime between #{startTime} and #{endTime}
+                 and orgcode = #{unitId}  
+                 and info.PRESSTATUS = '2'
+                 and info.CHARSTATUS = '2'
+     </select>
 </mapper>

@@ -9,22 +9,20 @@ import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.mapper.shejike.SheJiKeMapper;
-
 /**
- * 病床使用率（病床使用天数/总天数）
+ * 最小处方金额
  * @author FM
  *
  */
 @Component
-public class BedInUseDaysRate extends DataProcessor{
-
+public class MinPrescriptionMoney extends DataProcessor{
 	@Autowired
     private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "14006";
+    public static final String EVENT_ID = "16004";
 
     private SheJiKeMapper mapper;
-
+    
     public SheJiKeMapper getMapper() {
         if (mapper == null) {
             mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
@@ -40,16 +38,11 @@ public class BedInUseDaysRate extends DataProcessor{
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        long totalBed = getMapper().getBedTotalDays(startTime, endTime, unitId);//获取总床位数
-        //时间相减（天数）
-        int days = (int)((endTime.getTime() - startTime.getTime()) / (1000*3600*24));
-        long total = totalBed*days;
-        return total;
+        return (long)(getMapper().getMinPrescriptionMoney(startTime, endTime, unitId)*100);
     }
 
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getBedInUseDays(startTime, endTime, unitId);
+        return 0;
     }
 }
