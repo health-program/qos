@@ -103,7 +103,11 @@ public class DataProcessManager {
 			exception.setException(ex.getMessage());
 			exception.setProcessDay(start);
 			exception.setUnitId(unitId);
-			dataProcessExceptionService.save(exception);
+			try {
+				dataProcessExceptionService.save(exception);
+			} catch (Exception ex2) {
+				logger.error("持久化处理数据异常错误", ex2);
+			}
 		}
 	}
 
@@ -246,7 +250,7 @@ public class DataProcessManager {
 									|| (targetType == DataEvent.TARGET_TYPE_COMMUNITY && unitType == DataUnit.TYPE_COMMUNITY)) {
 								processDataForOneDay(start, end, unit.getId(), processor);
 							}
-							
+
 							current++;
 						}
 					}

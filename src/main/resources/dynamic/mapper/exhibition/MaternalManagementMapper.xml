@@ -20,7 +20,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -43,7 +43,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -93,7 +93,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
         UNION ALL
         SELECT COUNT
@@ -109,7 +109,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
         ) c
     </select>
@@ -128,7 +128,7 @@
             AND  dkdrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -146,7 +146,7 @@
             AND  dindate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -164,7 +164,7 @@
             AND  dSwsj <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -182,7 +182,7 @@
             AND  dindate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -200,7 +200,7 @@
             AND  dindate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -218,7 +218,7 @@
             AND  CAST(CAST(iYear AS VARCHAR(4)) + '-' + CAST(iMonth AS VARCHAR(4)) + '-01' AS datetime) <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cjgdm = #{code}
+            AND  cjgdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -237,7 +237,7 @@
             AND  CAST(CAST(iYear AS VARCHAR(4)) + '-' + CAST(iMonth AS VARCHAR(4)) + '-01' AS datetime) <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cjgdm = #{code}
+            AND  cjgdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -256,7 +256,7 @@
             AND  CAST(CAST(iYear AS VARCHAR(4)) + '-' + CAST(iMonth AS VARCHAR(4)) + '-01' AS datetime) <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cjgdm = #{code}
+            AND  cjgdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -275,7 +275,7 @@
             AND  CAST(CAST(iYear AS VARCHAR(4)) + '-' + CAST(iMonth AS VARCHAR(4)) + '-01' AS datetime) <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cjgdm = #{code}
+            AND  cjgdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -294,7 +294,7 @@
             AND  dindate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -316,7 +316,7 @@
             AND dFsrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND cJcdwbh = #{code}
+            AND cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -329,7 +329,7 @@
             AND dFsrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND cJcdwbh = #{code}
+            AND cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -387,7 +387,7 @@
             AND  dCzrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -402,7 +402,7 @@
             AND  dFzrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -425,7 +425,7 @@
             AND  dDyclfsj <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cFfdwdm = #{code}
+            AND  cFfdwdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -448,7 +448,7 @@
             AND  dDyclfsj <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cFfdwdm = #{code}
+            AND  cFfdwdm LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -468,7 +468,7 @@
             AND  dJcrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -488,7 +488,7 @@
             AND  dJcrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
