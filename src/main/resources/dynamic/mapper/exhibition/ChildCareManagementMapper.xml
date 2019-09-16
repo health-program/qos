@@ -16,7 +16,7 @@
             AND  dswrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -34,7 +34,7 @@
             AND  dcsrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -52,7 +52,7 @@
             AND  dCxrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -70,7 +70,7 @@
             AND  dJcrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -88,7 +88,7 @@
             AND  dCsrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -106,7 +106,7 @@
             AND  dCsrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -124,7 +124,7 @@
             AND  ddate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -158,7 +158,7 @@
             AND  dindate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -189,7 +189,7 @@
             AND  ddate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -204,7 +204,7 @@
         GROUP BY cJcdwbh,cJcdwmc ORDER BY agencyNo ASC;
     </select>
 
-    <select id="getInfantVisionNumber" resultType="com.paladin.qos.dynamic.model.exhibition.InfantVision">
+    <select id="getInfantVisionNumber" resultType="long">
         SELECT COUNT ( 1 ) AS infantVisionTotal   FROM  slsc WHERE  cJcdwbh != ''
         <if test="startTime != null">
             AND dJcrq >=  #{startTime}
@@ -213,7 +213,7 @@
             AND  dJcrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -231,7 +231,7 @@
             AND  dJcrq <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 

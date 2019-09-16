@@ -46,7 +46,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -60,7 +60,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -74,7 +74,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -88,7 +88,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -103,7 +103,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 
@@ -117,7 +117,7 @@
             AND  dIndate <![CDATA[<= ]]> #{endTime}
         </if>
         <if test="code != null">
-            AND  cJcdwbh = #{code}
+            AND  cJcdwbh LIKE  #{code} + '%'
         </if>
     </select>
 </mapper>
