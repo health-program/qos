@@ -28,7 +28,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         group by managedcentercode;
     </select>
@@ -45,7 +45,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         group by managedcentercode;
     </select>
@@ -67,7 +67,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         group by managedcentercode;
     </select>
@@ -85,7 +85,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         group by managedcentercode;
     </select>
@@ -103,7 +103,7 @@
             AND  examdate <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  examdate <![CDATA[<= ]]> #{endDate}
+            AND  examdate <![CDATA[< ]]> #{endDate}
         </if>
         union all
         select code from (select * from ( select row_number()over(partition by c.code order by c.examdate desc)num,c.*
@@ -114,7 +114,7 @@
             AND  examdate <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  examdate <![CDATA[<= ]]> #{endDate}
+            AND  examdate <![CDATA[< ]]> #{endDate}
         </if>
         )
         <if test="unitId != null">
@@ -133,7 +133,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         <if test="unitId != null">
             AND  managedcentercode = #{unitId}
@@ -157,7 +157,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         <if test="unitId != null">
             AND  managedcentercode = #{unitId}
@@ -180,7 +180,7 @@
             AND  createdtime <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
+            AND  createdtime <![CDATA[< ]]> #{endDate}
         </if>
         )
         <if test="unitId != null">
@@ -204,7 +204,7 @@
             AND  visitdate <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  visitdate <![CDATA[<= ]]> #{endDate}
+            AND  visitdate <![CDATA[< ]]> #{endDate}
         </if>
             group by code)
         <if test="unitId != null">
@@ -222,7 +222,7 @@
             AND  visitdate <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  visitdate <![CDATA[<= ]]> #{endDate}
+            AND  visitdate <![CDATA[< ]]> #{endDate}
         </if>
         group by code)
         <if test="unitId != null">
@@ -240,7 +240,7 @@
             AND  visitdate <![CDATA[>= ]]> #{startDate}
         </if>
         <if test="endDate != null">
-            AND  visitdate <![CDATA[<= ]]> #{endDate}
+            AND  visitdate <![CDATA[< ]]> #{endDate}
         </if>
         group by code)
         <if test="unitId != null">
