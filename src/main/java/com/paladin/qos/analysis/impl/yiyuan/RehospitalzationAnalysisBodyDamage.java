@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisBodyDamageMapper;
-import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisProstaticMapper;
 
 /**
  * 累及身体多个部位的损伤再住院率统计
@@ -20,18 +18,18 @@ import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisProstaticMa
  */
 @Component
 public class RehospitalzationAnalysisBodyDamage extends YiyuanDataProcessor {
-	
+
 	private RehospitalzationAnalysisBodyDamageMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public RehospitalzationAnalysisBodyDamageMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(RehospitalzationAnalysisBodyDamageMapper.class);
+			mapper = sqlSessionContainer.getMapper(RehospitalzationAnalysisBodyDamageMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "11106";
 
 	@Override

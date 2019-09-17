@@ -3,7 +3,7 @@
 <mapper namespace="com.paladin.qos.mapper.shejike.SheJiKeMapper">
     <!-- 门诊人次数 -->
 	<select id="getOutpatientNumber" parameterType="Map" resultType="Long">
-		select count(*) from phis_webhis.V_OPR_REGISTER 
+		select count(*) from phis_webhis.V_OPR_REGISTER a
 		<where> 
 		REGLEVLCODE <![CDATA[!=]]> '5'
 		and REGSTATUS = '0'
@@ -65,7 +65,7 @@
 		select count(distinct(DOCTCODE)) from phis_webhis.V_OPM_RECIPE_INFO a
 		
 		<where> 
-		     where a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		      a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
 		    <if test="startTime != null and startTime !='' ">
 				and a.DRAWTIME <![CDATA[>=]]>
 				#{startTime}
@@ -85,7 +85,7 @@
 		select round(count(*)/count(distinct(DOCTCODE)),2) as from phis_webhis.V_OPM_RECIPE_INFO  a
              
 		<where> 
-		     where a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
+		      a.PRESSTATUS = '2' and a.CHARSTATUS = '2'
 		    <if test="startTime != null and startTime !='' ">
 				and a.DRAWTIME <![CDATA[>=]]>
 				#{startTime}
@@ -258,7 +258,7 @@
 	
 	<!-- 医疗收入 -->
 	<select id="getMedicalMoney" parameterType="Map" resultType="double">
-	 select round(SUM(TOTCOST),2) as medicalMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 select round(SUM(TOTCOST),2) as medicalMoney from phis_webhis.V_OPB_FEEDETAIL a
 	 <where> 
 		      ITEMSTATUS = '0' and ISDRUG = '0'
 		    <if test="startTime != null and startTime !='' ">
@@ -277,7 +277,7 @@
 	
 	<!-- 药品收入 -->
 	<select id="getDrugMoney" parameterType="Map" resultType="double">
-	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL a
 	 <where> 
 		       ITEMSTATUS = '0' and ISDRUG = '1'
 		    <if test="startTime != null and startTime !='' ">
@@ -296,7 +296,7 @@
 	
 	<!-- 其他收入 -->
 	<select id="getOtherMoney" parameterType="Map" resultType="double">
-	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL 
+	 select round(SUM(TOTCOST),2) as drugMoney from phis_webhis.V_OPB_FEEDETAIL a
 	 <where> 
 		      ITEMSTATUS = '0' and ISDRUG not in ('0','1')
 		    <if test="startTime != null and startTime !='' ">
@@ -641,7 +641,7 @@
                   on kss.recipeid = info.recipeid
                where 1=1
                  AND info.Opertime between #{startTime} and #{endTime}
-                 and orgcode = #{unitId}  
+                 and info.orgcode = #{unitId}  
                  and info.PRESSTATUS = '2'
                  and info.CHARSTATUS = '2'
      </select>
@@ -665,7 +665,7 @@
                   on kss.recipeid = info.recipeid
                where 1=1
                  AND info.Opertime between #{startTime} and #{endTime}
-                 and orgcode = #{unitId}  
+                 and info.orgcode = #{unitId}  
                  and info.PRESSTATUS = '2'
                  and info.CHARSTATUS = '2'
      </select>
@@ -689,7 +689,7 @@
                   on kss.recipeid = info.recipeid
                where 1=1
                  AND info.Opertime between #{startTime} and #{endTime}
-                 and orgcode = #{unitId}  
+                 and info.orgcode = #{unitId}  
                  and info.PRESSTATUS = '2'
                  and info.CHARSTATUS = '2'
      </select>

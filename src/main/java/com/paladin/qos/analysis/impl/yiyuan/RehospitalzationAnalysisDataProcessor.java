@@ -8,13 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalizationAnalysisMapper;
-import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisCerebralInfarctionMapper;
 
 @Component
 public class RehospitalzationAnalysisDataProcessor extends YiyuanDataProcessor {
-
 
 	private RehospitalizationAnalysisMapper mapper;
 	@Autowired
@@ -22,11 +19,11 @@ public class RehospitalzationAnalysisDataProcessor extends YiyuanDataProcessor {
 
 	public RehospitalizationAnalysisMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(RehospitalizationAnalysisMapper.class);
+			mapper = sqlSessionContainer.getMapper(RehospitalizationAnalysisMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "11100";
 
 	@Override

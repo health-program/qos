@@ -10,6 +10,7 @@ import com.paladin.qos.dynamic.mapper.yiyuan.MortalityAnalysisMapper;
 
 /**
  * 整体住院死亡率数据处理
+ * 
  * @author TontoZhou
  * @since 2019年8月14日
  */
@@ -17,19 +18,18 @@ import com.paladin.qos.dynamic.mapper.yiyuan.MortalityAnalysisMapper;
 public class MortalityHospitalizedDataProcessor extends YiyuanDataProcessor {
 
 	public static final String EVENT_ID = "10100";
-		
-	
+
 	private MortalityAnalysisMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public MortalityAnalysisMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(MortalityAnalysisMapper.class);
+			mapper = sqlSessionContainer.getMapper(MortalityAnalysisMapper.class);
 		}
 		return mapper;
 	}
+
 	@Override
 	public String getEventId() {
 		return EVENT_ID;

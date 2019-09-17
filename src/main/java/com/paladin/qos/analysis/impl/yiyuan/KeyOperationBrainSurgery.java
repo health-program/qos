@@ -25,8 +25,7 @@ public class KeyOperationBrainSurgery extends YiyuanDataProcessor {
 
 	public KeyOperationBrainSurgeryMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(KeyOperationBrainSurgeryMapper.class);
+			mapper = sqlSessionContainer.getMapper(KeyOperationBrainSurgeryMapper.class);
 		}
 		return mapper;
 	}
