@@ -18,7 +18,7 @@ public class ExcelOrgSchool {
  	private Integer affiliation;// 隶属关系
  	
     	@ReadProperty(cellIndex = 3,enumType="region-type")
- 	private Integer district;// 区域
+ 	private String district;// 区域
  	
     	@ReadProperty(cellIndex = 4)
  	private String mainLeaderName;// 主要领导姓名
@@ -98,11 +98,11 @@ public class ExcelOrgSchool {
 	    this.affiliation = affiliation;
 	}
 
-	public Integer getDistrict() {
+	public String getDistrict() {
 	    return district;
 	}
 
-	public void setDistrict(Integer district) {
+	public void setDistrict(String district) {
 	    this.district = district;
 	}
 

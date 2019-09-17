@@ -21,7 +21,7 @@ public class OrgSchool extends BaseModel {
 	private Integer affiliation;
 
 	// 区域
-	private Integer district;
+	private String district;
 
 	// 性质
 	private Integer nature;
@@ -94,11 +94,11 @@ public class OrgSchool extends BaseModel {
 		this.affiliation = affiliation;
 	}
 
-	public Integer getDistrict() {
+	public String getDistrict() {
 		return district;
 	}
 
-	public void setDistrict(Integer district) {
+	public void setDistrict(String district) {
 		this.district = district;
 	}
 
