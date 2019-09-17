@@ -44,7 +44,7 @@ public class FamilyCopdSiftTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().copdSiftNum(endTime, endTime, unit);
+ 		return getMapper().copdSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

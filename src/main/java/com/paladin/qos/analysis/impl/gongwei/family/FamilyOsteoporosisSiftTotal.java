@@ -44,7 +44,7 @@ public class FamilyOsteoporosisSiftTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().osteoporosisSiftNum(endTime, endTime, unit);
+ 		return getMapper().osteoporosisSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

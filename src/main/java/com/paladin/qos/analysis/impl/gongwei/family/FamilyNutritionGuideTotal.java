@@ -44,7 +44,7 @@ public class FamilyNutritionGuideTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().nutritionGuidePersonNum(endTime, endTime, unit);
+		return getMapper().nutritionGuidePersonNum(startTime, endTime, unit);
 	}
 
 	@Override

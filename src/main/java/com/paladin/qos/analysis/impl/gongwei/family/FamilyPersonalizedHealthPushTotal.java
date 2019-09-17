@@ -44,7 +44,7 @@ public class FamilyPersonalizedHealthPushTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().personalizedHealthPushNum(endTime, endTime, unit);
+ 		return getMapper().personalizedHealthPushNum(startTime, endTime, unit);
  	}
 
  	@Override

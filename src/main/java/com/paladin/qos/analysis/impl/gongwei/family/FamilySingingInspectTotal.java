@@ -44,7 +44,7 @@ public class FamilySingingInspectTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().singingInspectNum(endTime, endTime, unit);
+ 		return getMapper().singingInspectNum(startTime, endTime, unit);
  	}
 
  	@Override

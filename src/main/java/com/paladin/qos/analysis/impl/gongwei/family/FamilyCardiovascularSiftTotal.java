@@ -44,7 +44,7 @@ public class FamilyCardiovascularSiftTotal extends GongWeiDataProcessor  {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().cardiovascularSiftNum(endTime, endTime, unit);
+ 		return getMapper().cardiovascularSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

@@ -44,7 +44,7 @@ public class FamilySingingPersonManageTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().singingPersonManageNum(endTime, endTime, unit);
+		return getMapper().singingPersonManageNum(startTime, endTime, unit);
 	}
 
 	@Override

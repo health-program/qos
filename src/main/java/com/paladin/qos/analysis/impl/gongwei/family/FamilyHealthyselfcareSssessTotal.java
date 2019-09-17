@@ -44,7 +44,7 @@ public class FamilyHealthyselfcareSssessTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().healthyselfcareSssessNum(endTime, endTime, unit);
+ 		return getMapper().healthyselfcareSssessNum(startTime, endTime, unit);
  	}
 
  	@Override

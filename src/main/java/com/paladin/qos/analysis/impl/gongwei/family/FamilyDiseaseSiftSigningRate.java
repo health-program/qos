@@ -44,7 +44,7 @@ public class FamilyDiseaseSiftSigningRate extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().diseaseSiftSigningRate(endTime, endTime, unit);
+ 		return getMapper().diseaseSiftSigningRate(startTime, endTime, unit);
  	}
 
  	@Override

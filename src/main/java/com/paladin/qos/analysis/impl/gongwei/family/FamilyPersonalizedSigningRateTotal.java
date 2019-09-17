@@ -44,7 +44,7 @@ public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().singingServeNum(endTime, endTime, unit);
+		return getMapper().singingServeNum(startTime, endTime, unit);
 	}
 
 	@Override
@@ -54,6 +54,6 @@ public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().singingTotal(endTime, endTime, unit);
+		return getMapper().singingTotal(startTime, endTime, unit);
 	}
 }

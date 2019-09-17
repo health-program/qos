@@ -44,7 +44,7 @@ public class FamilyPrescriptionServicTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().prescriptionServicNum(endTime, endTime, unit);
+ 		return getMapper().prescriptionServicNum(startTime, endTime, unit);
  	}
 
  	@Override

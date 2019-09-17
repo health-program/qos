@@ -44,7 +44,7 @@ public class FamilyChildhoodSsthmaSiftTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().childhoodSsthmaSiftNum(endTime, endTime, unit);
+ 		return getMapper().childhoodSsthmaSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

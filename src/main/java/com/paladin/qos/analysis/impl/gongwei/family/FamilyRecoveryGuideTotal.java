@@ -44,7 +44,7 @@ public class FamilyRecoveryGuideTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().recoveryGuidePersonNum(endTime, endTime, unit);
+ 		return getMapper().recoveryGuidePersonNum(startTime, endTime, unit);
  	}
 
  	@Override

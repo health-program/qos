@@ -44,7 +44,7 @@ public class FamilyServiceSigningRateTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().signingNum(endTime, endTime, unit);
+		return getMapper().signingNum(startTime, endTime, unit);
 	}
 
 	@Override
@@ -54,6 +54,6 @@ public class FamilyServiceSigningRateTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().singingResidentNum(endTime, endTime, unit);
+		return getMapper().singingResidentNum(startTime, endTime, unit);
 	}
 }

@@ -44,7 +44,7 @@ public class FamilyTuberculosisSigningRate extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().singingServiceTotal(endTime, endTime, unit);
+ 		return getMapper().singingServiceTotal(startTime, endTime, unit);
  	}
 
  	@Override
@@ -54,6 +54,6 @@ public class FamilyTuberculosisSigningRate extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().tuberculosisSigningRate(endTime, endTime, unit);
+		return getMapper().tuberculosisSigningRate(startTime, endTime, unit);
  	}
 }

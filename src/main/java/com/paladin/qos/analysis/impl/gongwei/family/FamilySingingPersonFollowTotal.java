@@ -44,7 +44,7 @@ public class FamilySingingPersonFollowTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().singingPersonFollowNum(endTime, endTime, unit);
+		return getMapper().singingPersonFollowNum(startTime, endTime, unit);
 	}
 
 	@Override

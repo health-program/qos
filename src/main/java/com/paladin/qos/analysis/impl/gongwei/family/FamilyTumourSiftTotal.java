@@ -44,7 +44,7 @@ public class FamilyTumourSiftTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().tumourSiftNum(endTime, endTime, unit);
+ 		return getMapper().tumourSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

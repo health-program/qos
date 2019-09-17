@@ -44,7 +44,7 @@ public class FamilyDoorServiceTotal extends GongWeiDataProcessor{
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
-		return getMapper().doorServicePersonNum(endTime, endTime, unit);
+		return getMapper().doorServicePersonNum(startTime, endTime, unit);
 	}
 
 	@Override

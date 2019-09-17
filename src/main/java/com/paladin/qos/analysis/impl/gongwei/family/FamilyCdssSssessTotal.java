@@ -44,7 +44,7 @@ public class FamilyCdssSssessTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().cdssSssessNum(endTime, endTime, unit);
+ 		return getMapper().cdssSssessNum(startTime, endTime, unit);
  	}
 
  	@Override
