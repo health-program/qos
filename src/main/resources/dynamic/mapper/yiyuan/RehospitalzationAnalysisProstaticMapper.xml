@@ -10,17 +10,11 @@
 				where major_code like 'N40%') -->
 			OHREC_DREC = '1'
 			and a.IHD_DIS_CODE in ('N40.x01','N40.x00')
-			<if test="startTime != null and startTime !='' ">
 				and OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 
@@ -28,17 +22,11 @@
 		SELECT count(*) FROM outhospitalrecord a
 		where a.OHREC_DREC = '1'
 		and a.IHD_DIS_CODE in ('N40.x01','N40.x00')
-		<if test="startTime != null and startTime !='' ">
 			and a.OUT_HP_DT <![CDATA[>=]]>
 			#{startTime}
-		</if>
-		<if test="endTime != null and endTime !='' ">
 			and a.OUT_HP_DT <![CDATA[<]]>
 			#{endTime}
-		</if>
-		<if test="unitId != null and unitId !='' ">
 			and ORGAN_CODE = #{unitId}
-		</if>
 		AND EXISTS (
 		SELECT * FROM outhospitalrecord b
 		WHERE

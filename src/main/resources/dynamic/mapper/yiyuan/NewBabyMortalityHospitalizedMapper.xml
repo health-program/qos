@@ -16,17 +16,11 @@
 		a.HP_S_NO = c.HP_S_NO
 		<where>
 			(b.AGE_DAY is not NULL or c.AGE_DAY is not NULL)
-			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and a.OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and a.ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 
@@ -42,17 +36,11 @@
 		<where>
 			a.OHREC_DREC = '2' and
 			(b.AGE_DAY is not NULL or c.AGE_DAY is not NULL)
-			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and a.OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and a.ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 

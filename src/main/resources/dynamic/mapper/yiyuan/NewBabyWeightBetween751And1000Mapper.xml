@@ -19,17 +19,11 @@
 			a.OHREC_DREC = '1'
        and (b.AGE_DAY is not NULL or c.AGE_DAY is not NULL)
        and ( (b.IN_HP_WEIGHT<![CDATA[>=]]>751 and b.IN_HP_WEIGHT<![CDATA[<=]]>1000) or (c.IN_HP_WEIGHT<![CDATA[>=]]>751 and c.IN_HP_WEIGHT<![CDATA[<=]]>1000))
-			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and a.OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and a.ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 
@@ -48,17 +42,11 @@
 			a.OHREC_DREC = '2'
        and (b.AGE_DAY is not NULL or c.AGE_DAY is not NULL)
        and ( (b.IN_HP_WEIGHT<![CDATA[>=]]>751 and b.IN_HP_WEIGHT<![CDATA[<=]]>1000) or (c.IN_HP_WEIGHT<![CDATA[>=]]>751 and c.IN_HP_WEIGHT<![CDATA[<=]]>1000))
-			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and a.OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and a.ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 

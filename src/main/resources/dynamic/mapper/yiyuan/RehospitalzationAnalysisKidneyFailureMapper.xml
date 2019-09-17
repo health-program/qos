@@ -37,17 +37,11 @@
 			'N18.900',
 			'N18.802',
 			'N17.900')
-			<if test="startTime != null and startTime !='' ">
 				and OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 
@@ -82,17 +76,11 @@
 		'N18.900',
 		'N18.802',
 		'N17.900')
-		<if test="startTime != null and startTime !='' ">
 			and a.OUT_HP_DT <![CDATA[>=]]>
 			#{startTime}
-		</if>
-		<if test="endTime != null and endTime !='' ">
 			and a.OUT_HP_DT <![CDATA[<]]>
 			#{endTime}
-		</if>
-		<if test="unitId != null and unitId !='' ">
 			and ORGAN_CODE = #{unitId}
-		</if>
 		AND EXISTS (
 		SELECT * FROM outhospitalrecord b
 		WHERE

@@ -46,17 +46,11 @@
 			'I10.x12',
 			'I10.x09',
 			'I10.x06')
-			<if test="startTime != null and startTime !='' ">
 				and OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 
@@ -99,17 +93,11 @@
 		'I10.x12',
 		'I10.x09',
 		'I10.x06')
-		<if test="startTime != null and startTime !='' ">
 			and a.OUT_HP_DT <![CDATA[>=]]>
 			#{startTime}
-		</if>
-		<if test="endTime != null and endTime !='' ">
 			and a.OUT_HP_DT <![CDATA[<]]>
 			#{endTime}
-		</if>
-		<if test="unitId != null and unitId !='' ">
 			and ORGAN_CODE = #{unitId}
-		</if>
 		AND EXISTS (
 		SELECT * FROM outhospitalrecord b
 		WHERE
