@@ -94,16 +94,14 @@
 			and o.CREATEDTIME &lt; to_date(#{startTime},'yyyy-mm-dd')
 			and r.idcardno in
 			 
-			<foreach   collection="list"   item="item"   index="index"  open="(" separator="," close=")"  > 
-				         #{item.idCard} 
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.idCard}
 			</foreach>
-	
 		and r.orgcode in
-		<foreach   collection="list"   item="item"   index="index"  
-			open="(" separator="," close=")"  > 
-			         #{item.unitId} 
-			    
-		</foreach>
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.unitId} 
+			</foreach>
+			
 	</select>
 
 	<!-- 签约居民就诊总次数 -->
@@ -139,10 +137,8 @@
 		</if>
 		<if test="idCard != null and idCard !='' ">
 			and r.idcardno in
-			<foreach   collection="list"   item="item"   index="index"  
-				open="(" separator="," close=")"  > 
-				         #{item}
-				    
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item} 
 			</foreach>
 		</if>
 	</select>
@@ -181,18 +177,14 @@
 		</if>
 		<if test="list.name != null and list.name !='' ">
 			and r.docname in
-			<foreach   collection="list"   item="item"   index="index"  
-				open="(" separator="," close=")"  > 
-				         #{item.name}
-				    
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.name} 
 			</foreach>
 		</if>
 		<if test="list.unitId != null and list.unitId !='' ">
 			and r.ORGCODE in
-			<foreach   collection="list"   item="item"   index="index"  
-				open="(" separator="," close=")"  > 
-				         #{item.unitId}
-				    
+			<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			#{item.unitId} 
 			</foreach>
 		</if>
 	</select>
