@@ -10,7 +10,6 @@
         <if test="unitId != null">
             AND  managedcentercode = #{unitId}
         </if>
-        ;
     </select>
 
 
@@ -21,16 +20,9 @@
         select count(1)
         from phis_chss.v_fha_person_main
         where stateid=1
-        <if test="unitId != null">
             AND  managedcentercode = #{unitId}
-        </if>
-        <if test="startDate != null">
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        group by managedcentercode;
     </select>
 
     <!--审核公开的健康档案数-->
@@ -38,16 +30,9 @@
         select count(1)
         from phis_chss.v_fha_person_main
         where stateid=1 and verify=1
-        <if test="unitId != null">
             AND  managedcentercode = #{unitId}
-        </if>
-        <if test="startDate != null">
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        group by managedcentercode;
     </select>
 
     <!--老年人体检数-->
@@ -60,16 +45,9 @@
           join  phis_chss.v_fhc_check_main c
           on p.code=c.code where p.birthday <![CDATA[<= ]]> add_months(sysdate,-12*65)
           group by p.code)
-        <if test="unitId != null">
             AND  managedcentercode = #{unitId}
-        </if>
-        <if test="startDate != null">
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        group by managedcentercode;
     </select>
 
 
@@ -78,16 +56,9 @@
         select count(managedcentercode)
         from phis_chss.v_fha_person_main
         where birthday <![CDATA[<= ]]> add_months(sysdate,-12*65)
-        <if test="unitId != null">
             AND  managedcentercode = #{unitId}
-        </if>
-        <if test="startDate != null">
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        group by managedcentercode;
     </select>
 
     <!--最近一次血压达标人数-->
@@ -99,28 +70,24 @@
         from phis_chss.v_fhc_check_main c  left join  phis_chss.v_fha_person_main  p on c.code=p.code where p.LINKB is not null and p.birthday<![CDATA[<= ]]>add_months(sysdate,-12*65)) s
         where num=1 ) where lsbp <![CDATA[<>]]> 0 and ldbp<![CDATA[<>]]>0 and rsbp<![CDATA[<>]]>0 and rdbp<![CDATA[<>]]>0
         and lsbp<![CDATA[<]]>150 and LDBP<![CDATA[<]]>90 and RSBP<![CDATA[<]]>150 and RDBP <![CDATA[<]]>90
-        <if test="startDate != null">
+
             AND  examdate <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
+
             AND  examdate <![CDATA[< ]]> #{endDate}
-        </if>
+
         union all
         select code from (select * from ( select row_number()over(partition by c.code order by c.examdate desc)num,c.*
         from phis_chss.v_fhc_check_main c  left join  phis_chss.v_fha_person_main  p on c.code=p.code where p.LINKB is not null and p.birthday<![CDATA[>]]>add_months(sysdate,-12*65)) s
         where num=1 ) where lsbp<![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and rsbp <![CDATA[<> ]]>0 and rdbp <![CDATA[<> ]]>0
         and lsbp<![CDATA[<]]>140 and LDBP<![CDATA[<]]>90 and RSBP<![CDATA[<]]>140 and RDBP <![CDATA[<]]>90
-        <if test="startDate != null">
+
             AND  examdate <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  examdate <![CDATA[< ]]> #{endDate}
-        </if>
+
         )
-        <if test="unitId != null">
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
     </select>
 
 
@@ -129,16 +96,13 @@
         select count(1)
         from phis_chss.v_fha_person_main
         where linkb is not null
-        <if test="startDate != null">
+
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
     <!--高血压管理规范管理数-->
@@ -153,16 +117,13 @@
         select count(1)
         from phis_chss.v_fha_person_main
         where linkd is not null
-        <if test="startDate != null">
+
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
     <!--最近一次血糖达标人数-->
@@ -176,17 +137,15 @@
         where num=1 )
         where fbgdl1 <![CDATA[<]]>7
         and fbgdl1<![CDATA[<>]]>0
-        <if test="startDate != null">
+
             AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  createdtime <![CDATA[< ]]> #{endDate}
-        </if>
+
         )
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
 
@@ -200,17 +159,15 @@
     <select id="getReferralNumber" resultType="java.lang.Long">
         select count(1) from phis_chss.v_fha_person_main where code in (
             select code from phis_chss.v_fhd_diabetes_visit where sftransorg=0
-        <if test="startDate != null">
+
             AND  visitdate <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  visitdate <![CDATA[< ]]> #{endDate}
-        </if>
+
             group by code)
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
 
@@ -218,17 +175,15 @@
     <select id="getPatientNumber" resultType="java.lang.Long">
         select count(1) from phis_chss.v_fha_person_main where code in (
         select code from phis_chss.v_fhd_diabetes_visit where 1=1
-        <if test="startDate != null">
+
             AND  visitdate <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  visitdate <![CDATA[< ]]> #{endDate}
-        </if>
+
         group by code)
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
 
@@ -236,25 +191,16 @@
     <select id="getGuideNumber" resultType="java.lang.Long">
         select count(1) from phis_chss.v_fha_person_main where code in (
         select code from phis_chss.v_fhd_diabetes_visit where 1=1
-        <if test="startDate != null">
+
             AND  visitdate <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
+
             AND  visitdate <![CDATA[< ]]> #{endDate}
-        </if>
+
         group by code)
-        <if test="unitId != null">
+
             AND  managedcentercode = #{unitId}
-        </if>
-        group by managedcentercode;
+
     </select>
 
-
-
-
-    <!--select count(*) from phis_chss.v_fha_person_main where birthday<add_months(sysdate,-12*65);-->
-
-    <!--select count(*) from-->
-    <!--(select p.code from phis_chss.v_fha_person_main p   join  phis_chss.v_fhc_check_main c  on p.code=c.code where p.birthday<add_months(sysdate,-12*65) group by p.code);-->
 </mapper>
 
