@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightLessThan750Mapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightMoreThan1800Mapper;
 
 /**
@@ -27,8 +25,7 @@ public class NewBabyWeightMoreThan1800 extends YiyuanDataProcessor {
 
 	public NewBabyWeightMoreThan1800Mapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(NewBabyWeightMoreThan1800Mapper.class);
+			mapper = sqlSessionContainer.getMapper(NewBabyWeightMoreThan1800Mapper.class);
 		}
 		return mapper;
 	}

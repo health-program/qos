@@ -8,32 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightBetween751And1000Mapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightLessThan750Mapper;
 
 /**
  * 新生儿患者出生体重≤750克死亡率
+ * 
  * @author FM
  *
  */
 @Component
-public class NewBabyWeightLessThan750 extends YiyuanDataProcessor{
+public class NewBabyWeightLessThan750 extends YiyuanDataProcessor {
 
-	
 	private NewBabyWeightLessThan750Mapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public NewBabyWeightLessThan750Mapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(NewBabyWeightLessThan750Mapper.class);
+			mapper = sqlSessionContainer.getMapper(NewBabyWeightLessThan750Mapper.class);
 		}
 		return mapper;
 	}
-    public static final String EVENT_ID = "10113";
-		
+
+	public static final String EVENT_ID = "10113";
+
 	@Override
 	public String getEventId() {
 		return EVENT_ID;

@@ -1,7 +1,11 @@
 package com.paladin.qos.analysis;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import com.paladin.qos.analysis.DataConstantContainer.Unit;
 
 /**
  * 数据处理器，对数据进行时间维度和机构维度的数据预处理，提高统计效率
@@ -24,16 +28,7 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	public abstract String getEventId();
-	
-	/**
-	 * 获取对应医院ID，适用于不同数据库，如果返回null，则表示不需要处理
-	 * 
-	 * @param unitId
-	 * @return
-	 */
-	public String getMappingUnitId(String unitId) {
-		return unitId;
-	} 
+
 
 	/**
 	 * 处理时间粒度
@@ -41,7 +36,7 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	// public int getTimeGranularity() {
-	// 		return TIME_GRANULARITY_DAY;
+	// return TIME_GRANULARITY_DAY;
 	// }
 
 	/**
@@ -66,11 +61,10 @@ public abstract class DataProcessor {
 	 */
 	public RateMetadata processByDay(Date startTime, Date endTime, String unitId) {
 
-		String mappingUnitId = getMappingUnitId(unitId);
-		if(mappingUnitId == null || mappingUnitId.length() == 0) {
+		if (unitId == null || unitId.length() == 0) {
 			return null;
 		}
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(startTime);
 
@@ -80,8 +74,8 @@ public abstract class DataProcessor {
 		int weekYear = c.get(Calendar.WEEK_OF_YEAR);
 		int weekMonth = c.get(Calendar.WEEK_OF_MONTH);
 
-		long totalNum = getTotalNum(startTime, endTime, mappingUnitId);
-		long eventNum = getEventNum(startTime, endTime, mappingUnitId);
+		long totalNum = getTotalNum(startTime, endTime, unitId);
+		long eventNum = getEventNum(startTime, endTime, unitId);
 
 		RateMetadata metadata = new RateMetadata();
 		metadata.setEventNum(eventNum);
@@ -117,5 +111,55 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	public abstract long getEventNum(Date startTime, Date endTime, String unitId);
+
+	/**
+	 * 是否需要实时部分数据
+	 * 
+	 * @param endTime
+	 * @return
+	 */
+	public boolean needDataRealTime() {
+		return true;
+	}
+
+	/**
+	 * 返回实时数据时间区间
+	 * 
+	 * @param endTime
+	 * @return
+	 */
+	public Date[] getDataRealTimeInterval() {
+		Date today = TimeUtil.toDayTime(new Date());
+		Date endTime = new Date(today.getTime() + TimeUtil.MILLIS_IN_DAY);
+		return new Date[] { today, endTime };
+	}
+
+	/**
+	 * 获取实时数据
+	 * 
+	 * @param unitIds
+	 * @return
+	 */
+	public List<DataRealTime> getDataRealTime(List<Unit> units) {
+		if (units == null || units.size() == 0) {
+			return null;
+		}
+
+		Date[] dates = getDataRealTimeInterval();
+		Date startTime = dates[0];
+		Date endTime = dates[1];
+
+		List<DataRealTime> datas = new ArrayList<>(units.size());
+
+		for (Unit unit : units) {
+			String unitId = unit.getId();
+			long totalNum = getTotalNum(startTime, endTime, unitId);
+			long eventNum = getEventNum(startTime, endTime, unitId);
+			DataRealTime data = new DataRealTime(unitId, totalNum, eventNum);
+			datas.add(data);
+		}
+
+		return datas;
+	}
 
 }

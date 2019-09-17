@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationHipAndKneeReplacementMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationPercutaneousCoronaryInterventionMapper;
 
 /**
@@ -20,18 +18,18 @@ import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationPercutaneousCoronaryInt
  */
 @Component
 public class KeyOperationPercutaneousCoronaryIntervention extends YiyuanDataProcessor {
-	
+
 	private KeyOperationPercutaneousCoronaryInterventionMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public KeyOperationPercutaneousCoronaryInterventionMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(KeyOperationPercutaneousCoronaryInterventionMapper.class);
+			mapper = sqlSessionContainer.getMapper(KeyOperationPercutaneousCoronaryInterventionMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "12101";
 
 	@Override

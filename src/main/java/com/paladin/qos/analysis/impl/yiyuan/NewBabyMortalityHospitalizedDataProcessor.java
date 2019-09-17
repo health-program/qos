@@ -19,18 +19,17 @@ import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyMortalityHospitalizedMapper;
 @Component
 public class NewBabyMortalityHospitalizedDataProcessor extends YiyuanDataProcessor {
 
-
 	private NewBabyMortalityHospitalizedMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public NewBabyMortalityHospitalizedMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(NewBabyMortalityHospitalizedMapper.class);
+			mapper = sqlSessionContainer.getMapper(NewBabyMortalityHospitalizedMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "10110";
 
 	@Override

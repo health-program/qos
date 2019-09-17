@@ -12,25 +12,26 @@ import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationHipAndKneeReplacementMa
 
 /**
  * 髋、膝关节置换术死亡率
+ * 
  * @author FM
  *
  */
 @Component
-public class KeyOperationHipAndKneeReplacement extends YiyuanDataProcessor{
-	
+public class KeyOperationHipAndKneeReplacement extends YiyuanDataProcessor {
+
 	private KeyOperationHipAndKneeReplacementMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public KeyOperationHipAndKneeReplacementMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(KeyOperationHipAndKneeReplacementMapper.class);
+			mapper = sqlSessionContainer.getMapper(KeyOperationHipAndKneeReplacementMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "12102";
-	
+
 	@Override
 	public String getEventId() {
 		return EVENT_ID;

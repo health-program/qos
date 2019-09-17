@@ -8,31 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightMoreThan1800Mapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisAppendicitisMapper;
 
 /**
  * 急性阑尾炎伴弥漫性腹膜炎及脓肿再住院率统计
+ * 
  * @author FM
  *
  */
 @Component
-public class RehospitalzationAnalysisAppendicitis extends YiyuanDataProcessor{
-	
+public class RehospitalzationAnalysisAppendicitis extends YiyuanDataProcessor {
+
 	private RehospitalzationAnalysisAppendicitisMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public RehospitalzationAnalysisAppendicitisMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(RehospitalzationAnalysisAppendicitisMapper.class);
+			mapper = sqlSessionContainer.getMapper(RehospitalzationAnalysisAppendicitisMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "11111";
-	
+
 	@Override
 	public String getEventId() {
 		return EVENT_ID;

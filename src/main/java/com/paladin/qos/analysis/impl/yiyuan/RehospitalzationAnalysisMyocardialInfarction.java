@@ -8,32 +8,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisMalignantSurgeryMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisMyocardialInfarctionMapper;
 
 /**
  * 急性心肌梗死再住院率统计
+ * 
  * @author FM
  *
  */
 @Component
-public class RehospitalzationAnalysisMyocardialInfarction extends YiyuanDataProcessor{
-	
-	 
+public class RehospitalzationAnalysisMyocardialInfarction extends YiyuanDataProcessor {
+
 	private RehospitalzationAnalysisMyocardialInfarctionMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public RehospitalzationAnalysisMyocardialInfarctionMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(RehospitalzationAnalysisMyocardialInfarctionMapper.class);
+			mapper = sqlSessionContainer.getMapper(RehospitalzationAnalysisMyocardialInfarctionMapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "11101";
-	
+
 	@Override
 	public String getEventId() {
 		return EVENT_ID;

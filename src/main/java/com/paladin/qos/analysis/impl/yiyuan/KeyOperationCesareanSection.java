@@ -27,8 +27,7 @@ public class KeyOperationCesareanSection extends YiyuanDataProcessor {
 
 	public KeyOperationCesareanSectionMapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(KeyOperationCesareanSectionMapper.class);
+			mapper = sqlSessionContainer.getMapper(KeyOperationCesareanSectionMapper.class);
 		}
 		return mapper;
 	}

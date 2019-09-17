@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
-import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightBetween1001And1800Mapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightBetween751And1000Mapper;
 
 /**
@@ -21,18 +19,17 @@ import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyWeightBetween751And1000Mappe
 @Component
 public class NewBabyWeightBetween751And1000 extends YiyuanDataProcessor {
 
-	
 	private NewBabyWeightBetween751And1000Mapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
 	public NewBabyWeightBetween751And1000Mapper getMapper() {
 		if (mapper == null) {
-			mapper = sqlSessionContainer
-					.getMapper(NewBabyWeightBetween751And1000Mapper.class);
+			mapper = sqlSessionContainer.getMapper(NewBabyWeightBetween751And1000Mapper.class);
 		}
 		return mapper;
 	}
+
 	public static final String EVENT_ID = "10114";
 
 	@Override

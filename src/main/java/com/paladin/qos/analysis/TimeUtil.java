@@ -103,4 +103,31 @@ public class TimeUtil {
 		c.setTime(date);
 		return c.get(Calendar.YEAR);
 	}
+
+	public static boolean isToday(Date time) {
+		if (time == null)
+			return false;
+		
+		long millis = time.getTime();
+		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
+
+		long nowMillis = System.currentTimeMillis();
+		nowMillis = nowMillis - ((nowMillis + timeZone.getOffset(nowMillis)) % MILLIS_IN_DAY);
+
+		return millis == nowMillis;
+	}
+	
+	public static boolean isAfterOrEqualToday(Date time) {
+		if (time == null)
+			return false;
+		
+		long millis = time.getTime();
+		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
+
+		long nowMillis = System.currentTimeMillis();
+		nowMillis = nowMillis - ((nowMillis + timeZone.getOffset(nowMillis)) % MILLIS_IN_DAY);
+
+		return millis >= nowMillis;
+	}
+
 }

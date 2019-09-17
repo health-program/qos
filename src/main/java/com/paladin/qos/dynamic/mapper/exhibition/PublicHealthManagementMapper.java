@@ -1,10 +1,8 @@
 package com.paladin.qos.dynamic.mapper.exhibition;
 
-import com.paladin.qos.dynamic.model.exhibition.Archives;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.Date;
-import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 
 public interface PublicHealthManagementMapper {
 
