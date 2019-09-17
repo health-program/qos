@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
@@ -23,6 +24,7 @@ public class DataRealTimeProcessor {
 	private Map<String, DataRealTimeCache> cacheMap = new HashMap<>();
 	private Map<String, Integer> updateIntervalTimeMap = new HashMap<>();
 
+	//@Scheduled(cron = "0 0/5 * * * ?")
 	public void processSchedule(int minutes) {
 
 		List<Event> events = DataConstantContainer.getEventList();
@@ -31,7 +33,7 @@ public class DataRealTimeProcessor {
 			String eventId = event.getId();
 			DataProcessor processor = dataProcessContainer.getDataProcessor(eventId);
 
-			if (processor != null && processor.needDataRealTime()) {
+			if (processor != null && event.isRealTimeEnabled()) {
 				DataRealTimeCache cache = cacheMap.get(eventId);
 				if (cache == null) {
 					cache = new DataRealTimeCache();
@@ -64,25 +66,18 @@ public class DataRealTimeProcessor {
 					continue;
 				}
 
-				List<DataRealTime> datas = processor.getDataRealTime(units);
-				Map<String, DataRealTime> dataUnitMap = new HashMap<>();
-				if (datas != null) {
-					for (DataRealTime data : datas) {
-						dataUnitMap.put(data.getUnitId(), data);
-					}
-				}
-
-				cache.setDataList(datas);
+				Map<String, DataRealTime> dataUnitMap = processor.getDataRealTime(units);
 				cache.setDataUnitMap(dataUnitMap);
 
-				int intervalTime = 5; // TODO 该时间需要修改为每个事件单独，暂时写死为所有事件都5分钟更新一次
+				int intervalTime = event.getRealTimeInterval();
 				updateIntervalTimeMap.put(eventId, intervalTime);
 			}
 		}
 	}
 
 	public Map<String, DataRealTime> getRealTimeData(String eventId, List<String> unitIds, Date startTime, Date endTime) {
-		if (unitIds != null && unitIds.size() > 0 && startTime != null && endTime != null) {
+		Event event = DataConstantContainer.getEvent(eventId);
+		if (event != null && event.isRealTimeEnabled() && unitIds != null && unitIds.size() > 0 && startTime != null && endTime != null) {
 			DataRealTimeCache cache = cacheMap.get(eventId);
 			if (cache != null) {
 				Date start = cache.getStartTime();
@@ -96,7 +91,7 @@ public class DataRealTimeProcessor {
 			}
 
 			DataProcessor processor = dataProcessContainer.getDataProcessor(eventId);
-			if (processor != null && processor.needDataRealTime()) {
+			if (processor != null) {
 				Map<String, DataRealTime> dataUnitMap = new HashMap<>();
 				// 没有缓存则直接查询
 				for (String unitId : unitIds) {
@@ -110,7 +105,7 @@ public class DataRealTimeProcessor {
 			}
 		}
 
-		// 数据不完整
+		// 数据不完整或不需要实时
 		return null;
 	}
 
@@ -121,7 +116,6 @@ public class DataRealTimeProcessor {
 		private Date startTime;
 		private Date endTime;
 
-		private List<DataRealTime> dataList;
 		private Map<String, DataRealTime> dataUnitMap;
 
 		public String getEventId() {
@@ -130,14 +124,6 @@ public class DataRealTimeProcessor {
 
 		public void setEventId(String eventId) {
 			this.eventId = eventId;
-		}
-
-		public List<DataRealTime> getDataList() {
-			return dataList;
-		}
-
-		public void setDataList(List<DataRealTime> dataList) {
-			this.dataList = dataList;
 		}
 
 		public Map<String, DataRealTime> getDataUnitMap() {

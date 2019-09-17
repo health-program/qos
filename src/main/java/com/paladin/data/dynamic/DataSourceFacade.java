@@ -31,6 +31,12 @@ public class DataSourceFacade {
 		hikariConfig.setJdbcUrl(config.getUrl());
 		hikariConfig.setUsername(config.getUsername());
 		hikariConfig.setPassword(config.getPassword());
+		hikariConfig.setMinimumIdle(5);
+		hikariConfig.setMaximumPoolSize(5);
+		hikariConfig.setAutoCommit(true);
+		hikariConfig.setIdleTimeout(600000);
+		hikariConfig.setMaxLifetime(1800000);
+		hikariConfig.setConnectionTimeout(30000);
 		return new HikariDataSource(hikariConfig);
 	}
 

@@ -63,20 +63,19 @@ public class TimeUtil {
 		return new Date(millis);
 	}
 
-	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	public static void main(String[] args) throws Exception {
-		Date time = format.parse("2019-8-13 24:00:00");
-
-		time = toDayTime(time);
-		System.out.println(format.format(time));
-
+	public static long getIntervalDays(long start, long end) {
+		start = start - ((start + timeZone.getOffset(start)) % MILLIS_IN_DAY);
+		long endd = (end + timeZone.getOffset(end)) % MILLIS_IN_DAY;
+		if (endd == 0) {
+			return (end - start) / MILLIS_IN_DAY;
+		} else {
+			return (end - endd - start) / MILLIS_IN_DAY + 1;
+		}
 	}
 
 	public static int getSerialNumberByDay(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
-
 		return getSerialNumberByDay(c);
 	}
 
@@ -107,7 +106,7 @@ public class TimeUtil {
 	public static boolean isToday(Date time) {
 		if (time == null)
 			return false;
-		
+
 		long millis = time.getTime();
 		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
 
@@ -116,11 +115,11 @@ public class TimeUtil {
 
 		return millis == nowMillis;
 	}
-	
+
 	public static boolean isAfterOrEqualToday(Date time) {
 		if (time == null)
 			return false;
-		
+
 		long millis = time.getTime();
 		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
 
@@ -130,4 +129,11 @@ public class TimeUtil {
 		return millis >= nowMillis;
 	}
 
+	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	public static void main(String[] args) throws Exception {
+		Date time = format.parse("2019-8-13 00:00:00");
+		Date time2 = format.parse("2019-8-15 01:00:00");
+		System.out.println(getIntervalDays(time.getTime(),time2.getTime()));
+	}
 }

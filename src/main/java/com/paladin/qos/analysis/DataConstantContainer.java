@@ -25,6 +25,8 @@ public class DataConstantContainer implements VersionContainer {
 
 	private final static String container_id = "data_constant_container";
 
+	private final static int DEFAULT_REAL_TIME_INTERVAL = 5;
+
 	@Override
 	public String getId() {
 		return container_id;
@@ -67,6 +69,8 @@ public class DataConstantContainer implements VersionContainer {
 			String id = dataEvent.getId();
 			String name = dataEvent.getName();
 			Integer enabled = dataEvent.getEnabled();
+			Integer realTimeEnabled = dataEvent.getRealTimeEnabled();
+			Integer realTimeInterval = dataEvent.getRealTimeInterval();
 
 			eventKeyValues.add(new KeyValue(id, name));
 			Event event = new Event();
@@ -75,7 +79,9 @@ public class DataConstantContainer implements VersionContainer {
 			event.setEnabled(enabled != null && enabled.intValue() == 1);
 			event.setEventType(dataEvent.getEventType());
 			event.setTargetType(dataEvent.getTargetType());
-			
+			event.setRealTimeEnabled(realTimeEnabled != null && realTimeEnabled.intValue() == 1);
+			event.setRealTimeInterval(realTimeInterval == null ? DEFAULT_REAL_TIME_INTERVAL : realTimeInterval);
+
 			events.add(event);
 			eventMap.put(id, event);
 		}
@@ -119,7 +125,7 @@ public class DataConstantContainer implements VersionContainer {
 			String id = unit.getId();
 			String name = unit.getName();
 			int type = unit.getType();
-			
+
 			unitKeyValues.add(new KeyValue(id, name));
 			if (type == DataUnit.TYPE_HOSPITAL) {
 				hospitals.add(unit);
@@ -127,8 +133,8 @@ public class DataConstantContainer implements VersionContainer {
 			} else if (type == DataUnit.TYPE_COMMUNITY) {
 				communities.add(unit);
 				communityKeyValues.add(new KeyValue(id, name));
-			} 
-			
+			}
+
 		}
 
 		constantsContainer.putConstant(TYPE_EVENT, eventKeyValues);
@@ -198,6 +204,8 @@ public class DataConstantContainer implements VersionContainer {
 		private String name;
 		private int eventType;
 		private int targetType;
+		private boolean realTimeEnabled;
+		private int realTimeInterval;
 		private boolean enabled;
 
 		public String getId() {
@@ -239,6 +247,22 @@ public class DataConstantContainer implements VersionContainer {
 		public void setTargetType(int targetType) {
 			this.targetType = targetType;
 		}
+
+		public boolean isRealTimeEnabled() {
+			return realTimeEnabled;
+		}
+
+		public void setRealTimeEnabled(boolean realTimeEnabled) {
+			this.realTimeEnabled = realTimeEnabled;
+		}
+
+		public int getRealTimeInterval() {
+			return realTimeInterval;
+		}
+
+		public void setRealTimeInterval(int realTimeInterval) {
+			this.realTimeInterval = realTimeInterval;
+		}
 	}
 
 	public static class Unit {
@@ -265,7 +289,7 @@ public class DataConstantContainer implements VersionContainer {
 		public void setName(String name) {
 			this.name = name;
 		}
-		
+
 		public int getType() {
 			return type;
 		}

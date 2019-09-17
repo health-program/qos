@@ -2,75 +2,101 @@ package com.paladin.qos.mapper.shejike;
 
 import java.util.Date;
 
+import org.apache.ibatis.annotations.Param;
+
 public interface SheJiKeMapper {
-	//医生平均门急诊量
-	long getAverageNumber(Date startTime, Date endTime, String unitId);
-	//使用床位数
-	long getBedInUseNumber(Date startTime, Date endTime, String unitId);
-	//急诊人次数
-	long getEmergencyNumber(Date startTime, Date endTime, String unitId);
-	//住院人次数
-	long getInhospitalNumber(Date startTime, Date endTime, String unitId);
-	//在院人次数
-	long getOnhospitalNumber(Date startTime, Date endTime, String unitId);
-	//出院人次数
-	long getOuthospitalNumber(Date startTime, Date endTime, String unitId);
-	//门诊人次数
-	long getOutpatientNumber(Date startTime, Date endTime, String unitId);
-	//门急诊总数
-	long getPatientsNumber(Date startTime, Date endTime, String unitId);
-	//额定床位数
-	long getRatedBedNumber(Date startTime, Date endTime, String unitId);
-	//出诊医生数
-	long getVisitDoctorNumber(Date startTime, Date endTime, String unitId);
-	
-	//病床总天数
-	long getBedTotalDays(Date startTime, Date endTime, String unitId);
-	//病床使用天数
-	long getBedInUseDays(Date startTime, Date endTime, String unitId);
-	//合计总收入
-	double getTotalMoney(Date startTime, Date endTime, String unitId);
-	//医疗收入
-	double getMedicalMoney(Date startTime, Date endTime, String unitId);
-	//药品收入
-	int getDrugMoney(Date startTime, Date endTime, String unitId);
-	//其他收入
-	int getOtherMoney(Date startTime, Date endTime, String unitId);
-	
-	//处方数量
-	long getPrescriptionNumber(Date startTime, Date endTime, String unitId);
-	//处方总额
-	double getPrescriptionMoney(Date startTime, Date endTime, String unitId);
-	//最大处方金额
-	double getMaxPrescriptionMoney(Date startTime, Date endTime, String unitId);
-	//最小处方金额
-	double getMinPrescriptionMoney(Date startTime, Date endTime, String unitId);
-	//平均处方金额
-	double getAvgPrescriptionMoney(Date startTime, Date endTime, String unitId);
-	
-	//门诊中医处方占比
-	long getTotalChineseMedicinePrescription(Date startTime, Date endTime,
-			String unitId);
-	long getEventChineseMedicinePrescription(Date startTime, Date endTime,
-			String unitId);
-	//门诊中药饮片占比
-	long getEventChineseDrinkMedicine(Date startTime, Date endTime,
-			String unitId);
-	//门诊中医非药物治疗处方占比
-	long getEventNonChineseMedicinePrescription(Date startTime, Date endTime,
-			String unitId);
-	//激素使用率
-	long getTotalHormone(Date startTime, Date endTime, String unitId);
-	long getEventHormone(Date startTime, Date endTime, String unitId);
-	//抗菌药物使用率
-	double getTotalAntiDrug(Date startTime, Date endTime, String unitId);
-	double getEventAntiDrug(Date startTime, Date endTime, String unitId);
-	
-	//一联抗生素使用率
-	long getTotalRecipe(Date startTime, Date endTime, String unitId);
-	long getEventOneAntiDrug(Date startTime, Date endTime, String unitId);
-	//二联抗生素使用率
-	long getEventTwoAntiDrug(Date startTime, Date endTime, String unitId);
-	//三联抗生素使用率
-	long getEventThreeAntiDrug(Date startTime, Date endTime, String unitId);
+	// 医生平均门急诊量
+	long getAverageNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 使用床位数
+	long getBedInUseNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 急诊人次数
+	long getEmergencyNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 住院人次数
+	long getInhospitalNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 在院人次数
+	long getOnhospitalNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 出院人次数
+	long getOuthospitalNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 门诊人次数
+	long getOutpatientNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 门急诊总数
+	long getPatientsNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 额定床位数
+	long getRatedBedNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 出诊医生数
+	long getVisitDoctorNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 病床总天数
+	long getBedTotalDays(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 病床使用天数
+	long getBedInUseDays(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 合计总收入
+	double getTotalMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 医疗收入
+	double getMedicalMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 药品收入
+	int getDrugMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 其他收入
+	int getOtherMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 处方数量
+	long getPrescriptionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 处方总额
+	double getPrescriptionMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 最大处方金额
+	double getMaxPrescriptionMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 最小处方金额
+	double getMinPrescriptionMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 平均处方金额
+	double getAvgPrescriptionMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 门诊中医处方占比
+	long getTotalChineseMedicinePrescription(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	long getEventChineseMedicinePrescription(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 门诊中药饮片占比
+	long getEventChineseDrinkMedicine(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 门诊中医非药物治疗处方占比
+	long getEventNonChineseMedicinePrescription(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 激素使用率
+	long getTotalHormone(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	long getEventHormone(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 抗菌药物使用率
+	double getTotalAntiDrug(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	double getEventAntiDrug(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 一联抗生素使用率
+	long getTotalRecipe(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	long getEventOneAntiDrug(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 二联抗生素使用率
+	long getEventTwoAntiDrug(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+
+	// 三联抗生素使用率
+	long getEventThreeAntiDrug(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
 }

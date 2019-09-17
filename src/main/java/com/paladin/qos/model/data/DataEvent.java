@@ -26,6 +26,12 @@ public class DataEvent {
 
 	// 
 	private String content;
+	
+	// 是否需要实时
+	private Integer realTimeEnabled;
+	
+	// 实时间隔时间，分钟
+	private Integer realTimeInterval;
 
 	// 是否启用
 	private Integer enabled;
@@ -76,6 +82,22 @@ public class DataEvent {
 
 	public void setEventType(Integer eventType) {
 		this.eventType = eventType;
+	}
+	
+	public Integer getRealTimeInterval() {
+		return realTimeInterval;
+	}
+
+	public void setRealTimeInterval(Integer realTimeInterval) {
+		this.realTimeInterval = realTimeInterval;
+	}
+
+	public Integer getRealTimeEnabled() {
+		return realTimeEnabled;
+	}
+
+	public void setRealTimeEnabled(Integer realTimeEnabled) {
+		this.realTimeEnabled = realTimeEnabled;
 	}
 
 }

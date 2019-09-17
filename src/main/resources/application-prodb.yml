@@ -10,12 +10,12 @@ paladin:
       username: jswj
       password: jswj2019
     source[1]:
-      name: gongwei
+      name: jcyl
       url: jdbc:oracle:thin:@//10.9.0.165:1521/ksdaga
       username: phis_wj
       password: phis_wj
     source[2]:
-      name: jcyl
+      name: gongwei
       url: jdbc:oracle:thin:@//10.9.0.12:1521/ksdaga
       username: phis_wj
       password: 123456

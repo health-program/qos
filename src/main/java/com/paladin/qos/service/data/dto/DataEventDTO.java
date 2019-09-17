@@ -1,22 +1,27 @@
 package com.paladin.qos.service.data.dto;
 
-
 public class DataEventDTO {
 
-	// 
+	//
 	private String id;
 
 	// 事件名称
 	private String name;
-	
+
 	// 事件类型，概率 or 总数
 	private Integer eventType;
-	
+
 	// 数据目标类型， 医院 or 社区 or 所有
 	private Integer targetType;
 
-	// 
+	//
 	private String content;
+
+	// 是否需要实时
+	private Integer realTimeEnabled;
+
+	// 实时间隔时间，分钟
+	private Integer realTimeInterval;
 
 	// 是否启用
 	private Integer enabled;
@@ -67,6 +72,22 @@ public class DataEventDTO {
 
 	public void setTargetType(Integer targetType) {
 		this.targetType = targetType;
+	}
+
+	public Integer getRealTimeEnabled() {
+		return realTimeEnabled;
+	}
+
+	public void setRealTimeEnabled(Integer realTimeEnabled) {
+		this.realTimeEnabled = realTimeEnabled;
+	}
+
+	public Integer getRealTimeInterval() {
+		return realTimeInterval;
+	}
+
+	public void setRealTimeInterval(Integer realTimeInterval) {
+		this.realTimeInterval = realTimeInterval;
 	}
 
 }

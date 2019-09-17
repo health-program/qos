@@ -7,6 +7,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.paladin.framework.utils.uuid.UUIDUtil;
@@ -34,8 +35,10 @@ public class DataProcessManager {
 	private DataProcessExceptionService dataProcessExceptionService;
 
 	/**
-	 * 处理计划，处理前一天的数据
+	 * 处理计划，处理前一天的数据，每天凌晨1点执行
+	 *
 	 */
+	@Scheduled(cron = "0 0 1 * * ?")  
 	public void processSchedule() {
 		List<Event> events = DataConstantContainer.getEventList();
 

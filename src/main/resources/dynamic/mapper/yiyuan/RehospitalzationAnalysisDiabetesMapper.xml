@@ -238,23 +238,16 @@
 		'E11.400',
 		'E13.100',
 		'E14.500')
-			and a.OUT_HP_DT <![CDATA[>=]]>
-			#{startTime}
-			and a.OUT_HP_DT <![CDATA[<]]>
-			#{endTime}
-			and ORGAN_CODE = #{unitId}
-		</if>
+		and a.OUT_HP_DT <![CDATA[>=]]> #{startTime}
+		and a.OUT_HP_DT <![CDATA[<]]> #{endTime}
+		and ORGAN_CODE = #{unitId}
 		AND EXISTS (
 		SELECT * FROM outhospitalrecord b
 		WHERE
 		b.CARDNO = a.CARDNO
-		AND b.OUT_HP_DT <![CDATA[!=]]>
-		a.OUT_HP_DT
-		and a.OUT_HP_DT <![CDATA[>=]]>
-		date_add(b.IN_HP_DT, INTERVAL - 31 DAY)
-		and a.OUT_HP_DT <![CDATA[<]]>
-		DATE(b.IN_HP_DT)
-
+		AND b.OUT_HP_DT <![CDATA[!=]]> a.OUT_HP_DT
+		and a.OUT_HP_DT <![CDATA[>=]]> date_add(b.IN_HP_DT, INTERVAL - 31 DAY)
+		and a.OUT_HP_DT <![CDATA[<]]> DATE(b.IN_HP_DT)
 		)
 	</select>
 </mapper>

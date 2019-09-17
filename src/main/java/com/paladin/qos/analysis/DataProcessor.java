@@ -1,9 +1,10 @@
 package com.paladin.qos.analysis;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 
@@ -28,7 +29,6 @@ public abstract class DataProcessor {
 	 * @return
 	 */
 	public abstract String getEventId();
-
 
 	/**
 	 * 处理时间粒度
@@ -113,16 +113,6 @@ public abstract class DataProcessor {
 	public abstract long getEventNum(Date startTime, Date endTime, String unitId);
 
 	/**
-	 * 是否需要实时部分数据
-	 * 
-	 * @param endTime
-	 * @return
-	 */
-	public boolean needDataRealTime() {
-		return true;
-	}
-
-	/**
 	 * 返回实时数据时间区间
 	 * 
 	 * @param endTime
@@ -140,7 +130,7 @@ public abstract class DataProcessor {
 	 * @param unitIds
 	 * @return
 	 */
-	public List<DataRealTime> getDataRealTime(List<Unit> units) {
+	public Map<String, DataRealTime> getDataRealTime(List<Unit> units) {
 		if (units == null || units.size() == 0) {
 			return null;
 		}
@@ -149,14 +139,14 @@ public abstract class DataProcessor {
 		Date startTime = dates[0];
 		Date endTime = dates[1];
 
-		List<DataRealTime> datas = new ArrayList<>(units.size());
+		HashMap<String, DataRealTime> datas = new HashMap<>();
 
 		for (Unit unit : units) {
 			String unitId = unit.getId();
 			long totalNum = getTotalNum(startTime, endTime, unitId);
 			long eventNum = getEventNum(startTime, endTime, unitId);
 			DataRealTime data = new DataRealTime(unitId, totalNum, eventNum);
-			datas.add(data);
+			datas.put(unitId, data);
 		}
 
 		return datas;
