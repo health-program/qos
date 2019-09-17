@@ -271,7 +271,7 @@
     <!-- 一联抗生素使用率 -->
     <select id="getTotalRecipe" resultType="long">
         select count(r.recipeid) recipeall
-        from opm_recipe_info r
+        from phis_webhis.opm_recipe_info r
         where r.PRESSTATUS = '2'
         and r.CHARSTATUS = '2'
         and r.Opertime &gt;= #{startTime}
@@ -280,9 +280,16 @@
     </select>
     <select id="getEventOneAntiDrug" resultType="long">
         select
-        count(case when kss.kss = '1' then kss.kss end) as ylkss
-        from (select t.recipeid, count(recipeid) as kss from phis_webhis.v_opb_feedetail t where t.ITEMID in
-        (select DRUG.DRUGID from phis_webhis.v_pha_drug DRUG where DRUG.ISANTIBIOTIC = 1)
+        count(case
+        when kss.kss = '1' then
+        kss.kss
+        end) as ylkss
+        from (select t.recipeid, count(recipeid) as kss
+        from phis_webhis.v_opb_feedetail t
+        where t.ITEMID in
+        (select DRUG.DRUGID
+        from phis_webhis.v_pha_drug DRUG
+        where DRUG.ISANTIBIOTIC = 1)
         AND t.createtime between #{startTime} and #{endTime}
         and orgcode = #{unitId}
         group by recipeid) kss

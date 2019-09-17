@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.DataProcessor;
+import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
@@ -42,7 +43,9 @@ public class BedInUseDaysRate extends DataProcessor{
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
         long totalBed = getMapper().getBedTotalDays(startTime, endTime, unitId);//获取总床位数
         //时间相减（天数）
+        //TODO
         int days = (int)((endTime.getTime() - startTime.getTime()) / (1000*3600*24));
+       // int days = TimeUtil.toDay(millis)
         long total = totalBed*days;
         return total;
     }
