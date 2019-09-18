@@ -11,6 +11,12 @@ public class FamilyDoctorUnitDTO {
 
 	// 人口数
 	private String population;
+	
+	// 工作室数量
+	private Integer studioNum;
+		
+	// 工作室名称
+	private String studioName;
 
 	public String getId() {
 		return id;
@@ -35,4 +41,21 @@ public class FamilyDoctorUnitDTO {
 	public void setPopulation(String population) {
 		this.population = population;
 	}
+
+	public Integer getStudioNum() {
+	    return studioNum;
+	}
+
+	public void setStudioNum(Integer studioNum) {
+	    this.studioNum = studioNum;
+	}
+
+	public String getStudioName() {
+	    return studioName;
+	}
+
+	public void setStudioName(String studioName) {
+	    this.studioName = studioName;
+	}
+	
 }

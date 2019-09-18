@@ -28,7 +28,9 @@
 	        url:"/qos/family/doctor/unit/update?id="+$("#id").val(),
 	        columns: [
 				{ title: "单位名称", name: "unit", inputType: "TEXT" },
-				{ title: "人口数", name: "population", inputType: "TEXT" }
+				{ title: "人口数(万)", name: "population", inputType: "TEXT",colspan: 2},
+				{ title: "工作室数量", name: "studioNum", inputType: "NUMBER",colspan: 2 },
+				{ title: "工作室名称", name: "studioName", inputType: "TEXTAREA"}
 				]
 	    }
     
