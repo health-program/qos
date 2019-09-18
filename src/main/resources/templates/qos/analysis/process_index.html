@@ -39,6 +39,17 @@
                 </dl>
             </div>
         </div>
+        <div class="box box-widget">
+            <div class="box-header no-border">
+                <h3 class="box-title">测试数据预处理代码</h3>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <button type="button" onclick="testProcessor()" class="btn btn-box-tool"><i class="fa fa-stethoscope"></i></button>
+                </div>
+            </div>
+            <div class="box-body" id="testResultDiv">
+            </div>
+        </div>
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
@@ -166,7 +177,6 @@
         })
     }
 
-
     function viewValidate(result) {
 
         var html = '<dt>数据时间跨度</dt>';
@@ -189,6 +199,42 @@
 
     function repair() {
         $.successAlert("修复功能还未开发");
+    }
+
+
+    var testResult;
+
+    function showException(i) {
+        $.infoAlert(testResult[i].exception);
+    }
+
+    function testProcessor() {
+        $.postAjax("/qos/analysis/data/test", function(rs) {
+            testResult = rs;
+            var html = '<table class="table table-hover table-striped"><tbody>';
+            for (var i = 0; i < rs.length; i++) {
+                var r = rs[i];
+                html += '<tr>';
+                if (r.isSuccess) {
+                    html += '<td>' + r.eventName + '</td>';
+                    html += '<td><span class="label label-success">success</span></td>';
+                    html += '<td>执行<b>' + r.processTimes + '</b>次共消耗<b>' + r.castTime + '</b>ms</td>';
+                } else {
+                    html += '<td>' + r.eventName + '</td>';
+                    html += '<td><span class="label label-danger">error</span></td>';
+
+                    var exception = r.exception || '处理异常';
+                    if (exception.length > 50) {
+                        exception = exception.substring(0, 50);
+                    }
+
+                    html += '<td><a href="javascript:showException(' + i + ')">' + exception + '</a></td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $("#testResultDiv").html(html);
+        });
     }
     </script>
 </body>

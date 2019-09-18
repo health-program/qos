@@ -180,6 +180,17 @@ public class DataConstantContainer implements VersionContainer {
 		return communities;
 	}
 
+	public static List<Unit> getUnitListByType(int targetType) {
+		if (targetType == DataEvent.TARGET_TYPE_ALL) {
+			return DataConstantContainer.getUnitList();
+		} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL) {
+			return DataConstantContainer.getHospitalList();
+		} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY) {
+			return DataConstantContainer.getCommunityList();
+		}
+		return null;
+	}
+
 	public static Unit getUnit(String id) {
 		return unitMap.get(id);
 	}

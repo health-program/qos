@@ -24,10 +24,11 @@ public class DataRealTimeProcessor {
 	private Map<String, DataRealTimeCache> cacheMap = new HashMap<>();
 	private Map<String, Integer> updateIntervalTimeMap = new HashMap<>();
 
-	//@Scheduled(cron = "0 0/5 * * * ?")
+	@Scheduled(cron = "0 0/10 * * * ?")
 	public void processSchedule(int minutes) {
 
 		List<Event> events = DataConstantContainer.getEventList();
+		long begin = System.currentTimeMillis();
 
 		for (Event event : events) {
 			String eventId = event.getId();
@@ -53,15 +54,9 @@ public class DataRealTimeProcessor {
 				}
 
 				int targetType = event.getTargetType();
-				List<Unit> units = null;
+				List<Unit> units = DataConstantContainer.getUnitListByType(targetType);
 
-				if (targetType == DataEvent.TARGET_TYPE_ALL) {
-					units = DataConstantContainer.getUnitList();
-				} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL) {
-					units = DataConstantContainer.getHospitalList();
-				} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY) {
-					units = DataConstantContainer.getCommunityList();
-				} else {
+				if (units == null) {
 					logger.error("实时处理数据失败！事件[" + eventId + ":" + event.getName() + "]找不到对应的数据范围类型[targetType:" + targetType + "]");
 					continue;
 				}
@@ -73,6 +68,8 @@ public class DataRealTimeProcessor {
 				updateIntervalTimeMap.put(eventId, intervalTime);
 			}
 		}
+
+		logger.info("------------>更新一次数据缓存，耗时：" + (System.currentTimeMillis() - begin) + "毫秒<------------");
 	}
 
 	public Map<String, DataRealTime> getRealTimeData(String eventId, List<String> unitIds, Date startTime, Date endTime) {

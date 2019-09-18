@@ -59,7 +59,7 @@ public class AnalysisController {
 				unitIds.add(unit.getId());
 			}
 		}
-		
+
 		if (unitIds == null || unitIds.size() == 0) {
 			List<Unit> units = DataConstantContainer.getUnitList();
 			unitIds = new ArrayList<>();
@@ -67,7 +67,7 @@ public class AnalysisController {
 				unitIds.add(unit.getId());
 			}
 		}
-		
+
 		if (dataProcessManager.processDataByThread(startDate, endDate, unitIds, eventIds)) {
 			return CommonResponse.getSuccessResponse();
 		} else {
@@ -104,9 +104,15 @@ public class AnalysisController {
 	@PostMapping("/data/validate")
 	@ResponseBody
 	public Object validateProcessedData(AnalysisRequest request) {
-		String eventId = request.getEventId();
-		String unitId = request.getUnitId();
-		return CommonResponse.getSuccessResponse(analysisService.validateProcessedData(eventId, unitId));
+		Date startDate = request.getStartTime();
+		Date endDate = request.getEndTime();
+		return CommonResponse.getSuccessResponse(analysisService.validateProcessedData(startDate, endDate));
+	}
+
+	@PostMapping("/data/test")
+	@ResponseBody
+	public Object testProcessor() {
+		return CommonResponse.getSuccessResponse(analysisService.testProcessors());
 	}
 
 	@PostMapping("/data/instalments")
@@ -159,7 +165,7 @@ public class AnalysisController {
 		return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, startDate, endDate));
 	}
 
-	@RequestMapping(value = "/processed/count", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/data/count", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getProcessedDataByCount(AnalysisRequest request) {
 		String eventId = request.getEventId();

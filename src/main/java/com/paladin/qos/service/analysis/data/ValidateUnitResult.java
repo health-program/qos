@@ -2,22 +2,13 @@ package com.paladin.qos.service.analysis.data;
 
 import java.util.List;
 
-public class ValidateResult {
+public class ValidateUnitResult {
 	
-	private String eventId;
 	private String unitId;
 	private int firstDay;
 	private int lastDay;
 	
 	private List<Integer> lostDays;
-
-	public String getEventId() {
-		return eventId;
-	}
-
-	public void setEventId(String eventId) {
-		this.eventId = eventId;
-	}
 
 	public String getUnitId() {
 		return unitId;
@@ -50,6 +41,5 @@ public class ValidateResult {
 	public void setLostDays(List<Integer> lostDays) {
 		this.lostDays = lostDays;
 	}
-	
 	
 }

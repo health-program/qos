@@ -3,6 +3,7 @@ package com.paladin.qos.analysis;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class TimeUtil {
@@ -73,6 +74,11 @@ public class TimeUtil {
 		}
 	}
 
+	public static List<Integer> getSerialNumberByDay (Date startTime, Date endTime) {
+		
+		return null;
+	}
+	
 	public static int getSerialNumberByDay(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -129,11 +135,17 @@ public class TimeUtil {
 		return millis >= nowMillis;
 	}
 
+	public static Date getOnePastDay(int pastDays) {
+		long millis = System.currentTimeMillis();
+		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
+		return new Date(millis - MILLIS_IN_DAY * pastDays);
+	}
+
 	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public static void main(String[] args) throws Exception {
 		Date time = format.parse("2019-8-13 00:00:00");
 		Date time2 = format.parse("2019-8-15 01:00:00");
-		System.out.println(getIntervalDays(time.getTime(),time2.getTime()));
+		System.out.println(getIntervalDays(time.getTime(), time2.getTime()));
 	}
 }

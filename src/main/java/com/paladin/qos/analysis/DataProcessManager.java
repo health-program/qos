@@ -38,7 +38,7 @@ public class DataProcessManager {
 	 * 处理计划，处理前一天的数据，每天凌晨1点执行
 	 *
 	 */
-	@Scheduled(cron = "0 0 1 * * ?")  
+	@Scheduled(cron = "0 0 1 * * ?")
 	public void processSchedule() {
 		List<Event> events = DataConstantContainer.getEventList();
 
@@ -52,15 +52,9 @@ public class DataProcessManager {
 				logger.error("处理数据失败！未找到事件[" + eventId + ":" + event.getName() + "]对应的数据处理器");
 			} else {
 
-				List<Unit> units = null;
+				List<Unit> units = DataConstantContainer.getUnitListByType(targetType);
 
-				if (targetType == DataEvent.TARGET_TYPE_ALL) {
-					units = DataConstantContainer.getUnitList();
-				} else if (targetType == DataEvent.TARGET_TYPE_HOSPITAL) {
-					units = DataConstantContainer.getHospitalList();
-				} else if (targetType == DataEvent.TARGET_TYPE_COMMUNITY) {
-					units = DataConstantContainer.getCommunityList();
-				} else {
+				if (units == null) {
 					logger.error("处理数据失败！事件[" + eventId + ":" + event.getName() + "]找不到对应的数据范围类型[targetType:" + targetType + "]");
 					continue;
 				}
