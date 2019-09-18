@@ -38,7 +38,7 @@ public class PrescriptionNumber extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return getMapper().getPrescriptionNumber(startTime, endTime, unitId);
     }
 

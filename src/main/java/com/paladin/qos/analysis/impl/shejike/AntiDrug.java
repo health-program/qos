@@ -38,13 +38,13 @@ public class AntiDrug extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return (long)(getMapper().getTotalAntiDrug(startTime, endTime, unitId)*100);
     }
 
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-    	 sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+    	 sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
          return (long)(getMapper().getEventAntiDrug(startTime, endTime, unitId)*100);
     }
 }

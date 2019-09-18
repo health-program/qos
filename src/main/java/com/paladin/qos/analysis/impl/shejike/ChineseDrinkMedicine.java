@@ -38,13 +38,13 @@ public class ChineseDrinkMedicine extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return getMapper().getTotalChineseMedicinePrescription(startTime, endTime, unitId);
     }
 
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return getMapper().getEventChineseDrinkMedicine(startTime, endTime, unitId);
     }
 }

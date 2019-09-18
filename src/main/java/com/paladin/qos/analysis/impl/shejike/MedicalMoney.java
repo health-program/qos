@@ -37,7 +37,7 @@ public class MedicalMoney extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return (long)(getMapper().getMedicalMoney(startTime, endTime, unitId)*100);
     }
 

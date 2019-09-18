@@ -41,7 +41,7 @@ public class BedInUseDaysRate extends DataProcessor {
 
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
-		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
 		long totalBed = getMapper().getBedTotalDays(startTime, endTime, unitId);// 获取总床位数
 		// 时间相减（天数）
 		long days = TimeUtil.getIntervalDays(startTime.getTime(), endTime.getTime());
@@ -51,7 +51,7 @@ public class BedInUseDaysRate extends DataProcessor {
 
 	@Override
 	public long getEventNum(Date startTime, Date endTime, String unitId) {
-		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
 		return getMapper().getBedInUseDays(startTime, endTime, unitId);
 	}
 }

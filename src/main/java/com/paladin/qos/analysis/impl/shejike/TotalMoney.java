@@ -38,7 +38,7 @@ public class TotalMoney extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return  (long)(getMapper().getTotalMoney(startTime, endTime, unitId)*100);
     }
 

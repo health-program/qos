@@ -38,7 +38,7 @@ public class VisitDoctorNumber extends DataProcessor{
 
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
         return  getMapper().getVisitDoctorNumber(startTime, endTime, unitId);
     }
 
