@@ -1,6 +1,7 @@
 package com.paladin.qos.model.familydoctor;
 
 import com.paladin.framework.common.BaseModel;
+
 import javax.persistence.Id;
 
 public class FamilyDoctorUnit extends BaseModel {
@@ -14,6 +15,12 @@ public class FamilyDoctorUnit extends BaseModel {
 
 	// 人口数
 	private String population;
+	
+	// 工作室数量
+	private Integer studioNum;
+		
+	// 工作室名称
+	private String studioName;
 
 	public String getId() {
 		return id;
@@ -37,6 +44,22 @@ public class FamilyDoctorUnit extends BaseModel {
 
 	public void setPopulation(String population) {
 		this.population = population;
+	}
+
+	public Integer getStudioNum() {
+	    return studioNum;
+	}
+
+	public void setStudioNum(Integer studioNum) {
+	    this.studioNum = studioNum;
+	}
+
+	public String getStudioName() {
+	    return studioName;
+	}
+
+	public void setStudioName(String studioName) {
+	    this.studioName = studioName;
 	}
 
 }

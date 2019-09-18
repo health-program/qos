@@ -12,6 +12,12 @@ public class FamilyDoctorUnitVO {
 
 	// 人口数
 	private String population;
+	
+	// 工作室数量
+	private Integer studioNum;
+	
+	// 工作室名称
+	private String studioName;
 
 	// 
 	private Date createTime;
@@ -79,6 +85,22 @@ public class FamilyDoctorUnitVO {
 
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
+	}
+
+	public Integer getStudioNum() {
+	    return studioNum;
+	}
+
+	public void setStudioNum(Integer studioNum) {
+	    this.studioNum = studioNum;
+	}
+
+	public String getStudioName() {
+	    return studioName;
+	}
+
+	public void setStudioName(String studioName) {
+	    this.studioName = studioName;
 	}
 
 }
