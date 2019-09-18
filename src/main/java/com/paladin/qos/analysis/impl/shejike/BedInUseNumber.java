@@ -39,7 +39,12 @@ public class BedInUseNumber extends DataProcessor{
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return  getMapper().getBedInUseNumber(startTime, endTime, unitId);
+        long a = getMapper().getBedInUseNumber(startTime, endTime, unitId);
+        System.out.println("startTime"+startTime);
+        System.out.println("endTime"+endTime);
+        System.out.println("unitId"+unitId);
+        System.out.println("--------"+a);
+        return  a;
     }
 
     @Override
