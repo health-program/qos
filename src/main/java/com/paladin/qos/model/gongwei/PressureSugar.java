@@ -1,4 +1,4 @@
-package com.paladin.qos.dynamic.model.exhibition;
+package com.paladin.qos.model.gongwei;
 
 public class PressureSugar {
 

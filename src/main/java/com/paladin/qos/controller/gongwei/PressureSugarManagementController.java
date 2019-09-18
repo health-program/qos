@@ -1,11 +1,9 @@
-package com.paladin.qos.controller.exhibition;
+package com.paladin.qos.controller.gongwei;
 
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.exhibition.dto.ArchivesRequest;
-import com.paladin.qos.controller.exhibition.dto.PressureSugarRequest;
+import com.paladin.qos.controller.gongwei.dto.PressureSugarRequest;
 import com.paladin.qos.service.exhibition.ArchivesManagementService;
-import com.paladin.qos.service.exhibition.vo.ArchivesManagementVO;
 import com.paladin.qos.service.exhibition.vo.PressureSugarManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/qos/exhibition/pressureSugar")
+@RequestMapping("/qos/gongwei/pressureSugar")
 public class PressureSugarManagementController {
 
     @Autowired

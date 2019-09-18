@@ -1,11 +1,9 @@
-package com.paladin.qos.controller.exhibition;
+package com.paladin.qos.controller.gongwei;
 
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.exhibition.dto.ArchivesRequest;
-import com.paladin.qos.controller.exhibition.dto.PhysicalRequest;
+import com.paladin.qos.controller.gongwei.dto.PhysicalRequest;
 import com.paladin.qos.service.exhibition.ArchivesManagementService;
-import com.paladin.qos.service.exhibition.vo.ArchivesManagementVO;
 import com.paladin.qos.service.exhibition.vo.PhysicalManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/qos/exhibition/physical")
+@RequestMapping("/qos/gongwei/physical")
 public class PhysicalManagementController {
 
     @Autowired

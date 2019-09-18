@@ -2,19 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.dynamic.mapper.gongwei.PublicHealthManagementMapper">
 
-    <!--辖区内公安部门掌握的常住居民数-->
-    <select id="getAreaPeopleNumber" resultType="java.lang.String">
-        select population
-        from family_doctor_unit
-        where 1=1
-        <if test="unitId != null">
-            AND  managedcentercode = #{unitId}
-        </if>
-    </select>
-
-
-
-
     <!--活动档案数-->
     <select id="getActiveArchives" resultType="java.lang.Long">
         select count(1)
@@ -68,8 +55,13 @@
         where code in(
         select code from (select * from ( select row_number()over(partition by c.code order by c.examdate desc)num,c.*
         from phis_chss.v_fhc_check_main c  left join  phis_chss.v_fha_person_main  p on c.code=p.code where p.LINKB is not null and p.birthday<![CDATA[<= ]]>add_months(sysdate,-12*65)) s
-        where num=1 ) where lsbp <![CDATA[<>]]> 0 and ldbp<![CDATA[<>]]>0 and rsbp<![CDATA[<>]]>0 and rdbp<![CDATA[<>]]>0
-        and lsbp<![CDATA[<]]>150 and LDBP<![CDATA[<]]>90 and RSBP<![CDATA[<]]>150 and RDBP <![CDATA[<]]>90
+        where num=1 ) where
+        ((rsbp =0 or rsbp is null) and (RDBP =0 or RDBP is null) and lsbp <![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and lsbp<![CDATA[<]]> 150 and LDBP<![CDATA[<]]>90)
+         or ((lsbp =0 or lsbp is null) and (ldbp =0 or ldbp is null) and rsbp <![CDATA[<> ]]>0 and rdbp<![CDATA[<> ]]>0 and RSBP<![CDATA[<]]>150 and RDBP<![CDATA[<]]>90   )
+          or (
+          lsbp <![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and lsbp<![CDATA[<]]> 150 and LDBP<![CDATA[<]]>90
+          and rsbp <![CDATA[<> ]]>0 and rdbp<![CDATA[<> ]]>0 and RSBP<![CDATA[<]]>150 and RDBP<![CDATA[<]]>90
+          )
 
             AND  examdate <![CDATA[>= ]]> #{startDate}
 
@@ -79,9 +71,13 @@
         union all
         select code from (select * from ( select row_number()over(partition by c.code order by c.examdate desc)num,c.*
         from phis_chss.v_fhc_check_main c  left join  phis_chss.v_fha_person_main  p on c.code=p.code where p.LINKB is not null and p.birthday<![CDATA[>]]>add_months(sysdate,-12*65)) s
-        where num=1 ) where lsbp<![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and rsbp <![CDATA[<> ]]>0 and rdbp <![CDATA[<> ]]>0
-        and lsbp<![CDATA[<]]>140 and LDBP<![CDATA[<]]>90 and RSBP<![CDATA[<]]>140 and RDBP <![CDATA[<]]>90
-
+        where num=1 )
+        where ((rsbp =0 or rsbp is null) and (RDBP =0 or RDBP is null) and lsbp <![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and lsbp<![CDATA[<]]> 140 and LDBP<![CDATA[<]]>90)
+         or ((lsbp =0 or lsbp is null) and (ldbp =0 or ldbp is null) and rsbp <![CDATA[<> ]]>0 and rdbp<![CDATA[<> ]]>0 and RSBP<![CDATA[<]]>140 and RDBP<![CDATA[<]]>90   )
+          or (
+          lsbp <![CDATA[<> ]]> 0 and ldbp<![CDATA[<> ]]>0 and lsbp<![CDATA[<]]> 140 and LDBP<![CDATA[<]]>90
+          and rsbp <![CDATA[<> ]]>0 and rdbp<![CDATA[<> ]]>0 and RSBP<![CDATA[<]]>140 and RDBP<![CDATA[<]]>90
+          )
             AND  examdate <![CDATA[>= ]]> #{startDate}
 
             AND  examdate <![CDATA[< ]]> #{endDate}
@@ -96,11 +92,12 @@
         select count(1)
         from phis_chss.v_fha_person_main
         where linkb is not null
-
-            AND  createdtime <![CDATA[>= ]]> #{startDate}
-
-            AND  createdtime <![CDATA[< ]]> #{endDate}
-
+        and code in (
+        select code from phis_chss.v_fhc_check_main where
+        examdate <![CDATA[>= ]]> #{startDate}
+        AND  examdate <![CDATA[< ]]> #{endDate}
+        group by code
+        )
             AND  managedcentercode = #{unitId}
 
     </select>

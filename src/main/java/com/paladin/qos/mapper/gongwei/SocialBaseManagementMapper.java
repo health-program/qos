@@ -1,6 +1,6 @@
-package com.paladin.qos.dynamic.mapper.exhibition;
+package com.paladin.qos.mapper.gongwei;
 
-import com.paladin.qos.dynamic.model.exhibition.Physical;
+import com.paladin.qos.model.gongwei.Physical;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

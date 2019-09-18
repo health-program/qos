@@ -45,7 +45,7 @@ public class ReferralRate extends GongWeiDataProcessor{
             return 0;
         }
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getReferralNumber(startTime, endTime, gongWeiUnitId);
+        return  getMapper().getPatientNumber(startTime, endTime, gongWeiUnitId);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class ReferralRate extends GongWeiDataProcessor{
             return 0;
         }
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getRecentSugarReachNumber(startTime, endTime, gongWeiUnitId);
+        return  getMapper().getReferralNumber(startTime, endTime, gongWeiUnitId);
     }
 }

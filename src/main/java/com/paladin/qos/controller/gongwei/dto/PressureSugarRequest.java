@@ -1,4 +1,4 @@
-package com.paladin.qos.controller.exhibition.dto;
+package com.paladin.qos.controller.gongwei.dto;
 
 public class PressureSugarRequest {
 
