@@ -1,8 +1,6 @@
-package com.paladin.qos.controller.exhibition.dto;
+package com.paladin.qos.controller.gongwei.dto;
 
-import java.util.Date;
-
-public class ArchivesRequest {
+public class PhysicalRequest {
 
   private String managedCenter;
 

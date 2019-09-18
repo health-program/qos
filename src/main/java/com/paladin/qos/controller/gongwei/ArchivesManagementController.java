@@ -1,10 +1,8 @@
-package com.paladin.qos.controller.exhibition;
+package com.paladin.qos.controller.gongwei;
 
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.analysis.AnalysisRequest;
-import com.paladin.qos.controller.data.dto.DataUtilRequest;
-import com.paladin.qos.controller.exhibition.dto.ArchivesRequest;
+import com.paladin.qos.controller.gongwei.dto.ArchivesRequest;
 import com.paladin.qos.service.exhibition.ArchivesManagementService;
 import com.paladin.qos.service.exhibition.vo.ArchivesManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/qos/exhibition/archives")
+@RequestMapping("/qos/gongwei/archives")
 public class ArchivesManagementController {
 
     @Autowired

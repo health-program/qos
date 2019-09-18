@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.paladin.qos.dynamic.mapper.exhibition.ArchivesManagementMapper">
+<mapper namespace="com.paladin.qos.mapper.gongwei.ArchivesManagementMapper">
 
     <!--最近一次血压达标-->
-    <select id="getPressureSugarTotal" resultType="com.paladin.qos.dynamic.model.exhibition.PressureSugar">
+    <select id="getPressureSugarTotal" resultType="com.paladin.qos.model.gongwei.PressureSugar">
         select pm.managedcentercode,count(pm.managedcentercode) from(
         select * from (select * from ( select row_number()over(partition by c.code order by c.examdate desc)num,c.*
         from phis_chss.v_fhc_check_main c  left join  phis_chss.v_fha_person_main  p on c.code=p.code where p.LINKB is not null and p.birthday <![CDATA[<= ]]> add_months(sysdate,-12*65)) s

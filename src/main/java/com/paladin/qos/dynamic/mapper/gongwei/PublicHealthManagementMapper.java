@@ -6,9 +6,6 @@ import java.util.Date;
 
 public interface PublicHealthManagementMapper {
 
-    //辖区内公安部门掌握的常住居民数
-    String getAreaPeopleNumber(@Param("unitId") String unitId);
-
     //活动档案数
     Long getActiveArchives(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
 
