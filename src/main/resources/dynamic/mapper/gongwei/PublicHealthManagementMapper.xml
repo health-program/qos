@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.paladin.qos.dynamic.mapper.exhibition.PublicHealthManagementMapper">
+<mapper namespace="com.paladin.qos.dynamic.mapper.gongwei.PublicHealthManagementMapper">
 
     <!--辖区内公安部门掌握的常住居民数-->
     <select id="getAreaPeopleNumber" resultType="java.lang.String">
