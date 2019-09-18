@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
-import com.paladin.qos.model.data.DataEvent;
 
 public class DataRealTimeProcessor {
 

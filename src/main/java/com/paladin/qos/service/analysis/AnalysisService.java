@@ -392,6 +392,8 @@ public class AnalysisService {
 			ValidateEventResult result = new ValidateEventResult();
 			result.setEventId(eventId);
 			result.setUnitResults(unitResults);
+			
+			results.add(result);
 		}
 
 		return results;
@@ -402,11 +404,6 @@ public class AnalysisService {
 		List<Integer> nums = analysisMapper.getSerialNumbers(eventId, unitId);
 
 		ValidateUnitResult unitResult = new ValidateUnitResult();
-
-		int size = nums.size();
-
-		int first = nums.get(0);
-		int last = nums.get(size - 1);
 
 		HashSet<Integer> numSet = new HashSet<>();
 
@@ -423,9 +420,14 @@ public class AnalysisService {
 				lostNums.add(sn);
 			}
 		}
+		
+		if (nums != null && nums.size() > 0) {
+			int first = nums.get(0);
+			int last = nums.get(nums.size() - 1);
+			unitResult.setFirstDay(first);
+			unitResult.setLastDay(last);
+		}
 
-		unitResult.setFirstDay(first);
-		unitResult.setLastDay(last);
 		unitResult.setLostDays(lostNums);
 		unitResult.setUnitId(unitId);
 

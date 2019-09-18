@@ -2,6 +2,8 @@ package com.paladin.qos.service.analysis.data;
 
 import java.util.List;
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class ValidateUnitResult {
 	
 	private String unitId;
@@ -10,6 +12,10 @@ public class ValidateUnitResult {
 	
 	private List<Integer> lostDays;
 
+	public String getUnitName() {
+		return DataConstantContainer.getUnitName(unitId);
+	}
+	
 	public String getUnitId() {
 		return unitId;
 	}

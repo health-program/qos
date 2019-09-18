@@ -1,6 +1,7 @@
 package com.paladin.qos.analysis;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -74,11 +75,30 @@ public class TimeUtil {
 		}
 	}
 
-	public static List<Integer> getSerialNumberByDay (Date startTime, Date endTime) {
-		
-		return null;
+	public static List<Integer> getSerialNumberByDay(Date startTime, Date endTime) {
+		if (startTime == null || endTime == null) {
+			return null;
+		}
+
+		List<Integer> sns = new ArrayList<>();
+		long endMillis = endTime.getTime();
+
+		long millis = startTime.getTime();
+		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
+
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(millis);
+
+		do {
+			sns.add(getSerialNumberByDay(c));
+			millis += MILLIS_IN_DAY;
+			c.setTimeInMillis(millis);
+
+		} while (millis < endMillis);
+
+		return sns;
 	}
-	
+
 	public static int getSerialNumberByDay(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
