@@ -2,42 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.gongwei.ArchivesManagementMapper">
 
-
-    <!--辖区内公安部门掌握的常住居民数-->
-    <select id="getAreaPeopleNumber" resultType="java.lang.String">
-        select population
-        from family_doctor_unit
-        where 1=1
-        <if test="unitId != null">
-            AND  managedcentercode = #{unitId}
-        </if>
-    </select>
-
-
-    <!--活动档案数-->
-    <select id="getArchivesTotal" resultType="com.paladin.qos.model.gongwei.Archives">
-        select a.managedcentercode as managedCenter,a.ac as activeArchivesNumber,p.pc as publicArchivesNumber
-        (
-        (select managedcentercode,count(managedcentercode)ac from phis_chss.v_fha_person_main where stateid=1
-        <if test="startDate != null">
-            AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
-        </if>
-        group by managedcentercode)a
+    <!--档案管理-->
+    <select id="getArchivesTotal" resultType="com.paladin.qos.service.gongwei.vo.ArchivesManagementVO">
+        select d1.unit_id unitId ,f.population*10000 peopleNumber,d1.active activeArchivesNumber,d2.public publicArchivesNumber from
+        (select unit_id,sum(total_num) as active from data_processed_day where event_id= #{eventId1} and unit_id=#{unitId}) d1
         join
-        (select managedcentercode,count(managedcentercode)pc from phis_chss.v_fha_person_main where stateid=1
-        and verify=1
-        <if test="startDate != null">
-            AND  createdtime <![CDATA[>= ]]> #{startDate}
-        </if>
-        <if test="endDate != null">
-            AND  createdtime <![CDATA[<= ]]> #{endDate}
-        </if>
-        group by managedcentercode)p
-        on a.managedcentercode=p.managedcentercode
-        )
+        (select unit_id,sum(event_num) as public from data_processed_day where event_id=#{eventId2} and unit_id=#{unitId}) d2
+        on d1.unit_id=d2.unit_id
+        join family_doctor_unit f
+        on d2.unit_id=f.id;
     </select>
 
 

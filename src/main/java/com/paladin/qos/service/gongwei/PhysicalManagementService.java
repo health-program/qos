@@ -1,8 +1,9 @@
-package com.paladin.qos.service.exhibition;
+package com.paladin.qos.service.gongwei;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.mapper.gongwei.PhysicalManagementMapper;
-import com.paladin.qos.service.exhibition.vo.PhysicalManagementVO;
+import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
+import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

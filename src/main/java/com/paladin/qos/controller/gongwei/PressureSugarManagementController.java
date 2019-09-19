@@ -3,8 +3,8 @@ package com.paladin.qos.controller.gongwei;
 
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.gongwei.dto.PressureSugarRequest;
-import com.paladin.qos.service.exhibition.ArchivesManagementService;
-import com.paladin.qos.service.exhibition.vo.PressureSugarManagementVO;
+import com.paladin.qos.service.gongwei.ArchivesManagementService;
+import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

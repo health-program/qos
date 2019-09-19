@@ -1,11 +1,11 @@
-package com.paladin.qos.service.exhibition.vo;
+package com.paladin.qos.service.gongwei.vo;
 
-import java.util.List;
 
+import com.paladin.qos.analysis.DataConstantContainer;
 
 public class ArchivesManagementVO {
 
-    private String managedCenter;
+    private String unitId;
 
     private Long peopleNumber;
 
@@ -16,6 +16,14 @@ public class ArchivesManagementVO {
     private Double createArchivesRate;
 
     private Double publicArchivesRate;
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitId);
+    }
 
     public Double getCreateArchivesRate() {
         return createArchivesRate;
@@ -33,13 +41,6 @@ public class ArchivesManagementVO {
         this.publicArchivesRate = publicArchivesRate;
     }
 
-    public String getManagedCenter() {
-        return managedCenter;
-    }
-
-    public void setManagedCenter(String managedCenter) {
-        this.managedCenter = managedCenter;
-    }
 
     public Long getPeopleNumber() {
         return peopleNumber;

@@ -48,10 +48,10 @@ public interface SheJiKeMapper {
 	double getMedicalMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
 
 	// 药品收入
-	int getDrugMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+	double getDrugMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
 
 	// 其他收入
-	int getOtherMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
+	double getOtherMoney(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);
 
 	// 处方数量
 	long getPrescriptionNumber(@Param("startTime") Date startTime, @Param("endTime") Date endTime, @Param("unitId") String unitId);

@@ -1,4 +1,4 @@
-package com.paladin.qos.service.exhibition.vo;
+package com.paladin.qos.service.gongwei.vo;
 
 
 public class PhysicalManagementVO {
