@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisBodyDamageMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisBrainInjuryMapper;
 
 /**

@@ -10,7 +10,6 @@ import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
-import com.paladin.qos.dynamic.mapper.gongwei.PublicHealthManagementMapper;
 
 /**
  * 65周岁及以上老年人签约率

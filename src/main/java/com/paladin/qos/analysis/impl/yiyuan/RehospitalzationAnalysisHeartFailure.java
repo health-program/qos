@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisGoiterMapper;
-import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisHeartFailureMapper;
 
 /**
  * 充血性心力衰竭再住院率统计

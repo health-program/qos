@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationHipAndKneeReplacementMapper;
-import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationPercutaneousCoronaryInterventionMapper;
 
 /**
  * 经皮冠状动脉介入治疗死亡人率

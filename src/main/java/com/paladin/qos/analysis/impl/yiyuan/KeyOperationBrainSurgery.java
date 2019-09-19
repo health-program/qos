@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationBrainSurgeryMapper;
-import com.paladin.qos.dynamic.mapper.yiyuan.opd.OpdStatisticsMapper;
 
 /**
  * 颅、脑手术死亡率

@@ -1,13 +1,9 @@
 package com.paladin.qos.mapper.gongwei;
 
-import com.paladin.qos.model.gongwei.Archives;
-import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
+import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
 
 @Service
 public interface ArchivesManagementMapper {
