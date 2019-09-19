@@ -34,14 +34,18 @@ public class AvgPrescriptionMoney extends DataProcessor{
         return EVENT_ID;
     }
 
+    //处方数量
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return (long)(getMapper().getAvgPrescriptionMoney(startTime, endTime, unitId)*100);
+        return getMapper().getPrescriptionNumber(startTime, endTime, unitId);
     }
 
+    //处方金额
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
+    	
+    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+        return (long)(getMapper().getPrescriptionMoney(startTime, endTime, unitId)*100);
     }
 }

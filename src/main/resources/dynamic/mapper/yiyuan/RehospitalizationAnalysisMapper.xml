@@ -10,7 +10,7 @@
 		and ORGAN_CODE  =  #{unitId}
 	</select>
 	
-	<select id="getEventNum" parameterType="Map" resultType="Long">
+	<!-- <select id="getEventNum" parameterType="Map" resultType="Long">
 	SELECT count(*) FROM outhospitalrecord a
 	where a.OHREC_DREC = '1'
 	and a.OUT_HP_DT <![CDATA[>=]]> #{startTime}
@@ -24,5 +24,22 @@
 	and a.OUT_HP_DT <![CDATA[>=]]> date_add(b.IN_HP_DT, INTERVAL - 31 DAY) 
 	and a.OUT_HP_DT <![CDATA[<]]> DATE(b.IN_HP_DT)
 	)
+	</select> -->
+	
+	<select id="getEventNum" parameterType="Map" resultType="Long">
+	SELECT count(*) FROM outhospitalrecord a
+  where a.OHREC_DREC = '1'
+   and a.OUT_HP_DT <![CDATA[>=]]> #{startTime}
+    and a.OUT_HP_DT <![CDATA[<]]> #{startTime}
+  and ORGAN_CODE  =  #{unitId}
+  AND EXISTS (
+  SELECT 1 FROM outhospitalrecord b
+  WHERE
+  b.CARDNO = a.CARDNO
+  AND b.OUT_HOS_ID <![CDATA[!=]]> a.OUT_HOS_ID
+  and a.OUT_HP_DT <![CDATA[>=]]> (b.IN_HP_DT-31) 
+  and a.OUT_HP_DT <![CDATA[<]]> b.IN_HP_DT
+  )
+
 	</select>
-</mapper>
+</mapper>  

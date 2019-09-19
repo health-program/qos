@@ -246,8 +246,8 @@
 		WHERE
 		b.CARDNO = a.CARDNO
 		AND b.OUT_HP_DT <![CDATA[!=]]> a.OUT_HP_DT
-		and a.OUT_HP_DT <![CDATA[>=]]> date_add(b.IN_HP_DT, INTERVAL - 31 DAY)
-		and a.OUT_HP_DT <![CDATA[<]]> DATE(b.IN_HP_DT)
+		and a.OUT_HP_DT <![CDATA[>=]]> (b.IN_HP_DT-31)
+		and a.OUT_HP_DT <![CDATA[<]]> b.IN_HP_DT
 		)
 	</select>
 </mapper>
