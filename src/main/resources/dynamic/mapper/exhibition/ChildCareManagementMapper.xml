@@ -133,7 +133,12 @@
     </select>
 
     <select id="getNewbornHearingNumber" resultType="long">
-        SELECT COUNT(1) AS total FROM  Tlsc  WHERE dJcrq >=  #{startTime} AND  dJcrq <![CDATA[< ]]> #{endTime} AND  cJcdwbh LIKE  #{code} + '%'
+        SELECT
+        COUNT( cXsebh ) AS total
+        FROM
+        Yfxseqk a
+        LEFT JOIN ( SELECT DISTINCT ( cXsebh ) AS cXsebh FROM Tlsc ) b ON a.cXm = b.cXsebh
+        WHERE  a.dCsrq >= #{startTime}  AND a.dCsrq <![CDATA[< ]]> #{endTime}  AND  cJcdwbh LIKE  #{code} + '%'
     </select>
 
 

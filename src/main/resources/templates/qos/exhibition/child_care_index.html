@@ -160,21 +160,57 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/child/search/all",{startTime : startTime, endTime : endTime},function (res) {
-            $("#etjk").text(getTotalFromAr(res.childCard));
-            $("#jbsc").text(getTotalFromAr(res.neonatalDiseaseScreening));
-            $("#csqx").text(getTotalFromAr(res.neonatalBirthDefects));
-            $("#yesw").text(getTotalFromAr(res.infantDeath));
-            $("#etry").text(getTotalFromAr(res.childHealthCheck));
+            let etjkData = [];
+            let jbscData = [];
+            let csqxData = [];
+            let etryData = [];
+            let yeswData = [];
+            res.forEach(event => {
+                if (event.eventId === '13203') {
+                    etjkData = mergeTotalNumArr(event.unitPoints);
+                    $("#etjk").text(getTotalFromAr(etjkData));
+                } else if (event.eventId === '13204') {
+                    jbscData = mergeTotalNumArr(event.unitPoints);
+                    $("#jbsc").text(getTotalFromAr(jbscData));
+                } else if (event.eventId === '13205') {
+                    csqxData = mergeTotalNumArr(event.unitPoints);
+                    $("#csqx").text(getTotalFromAr(csqxData));
+                } else if (event.eventId === '13207') {
+                    etryData = mergeTotalNumArr(event.unitPoints);
+                    $("#etry").text(getTotalFromAr(etryData));
+                } else if (event.eventId === '13206') {
+                    yeswData = mergeTotalNumArr(event.unitPoints);
+                    $("#yesw").text(getTotalFromAr(yeswData));
+                }
+            });
         })
     }
     function getTotalFromAr(data) {
         let total = 0;
         if (data) {
             data.forEach(function (d) {
-                total += d.total
+                total += d.totalNum
             })
         }
         return total;
+    }
+
+    function mergeTotalNumArr(arr) {
+        let newArr = [];
+        arr.forEach(item=>{
+            let points = item.points;
+            points.reduce((newArr, obj) =>{
+                let date = obj.year +'-'+ (obj.month <10 ? '0'+obj.month:obj.month);
+                let originObj = newArr.find(point => point.date === date);
+                if (originObj) {
+                    originObj.totalNum += obj.totalNum
+                } else {
+                    newArr.push({date:date,totalNum:obj.totalNum})
+                }
+                return  newArr;
+            },newArr)
+        });
+        return newArr;
     }
 
     function generatorXsefmChart(chart) {
@@ -188,10 +224,22 @@
         $.postAjax("/qos/exhibition/child/search/xsrfm",{startTime : startTime, endTime : endTime},function (res) {
             let chartData = [];
             if (res) {
-                let male = getTotalFromAr(res.maleNewbornChildbirth);
-                let female = getTotalFromAr(res.femaleNewbornChildbirth);
+                let maleData = [];
+                let femaleData = [];
+                let tlData = [];
+                res.forEach(event => {
+                    if (event.eventId === '13201') {
+                        maleData = mergeTotalNumArr(event.unitPoints);
+                    } else if (event.eventId === '13202') {
+                        femaleData = mergeTotalNumArr(event.unitPoints);
+                    } else if (event.eventId === '13211') {
+                        tlData = mergeTotalNumArr(event.unitPoints);
+                    }
+                });
+                let male = getTotalFromAr(maleData);
+                let female = getTotalFromAr(femaleData);
                 newbornChildTotal = male + female;
-                newbornHearingTotal = getTotalFromAr(res.newbornHearing);
+                newbornHearingTotal = getTotalFromAr(tlData);
                 chartData.push({value:male,name:"男性"},{value:female,name:"女性"})
             }
             chart.hideLoading();
@@ -206,9 +254,9 @@
                         fontStyle : 'italic',
                         fontWeight : 'bold' ,
                         fontFamily : 'Microsoft YaHei',
-                        fontSize : 20   //文字的字体大小
+                        fontSize : 18   //文字的字体大小
                     },
-                    formatter: '{b}：\n {c}个 ({d}%)'
+                    formatter: '{b}：\n{c}个({d}%)'
                 }
             };
             option = {
@@ -377,10 +425,10 @@
             idField: "id",
             columns: [
                 [
-                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                    {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "儿童体检人次数", field: "childHealthCheckup", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "儿童体检人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
@@ -396,10 +444,10 @@
             idField: "id",
             columns: [
                 [
-                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                    {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿视力筛查人次数", field: "infantVisionTotal", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿视力筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
@@ -415,10 +463,10 @@
             idField: "id",
             columns: [
                 [
-                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                    {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿先天性心脏病筛查人次数", field: "heartDiseaseTotal", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿先天性心脏病筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
@@ -432,7 +480,7 @@
     function sumTotalFormatterModal(data) {
         field = this.field;
         var result = data.reduce(function(sum, row) {
-            return sum + (row[field]);
+            return sum + (row[field])*1;
         }, 0);
         return result === 0 ? '0' : result;
     }

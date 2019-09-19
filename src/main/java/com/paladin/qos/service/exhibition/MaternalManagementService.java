@@ -8,8 +8,11 @@ import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper;
 import com.paladin.qos.dynamic.model.exhibition.MaternalCheckup;
 import com.paladin.qos.dynamic.model.exhibition.MaternalOrgData;
+import com.paladin.qos.mapper.report.ReportDataMapper;
 import com.paladin.qos.service.exhibition.vo.DataDemonstrationVO;
 import com.paladin.qos.service.exhibition.vo.MaternalManagementVO;
+import com.paladin.qos.service.report.dto.ReportDataQueryDTO;
+import com.paladin.qos.service.report.vo.ReportDataVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,9 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
 
     @Autowired
     private SqlSessionContainer sqlSessionContainer;
+
+    @Autowired
+    private ReportDataMapper reportDataMapper;
 
     private static SimpleDateFormat format = DateFormatUtil.getThreadSafeFormat("yyyy-MM");
 
@@ -406,5 +412,5 @@ public class MaternalManagementService extends BaseExhibitionDataAcquire{
     }
 
 
-
+    public List<ReportDataVO> getWcqData() {  return  reportDataMapper.findAll(new ReportDataQueryDTO());}
 }

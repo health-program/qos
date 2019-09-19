@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="row" style="margin-left: 1px;margin-right: 5px">
-        <div class="col-md-7">
+        <div class="col-md-7" style="padding-right: 10px">
             <div class="row">
                 <div class="col-md-4">
                     <div class="box box-solid" style="margin-bottom: 5px">
@@ -117,13 +117,13 @@
                         </div>
                         <div class="box-body no-padding">
                             <form class="form-horizontal">
-                                <div class="form-group" style="margin-bottom: 0">
+                                <div class="form-group" style="margin-bottom: 0;min-height: 56px">
                                     <label class="col-sm-7 control-label" style="font-size: 25px">发放人次数：</label>
                                     <div class="col-sm-5 no-padding">
                                         <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="ysrs">
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom: 0">
+                                <div class="form-group" style="margin-bottom: 0;min-height: 56px">
                                     <label class="col-sm-7 control-label" style="font-size: 25px">发放瓶数：</label>
                                     <div class="col-sm-5 no-padding">
                                         <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="ysps">
@@ -140,13 +140,13 @@
                         </div>
                         <div class="box-body no-padding">
                             <form class="form-horizontal">
-                                <div class="form-group" style="margin-bottom: 0">
+                                <div class="form-group" style="margin-bottom: 0;min-height: 56px">
                                     <label class="col-sm-8 control-label" style="font-size: 25px">宫颈癌筛查数：</label>
                                     <div class="col-sm-4 no-padding">
                                         <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="gja">
                                     </div>
                                 </div>
-                                <div class="form-group" style="margin-bottom: 0">
+                                <div class="form-group" style="margin-bottom: 0;min-height: 56px">
                                     <label class="col-sm-8 control-label" style="font-size: 25px">乳腺癌筛查数：</label>
                                     <div class="col-sm-4 no-padding">
                                         <p  class="form-control-static  description" style="font-size: 25px;color: #44b7d3;font-weight: bold" id="rxa">
@@ -229,14 +229,17 @@
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
     /*<![CDATA[*/
-    var data, ycfTable;
+    var data, ycfTable,wcqTable;
     $(function () {
-        initMaternalManagementData();
+        initMaternalLeftData();
+        initMaternalRightUpData();
+        initMaternalRightDownData();
         generatorHqjcChart(hqjcChart);
         generatorYfjkChartChart(yfjkChart);
         generatorYfscChartChart(yfscChart);
         generatorFnscChartChart(fnscChart);
         initYcftjDataGrid();
+        initWcqDataGrid();
     });
 
     function searchData() {
@@ -254,12 +257,15 @@
                 $.errorMessage("请输入正确的时间区间");
             }
         }
-        initMaternalManagementData();
+        initMaternalLeftData();
+        initMaternalRightUpData();
+        initMaternalRightDownData();
         generatorHqjcChart(hqjcChart);
         generatorYfjkChartChart(yfjkChart);
         generatorYfscChartChart(yfscChart);
         generatorFnscChartChart(fnscChart);
         ycfTable.refresh();
+        wcqTable.refresh();
 
     }
     //图表自适应大小
@@ -278,22 +284,86 @@
 
     var fnscChart = echarts.init(document.getElementById('fnscChartDiv'));
 
-    function initMaternalManagementData() {
+    function initMaternalLeftData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/all",{startTime : startTime, endTime : endTime},function (res) {
-            $("#gwycf").text(getTotalFromAr(res.highriskMaternal));
-            $("#yqjc").text(res.prepregnancyCheck);
-            $("#ysrs").text(res.numberOfFolates);
-            $("#ysps").text(res.folicAcidDispensingBottle);
-            $("#yfsw").text(getTotalFromAr(res.maternalDeath));
-            $("#gja").text(getTotalFromAr(res.cervicalCancerScreening));
-            $("#rxa").text(getTotalFromAr(res.breastCancerScreening));
-            $("#mdjc").text(getTotalFromAr(res.syphilisTest));
-            $("#mdgr").text(getTotalFromAr(res.syphilisInfection));
-            $("#ygjc").text(getTotalFromAr(res.hepatitisBtest));
-            $("#yggr").text(getTotalFromAr(res.hepatitisBdeterminesInfection));
-            $("#chfs").text(getTotalFromAr(res.postpartumVisit));
+        $.postAjax("/qos/exhibition/maternal/search/left",{startTime : startTime, endTime : endTime},function (res) {
+            let gwycfData = [];
+            let yqjcData = [];
+            let yffsData = [];
+            let etfsData = [];
+            let yfswData = [];
+            res.forEach(event => {
+                if (event.eventId === '13305') {
+                    gwycfData = mergeTotalNumArr(event.unitPoints);
+                    $("#gwycf").text(getTotalFromAr(gwycfData));
+                } else if (event.eventId === '13303') {
+                    yqjcData = mergeTotalNumArr(event.unitPoints);
+                    $("#yqjc").text(getTotalFromAr(yqjcData));
+                } else if (event.eventId === '13314') {
+                    yffsData = mergeTotalNumArr(event.unitPoints);
+                } else if (event.eventId === '13321') {
+                    etfsData = mergeTotalNumArr(event.unitPoints);
+                } else if (event.eventId === '13306') {
+                    yfswData = mergeTotalNumArr(event.unitPoints);
+                    $("#yfsw").text(getTotalFromAr(yfswData));
+                }
+            });
+            $("#chfs").text(getTotalFromAr(yffsData)+getTotalFromAr(etfsData));
+        })
+    }
+
+
+    function initMaternalRightUpData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/up",{startTime : startTime, endTime : endTime},function (res) {
+            let ysrsData = [];
+            let yspsData = [];
+            let gjaData = [];
+            let rxaData = [];
+            res.forEach(event => {
+                if (event.eventId === '13317') {
+                    ysrsData = mergeTotalNumArr(event.unitPoints);
+                    $("#ysrs").text(getTotalFromAr(ysrsData));
+                } else if (event.eventId === '13318') {
+                    yspsData = mergeTotalNumArr(event.unitPoints);
+                    $("#ysps").text(getTotalFromAr(yspsData));
+                } else if (event.eventId === '13307') {
+                    gjaData = mergeTotalNumArr(event.unitPoints);
+                    $("#gja").text(getTotalFromAr(gjaData));
+                } else if (event.eventId === '13308') {
+                    rxaData = mergeTotalNumArr(event.unitPoints);
+                    $("#rxa").text(getTotalFromAr(rxaData));
+                }
+            });
+        })
+    }
+
+
+    function initMaternalRightDownData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/down",{startTime : startTime, endTime : endTime},function (res) {
+            let mdjcData = [];
+            let mdgrData = [];
+            let ygjcData = [];
+            let yggrData = [];
+            res.forEach(event => {
+                if (event.eventId === '13309') {
+                    mdjcData = mergeTotalNumArr(event.unitPoints);
+                    $("#mdjc").text(getTotalFromAr(mdjcData));
+                } else if (event.eventId === '13310') {
+                    mdgrData = mergeTotalNumArr(event.unitPoints);
+                    $("#mdgr").text(getTotalFromAr(mdgrData));
+                } else if (event.eventId === '13311') {
+                    ygjcData = mergeTotalNumArr(event.unitPoints);
+                    $("#ygjc").text(getTotalFromAr(ygjcData));
+                } else if (event.eventId === '13312') {
+                    yggrData = mergeTotalNumArr(event.unitPoints);
+                    $("#yggr").text(getTotalFromAr(yggrData));
+                }
+            });
         })
     }
 
@@ -301,10 +371,28 @@
         let total = 0;
         if (data) {
             data.forEach(function (d) {
-                total += d.total
+                total += d.totalNum
             })
         }
         return total;
+    }
+
+    function mergeTotalNumArr(arr) {
+        let newArr = [];
+        arr.forEach(item=>{
+            let points = item.points;
+            points.reduce((newArr, obj) =>{
+                let date = obj.year +'-'+ (obj.month <10 ? '0'+obj.month:obj.month);
+                let originObj = newArr.find(point => point.date === date);
+                if (originObj) {
+                    originObj.totalNum += obj.totalNum
+                } else {
+                    newArr.push({date:date,totalNum:obj.totalNum})
+                }
+                return  newArr;
+            },newArr)
+        });
+        return newArr;
     }
 
     function generatorHqjcChart(chart) {
@@ -318,7 +406,16 @@
         $.postAjax("/qos/exhibition/maternal/search/hqjc",{ startTime : startTime, endTime : endTime},function (res) {
             let chartData = [];
             if (res) {
-                chartData.push({value:res.malePremaritalCheck,name:"男"},{value:res.femalePremaritalCheck,name:"女"})
+                let maleData = [];
+                let femaleData = [];
+                res.forEach(event => {
+                    if (event.eventId === '13301') {
+                        maleData = mergeTotalNumArr(event.unitPoints);
+                    } else if (event.eventId === '13302') {
+                        femaleData = mergeTotalNumArr(event.unitPoints);
+                    }
+                });
+                chartData.push({value:getTotalFromAr(maleData),name:"男性"},{value:getTotalFromAr(femaleData),name:"女性"})
             }
             chart.hideLoading();
             var labelOption = {
@@ -331,7 +428,7 @@
                         fontFamily : 'Microsoft YaHei',
                         fontSize : 15   //文字的字体大小
                     },
-                    formatter: '{b}：\n {c}个 ({d}%)'
+                    formatter: '{b}：\n {c}位({d}%)'
                 }
             };
             option = {
@@ -372,14 +469,22 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/maternal/search/yfjk",{ startTime : startTime, endTime : endTime},function (res) {
-            let total = getTotalFromAr(res.pregnantWomenBuildCardNumber);
-            let earlyPregnancyCardNumber = getTotalFromAr(res.earlyPregnancyCardNumber);
+            let preData = [];
+            let earlyData = [];
+            res.forEach(event => {
+                if (event.eventId === '13319') {
+                    preData = mergeTotalNumArr(event.unitPoints);
+                } else if (event.eventId === '13320') {
+                    earlyData = mergeTotalNumArr(event.unitPoints);
+                }
+            });
+            let total = getTotalFromAr(preData);
+            let earlyPregnancyCardNumber = getTotalFromAr(earlyData);
             let data = [];
             data.push({value:total-earlyPregnancyCardNumber, name:'非早孕建卡数' },{value:earlyPregnancyCardNumber, name:'早孕建卡数'});
-            let percentage;
-            for (let item of data) {
-                if (item.name === '早孕建卡数')
-                    percentage = (Math.round(item.value / total * 10000) / 100.00).toFixed(2) + '%';
+            let percentage = '0.00%';
+            if (total !== 0){
+                percentage = (Math.round(earlyPregnancyCardNumber  / total * 10000) / 100.00).toFixed(2) + '%';
             }
             chart.hideLoading();
             option = {
@@ -510,10 +615,17 @@
             let dataValue = [];
             let timeValue = [];
             let total = 0;
-            res.forEach(function (data) {
-                dataValue.push(data.total);
-                timeValue.push(data.searchTime);
-                total += data.total;
+            let datas = [];
+            if (res.eventId == '13304') {
+                datas = mergeTotalNumArr(res.unitPoints);
+            }
+            if (datas || datas.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
+            datas.forEach(function (data) {
+                dataValue.push(data.totalNum);
+                timeValue.push(data.date);
+                total += data.totalNum;
             });
             $("#yfscTotal").text(total + "人次");
             chart.hideLoading();
@@ -606,10 +718,17 @@
             let dataValue = [];
             let timeValue = [];
             let total = 0;
-            res.forEach(function (data) {
-                dataValue.push(data.total);
-                timeValue.push(data.searchTime);
-                total += data.total;
+            let datas = [];
+            if (res.eventId === '13313') {
+                datas = mergeTotalNumArr(res.unitPoints);
+            }
+            if (datas || datas.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
+            datas.forEach(function (data) {
+                dataValue.push(data.totalNum);
+                timeValue.push(data.date);
+                total += data.totalNum;
             });
             $("#fnbTotal").text(total + "人次");
             chart.hideLoading();
@@ -715,14 +834,87 @@
             url: '/qos/exhibition/maternal/search/yftj',
             showFooter:true,
             pagination: false,
+            responseHandler: function (res) {
+                res = res || [];
+                let first = res['13315'] || [];
+                let cycle = res['13316'] || [];
+                if ($.isArray(first) && $.isArray(cycle)) {
+                    var nameField = 'agencyName';
+                    var firstField = 'firstExaminationTimes';
+                    var cycleField = 'cycleExaminationTimes';
+
+                    let d = [];
+                    first.forEach(f => {
+                       let x = {};
+                        x[nameField] = f.unitName;
+                        x[firstField] = f.count;
+                        d.push(x)
+                    });
+                    d.forEach(c =>{
+                        let obj = cycle.find(a => a.unitName === c[nameField]);
+                        if (obj) {
+                            c[cycleField] = obj.count;
+                        }
+                    });
+                    return d;
+                } else {
+                    return [];
+                }
+            },
             searchbar: '#searchbar'
         });
     }
 
+
+    function initWcqDataGrid() {
+        wcqTable = $.createTable("#wcqDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "围产期心脏病筛查人数", field: "data", align: "center",footerFormatter: sumTotalFormatterModal}
+
+                ]
+            ],
+            url: '/qos/exhibition/maternal/search/wcq',
+            showFooter:true,
+            pagination: false,
+            searchbar: '#searchbar'
+        });
+    }
+
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
     function sumTotalFormatterModal(data) {
         field = this.field;
         var result = data.reduce(function(sum, row) {
-            return sum + (row[field]);
+            return sum + (row[field]) *1;
         }, 0);
         return result === 0 ? '0' : result;
     }
