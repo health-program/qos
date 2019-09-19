@@ -4,4 +4,15 @@
 	<select id="countPersonnel" resultType="int">
 	SELECT COUNT(1) FROM `family_doctor_personnel` AS p WHERE p.`name`=#{name}
 	</select>
+	
+	<select id="personnelNum" resultType="com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorTeamVo">
+	SELECT unit_id as unitId,
+	SUM(p.personnel_category ='2')doctorNum,
+	SUM(p.personnel_category ='3')nurseNum,
+	SUM(p.personnel_category ='4')healthCoordinatorNum, 
+	SUM(p.personnel_category ='5')healthManageNum, 
+	SUM(p.personnel_category ='6')dietitianNum, 
+	SUM(p.personnel_category ='7')consultantNum 
+	from family_doctor_personnel as p GROUP BY p.unit_id;
+	</select>
 </mapper>

@@ -58,7 +58,7 @@ public class FamilyDoctorPersonnelService extends ServiceSupport<FamilyDoctorPer
     
     public int countPersonnel(String name){
 	return familyDoctorPersonnelMapper.countPersonnel(name);
-    }
+    } 
     
     private static final List<ReadColumn> personnelImportColumns = DefaultReadColumn.createReadColumn(ExcelFamilyDoctorPersonnel.class, new EnumContainer(){
 

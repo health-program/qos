@@ -89,15 +89,15 @@
                 [
                      { checkbox: true }, 
                     { title: "医疗机构", field: "unitName" },
-                    { title: "医院感染总发生率统计", field: "totalInfection" , formatter: getRate},
-                    { title: "与手术相关科室感染发生率统计", field: "operatingDepartmentsInfection" , formatter: getRate},
-                    { title: "手术部位感染总发生率统计", field: "operatingPartInfection" , formatter: getRate},
-                    { title: "手术风险分级（NNIS分级）手术部位感染率统计", field: "operatingRiskInfection" , formatter: getRate},
-                    { title: "手术患者肺部感染发生率统计", field: "lungInfection" , formatter: getRate},
-                    { title: "新生儿患者医院感染发生率统计", field: "newBornInfection" , formatter: getRate},
-                    { title: "择期手术患者医院感染发生率统计", field: "selectiveOperationsInfection" , formatter: getRate},
-                    { title: "与血液透析相关血液感染发生率统计", field: "bloodInfection" , formatter: getRate},
-                    { title: "重症监护室相关感染率统计", field: "intensiveCareUnitInfection" , formatter: getRate}
+                    { title: "医院感染总发生率", field: "totalInfection" , formatter: getRate},
+                    { title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection" , formatter: getRate},
+                    { title: "手术部位感染总发生率", field: "operatingPartInfection" , formatter: getRate},
+                    { title: "手术风险分级（NNIS分级）手术部位感染率", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "手术患者肺部感染发生率", field: "lungInfection" , formatter: getRate},
+                    { title: "新生儿患者医院感染发生率", field: "newBornInfection" , formatter: getRate},
+                    { title: "择期手术患者医院感染发生率", field: "selectiveOperationsInfection" , formatter: getRate},
+                    { title: "与血液透析相关血液感染发生率", field: "bloodInfection" , formatter: getRate},
+                    { title: "重症监护室相关感染率", field: "intensiveCareUnitInfection" , formatter: getRate}
                 ]
             ],
             url: '/qos/infectioncomplication/infection/charts/count',
@@ -135,8 +135,8 @@
     var infection1Chart = echarts.init(document.getElementById('infectionChart1'));
     var infection2Chart = echarts.init(document.getElementById('infectionChart2'));
     
-    var dataLegend = ['医院感染总发生率统计', '与手术相关科室感染发生率统计','手术部位感染总发生率统计', '手术风险分级（NNIS分级）手术部位感染率统计', 
-          			 '手术患者肺部感染发生率统计', '新生儿患者医院感染发生率统计', '择期手术患者医院感染发生率统计', '与血液透析相关血液感染发生率统计','重症监护室相关感染率统计'];
+    var dataLegend = ['医院感染总发生率', '与手术相关科室感染发生率','手术部位感染总发生率', '手术风险分级（NNIS分级）手术部位感染率', 
+          			 '手术患者肺部感染发生率', '新生儿患者医院感染发生率', '择期手术患者医院感染发生率', '与血液透析相关血液感染发生率','重症监护室相关感染率'];
    
  	function infectionChart1(){
  		if(dataVal){
@@ -204,7 +204,7 @@
 				        type: 'category',
 				        axisLabel: {
  		                interval:0,
- 		                rotate:50//角度顺时针计算的
+ 		                rotate:35//角度顺时针计算的
  		                } ,
 				    	axisTick : {
 							alignWithLabel : true
@@ -223,7 +223,7 @@
 		   	          },
 				    series: [
 				        {
-				            name: '医院感染总发生率统计',
+				            name: '医院感染总发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -233,7 +233,7 @@
 				            },
 				            data: data1
 				        },{
-				            name: '与手术相关科室感染发生率统计',
+				            name: '与手术相关科室感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -243,7 +243,7 @@
   				            },
 				            data: data2
 				        },{
-				            name: '手术部位感染总发生率统计',
+				            name: '手术部位感染总发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -253,7 +253,7 @@
   				            },
 				            data: data3
 				        },{
-				            name: '手术风险分级（NNIS分级）手术部位感染率统计',
+				            name: '手术风险分级（NNIS分级）手术部位感染率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -263,7 +263,7 @@
   				            },
 				            data: data4
 				        },{
-				            name: '手术患者肺部感染发生率统计',
+				            name: '手术患者肺部感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -273,7 +273,7 @@
   				            },
 				            data: data5
 				        },{
-				            name: '新生儿患者医院感染发生率统计',
+				            name: '新生儿患者医院感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -283,7 +283,7 @@
   				            },
 				            data: data6
 				        },{
-				            name: '择期手术患者医院感染发生率统计',
+				            name: '择期手术患者医院感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -293,7 +293,7 @@
    				            },
 				            data: data7
 				        },{
-				            name: '与血液透析相关血液感染发生率统计',
+				            name: '与血液透析相关血液感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -303,7 +303,7 @@
    				            },
 				            data: data8
 				        },{
-				            name: '重症监护室相关感染率统计',
+				            name: '重症监护室相关感染率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -424,7 +424,7 @@
 						    ],
 						    series: [
 						        {
-						            name: '医院感染总发生率统计',
+						            name: '医院感染总发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -439,7 +439,7 @@
 						            areaStyle: {color: '#4a72c9'},
 						            data: data1
 						        },{
-						            name: '与手术相关科室感染发生率统计',
+						            name: '与手术相关科室感染发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -454,7 +454,7 @@
 						            areaStyle: {color: '#6071c6'},
 						            data: data2
 						        },{
-						            name: '手术部位感染总发生率统计',
+						            name: '手术部位感染总发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -469,7 +469,7 @@
 						            areaStyle: {color: '#78a9f2'},
 						            data: data3
 						        },{
-						            name: '手术风险分级（NNIS分级）手术部位感染率统计',
+						            name: '手术风险分级（NNIS分级）手术部位感染率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -484,7 +484,7 @@
 						            areaStyle: {color: '#a3ccf8'},
 						            data: data4
 						        },{
-						            name: '手术患者肺部感染发生率统计',
+						            name: '手术患者肺部感染发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -499,7 +499,7 @@
 						            areaStyle: {color: '#47b8e2'},
 						            data: data5
 						        },{
-						            name: '新生儿患者医院感染发生率统计',
+						            name: '新生儿患者医院感染发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -514,7 +514,7 @@
 						            areaStyle: {color: '#6087bf'},
 						            data: data6
 						        },{
-						            name: '择期手术患者医院感染发生率统计',
+						            name: '择期手术患者医院感染发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            areaStyle: {color: '#4a72c9'},
@@ -529,7 +529,7 @@
 						            },
 						            data: data7
 						        },{
-						            name: '与血液透析相关血液感染发生率统计',
+						            name: '与血液透析相关血液感染发生率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -544,7 +544,7 @@
 						            areaStyle: {color: '#6071c6'},
 						            data: data8
 						        },{
-						            name: '重症监护室相关感染率统计',
+						            name: '重症监护室相关感染率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,

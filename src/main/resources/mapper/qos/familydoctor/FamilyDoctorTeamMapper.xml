@@ -4,4 +4,11 @@
 	<select id="getTeam" resultType="com.paladin.qos.service.familydoctor.vo.FamilyDoctorTeamVO">
 	SELECT id,unit_id AS unitId FROM family_doctor_team WHERE team_name =#{teamName}
 	</select>
+	
+	<select id="teamNum" resultType="com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorTeamVo">
+	SELECT t.unit_id as unitId ,count(1)as teamNum,u.studio_num as studioNum from family_doctor_team as t
+	LEFT JOIN family_doctor_unit as u on t.unit_id=u.id
+	GROUP BY t.unit_id;
+	</select>
+	
 </mapper>

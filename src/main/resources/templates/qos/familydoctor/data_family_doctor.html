@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/fonts/family/iconfont.css">
+<style type="text/css">
+.iconfont{
+font-size: 6vh;
+color: rgb(68, 183, 211);
+margin-left: 22px;
+}
+.typeface{
+	color: #808080;
+    font-family: 黑体;
+    font-size: 16px;
+    padding: 16px;
+    padding-top: 20px;
+}
+.typeface1{
+padding-bottom: 10px;
+}
+.number{
+	font-size: 36px;
+	color: rgb(68, 183, 211);
+}
+.icon{
+margin-top: 16px;
+}
+</style>
+<body>
+    <section class="content">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-diannao"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>慢病签约人员管理数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-dianhua"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>慢病签约人员随访数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-yiyuan"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>签约人员双向转诊数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-plywood"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>家庭病床建床数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"  >
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box box-solid">
+								<div class="row">
+									<div class="col-md-3 icon">
+										<span class="iconfont icon-fangzi"></span>
+									</div>
+									<div class="col-md-9">
+										<div class="row">
+											<div class="col-md-12 typeface">
+												<span>专病小区专科诊疗数</span>
+											</div>
+											<div class="col-md-12 typeface1">
+												<span class="number">52234</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-fangzi1"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>上门服务人次数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-chufang"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>营养指导人次数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-wenjianjia"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>康复指导人次数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"  >
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box box-solid">
+								<div class="row">
+									<div class="col-md-3 icon">
+										<span class="iconfont icon-bi"></span>
+									</div>
+									<div class="col-md-9">
+										<div class="row">
+											<div class="col-md-12 typeface">
+												<span>用药指导人次数</span>
+											</div>
+											<div class="col-md-12 typeface1">
+												<span class="number">52234</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="col-md-3"  >
+					<div class="row">
+						<div class="col-md-12">
+							<div class="box box-solid">
+								<div class="row">
+									<div class="col-md-3 icon">
+										<span class="iconfont icon-rili"></span>
+									</div>
+									<div class="col-md-9">
+										<div class="row">
+											<div class="col-md-12 typeface">
+												<span>慢病长处方服务数</span>
+											</div>
+											<div class="col-md-12 typeface1">
+												<span class="number">52234</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-chufangwaipei"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>签约居民体检人数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-xin-1"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>心脑血管高危人群筛查人数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-yan"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>肿瘤高危人群筛查数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-diannao"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>骨质酥松高危人群筛查数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-icon-test"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>COPD高危人群筛查数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-ertong"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>儿童哮喘筛查数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-icon1"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>健康自助监测评估数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-chaxun"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>CDSS心脑血管风险评估数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-tuisong"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>个性化健康信息精准推送数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+   
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="region-type" />
+    <section class="content">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="teamChart" class="box-body" style="height: 350px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="studioChart" class="box-body" style="height: 350px">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+        <div class="col-md-8">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="dataGrid"></table>
+                </div>
+            </div>
+        </div>
+			<div class="col-md-4">
+				<div class="box box-solid">
+					<div id="pieChart" class="box-body" style="height: 620px">
+					</div>
+				</div>
+			</div>
+    </section>
+    <div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+  	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		teamChart.resize();
+		studioChart.resize();
+		pieChart.resize();
+	});
+    
+    
+    var table, dataVal,dataAll, requestParams;
+    $(function() {
+    	regionType();
+    	
+         laydate.render({
+             elem: '#createTime',
+             type: 'year',
+             max:'nowTime',
+             value:''
+         });
+        initTable();
+    });
+    var currentElement;
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { checkbox: true }, 
+                    { title: "社区", field: "unitId",enumcode: "region-type"},
+                    { title: "团队数量", field: "teamNum"},
+                    { title: "工作室数量", field: "studioNum"},
+                    { title: "医生人数", field: "doctorNum"},
+                    { title: "护士人数", field: "nurseNum" },
+                    { title: "协调员人数", field: "healthCoordinatorNum"},
+                    { title: "健康管理师人数", field: "healthManageNum"},
+                    { title: "营养师人数", field: "dietitianNum"},
+                    { title: "心理咨询师人数", field: "consultantNum"}
+                ]
+            ],
+            url: '/qos/data/familydoctor/unit/find',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: function(row) {
+                console.log("on check");
+                console.log(row);
+
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+                console.log(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	dataVal = res || [];
+            	if(dataVal){
+            		var arr = [];
+           			for(var i=0;i<dataVal.length;i++){
+           				if (i == 0) arr.push(dataVal[i]);
+           				b = false;
+           				if (arr.length > 0 && i > 0) {
+           					for(var j=0;j<arr.length;j++){
+               					if(dataVal[i].unitId == arr[j].unitId){
+               						if(dataVal[i].teamNum != 0)arr[j].teamNum = dataVal[i].teamNum;
+               						if(dataVal[i].studioNum != 0)arr[j].studioNum = dataVal[i].studioNum;
+               						if(dataVal[i].doctorNum != 0)arr[j].doctorNum = dataVal[i].doctorNum;
+               						if(dataVal[i].nurseNum != 0)arr[j].nurseNum = dataVal[i].nurseNum;
+               						if(dataVal[i].healthCoordinatorNum != 0)arr[j].healthCoordinatorNum = dataVal[i].healthCoordinatorNum;
+               						if(dataVal[i].healthManageNum != 0)arr[j].healthManageNum = dataVal[i].healthManageNum;
+               						if(dataVal[i].dietitianNum != 0)arr[j].dietitianNum = dataVal[i].dietitianNum;
+               						if(dataVal[i].consultantNum != 0)arr[j].consultantNum = dataVal[i].consultantNum;
+               					 	b = true;
+               					}
+               				}
+           				 if (!b) {
+                             arr.push(dataVal[i]);
+                           }
+           				}
+           			}
+            	}
+            	dataAll = arr;
+            	teamChart1();
+            	studioChart1();
+            	pieChart1();
+                return arr;
+            }
+        });
+    }
+    
+    var teamChart = echarts.init(document.getElementById('teamChart'));
+    function teamChart1(){
+    	var dataSort = [];
+    	var xAxisValue=[],seriesValue=[];
+    	if(dataAll){
+    		var region = regionType();
+        	 for (var i = 0; i < region.length; i++) {
+        		 for(var j=0;j<dataAll.length;j++){
+        			if(region[i].value == dataAll[j].unitId){
+        				dataSort.push({name:region[i].name,value:dataAll[j].teamNum});
+        				break;
+        			}
+        			if(j == dataAll.length-1){
+        				dataSort.push({name:region[i].name,value:0});
+ 					}
+        		 }
+        	 }
+        	 dataSort.sort(compare('value'));
+        	 for (var i = 0; i < dataSort.length; i++) {
+        		xAxisValue.push(dataSort[i].name);
+ 				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
+        	 }
+    	}
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : {            
+    		            type : 'shadow'        
+    		        }
+    		    },
+    		    legend: {
+    		        data:['团队数量']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		             axisLabel: {
+    		                interval:0,
+    		                rotate:50//角度顺时针计算的
+    		                } , 
+    		            data: xAxisValue,
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'团队数量',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:seriesValue
+    		        }
+    		    ]
+    		};
+    	teamChart.setOption(option,true);
+    }
+    
+    
+    var studioChart = echarts.init(document.getElementById('studioChart'));
+    function studioChart1(){
+    	var dataSort = [];
+    	var xAxisValue=[],seriesValue=[];
+    	if(dataAll){
+    		var region = regionType();
+        	 for (var i = 0; i < region.length; i++) {
+        		 for(var j=0;j<dataAll.length;j++){
+        			if(region[i].value == dataAll[j].unitId){
+        				dataSort.push({name:region[i].name,value:dataAll[j].studioNum});
+        				break;
+        			}
+        			if(j == dataAll.length-1){
+        				dataSort.push({name:region[i].name,value:0});
+ 					}
+        		 }
+        	 }
+        	 dataSort.sort(compare('value'));
+        	 for (var i = 0; i < dataSort.length; i++) {
+        		xAxisValue.push(dataSort[i].name);
+ 				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
+        	 }
+    	}
+    	
+    	option = {
+    		    color: ['#3398DB'],
+    		    tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : { 
+    		            type : 'shadow' 
+    		        }
+    		    },
+    		    legend: {
+    		        data:['工作室数量']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis : [
+    		        {
+    		            type : 'category',
+    		             axisLabel: {
+    		                interval:0,
+    		                rotate:50//角度顺时针计算的
+    		                } ,
+    		            data: xAxisValue,
+    		            axisTick: {
+    		                alignWithLabel: true
+    		            }
+    		        }
+    		    ],
+    		    yAxis : [
+    		        {
+    		            type : 'value'
+    		        }
+    		    ],
+    		    series : [
+    		        {
+    		            name:'工作室数量',
+    		            type:'bar',
+    		            barWidth: '60%',
+    		            data:seriesValue
+    		        }
+    		    ]
+    		};
+    	studioChart.setOption(option,true);
+    }
+    
+    var pieChart = echarts.init(document.getElementById('pieChart'));
+    function pieChart1(){
+    	if(dataAll == null){
+    		showChartInfo2(pieChart,'暂无数据显示');
+    	}else{
+    		var ys=0,hs=0,xty=0,jkgls=0,yys=0,xlzxs=0;
+    		for(var i=0;i<dataAll.length;i++){
+    			ys+=dataAll[i].doctorNum;
+    			hs+=dataAll[i].nurseNum;
+    			xty+=dataAll[i].healthCoordinatorNum;
+    			jkgls+=dataAll[i].healthManageNum;
+    			yys+=dataAll[i].dietitianNum;
+    			xlzxs+=dataAll[i].consultantNum;
+    		}
+    		option = {
+        		    tooltip : {
+        		        trigger: 'item',
+        		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        		    },
+        		    series : [
+        		        {
+        		        	name: '',
+        		            type: 'pie',
+        		            radius : '70%',
+        		            center: ['50%', '50%'],
+        		            data:[
+        		                {value:ys,
+        		                name:'医生',
+        		                itemStyle : {
+               	                    normal : {
+               							color: '#a3ccf8'
+               	                    }
+    	  				           }
+        		                },
+        		                {value:hs,
+        		                name:'护士',
+        		                itemStyle : {
+                  	                    normal : {
+                  							color: '#47b8e2'
+                  	                    }
+       	  				           }    		                
+        		                	},
+        		                {value:xty,
+        		                name:'协调员',
+        		                itemStyle : {
+                  	                    normal : {
+                  							color: '#6087bf'
+                  	                    }
+       	  				           }  
+        		                },
+        		                {value:jkgls,
+        		                name:'健康管理师',
+        		                itemStyle : {
+                  	                    normal : {
+                  							color: '#4a72c9'
+                  	                    }
+       	  				           }  
+        		                },
+        		                {value:yys,
+        		                name:'营养师',
+        		                itemStyle : {
+                  	                    normal : {
+                  							color: '#6071c6'
+                  	                    }
+       	  				           }  
+        		                },
+        		                {value:xlzxs,
+        		                name:'心理咨询师',
+        		                itemStyle : {
+                  	                    normal : {
+                  							color: '#78a9f2'
+                  	                    }
+       	  				           }  
+        		                }
+        		            ],
+        		            itemStyle: {
+        		                emphasis: {
+        		                    shadowBlur: 10,
+        		                    shadowOffsetX: 0,
+        		                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+        		                }
+        		            }
+        		        }
+        		    ]
+        		};
+        	pieChart.setOption(option,true);
+    	}
+    	
+    }
+    
+    
+    var showChartInfo2 = function (healthTeacher, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            series: []
+        };
+        pieChart.clear() ;
+        pieChart.hideLoading();
+        pieChart.setOption(msgOption)
+    };
+    
+    function regionType(){
+    	var regionType =[];
+    	var value = $.parseJSON($("#tonto_constant_value").text());
+        var region = value["region-type"];
+        for (var i = 0; i < region.length; i++) {
+        	var w=region[i].value.indexOf("社");
+        	var name =region[i].value.substring(3, w);
+        	regionType.push({name:name,value:region[i].key})
+        }
+        return regionType;
+    }
+   
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return value2 - value1;
+        }
+    }
+  	//]]>
+    </script>
+</body>
+
+</html>

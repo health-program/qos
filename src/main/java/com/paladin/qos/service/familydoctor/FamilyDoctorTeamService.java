@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.util.StringUtil;
+import com.paladin.qos.mapper.familydoctor.FamilyDoctorPersonnelMapper;
 import com.paladin.qos.mapper.familydoctor.FamilyDoctorTeamMapper;
 import com.paladin.qos.model.familydoctor.FamilyDoctorPersonnel;
 import com.paladin.qos.model.familydoctor.FamilyDoctorTeam;
 import com.paladin.qos.service.familydoctor.dto.ExcelFamilyDoctorTeam;
+import com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorTeamVo;
 import com.paladin.qos.service.familydoctor.vo.FamilyDoctorTeamVO;
 import com.paladin.framework.common.ExcelImportResult;
 import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
@@ -35,6 +37,9 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
     private FamilyDoctorPersonnelService familyDoctorPersonnelService;
     
     @Autowired
+    private FamilyDoctorPersonnelMapper familyDoctorPersonnelMapper;
+    
+    @Autowired
     private FamilyDoctorTeamMapper familyDoctorTeamMapper;
     
     public FamilyDoctorTeamVO countTaem(String teamName){
@@ -51,6 +56,14 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
 	}
 	return removeByPrimaryKey(id);
     }
+    
+    public List<DataFamilyDoctorTeamVo> teamNum(){
+	List<DataFamilyDoctorTeamVo> vo = new ArrayList<DataFamilyDoctorTeamVo>();
+	vo.addAll(familyDoctorTeamMapper.teamNum());
+	vo.addAll(familyDoctorPersonnelMapper.personnelNum());
+	return vo;
+    };
+    
     
     private static final List<ReadColumn> teamImportColumns = DefaultReadColumn.createReadColumn(ExcelFamilyDoctorTeam.class, null);
     
