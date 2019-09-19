@@ -12,38 +12,30 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 医生平均门急诊量
+ * 
  * @author FM
  *
  */
 @Component
-public class AverageNumber extends DataProcessor{
+public class AverageNumber extends DataProcessor {
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13005";
+	public static final String EVENT_ID = "13005";
 
-    private SheJiKeMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getAverageNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
-
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return  getMapper().getAverageNumber(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

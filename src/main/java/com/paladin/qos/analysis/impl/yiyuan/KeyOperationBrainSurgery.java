@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationBrainSurgeryMapper;
+import com.paladin.qos.dynamic.mapper.yiyuan.opd.OpdStatisticsMapper;
 
 /**
  * 颅、脑手术死亡率
@@ -19,16 +20,8 @@ import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationBrainSurgeryMapper;
 @Component
 public class KeyOperationBrainSurgery extends YiyuanDataProcessor {
 
-	private KeyOperationBrainSurgeryMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public KeyOperationBrainSurgeryMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(KeyOperationBrainSurgeryMapper.class);
-		}
-		return mapper;
-	}
 
 	public static final String EVENT_ID = "12103";
 
@@ -44,7 +37,7 @@ public class KeyOperationBrainSurgery extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationBrainSurgeryMapper.class).getTotalNum(params);
 	}
 
 	@Override
@@ -54,6 +47,6 @@ public class KeyOperationBrainSurgery extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationBrainSurgeryMapper.class).getEventNum(params);
 	}
 }

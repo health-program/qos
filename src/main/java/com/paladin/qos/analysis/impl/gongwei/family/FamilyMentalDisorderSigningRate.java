@@ -11,49 +11,42 @@ import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
 
-/**重精神障碍患者签约率   
+/**
+ * 重精神障碍患者签约率
+ * 
  * @author MyKite
- * @version 2019年9月11日 下午4:32:42 
+ * @version 2019年9月11日 下午4:32:42
  */
 @Component
-public class FamilyMentalDisorderSigningRate extends GongWeiDataProcessor{
-    
- 	@Autowired
- 	private SqlSessionContainer sqlSessionContainer;
+public class FamilyMentalDisorderSigningRate extends GongWeiDataProcessor {
 
- 	public static final String EVENT_ID = "21028";
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
- 	@Override
- 	public String getEventId() {
- 		return EVENT_ID;
- 	}
+	public static final String EVENT_ID = "21028";
 
- 	private DataFamilyDoctorMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
- 	public DataFamilyDoctorMapper getMapper() {
- 		if (mapper == null) {
- 			mapper = sqlSessionContainer.getMapper(DataFamilyDoctorMapper.class);
- 		}
- 		return mapper;
- 	}
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingServiceTotal(startTime, endTime, unit);
+	}
 
- 	@Override
- 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
- 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
- 		String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
- 		return getMapper().singingServiceTotal(startTime, endTime, unit);
- 	}
-
- 	@Override
- 	public long getEventNum(Date startTime, Date endTime, String unitId) {
- 	    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
- 	    	String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
-		return getMapper().mentalDisorderSigningRate(startTime, endTime, unit);
- 	}
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).mentalDisorderSigningRate(startTime, endTime, unit);
+	}
 }

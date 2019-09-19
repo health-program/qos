@@ -12,39 +12,31 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 二联抗生素使用率
+ * 
  * @author FM
  *
  */
 @Component
-public class TwoAntiDrug extends DataProcessor{
+public class TwoAntiDrug extends DataProcessor {
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "16013";
+	public static final String EVENT_ID = "16013";
 
-    private SheJiKeMapper mapper;
-    
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getTotalRecipe(startTime, endTime, unitId);
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return getMapper().getTotalRecipe(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return getMapper().getEventTwoAntiDrug(startTime, endTime, unitId);
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getEventTwoAntiDrug(startTime, endTime, unitId);
+	}
 }

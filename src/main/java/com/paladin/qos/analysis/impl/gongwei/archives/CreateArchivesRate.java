@@ -1,9 +1,9 @@
 package com.paladin.qos.analysis.impl.gongwei.archives;
 
-
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
+import com.paladin.qos.dynamic.mapper.exhibition.MaternalManagementMapper;
 import com.paladin.qos.dynamic.mapper.gongwei.PublicHealthManagementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,42 +13,35 @@ import java.util.Date;
 
 /**
  * 居民健康档案建档率
+ * 
  * @author wcw
  *
  */
 @Component
-public class CreateArchivesRate extends GongWeiDataProcessor{
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
+public class CreateArchivesRate extends GongWeiDataProcessor {
 
-    public static final String EVENT_ID = "22001";
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    private PublicHealthManagementMapper mapper;
+	public static final String EVENT_ID = "22001";
 
-    public PublicHealthManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(PublicHealthManagementMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		String gongWeiUnitId = getMappingUnitId(unitId);
+		if (StringUtils.isEmpty(gongWeiUnitId)) {
+			return 0;
+		}
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class).getActiveArchives(startTime, endTime, gongWeiUnitId);
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        String gongWeiUnitId=getMappingUnitId(unitId);
-        if (StringUtils.isEmptyOrWhitespace(gongWeiUnitId)){
-            return 0;
-        }
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getActiveArchives(startTime, endTime, gongWeiUnitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-       return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

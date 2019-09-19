@@ -12,41 +12,32 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 门诊人次数
+ * 
  * @author FM
  *
  */
 @Component
-public class OutpatientNumber extends DataProcessor{
+public class OutpatientNumber extends DataProcessor {
 
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13001";
+	public static final String EVENT_ID = "13001";
 
-    private SheJiKeMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getOutpatientNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return  getMapper().getOutpatientNumber(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
-
-	
 }

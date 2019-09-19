@@ -12,38 +12,30 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 合计总收入
+ * 
  * @author FM
  *
  */
 @Component
-public class TotalMoney extends DataProcessor{
+public class TotalMoney extends DataProcessor {
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "15001";
+	public static final String EVENT_ID = "15001";
 
-    private SheJiKeMapper mapper;
-    
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return (long) (sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getTotalMoney(startTime, endTime, unitId) * 100);
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return  (long)(getMapper().getTotalMoney(startTime, endTime, unitId)*100);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

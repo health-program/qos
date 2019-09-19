@@ -11,44 +11,37 @@ import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
 
-/**用药指导人次数   
+/**
+ * 用药指导人次数
+ * 
  * @author MyKite
- * @version 2019年9月11日 下午3:54:53 
+ * @version 2019年9月11日 下午3:54:53
  */
 @Component
 public class FamilyMedicationGuideTotal extends GongWeiDataProcessor {
-    
- 	@Autowired
- 	private SqlSessionContainer sqlSessionContainer;
 
- 	public static final String EVENT_ID = "21010";
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
- 	@Override
- 	public String getEventId() {
- 		return EVENT_ID;
- 	}
+	public static final String EVENT_ID = "21010";
 
- 	private DataFamilyDoctorMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
- 	public DataFamilyDoctorMapper getMapper() {
- 		if (mapper == null) {
- 			mapper = sqlSessionContainer.getMapper(DataFamilyDoctorMapper.class);
- 		}
- 		return mapper;
- 	}
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).medicationGuidePersonNum(startTime, endTime, unit);
+	}
 
- 	@Override
- 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
- 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
- 		String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
- 		return getMapper().medicationGuidePersonNum(startTime, endTime, unit);
- 	}
-
- 	@Override
- 	public long getEventNum(Date startTime, Date endTime, String unitId) {
- 		return 0;
- 	}
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

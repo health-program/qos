@@ -12,43 +12,30 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 使用床位
+ * 
  * @author FM
  *
  */
 @Component
-public class BedInUseNumber extends DataProcessor{
+public class BedInUseNumber extends DataProcessor {
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "14005";
+	public static final String EVENT_ID = "14005";
 
-    private SheJiKeMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getBedInUseNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
-
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        long a = getMapper().getBedInUseNumber(startTime, endTime, unitId);
-        System.out.println("startTime"+startTime);
-        System.out.println("endTime"+endTime);
-        System.out.println("unitId"+unitId);
-        System.out.println("--------"+a);
-        return  a;
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

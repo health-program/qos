@@ -2,6 +2,7 @@ package com.paladin.qos.analysis.impl.gongwei.inoculate;
 
 import java.util.Date;
 
+import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
 import com.paladin.qos.dynamic.mapper.gongwei.PublicHealthManagementMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,22 +23,14 @@ public class InoculateAbnormalRate extends GongWeiDataProcessor {
 
 	public static final String EVENT_ID = "22010";
 
-	private PublicHealthManagementMapper mapper;
-
-	public PublicHealthManagementMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(PublicHealthManagementMapper.class);
-		}
-		return mapper;
-	}
-
 	@Override
 	public String getEventId() {
 		return EVENT_ID;
 	}
 
 	@Override
-	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {	
+		sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class);		
 		return 0;
 	}
 

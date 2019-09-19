@@ -17,33 +17,25 @@ import java.util.Date;
  */
 @Component
 public class NewbornHearing extends FuyouDataProcessor {
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13211";
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    private ChildCareManagementMapper mapper;
+	public static final String EVENT_ID = "13211";
 
-    public ChildCareManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(ChildCareManagementMapper.class).getNewbornHearingNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return  getMapper().getNewbornHearingNumber(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

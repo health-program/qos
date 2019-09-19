@@ -17,33 +17,24 @@ import java.util.Date;
  */
 @Component
 public class ChildHealthCheck extends FuyouDataProcessor {
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13207";
+	public static final String EVENT_ID = "13207";
 
-    private ChildCareManagementMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public ChildCareManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(ChildCareManagementMapper.class).getChildHealthCheckNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
-
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return  getMapper().getChildHealthCheckNumber(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

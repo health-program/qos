@@ -16,17 +16,8 @@ import com.paladin.qos.dynamic.mapper.yiyuan.opd.OpdStatisticsMapper;
 @Component
 public class HospitalizationDrugTotal extends YiyuanDataProcessor{
     
-	private OpdStatisticsMapper mapper;
-
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-	
-	public OpdStatisticsMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(OpdStatisticsMapper.class);
-		}
-		return mapper;
-	}
 	
 	public static final String EVENT_ID = "31006";
 
@@ -38,7 +29,7 @@ public class HospitalizationDrugTotal extends YiyuanDataProcessor{
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().HospitalizationDrugTotal(startTime, endTime, unitId);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(OpdStatisticsMapper.class).HospitalizationDrugTotal(startTime, endTime, unitId);
 	}
 
 	@Override

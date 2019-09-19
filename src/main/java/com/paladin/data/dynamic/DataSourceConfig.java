@@ -70,7 +70,7 @@ public class DataSourceConfig {
 	
 	private Boolean poolPreparedStatements;		// oracle 建议为true
 	
-	private int maxPoolPreparedStatementPerConnectionSize = 20;
+	private int maxPoolPreparedStatementPerConnectionSize = -1;
 	
 	/**  
 	 * 数据库名称，唯一  

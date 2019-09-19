@@ -11,44 +11,37 @@ import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
 
-/** 慢病长处方服务数  
+/**
+ * 慢病长处方服务数
+ * 
  * @author MyKite
- * @version 2019年9月11日 下午3:56:51 
+ * @version 2019年9月11日 下午3:56:51
  */
 @Component
-public class FamilyPrescriptionServicTotal extends GongWeiDataProcessor{
-    
- 	@Autowired
- 	private SqlSessionContainer sqlSessionContainer;
+public class FamilyPrescriptionServicTotal extends GongWeiDataProcessor {
 
- 	public static final String EVENT_ID = "21011";
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
- 	@Override
- 	public String getEventId() {
- 		return EVENT_ID;
- 	}
+	public static final String EVENT_ID = "21011";
 
- 	private DataFamilyDoctorMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
- 	public DataFamilyDoctorMapper getMapper() {
- 		if (mapper == null) {
- 			mapper = sqlSessionContainer.getMapper(DataFamilyDoctorMapper.class);
- 		}
- 		return mapper;
- 	}
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).prescriptionServicNum(startTime, endTime, unit);
+	}
 
- 	@Override
- 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
- 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
- 		String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
- 		return getMapper().prescriptionServicNum(startTime, endTime, unit);
- 	}
-
- 	@Override
- 	public long getEventNum(Date startTime, Date endTime, String unitId) {
- 		return 0;
- 	}
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

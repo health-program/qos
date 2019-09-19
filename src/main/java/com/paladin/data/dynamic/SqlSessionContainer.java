@@ -23,79 +23,58 @@ import com.paladin.framework.spring.SpringContainer;
 public class SqlSessionContainer implements SpringContainer {
 
 	@Resource
-	private SqlSessionFactoryProperties  properties;
-	
+	private SqlSessionFactoryProperties properties;
+
 	private SqlSessionFactory sqlSessionFactory;
 	private SqlSessionTemplate sqlSessionTemplate;
-	
+
 	private DynamicDataSource dataSource;
-	
-	private ThreadLocal<SqlSession> sessionThreadLocal = new ThreadLocal<>();
-	
+
 	public boolean initialize() {
-		try {			
+		try {
 			sqlSessionFactory = buildSqlSessionFactory(properties);
-			sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);		
+			sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return true;
 	}
-	
-	/**
-	 * 获取mapper
-	 * @param mapperClass
-	 * @return
-	 */
-	public <T> T getMapper(Class<T> mapperClass) {
-		return getSqlSession().getMapper(mapperClass);
-	}
-	
+
 	/**
 	 * 设置当前数据源
+	 * 
 	 * @param name
 	 */
 	public void setCurrentDataSource(String name) {
 		dataSource.setCurrentDataSource(name);
 	}
-	
+
 	/**
-	 * 获取SqlSession
+	 * 获取SqlSession，需要手动关闭
+	 * 
 	 * @return
 	 */
 	public SqlSession getSqlSession() {
-		SqlSession sqlSession = sessionThreadLocal.get();  // 从当前线程获取
-		if (sqlSession == null) {
-			sqlSession = sqlSessionFactory.openSession();
-			sessionThreadLocal.set(sqlSession);  // 将sqlSession与当前线程绑定
-		}
-		return sqlSession;
+		return sqlSessionFactory.openSession();
 	}
 	
-	/**
-	 * 关闭SqlSession
-	 */
-	public void close() {
-		SqlSession sqlSession = sessionThreadLocal.get();  // 从当前线程获取
-		if (sqlSession!=null) {
-			sqlSession.close();
-			sessionThreadLocal.remove();
-		}
-	} 
-	
+	public SqlSessionTemplate getSqlSessionTemplate() {
+		return sqlSessionTemplate;
+	}
+
 	private SqlSessionFactory buildSqlSessionFactory(SqlSessionFactoryProperties properties) throws IOException {
 		SimpleSqlSessionFactoryBuilder builder = new SimpleSqlSessionFactoryBuilder();
-		
+
 		dataSource = new DynamicDataSource();
-		
+
 		builder.setDataSource(dataSource);
 		builder.setTypeAliasesPackage(properties.getTypeAliasesPackage());
 
 		List<Interceptor> plugins = new ArrayList<>();
 
 		// 分页插件
-		if(properties.isPageEnabled()) {
+		if (properties.isPageEnabled()) {
 			PageInterceptor pageHelper = new PageInterceptor();
 			Properties pageProperties = new Properties();
 			pageProperties.setProperty("reasonable", "true");
@@ -106,7 +85,7 @@ public class SqlSessionContainer implements SpringContainer {
 
 			plugins.add(pageHelper);
 		}
-		
+
 		/*
 		 * 添加插件，如果需要可以查看QueryInterceptor等插件
 		 */
@@ -123,7 +102,6 @@ public class SqlSessionContainer implements SpringContainer {
 		return sqlSessionFactory;
 	}
 
-	public SqlSessionTemplate getSqlSessionTemplate() {
-		return sqlSessionTemplate;
-	}
+
+
 }

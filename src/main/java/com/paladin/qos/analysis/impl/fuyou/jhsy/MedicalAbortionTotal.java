@@ -28,19 +28,10 @@ public class MedicalAbortionTotal extends FuyouDataProcessor {
 		return EVENT_ID;
 	}
 
-	private FamilyPlanningManagementMapper mapper;
-
-	public FamilyPlanningManagementMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(FamilyPlanningManagementMapper.class);
-		}
-		return mapper;
-	}
-
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-		return getMapper().getMedicalAbortionNumber(startTime, endTime, unitId);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(FamilyPlanningManagementMapper.class).getMedicalAbortionNumber(startTime, endTime, unitId);
 	}
 
 	@Override

@@ -12,39 +12,31 @@ import com.paladin.qos.mapper.shejike.SheJiKeMapper;
 
 /**
  * 门诊中药非药物治疗处方占比
+ * 
  * @author FM
  *
  */
 @Component
-public class NonChineseMedicinePrescription extends DataProcessor{
+public class NonChineseMedicinePrescription extends DataProcessor {
 	@Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "16008";
+	public static final String EVENT_ID = "16008";
 
-    private SheJiKeMapper mapper;
-    
-    public SheJiKeMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getTotalChineseMedicinePrescription(startTime, endTime, unitId);
+	}
 
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return getMapper().getTotalChineseMedicinePrescription(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-        return getMapper().getEventNonChineseMedicinePrescription(startTime, endTime, unitId);
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getEventNonChineseMedicinePrescription(startTime, endTime, unitId);
+	}
 }

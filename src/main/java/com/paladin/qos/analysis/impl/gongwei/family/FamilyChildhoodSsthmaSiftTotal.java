@@ -28,15 +28,6 @@ public class FamilyChildhoodSsthmaSiftTotal extends GongWeiDataProcessor {
  		return EVENT_ID;
  	}
 
- 	private DataFamilyDoctorMapper mapper;
-
- 	public DataFamilyDoctorMapper getMapper() {
- 		if (mapper == null) {
- 			mapper = sqlSessionContainer.getMapper(DataFamilyDoctorMapper.class);
- 		}
- 		return mapper;
- 	}
-
  	@Override
  	public long getTotalNum(Date startTime, Date endTime, String unitId) {
  		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
@@ -44,7 +35,7 @@ public class FamilyChildhoodSsthmaSiftTotal extends GongWeiDataProcessor {
  		if(StringUtil.isEmpty(unit)){
  		   return 0;
  		}
- 		return getMapper().childhoodSsthmaSiftNum(startTime, endTime, unit);
+ 		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).childhoodSsthmaSiftNum(startTime, endTime, unit);
  	}
 
  	@Override

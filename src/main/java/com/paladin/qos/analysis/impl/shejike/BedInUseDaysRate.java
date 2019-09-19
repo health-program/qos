@@ -25,15 +25,6 @@ public class BedInUseDaysRate extends DataProcessor {
 
 	public static final String EVENT_ID = "14006";
 
-	private SheJiKeMapper mapper;
-
-	public SheJiKeMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(SheJiKeMapper.class);
-		}
-		return mapper;
-	}
-
 	@Override
 	public String getEventId() {
 		return EVENT_ID;
@@ -42,7 +33,7 @@ public class BedInUseDaysRate extends DataProcessor {
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-		long totalBed = getMapper().getBedTotalDays(startTime, endTime, unitId);// 获取总床位数
+		long totalBed = sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getBedTotalDays(startTime, endTime, unitId);// 获取总床位数
 		// 时间相减（天数）
 		long days = TimeUtil.getIntervalDays(startTime.getTime(), endTime.getTime());
 		long total = totalBed * days;
@@ -52,6 +43,6 @@ public class BedInUseDaysRate extends DataProcessor {
 	@Override
 	public long getEventNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
-		return getMapper().getBedInUseDays(startTime, endTime, unitId);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(SheJiKeMapper.class).getBedInUseDays(startTime, endTime, unitId);
 	}
 }

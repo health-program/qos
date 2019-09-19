@@ -17,19 +17,11 @@ import java.util.Date;
  */
 @Component
 public class InfantCongenitalHeartDisease extends FuyouDataProcessor {
+	
     @Autowired
     private SqlSessionContainer sqlSessionContainer;
 
     public static final String EVENT_ID = "13208";
-
-    private ChildCareManagementMapper mapper;
-
-    public ChildCareManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(ChildCareManagementMapper.class);
-        }
-        return mapper;
-    }
 
     @Override
     public String getEventId() {
@@ -39,7 +31,7 @@ public class InfantCongenitalHeartDisease extends FuyouDataProcessor {
     @Override
     public long getTotalNum(Date startTime, Date endTime, String unitId) {
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return  getMapper().getInfantCongenitalHeartDiseaseNumber(startTime, endTime, unitId);
+        return  sqlSessionContainer.getSqlSessionTemplate().getMapper(ChildCareManagementMapper.class).getInfantCongenitalHeartDiseaseNumber(startTime, endTime, unitId);
     }
 
     @Override

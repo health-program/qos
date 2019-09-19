@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationBrainSurgeryMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationCesareanSectionMapper;
 
 /**
@@ -19,18 +20,10 @@ import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationCesareanSectionMapper;
 @Component
 public class KeyOperationCesareanSection extends YiyuanDataProcessor {
 
-	private KeyOperationCesareanSectionMapper mapper;
-
 	public static final String EVENT_ID = "12104";
+
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public KeyOperationCesareanSectionMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(KeyOperationCesareanSectionMapper.class);
-		}
-		return mapper;
-	}
 
 	@Override
 	public String getEventId() {
@@ -44,7 +37,7 @@ public class KeyOperationCesareanSection extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationBrainSurgeryMapper.class).getTotalNum(params);
 	}
 
 	@Override
@@ -54,6 +47,6 @@ public class KeyOperationCesareanSection extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationBrainSurgeryMapper.class).getEventNum(params);
 	}
 }

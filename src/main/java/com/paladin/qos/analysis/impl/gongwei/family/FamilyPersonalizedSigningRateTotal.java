@@ -11,13 +11,15 @@ import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
 
-/** 个性化服务签约率（收费）  
+/**
+ * 个性化服务签约率（收费）
+ * 
  * @author MyKite
- * @version 2019年9月11日 上午10:43:46 
+ * @version 2019年9月11日 上午10:43:46
  */
 @Component
-public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor{
-    
+public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor {
+
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
@@ -28,32 +30,23 @@ public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor{
 		return EVENT_ID;
 	}
 
-	private DataFamilyDoctorMapper mapper;
-
-	public DataFamilyDoctorMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(DataFamilyDoctorMapper.class);
-		}
-		return mapper;
-	}
-
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
 		String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
-		return getMapper().singingServeNum(startTime, endTime, unit);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingServeNum(startTime, endTime, unit);
 	}
 
 	@Override
 	public long getEventNum(Date startTime, Date endTime, String unitId) {
-	    	sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-	    	String unit = getMappingUnitId(unitId);
- 		if(StringUtil.isEmpty(unit)){
- 		   return 0;
- 		}
-		return getMapper().singingTotal(startTime, endTime, unit);
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingTotal(startTime, endTime, unit);
 	}
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyMortalityNonOperationDataMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyMortalityOperationDataMapper;
 
 /**
@@ -19,16 +20,8 @@ import com.paladin.qos.dynamic.mapper.yiyuan.NewBabyMortalityOperationDataMapper
 @Component
 public class NewBabyMortalityOperationDataProcessor extends YiyuanDataProcessor {
 
-	private NewBabyMortalityOperationDataMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public NewBabyMortalityOperationDataMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(NewBabyMortalityOperationDataMapper.class);
-		}
-		return mapper;
-	}
 
 	public static final String EVENT_ID = "10111";
 
@@ -44,7 +37,7 @@ public class NewBabyMortalityOperationDataProcessor extends YiyuanDataProcessor 
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(NewBabyMortalityOperationDataMapper.class).getTotalNum(params);
 	}
 
 	@Override
@@ -54,7 +47,7 @@ public class NewBabyMortalityOperationDataProcessor extends YiyuanDataProcessor 
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(NewBabyMortalityOperationDataMapper.class).getEventNum(params);
 	}
 
 }

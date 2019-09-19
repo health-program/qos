@@ -17,33 +17,24 @@ import java.util.Date;
  */
 @Component
 public class NewbornVisit extends FuyouDataProcessor {
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "13321";
+	public static final String EVENT_ID = "13321";
 
-    private MaternalManagementMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public MaternalManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(MaternalManagementMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(MaternalManagementMapper.class).getNewbornVisitNumber(startTime, endTime, unitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
-
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_FUYOU);
-        return  getMapper().getNewbornVisitNumber(startTime, endTime, unitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		return 0;
+	}
 }

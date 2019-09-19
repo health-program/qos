@@ -9,20 +9,13 @@ import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalizationAnalysisMapper;
+import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisCerebralInfarctionMapper;
 
 @Component
 public class RehospitalzationAnalysisDataProcessor extends YiyuanDataProcessor {
 
-	private RehospitalizationAnalysisMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public RehospitalizationAnalysisMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(RehospitalizationAnalysisMapper.class);
-		}
-		return mapper;
-	}
 
 	public static final String EVENT_ID = "11100";
 
@@ -41,7 +34,7 @@ public class RehospitalzationAnalysisDataProcessor extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(RehospitalizationAnalysisMapper.class).getTotalNum(params);
 	}
 
 	/**
@@ -54,7 +47,7 @@ public class RehospitalzationAnalysisDataProcessor extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(RehospitalizationAnalysisMapper.class).getEventNum(params);
 	}
 
 }

@@ -63,12 +63,17 @@ public class DataSourceFacade {
 		dataSource.setMinEvictableIdleTimeMillis(config.getMinEvictableIdleTimeMillis());
 
 		Boolean poolPreparedStatements = config.getPoolPreparedStatements();
+		int maxPoolPreparedStatementPerConnectionSize =  config.getMaxPoolPreparedStatementPerConnectionSize();
 		if (poolPreparedStatements == null) {
 			poolPreparedStatements = isOracle ? true : false;
 		}
 
+		if(maxPoolPreparedStatementPerConnectionSize <= 0 && poolPreparedStatements) {
+			maxPoolPreparedStatementPerConnectionSize = 20;
+		}
+		
 		dataSource.setPoolPreparedStatements(poolPreparedStatements);
-		dataSource.setMaxPoolPreparedStatementPerConnectionSize(config.getMaxPoolPreparedStatementPerConnectionSize());
+		dataSource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
 
 		String connectionTestQuery = config.getConnectionTestQuery();
 		if (connectionTestQuery == null) {
@@ -94,7 +99,7 @@ public class DataSourceFacade {
 		hikariConfig.setIdleTimeout(config.getIdleTimeout());
 		hikariConfig.setMaxLifetime(config.getMaxLifetime());
 		hikariConfig.setConnectionTimeout(config.getConnectionTimeout());
-
+		
 		String connectionTestQuery = config.getConnectionTestQuery();
 
 		if (connectionTestQuery == null) {

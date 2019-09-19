@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisLungDiseaseMapper;
 import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisMalignantSurgeryMapper;
 
 /**
@@ -19,16 +20,8 @@ import com.paladin.qos.dynamic.mapper.yiyuan.RehospitalzationAnalysisMalignantSu
 @Component
 public class RehospitalzationAnalysisMalignantSurgery extends YiyuanDataProcessor {
 
-	private RehospitalzationAnalysisMalignantSurgeryMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public RehospitalzationAnalysisMalignantSurgeryMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(RehospitalzationAnalysisMalignantSurgeryMapper.class);
-		}
-		return mapper;
-	}
 
 	public static final String EVENT_ID = "11117";
 
@@ -44,7 +37,7 @@ public class RehospitalzationAnalysisMalignantSurgery extends YiyuanDataProcesso
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(RehospitalzationAnalysisMalignantSurgeryMapper.class).getTotalNum(params);
 	}
 
 	@Override
@@ -54,6 +47,6 @@ public class RehospitalzationAnalysisMalignantSurgery extends YiyuanDataProcesso
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(RehospitalzationAnalysisMalignantSurgeryMapper.class).getEventNum(params);
 	}
 }

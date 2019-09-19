@@ -19,16 +19,8 @@ import com.paladin.qos.dynamic.mapper.yiyuan.KeyOperationHipAndKneeReplacementMa
 @Component
 public class KeyOperationHipAndKneeReplacement extends YiyuanDataProcessor {
 
-	private KeyOperationHipAndKneeReplacementMapper mapper;
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-
-	public KeyOperationHipAndKneeReplacementMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(KeyOperationHipAndKneeReplacementMapper.class);
-		}
-		return mapper;
-	}
 
 	public static final String EVENT_ID = "12102";
 
@@ -44,7 +36,7 @@ public class KeyOperationHipAndKneeReplacement extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getTotalNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationHipAndKneeReplacementMapper.class).getTotalNum(params);
 	}
 
 	@Override
@@ -54,6 +46,6 @@ public class KeyOperationHipAndKneeReplacement extends YiyuanDataProcessor {
 		params.put("endTime", endTime);
 		params.put("unitId", unitId);
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().getEventNum(params);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(KeyOperationHipAndKneeReplacementMapper.class).getEventNum(params);
 	}
 }

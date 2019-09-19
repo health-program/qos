@@ -9,25 +9,18 @@ import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.impl.yiyuan.YiyuanDataProcessor;
 import com.paladin.qos.dynamic.mapper.yiyuan.opd.OpdStatisticsMapper;
 
-/**住院药品总费用(元)   
+/**
+ * 住院药品总费用(元)
+ * 
  * @author MyKite
- * @version 2019年9月17日 上午10:41:35 
+ * @version 2019年9月17日 上午10:41:35
  */
 @Component
-public class HospitalizationMoneyTotal extends YiyuanDataProcessor{
-    
-	private OpdStatisticsMapper mapper;
+public class HospitalizationMoneyTotal extends YiyuanDataProcessor {
 
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
-	
-	public OpdStatisticsMapper getMapper() {
-		if (mapper == null) {
-			mapper = sqlSessionContainer.getMapper(OpdStatisticsMapper.class);
-		}
-		return mapper;
-	}
-	
+
 	public static final String EVENT_ID = "31005";
 
 	@Override
@@ -38,7 +31,7 @@ public class HospitalizationMoneyTotal extends YiyuanDataProcessor{
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
 		sqlSessionContainer.setCurrentDataSource(getDataSourceByUnit(unitId));
-		return getMapper().HospitalizationMoneyTotal(startTime, endTime, unitId);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(OpdStatisticsMapper.class).HospitalizationMoneyTotal(startTime, endTime, unitId);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.paladin.qos.analysis.impl.gongwei.pressureSugar;
 
-
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
@@ -13,44 +12,40 @@ import java.util.Date;
 
 /**
  * 高血压患者规范管理率
+ * 
  * @author wcw
  *
  */
 @Component
-public class SugarManageRate extends GongWeiDataProcessor{
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
+public class SugarManageRate extends GongWeiDataProcessor {
+	
+	@Autowired
+	private SqlSessionContainer sqlSessionContainer;
 
-    public static final String EVENT_ID = "22007";
+	public static final String EVENT_ID = "22007";
 
-    private PublicHealthManagementMapper mapper;
+	@Override
+	public String getEventId() {
+		return EVENT_ID;
+	}
 
-    public PublicHealthManagementMapper getMapper() {
-        if (mapper == null) {
-            mapper = sqlSessionContainer.getMapper(PublicHealthManagementMapper.class);
-        }
-        return mapper;
-    }
+	@Override
+	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+		String gongWeiUnitId = getMappingUnitId(unitId);
+		if (StringUtils.isEmpty(gongWeiUnitId)) {
+			return 0;
+		}
+		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class).getSugarManageNumber(startTime, endTime,
+				gongWeiUnitId);
+	}
 
-    @Override
-    public String getEventId() {
-        return EVENT_ID;
-    }
-
-    @Override
-    public long getTotalNum(Date startTime, Date endTime, String unitId) {
-        String gongWeiUnitId=getMappingUnitId(unitId);
-        if (StringUtils.isEmptyOrWhitespace(gongWeiUnitId)){
-            return 0;
-        }
-        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getSugarManageNumber(startTime, endTime, gongWeiUnitId);
-    }
-
-    @Override
-    public long getEventNum(Date startTime, Date endTime, String unitId) {
-//        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-//        return  getMapper().getRecentSugarReachNumber(startTime, endTime, unitId);
-        return 0;
-    }
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		// sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		// return
+		// sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class).getRecentSugarReachNumber(startTime,
+		// endTime, unitId);
+		return 0;
+	}
 }
