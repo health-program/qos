@@ -52,17 +52,11 @@
 			'36.0701')
 			and (b.AGE_YEAR <![CDATA[>=]]>18
 			or c.AGE_YEAR <![CDATA[>=]]>18)
-			<if test="startTime != null and startTime !='' ">
 				and a.OUT_HP_DT <![CDATA[>=]]>
 				#{startTime}
-			</if>
-			<if test="endTime != null and endTime !='' ">
 				and a.OUT_HP_DT <![CDATA[<]]>
 				#{endTime}
-			</if>
-			<if test="unitId != null and unitId !='' ">
 				and a.ORGAN_CODE = #{unitId}
-			</if>
 		</where>
 	</select>
 

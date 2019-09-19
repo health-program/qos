@@ -48,7 +48,7 @@
 
 		<where>
 			a.OHREC_DREC = '2' and
-			a.OPERATION_CODE in (s'74.4x01',
+			a.OPERATION_CODE in ('74.4x01',
 			'74.9900',
 			'74.4x00',
 			'74.2x00',
