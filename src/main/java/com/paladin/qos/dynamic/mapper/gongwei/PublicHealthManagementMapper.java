@@ -3,6 +3,7 @@ package com.paladin.qos.dynamic.mapper.gongwei;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.List;
 
 public interface PublicHealthManagementMapper {
 
@@ -25,7 +26,10 @@ public interface PublicHealthManagementMapper {
     Long getPressureNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
 
     //高血压管理规范管理数
-    Long getPressureManageNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
+    Long getPressureManageNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
+
+    //高血压管理随访数
+    Long getPressureFollowNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
 
     //糖尿病患病数
     Long getSugarNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
@@ -34,7 +38,10 @@ public interface PublicHealthManagementMapper {
     Long getRecentSugarReachNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
 
     //高血糖管理规范管理数
-    Long getSugarManageNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
+    Long getSugarManageNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
+
+    //高血糖管理随访数
+    Long getSugarFollowNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
 
     //有效转诊的可疑症状的患者数
     Long getReferralNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);

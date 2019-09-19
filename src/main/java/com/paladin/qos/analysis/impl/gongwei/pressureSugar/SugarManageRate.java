@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 高血压患者规范管理率
@@ -44,13 +47,33 @@ public class SugarManageRate extends GongWeiDataProcessor{
             return 0;
         }
         sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-        return  getMapper().getSugarManageNumber(startTime, endTime, gongWeiUnitId);
+        return  getMapper().getSugarFollowNumber(getStringYear(startTime,endTime), gongWeiUnitId);
     }
 
     @Override
     public long getEventNum(Date startTime, Date endTime, String unitId) {
-//        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-//        return  getMapper().getRecentSugarReachNumber(startTime, endTime, unitId);
-        return 0;
+        String gongWeiUnitId=getMappingUnitId(unitId);
+        if (StringUtils.isEmptyOrWhitespace(gongWeiUnitId)){
+            return 0;
+        }
+        sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+        return  getMapper().getSugarManageNumber(getStringYear(startTime,endTime), gongWeiUnitId);
+    }
+
+    private List<String> getStringYear(Date startTime, Date endTime){
+        List<String> yearStr=new ArrayList<>();
+        Calendar start=Calendar.getInstance();
+        start.setTime(startTime);
+        int startYear=start.get(Calendar.YEAR);
+        Calendar end=Calendar.getInstance();
+        end.setTime(endTime);
+        int endYear=end.get(Calendar.YEAR);
+        if (endYear>=startYear){
+            for (int i=0;i<=endYear-startYear;i++){
+                yearStr.add(String.valueOf(startYear+i));
+            }
+            return yearStr;
+        }
+        return null;
     }
 }

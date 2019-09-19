@@ -3,8 +3,8 @@ package com.paladin.qos.controller.gongwei;
 
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.gongwei.dto.PhysicalRequest;
-import com.paladin.qos.service.exhibition.ArchivesManagementService;
-import com.paladin.qos.service.exhibition.vo.PhysicalManagementVO;
+import com.paladin.qos.service.gongwei.ArchivesManagementService;
+import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

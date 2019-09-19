@@ -1,7 +1,8 @@
-package com.paladin.qos.service.exhibition;
+package com.paladin.qos.service.gongwei;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.service.exhibition.vo.PressureSugarManagementVO;
+import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
+import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
