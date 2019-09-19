@@ -29,6 +29,9 @@ public class ArchivesManagementService extends BaseExhibitionDataAcquire {
 
     public ArchivesManagementVO findArchives(String managedCenter, Date startDate, Date endDate) {
         ArchivesManagementVO  archivesManagementVO= archivesManagementMapper.getArchivesTotal(EVENT_ID1,EVENT_ID2,managedCenter);
+//        if (null!=archivesManagementVO){
+//            Double peopleD=archivesManagementVO.getPeopleNumber();
+//        }
         return archivesManagementVO;
     }
 

@@ -13,6 +13,6 @@ import java.util.List;
 public interface ArchivesManagementMapper {
 
     //档案总数
-    ArchivesManagementVO getArchivesTotal (@Param("eventId1") String eventId1, @Param("eventId1") String eventId2, @Param("unitId") String unitId);
+    ArchivesManagementVO getArchivesTotal (@Param("eventId1") String eventId1, @Param("eventId2") String eventId2, @Param("unitId") String unitId);
 
 }

@@ -4,7 +4,7 @@
 
     <!--档案管理-->
     <select id="getArchivesTotal" resultType="com.paladin.qos.service.gongwei.vo.ArchivesManagementVO">
-        select d1.unit_id unitId ,f.population peopleNumber,d1.active activeArchivesNumber,d2.public publicArchivesNumber from
+        select d1.unit_id unitId ,f.population*10000 peopleNumber,d1.active activeArchivesNumber,d2.public publicArchivesNumber from
         (select unit_id,sum(total_num) as active from data_processed_day where event_id= #{eventId1} and unit_id=#{unitId}) d1
         join
         (select unit_id,sum(event_num) as public from data_processed_day where event_id=#{eventId2} and unit_id=#{unitId}) d2

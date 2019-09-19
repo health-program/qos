@@ -51,11 +51,23 @@ public class ArchivesManagementController {
             e.printStackTrace();
         }
         List<ArchivesManagementVO> archivesManagementVOList=new ArrayList<>();
-        List<Unit> units = DataConstantContainer.getUnitListByType(2);
+        List<Unit> units = DataConstantContainer.getUnitListByType(3);
+        ArchivesManagementVO archivesManagementVO=null;
         if (StringUtils.isEmptyOrWhitespace(managedCenter)){
             for (Unit unit : units) {
                 String unitId = unit.getId();
-                archivesManagementVOList.add(archivesManagementService.findArchives(unitId,startDate,endDate));
+                archivesManagementVO=archivesManagementService.findArchives(unitId,startDate,endDate);
+                if (null!=archivesManagementVO){
+                    if (null==archivesManagementVO.getActiveArchivesNumber()){
+                        archivesManagementVO.setActiveArchivesNumber(0l);
+                    }
+                    if (null==archivesManagementVO.getPublicArchivesNumber()){
+                        archivesManagementVO.setPublicArchivesNumber(0l);
+                    }
+
+                    archivesManagementVOList.add(archivesManagementVO);
+                }
+
             }
             return  CommonResponse.getSuccessResponse(archivesManagementVOList);
         }else{
