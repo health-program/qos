@@ -1,15 +1,15 @@
 package com.paladin.qos.analysis.impl.fuyou;
 
-import java.util.Date;
-
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.DataProcessor;
 import com.paladin.qos.analysis.RateMetadata;
 
-public abstract class FuyouDataProcessor extends DataProcessor {
+import java.util.Date;
 
-	public String getMappingUnitId(String unitId) {
+public abstract class FuyouDataProcessor extends DataProcessor{
+
+	public String getMappingUnitId(String unitId) {		
 		Unit unit = DataConstantContainer.getUnit(unitId);
 		return unit == null ? null : unit.getSource().getFuyouCode();
 	}
@@ -22,5 +22,5 @@ public abstract class FuyouDataProcessor extends DataProcessor {
 		}
 		return data;
 	}
-
+	
 }

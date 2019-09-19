@@ -279,7 +279,6 @@
                         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     },
                     formatter: function (params) {
-                        console.log(params)
                         return params[0].name + '<br/>'
                             + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
                             + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
@@ -345,7 +344,7 @@
                         data: orgData,
                         axisLabel: {
                             interval:0,
-                            rotate:50//角度顺时针计算的
+                            rotate:60//角度顺时针计算的
                         } ,
                         axisTick: {
                             alignWithLabel: true
@@ -402,15 +401,52 @@
             pagination: false,
             searchbar: '#searchbar',
             responseHandler: function(res) {
-                dataVal = res || [];
-                generatorZyjkChart(zyjkChart);
-                generatorYffsChart(yffsChart);
-                generatorOrgChart(orgChart);
-                return dataVal;
+                let zyjk = res['13320'] || [];
+                let yfjk = res['13319'] || [];
+                let yffs = res['13314'] || [];
+                if ($.isArray(zyjk) && $.isArray(yfjk) && $.isArray(yffs)) {
+                    let data = [{'name':'zyjk','data':zyjk}, {'name':'yfjk','data':yfjk}, {'name':'yffs','data':yffs}];
+                    let fields = ['zyjk', 'yfjk', 'yffs'];
+                    let d = initTableData(data, fields);
+                    dataVal = d || [];
+                    generatorZyjkChart(zyjkChart);
+                    generatorYffsChart(yffsChart);
+                    generatorOrgChart(orgChart);
+                    return dataVal;
+                } else {
+                    return [];
+                }
             }
 
         });
     }
+
+    function initTableData(data, fields) {
+        let d = [];
+        if (fields && fields.length > 0) {
+            fields.forEach(function (field, index) {
+                if (index === 0) {
+                    let value = data.find(d => d.name === field);
+                    value.data.forEach(f => {
+                        let x = {};
+                        x['agencyName'] = f.unitName;
+                        x[field] = f.count;
+                        d.push(x)
+                    });
+                }else {
+                    d.forEach(c =>{
+                        let value = data.find(d => d.name === field).data;
+                        let obj = value.find(a => a.unitName === c['agencyName']);
+                        if (obj) {
+                            c[field] = obj.count;
+                        }
+                    });
+                }
+            });
+        }
+        return d;
+    }
+    
 
     var showChartInfo = function (chart, infoStr) {
         var msgOption = {

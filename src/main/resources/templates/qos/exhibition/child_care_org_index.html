@@ -344,7 +344,7 @@
                         data: orgData,
                         axisLabel: {
                             interval:0,
-                            rotate:50//角度顺时针计算的
+                            rotate:60//角度顺时针计算的
                         } ,
                         axisTick: {
                             alignWithLabel: true
@@ -401,14 +401,65 @@
             pagination: false,
             searchbar: '#searchbar',
             responseHandler: function(res) {
-                dataVal = res || [];
-                generatorXseChart(xseChart);
-                generatorJksChart(jksChart);
-                generatorOrgChart(orgChart);
-                return dataVal;
+                let fss = res['13321'] || [];
+                let male = res['13201'] || [];
+                let female = res['13202'] || [];
+                let jks = res['13203'] || [];
+                let xses = mergeOrgTotalNumArr(male, female);
+                if ($.isArray(fss) && $.isArray(xses) && $.isArray(jks)) {
+                    let data = [{'name':'fss','data':fss}, {'name':'xses','data':xses}, {'name':'jks','data':jks}];
+                    let fields = ['fss', 'xses', 'jks'];
+                    let d = initTableData(data, fields);
+                    dataVal = d || [];
+                    generatorXseChart(xseChart);
+                    generatorJksChart(jksChart);
+                    generatorOrgChart(orgChart);
+                    return dataVal;
+                } else {
+                    return [];
+                }
             }
-
         });
+    }
+
+    function mergeOrgTotalNumArr(arr, arr1) {
+        let newArr =  arr || [];
+            arr1.reduce((newArr, obj) =>{
+                let originObj = newArr.find(point => point.unitName === obj.unitName);
+                if (originObj) {
+                    originObj.count += obj.count
+                } else {
+                    newArr.push({unitName:obj.unitName,count:obj.count})
+                }
+                return  newArr;
+            },newArr);
+        return newArr;
+    }
+
+    function initTableData(data, fields) {
+        let d = [];
+        if (fields && fields.length > 0) {
+            fields.forEach(function (field, index) {
+                if (index === 0) {
+                    let value = data.find(d => d.name === field);
+                    value.data.forEach(f => {
+                        let x = {};
+                        x['agencyName'] = f.unitName;
+                        x[field] = f.count;
+                        d.push(x)
+                    });
+                }else {
+                    d.forEach(c =>{
+                        let value = data.find(d => d.name === field).data;
+                        let obj = value.find(a => a.unitName === c['agencyName']);
+                        if (obj) {
+                            c[field] = obj.count;
+                        }
+                    });
+                }
+            });
+        }
+        return d;
     }
 
     var showChartInfo = function (chart, infoStr) {

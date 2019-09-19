@@ -134,21 +134,31 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/bycs",{ startTime : startTime, endTime : endTime},function (res) {
-            let bytData = res.condomDistribution;
-            let byyData = res.birthControlPills;
+            let bytData = [];
+            let byyData = [];
+            res.forEach(event => {
+                if (event.eventId == '13104') {
+                    byyData = mergeTotalNumArr(event.unitPoints);
+                }else {
+                    bytData = mergeTotalNumArr(event.unitPoints);
+                }
+            });
+            if (byyData.length === 0 && bytData.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
             let byyValue = [];
             let bytValue = [];
             let timeValue = [];
             let byyValueTotal = 0;
             let bytValueTotal = 0;
-            bytData.forEach(function (d) {
-                bytValue.push(~d.total+1);
-                bytValueTotal += d.total;
-                timeValue.push(d.searchTime)
+            bytData.forEach(function (units) {
+                timeValue.push(units.date);
+                bytValueTotal += units.totalNum;
+                bytValue.push(~units.totalNum+1)
             });
-            byyData.forEach(function (d) {
-                byyValue.push(d.total);
-                byyValueTotal += d.total;
+            byyData.forEach(function (units) {
+                byyValueTotal += units.totalNum;
+                byyValue.push(units.totalNum)
             });
             $("#byt").text(bytValueTotal);
             $("#byy").text(byyValueTotal);
@@ -226,6 +236,24 @@
         });
     }
 
+    function mergeTotalNumArr(arr) {
+        let newArr = [];
+        arr.forEach(item=>{
+            let points = item.points;
+            points.reduce((newArr, obj) =>{
+                let date = obj.year +'-'+ (obj.month <10 ? '0'+obj.month:obj.month);
+                let originObj = newArr.find(point => point.date === date);
+                if (originObj) {
+                    originObj.totalNum += obj.totalNum
+                } else {
+                    newArr.push({date:date,totalNum:obj.totalNum})
+                }
+                return  newArr;
+            },newArr)
+        });
+        return newArr;
+    }
+
     function generatorYwlcChart(chart) {
         chart.showLoading({
             text: '数据正在努力加载...',
@@ -235,13 +263,20 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/ywlc",{ startTime : startTime, endTime : endTime},function (res) {
+            let datas = [];
+            if (res.eventId == '13101') {
+                datas = mergeTotalNumArr(res.unitPoints);
+            }
+            if ( datas.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
             let dataValue = [];
             let timeValue = [];
             let total = 0;
-            res.forEach(function (data) {
-                dataValue.push(data.total);
-                timeValue.push(data.searchTime);
-                total += data.total;
+            datas.forEach(function (data) {
+                dataValue.push(data.totalNum);
+                timeValue.push(data.date);
+                total += data.totalNum;
             });
             $("#ywlc").text(total+"人");
             chart.hideLoading();
@@ -332,21 +367,31 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/gnjy",{ startTime : startTime, endTime : endTime},function (res) {
-            let fzData = res.intrauterineDevicePlacement;
-            let qcData = res.intrauterineDeviceRemoval;
+            let fzData = [];
+            let qcData = [];
+            res.forEach(event => {
+                if (event.eventId == '13105') {
+                    fzData = mergeTotalNumArr(event.unitPoints);
+                }else {
+                    qcData = mergeTotalNumArr(event.unitPoints);
+                }
+            });
+            if (fzData.length === 0 && qcData.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
             let fzValue = [];
             let qcValue = [];
             let timeValue = [];
             let fzValueTotal = 0;
             let qcValueTotal = 0;
             fzData.forEach(function (d) {
-                fzValue.push(d.total);
-                fzValueTotal += d.total;
-                timeValue.push(d.searchTime)
+                fzValue.push(d.totalNum);
+                fzValueTotal += d.totalNum;
+                timeValue.push(d.date)
             });
             qcData.forEach(function (d) {
-                qcValue.push(d.total);
-                qcValueTotal += d.total;
+                qcValue.push(d.totalNum);
+                qcValueTotal += d.totalNum;
             });
             $("#fz").text(fzValueTotal);
             $("#qc").text(qcValueTotal);
@@ -447,13 +492,20 @@
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         $.postAjax("/qos/exhibition/family/search/fyxg",{ startTime : startTime, endTime : endTime},function (res) {
+            let datas = [];
+            if (res.eventId == '13102') {
+                datas = mergeTotalNumArr(res.unitPoints);
+            }
+            if (datas.length === 0) {
+                showChartInfo(chart,'暂无数据')
+            }
             let dataValue = [];
             let timeValue = [];
             let total = 0;
-            res.forEach(function (data) {
-                dataValue.push(data.total);
-                timeValue.push(data.searchTime);
-                total += data.total;
+            datas.forEach(function (data) {
+                dataValue.push(data.totalNum);
+                timeValue.push(data.date);
+                total += data.totalNum;
             });
             $("#fyxg").text(total+"人");
             chart.hideLoading();
@@ -533,6 +585,31 @@
         });
 
     }
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
 
     function getYearMonthData() {
         var result = [];
