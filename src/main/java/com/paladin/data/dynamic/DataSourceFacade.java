@@ -2,15 +2,21 @@ package com.paladin.data.dynamic;
 
 import javax.sql.DataSource;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class DataSourceFacade {
 
+	public static enum DataSourceType {
+		HIKARI, DRUID;
+	}
+
 	protected String name;
 	protected boolean enabled;
-	protected HikariDataSource realDataSource;
+	protected DataSource realDataSource;
 	protected DataSourceConfig config;
+	protected DataSourceType type = DataSourceType.HIKARI;
 
 	public DataSourceFacade(DataSourceConfig config) {
 		if (config == null) {
@@ -19,6 +25,7 @@ public class DataSourceFacade {
 
 		this.config = config;
 		this.name = config.getName();
+		this.type = config.getType();
 
 		setEnabled(config.getEnabled());
 	}
@@ -26,17 +33,79 @@ public class DataSourceFacade {
 	/**
 	 * 根据数据库配置创建一个真实的数据源，该方法会在被对象创建时调用
 	 */
-	private HikariDataSource createRealDataSource() {
+	private DataSource createRealDataSource() {
+		if (type == DataSourceType.DRUID) {
+			return createDruidDataSource();
+		}
+		return createHikariDataSource();
+	}
+
+	private DataSource createDruidDataSource() {
+
+		boolean isOracle = config.getUrl().contains("oracle");
+
+		DruidDataSource dataSource = new DruidDataSource();
+
+		dataSource.setUrl(config.getUrl());
+		dataSource.setPassword(config.getPassword());
+		dataSource.setUsername(config.getUsername());
+		dataSource.setName(config.getName());
+
+		dataSource.setDefaultAutoCommit(config.isAutoCommit());
+		dataSource.setMaxActive(config.getMaxActive());
+		dataSource.setInitialSize(config.getInitialSize());
+		dataSource.setMinIdle(config.getMinIdle());
+		dataSource.setMaxWait(config.getMaxWait());
+		dataSource.setTestOnBorrow(config.isTestOnBorrow());
+		dataSource.setTestOnReturn(config.isTestOnReturn());
+		dataSource.setTestWhileIdle(config.isTestWhileIdle());
+		dataSource.setTimeBetweenEvictionRunsMillis(config.getTimeBetweenEvictionRunsMillis());
+		dataSource.setMinEvictableIdleTimeMillis(config.getMinEvictableIdleTimeMillis());
+
+		Boolean poolPreparedStatements = config.getPoolPreparedStatements();
+		if (poolPreparedStatements == null) {
+			poolPreparedStatements = isOracle ? true : false;
+		}
+
+		dataSource.setPoolPreparedStatements(poolPreparedStatements);
+		dataSource.setMaxPoolPreparedStatementPerConnectionSize(config.getMaxPoolPreparedStatementPerConnectionSize());
+
+		String connectionTestQuery = config.getConnectionTestQuery();
+		if (connectionTestQuery == null) {
+			if (isOracle) {
+				connectionTestQuery = "select 1 from dual";
+			} else {
+				connectionTestQuery = "select 1";
+			}
+		}
+
+		dataSource.setValidationQuery(connectionTestQuery);
+		return dataSource;
+	}
+
+	private HikariDataSource createHikariDataSource() {
 		HikariConfig hikariConfig = new HikariConfig();
 		hikariConfig.setJdbcUrl(config.getUrl());
 		hikariConfig.setUsername(config.getUsername());
 		hikariConfig.setPassword(config.getPassword());
-		hikariConfig.setMinimumIdle(5);
-		hikariConfig.setMaximumPoolSize(5);
-		hikariConfig.setAutoCommit(true);
-		hikariConfig.setIdleTimeout(600000);
-		hikariConfig.setMaxLifetime(1800000);
-		hikariConfig.setConnectionTimeout(30000);
+		hikariConfig.setMinimumIdle(config.getMinimumIdle());
+		hikariConfig.setMaximumPoolSize(config.getMaximumPoolSize());
+		hikariConfig.setAutoCommit(config.isAutoCommit());
+		hikariConfig.setIdleTimeout(config.getIdleTimeout());
+		hikariConfig.setMaxLifetime(config.getMaxLifetime());
+		hikariConfig.setConnectionTimeout(config.getConnectionTimeout());
+
+		String connectionTestQuery = config.getConnectionTestQuery();
+
+		if (connectionTestQuery == null) {
+			if (config.getUrl().contains("oracle")) {
+				connectionTestQuery = "select 1 from dual";
+			} else {
+				connectionTestQuery = "select 1";
+			}
+		}
+
+		hikariConfig.setConnectionTestQuery(connectionTestQuery);
 		return new HikariDataSource(hikariConfig);
 	}
 
@@ -50,7 +119,11 @@ public class DataSourceFacade {
 			if (this.enabled) {
 				// 关闭
 				if (realDataSource != null) {
-					realDataSource.close();
+					if (type == DataSourceType.DRUID) {
+						((DruidDataSource) realDataSource).close();
+					} else {
+						((HikariDataSource) realDataSource).close();
+					}
 					realDataSource = null;
 				}
 				this.enabled = false;
@@ -58,7 +131,11 @@ public class DataSourceFacade {
 				// 打开
 				if (realDataSource != null) {
 					// 如果有数据源尝试关闭
-					realDataSource.close();
+					if (type == DataSourceType.DRUID) {
+						((DruidDataSource) realDataSource).close();
+					} else {
+						((HikariDataSource) realDataSource).close();
+					}
 					realDataSource = null;
 				}
 				realDataSource = createRealDataSource();
