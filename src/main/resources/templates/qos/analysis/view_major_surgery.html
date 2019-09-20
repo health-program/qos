@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="monthChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="unitChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table, monthChart, unitChart, requestParam, selectUnit;
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { radio: true },
+                    {
+                        title: "医疗机构",
+                        field: "unitName"
+                    },
+                    {
+                        title: "冠状动脉旁路<br>移植术死亡率",
+                        field: "ev12100"
+                    },
+                    {
+                        title: "经皮冠状动脉<br>介入治疗死亡率",
+                        field: "ev12101"
+                    },
+                    {
+                        title: "髋膝关节置换<br>术死亡率",
+                        field: "ev12102"
+                    },
+                    {
+                        title: "颅脑手术死亡率",
+                        field: "ev12103"
+                    },
+                    {
+                        title: "剖宫产死亡率",
+                        field: "ev12104"
+                    }
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onCheck: unitSelected,
+            queryParams: function(params) {
+                params.eventIds = '12100,12101,12102,12103,12104';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+                if (!response) {
+                    return null;
+                }
+
+                var data = {};
+
+                convertRate2TableData(response, '12100', data);
+                convertRate2TableData(response, '12101', data);
+                convertRate2TableData(response, '12102', data);
+                convertRate2TableData(response, '12103', data);
+                convertRate2TableData(response, '12104', data);
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+
+                initUnitChart(response);
+                return result;
+            }
+        });
+    }
+
+    function convertRate2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            event = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+            total += item.totalNum;
+            event += item.eventNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate({
+            totalNum: total,
+            eventNum: event
+        });
+    }
+
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.totalNum;
+            total += item.totalNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed);
+    }
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.totalNum;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+
+    function initUnitChart(data) {
+
+        var ev12100 = convertUnitChartData(data, '12100', true);
+        var ev12101 = convertUnitChartData(data, '12101', true);
+        var ev12102 = convertUnitChartData(data, '12102', true);
+        var ev12103 = convertUnitChartData(data, '12103', true);
+        var ev12104 = convertUnitChartData(data, '12104', true);
+
+        if (!unitChart) {
+            unitChart = echarts.init(document.getElementById('unitChartDiv'));
+        }
+
+        var option = {
+            //加载数据图表
+            //color:['#1e90ff','#f0ffff'],
+            title: {
+                text: '重点手术住院死亡率柱状图'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value + '%';
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+                type: "scroll",
+                data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率', '髋膝关节置换术死亡率', '颅脑手术死亡率', '剖宫产死亡率'],
+                bottom: 0,
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev12100.unit,
+            },
+            yAxis: {
+                axisLabel: {
+                    formatter: function(val) {
+                        return val + '%';
+                    }
+                },
+                type: 'value',
+                max: 10
+            },
+            series: [{
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 2,
+                        }
+                    },
+                    name: '冠状动脉旁路移植术死亡率',
+                    data: ev12100.values
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '经皮冠状动脉介入治疗死亡率',
+                    data: ev12101.values
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '髋膝关节置换术死亡率',
+                    data: ev12102.values
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '颅脑手术死亡率',
+                    data: ev12103.values
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '剖宫产死亡率',
+                    data: ev12104.values
+                }
+            ]
+        }
+
+        unitChart.setOption(option, true);
+    }
+
+    function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+
+    var month12100, month12101, month12102, month12103, month121040;
+
+    function initMonthChart(response) {
+        if (!response) {
+            $.postAjax('/qos/analysis/data/get/month/instalments', requestParam, initMonthChart);
+            return;
+        }
+
+        month12100 = convertMonthChartData(response, '12100', true);
+        month12101 = convertMonthChartData(response, '12101', true);
+        month12102 = convertMonthChartData(response, '12102', true);
+        month12103 = convertMonthChartData(response, '12103', true);
+        month12104 = convertMonthChartData(response, '12104', true);
+
+        drawMonthChart('total');
+    }
+
+    function drawMonthChart() {
+        var unitId = selectUnit || 'total';
+
+        if (!monthChart) {
+            monthChart = echarts.init(document.getElementById('monthChartDiv'));
+        }
+
+        var option = {
+            //加载数据图表
+            //color:['#1e90ff','#f0ffff'],
+            title: {
+                text: '重点手术住院死亡率趋势图'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value + '%';
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            legend: {
+                type: "scroll",
+                data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率', '髋膝关节置换术死亡率', '颅脑手术死亡率', '剖宫产死亡率'],
+                bottom: 0
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                data: month12100.month
+            },
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 40,
+                containLabel: true
+            },
+            yAxis: {
+                axisLabel: {
+                    formatter: function(val) {
+                        return val + '%';
+                    }
+                },
+                type: 'value',
+                max: 10
+            },
+            series: [{
+                    type: 'line',
+                    areaStyle: {},
+                    label: {
+                        normal: {
+                            show: true, //显示数字
+                            position: 'top' //这里可以自己选择位置
+                        }
+                    },
+                    name: '冠状动脉旁路移植术死亡率',
+                    data: month12100.valuesMap[unitId]
+                },
+                {
+                    type: 'line',
+                    areaStyle: {},
+                    label: {
+                        normal: {
+                            show: true, //显示数字
+                            position: 'top' //这里可以自己选择位置
+                        }
+                    },
+                    name: '经皮冠状动脉介入治疗死亡率',
+                    data: month12101.valuesMap[unitId]
+                },
+                {
+                    type: 'line',
+                    areaStyle: {},
+                    label: {
+                        normal: {
+                            show: true, //显示数字
+                            position: 'top' //这里可以自己选择位置
+                        }
+                    },
+                    name: '髋膝关节置换术死亡率',
+                    data: month12102.valuesMap[unitId]
+                },
+                {
+                    type: 'line',
+                    areaStyle: {},
+                    label: {
+                        normal: {
+                            show: true, //显示数字
+                            position: 'top' //这里可以自己选择位置
+                        }
+                    },
+                    name: '颅脑手术死亡率',
+                    data: month12103.valuesMap[unitId]
+                },
+                {
+                    type: 'line',
+                    areaStyle: {},
+                    label: {
+                        normal: {
+                            show: true, //显示数字
+                            position: 'top' //这里可以自己选择位置
+                        }
+                    },
+                    name: '剖宫产死亡率',
+                    data: month12104.valuesMap[unitId]
+                }
+            ]
+        }
+
+        monthChart.setOption(option, true);
+
+    }
+    </script>
+</body>
+
+</html>

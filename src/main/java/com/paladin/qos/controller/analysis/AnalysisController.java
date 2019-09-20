@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -45,6 +46,11 @@ public class AnalysisController {
 	@GetMapping("/processed/index")
 	public Object dataIndex() {
 		return "/qos/analysis/processed_index";
+	}
+
+	@GetMapping("/view/{name}")
+	public Object viewInex(@PathVariable("name") String name) {
+		return "/qos/analysis/view_" + name;
 	}
 
 	@PostMapping("/data/process")
@@ -132,9 +138,13 @@ public class AnalysisController {
 		if (eventIds != null && eventIds.size() > 0) {
 			Map<String, DataResult<DataPointDay>> map = new HashMap<>();
 			for (String eventId : eventIds) {
-				DataResult<DataPointDay> item = analysisService.getDataSetOfDay(eventId, startDate, endDate);
-				if (item != null) {
-					map.put(eventId, item);
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					int unitType = getUnitType(event);
+					DataResult<DataPointDay> item = analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate);
+					if (item != null) {
+						map.put(eventId, item);
+					}
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
@@ -154,9 +164,13 @@ public class AnalysisController {
 		if (eventIds != null && eventIds.size() > 0) {
 			Map<String, DataResult<DataPointMonth>> map = new HashMap<>();
 			for (String eventId : eventIds) {
-				DataResult<DataPointMonth> item = analysisService.getDataSetOfMonth(eventId, startDate, endDate);
-				if (item != null) {
-					map.put(eventId, item);
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					int unitType = getUnitType(event);
+					DataResult<DataPointMonth> item = analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate);
+					if (item != null) {
+						map.put(eventId, item);
+					}
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
@@ -178,9 +192,13 @@ public class AnalysisController {
 		if (eventIds != null && eventIds.size() > 0) {
 			Map<String, DataResult<DataPointYear>> map = new HashMap<>();
 			for (String eventId : eventIds) {
-				DataResult<DataPointYear> item = analysisService.getDataSetOfYear(eventId, startYear, endYear);
-				if (item != null) {
-					map.put(eventId, item);
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					int unitType = getUnitType(event);
+					DataResult<DataPointYear> item = analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear);
+					if (item != null) {
+						map.put(eventId, item);
+					}
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
