@@ -2,7 +2,9 @@ package com.paladin.qos.controller.analysis;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,10 +16,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.DataProcessManager;
 import com.paladin.qos.analysis.TimeUtil;
+import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataPointDay;
+import com.paladin.qos.service.analysis.data.DataPointMonth;
+import com.paladin.qos.service.analysis.data.DataPointYear;
 import com.paladin.qos.service.analysis.data.DataResult;
 
 @Controller
@@ -115,72 +122,126 @@ public class AnalysisController {
 		return CommonResponse.getSuccessResponse(analysisService.testProcessors());
 	}
 
-	@PostMapping("/data/instalments")
+	@PostMapping("/data/get/day/instalments")
 	@ResponseBody
-	public Object getProcessedDataByInstalments(AnalysisRequest request) {
-		int dataType = request.getDataType();
-		String eventId = request.getEventId();
+	public Object getDataOfDayByInstalments(AnalysisRequest request) {
+		List<String> eventIds = request.getEventIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
-		if (startDate == null || eventId == null || eventId.length() == 0) {
-			return CommonResponse.getFailResponse();
-		}
-
-		if (endDate == null) {
-			endDate = new Date();
-		}
-
-		@SuppressWarnings("rawtypes")
-		DataResult result = null;
-
-		if (dataType == AnalysisService.DATA_TYPE_DAY) {
-			result = analysisService.getDataSetOfDay(eventId, startDate, endDate);
-		} else if (dataType == AnalysisService.DATA_TYPE_MONTH) {
-			result = analysisService.getDataSetOfMonth(eventId, startDate, endDate);
-		} else if (dataType == AnalysisService.DATA_TYPE_YEAR) {
-			result = analysisService.getDataSetOfYear(eventId, TimeUtil.getYear(startDate), TimeUtil.getYear(endDate));
+		if (eventIds != null && eventIds.size() > 0) {
+			Map<String, DataResult<DataPointDay>> map = new HashMap<>();
+			for (String eventId : eventIds) {
+				DataResult<DataPointDay> item = analysisService.getDataSetOfDay(eventId, startDate, endDate);
+				if (item != null) {
+					map.put(eventId, item);
+				}
+			}
+			return CommonResponse.getSuccessResponse(map);
 		} else {
-			return CommonResponse.getFailResponse();
+			String eventId = request.getEventId();
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfDay(eventId, startDate, endDate));
 		}
-
-		return CommonResponse.getSuccessResponse(result);
 	}
 
-	@RequestMapping(value = "/data/once", method = { RequestMethod.GET, RequestMethod.POST })
+	@PostMapping("/data/get/month/instalments")
 	@ResponseBody
-	public Object getProcessedDataByOnce(AnalysisRequest request) {
-		String eventId = request.getEventId();
+	public Object getDataOfMonthByInstalments(AnalysisRequest request) {
+		List<String> eventIds = request.getEventIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
-		if (startDate == null || eventId == null || eventId.length() == 0) {
-			return CommonResponse.getFailResponse();
+		if (eventIds != null && eventIds.size() > 0) {
+			Map<String, DataResult<DataPointMonth>> map = new HashMap<>();
+			for (String eventId : eventIds) {
+				DataResult<DataPointMonth> item = analysisService.getDataSetOfMonth(eventId, startDate, endDate);
+				if (item != null) {
+					map.put(eventId, item);
+				}
+			}
+			return CommonResponse.getSuccessResponse(map);
+		} else {
+			String eventId = request.getEventId();
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth(eventId, startDate, endDate));
 		}
-
-		if (endDate == null) {
-			endDate = new Date();
-		}
-
-		return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, startDate, endDate));
 	}
 
-	@RequestMapping(value = "/data/count", method = { RequestMethod.GET, RequestMethod.POST })
+	@PostMapping("/data/get/year/instalments")
+	@ResponseBody
+	public Object getDataOfYearByInstalments(AnalysisRequest request) {
+		Date startDate = request.getStartTime();
+		Date endDate = request.getEndTime();
+		int startYear = TimeUtil.getYear(startDate);
+		int endYear = TimeUtil.getYear(endDate);
+
+		List<String> eventIds = request.getEventIds();
+		if (eventIds != null && eventIds.size() > 0) {
+			Map<String, DataResult<DataPointYear>> map = new HashMap<>();
+			for (String eventId : eventIds) {
+				DataResult<DataPointYear> item = analysisService.getDataSetOfYear(eventId, startYear, endYear);
+				if (item != null) {
+					map.put(eventId, item);
+				}
+			}
+			return CommonResponse.getSuccessResponse(map);
+		} else {
+			String eventId = request.getEventId();
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfYear(eventId, startYear, endYear));
+		}
+	}
+
+	@RequestMapping(value = "/data/get/unit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getProcessedDataByCount(AnalysisRequest request) {
-		String eventId = request.getEventId();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
-		if (startDate == null || eventId == null || eventId.length() == 0) {
-			return CommonResponse.getFailResponse();
+		List<String> eventIds = request.getEventIds();
+		if (eventIds != null && eventIds.size() > 0) {
+			Map<String, Object> map = new HashMap<>();
+			for (String eventId : eventIds) {
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					int eventType = event.getEventType();
+					int unitType = getUnitType(event);
+					if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+						Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate);
+						if (item != null) {
+							map.put(eventId, item);
+						}
+					} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+						Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate);
+						if (item != null) {
+							map.put(eventId, item);
+						}
+					}
+				}
+			}
+			return CommonResponse.getSuccessResponse(map);
+		} else {
+			String eventId = request.getEventId();
+			Event event = DataConstantContainer.getEvent(eventId);
+			if (event != null) {
+				int eventType = event.getEventType();
+				int unitType = getUnitType(event);
+				if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+					return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate));
+				} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+					return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate));
+				}
+			}
 		}
 
-		if (endDate == null) {
-			endDate = new Date();
-		}
+		return CommonResponse.getErrorResponse();
+	}
 
-		return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, startDate, endDate));
+	private int getUnitType(Event event) {
+		int targetType = event.getTargetType();
+		if (targetType == DataEvent.TARGET_TYPE_COMMUNITY)
+			return 2;
+		if (targetType == DataEvent.TARGET_TYPE_HOSPITAL)
+			return 1;
+		return 0;
 	}
 
 }

@@ -9,21 +9,17 @@
         <h1>数据展示</h1>
     </section> -->
     <section class="content">
-        <div class="box box-solid">
-            <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
-                        <div class="col-md-2" style="display:none">
-                            <select name="eventId" class="form-control tonto-select-constant" enumcode="data-event-type">
-                            </select>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
-                            <input id="startTime" name="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" value="2018-01-01">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
                         </div>
-                        <div class="col-md-2">
-                            <input id="endTime" name="endTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -44,8 +40,8 @@
                 </div>
             </div>
             <div class="col-md-6">
-               <div class="box box-solid">
-                <label for="monthInput" class="col-sm-3 control-label">重点手术住院死亡率趋势图</label>
+                <div class="box box-solid">
+                    <label for="monthInput" class="col-sm-3 control-label">重点手术住院死亡率趋势图</label>
                     <div id="sumChartDiv" class="box-body" style="height: 300px">
                     </div>
                 </div>
@@ -53,9 +49,6 @@
                     <form class="form-horizontal" style="padding-top: 20px;padding-left: 20px">
                         <div class="form-group">
                             <label for="monthInput" class="col-sm-3 control-label">重点手术住院死亡率柱状图</label>
-                            <!-- <div class="col-md-4">
-                                <input id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
-                            </div> -->
                         </div>
                     </form>
                     <div id="dayChartDiv" class="box-body" style="height: 300px">
@@ -71,65 +64,6 @@
     $(function() {
         initTable();
     });
-     //1.冠状动脉旁路移植术死亡率
-    function getBypassGraftingRate(row) {
-        var e = row.bypassGraftingEventNum,
-            t = row.bypassGraftingTotalNum;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-    //2.经皮冠状动脉介入治疗死亡率
-    function getInterventionRate(row) {
-        var e = row.interventionEventNum,
-            t = row.interventionTotalNum;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-    //3.髋膝关节置换术死亡率
-    function getReplacementRate(row) {
-        var e = row.replacementEventNum,
-            t = row.replacementTotalNum;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-    //4.颅脑手术死亡率
-    function getBrainSurgeryRate(row) {
-        var e = row.brainSurgeryEventNum,
-            t = row.brainSurgeryTotalNum;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-    //5.剖宫产死亡率
-    function getCesareanRate(row) {
-        var e = row.cesareanEventNum,
-            t = row.cesareanTotalNum;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-   
-    
-
-    var currentElement;
 
     function initTable() {
         table = $.createTable("#dataGrid", {
@@ -137,124 +71,160 @@
             columns: [
                 [
                     { checkbox: true },
-                    { title: "医疗机构", field: "unitName",
-                    	formatter: function(value, row, index) {
-                             if(value=="0"){
-                            	 return "总计";
-                             }else{
-                            	 return value;
-                             }
-                    	} 
+                    {
+                        title: "医疗机构",
+                        field: "unitName"
                     },
-                    { title: "冠状动脉旁路移植术死亡率", field: "bypassGraftingRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       } 
+                    {
+                        title: "冠状动脉旁路<br>移植术死亡率",
+                        field: "ev12100"
                     },
-                    { title: "经皮冠状动脉介入治疗死亡率", field: "interventionRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       } 
+                    {
+                        title: "经皮冠状动脉<br>介入治疗死亡率",
+                        field: "ev12101"
                     },
-                    { title: "髋膝关节置换术死亡率", field: "replacementRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       }
+                    {
+                        title: "髋膝关节置换<br>术死亡率",
+                        field: "ev12102"
                     },
-                    { title: "颅脑手术死亡率", field: "brainSurgeryRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       }
+                    {
+                        title: "颅脑手术死亡率",
+                        field: "ev12103"
                     },
-                    { title: "剖宫产死亡率", field: "cesareanRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       }
+                    {
+                        title: "剖宫产死亡率",
+                        field: "ev12104"
                     }
                 ]
             ],
-            url: '/qos/analysis/data/majorSurgery',
+            url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
             onCheck: function(row) {
                 console.log("on check");
-                console.log(row);
-
             },
             onUncheck: function(row) {
                 console.log("on uncheck");
-                console.log(row);
             },
             queryParams: function(params) {
+                params.eventIds = '12100,12101,12102,12103,12104';
                 requestParams = params;
-            return params;
+                return params;
             },
-            responseHandler: function(res) {
-                sumData = res || [];
-                
-              //遍历数组
-                var event1 = 0,total1=0,event2 = 0,total2=0,event3 = 0,total3=0,event4 = 0,total4=0,
-                    event5 = 0,total5=0;
-                $.each(sumData,function(n,value) {
-                	event1+=value.bypassGraftingEventNum;
-                	total1+=value.bypassGraftingTotalNum;
-                	event2+=value.interventionEventNum;
-                	total2+=value.interventionTotalNum;
-                	event3+=value.replacementEventNum;
-                	total3+=value.replacementTotalNum;
-                	event4+=value.brainSurgeryEventNum;
-                	total4+=value.brainSurgeryTotalNum;
-                	event5+=value.cesareanEventNum;
-                	total5+=value.cesareanTotalNum;
-                	
-                }
-                )
-                
-                var deathEntity={};
+            responseHandler: function(response) {
+                var data = {};
 
-                deathEntity.unitName = '0'; 
-                deathEntity.bypassGraftingEventNum=event1;  deathEntity.bypassGraftingTotalNum=total1;  deathEntity.interventionEventNum = event2; deathEntity.interventionTotalNum = total2
-                deathEntity.replacementEventNum=event3;  deathEntity.replacementTotalNum=total3;  deathEntity.brainSurgeryEventNum = event4; deathEntity.brainSurgeryTotalNum = total4;
-                deathEntity.cesareanEventNum=event5;  deathEntity.cesareanTotalNum=total5
-                sumData.push(deathEntity);
-                
-                
-                for (var i = 0; i < sumData.length; i++) {
-                    var row = sumData[i];
-                    row.bypassGraftingRate = getBypassGraftingRate(row);
-                    row.interventionRate = getInterventionRate(row);
-                    row.replacementRate = getReplacementRate(row);
-                    row.brainSurgeryRate = getBrainSurgeryRate(row);
-                    row.cesareanRate = getCesareanRate(row);
-                    
+                convertRate2TableData(response, '12100', data);
+                convertRate2TableData(response, '12101', data);
+                convertRate2TableData(response, '12102', data);
+                convertRate2TableData(response, '12103', data);
+                convertRate2TableData(response, '12104', data);
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
                 }
-                
-                initDayChart();
-                initSumChart();
-                return sumData;
+
+                return result;
             }
         });
     }
-    
-    
 
+    function convertRate2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            event = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+            total += item.totalNum;
+            event += item.eventNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate({
+            totalNum: total,
+            eventNum: event
+        });
+    }
+
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.totalNum;
+            total += item.totalNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a > 0 && b > 0)
+            console.log(111);
+        if (a && b) {
+            c = a / b;
+        }
+        return c.toFixed(fixed) + '%';
+    }
+
+    var currentElement;
 
     function initDayChart() {
-    	var dataAxis = [],//x轴
-        
-        bypassGraftingRate=[],
-        interventionRate=[],
-        replacementRate=[],
-        brainSurgeryRate=[],
-        cesareanRate=[];
-    	var myChart = echarts.init(document.getElementById('dayChartDiv'));
-    	//x轴
-    	for (var i = 0; i < sumData.length-1; i++) {
+        var dataAxis = [], //x轴
+
+            bypassGraftingRate = [],
+            interventionRate = [],
+            replacementRate = [],
+            brainSurgeryRate = [],
+            cesareanRate = [];
+        var myChart = echarts.init(document.getElementById('dayChartDiv'));
+        //x轴
+        for (var i = 0; i < sumData.length - 1; i++) {
             var it = sumData[i];
             dataAxis.push(it.unitName);
         }
-    	for (var i = 0; i < sumData.length-1; i++) {
+        for (var i = 0; i < sumData.length - 1; i++) {
             var it = sumData[i];
             bypassGraftingRate.push(it.bypassGraftingRate);
             interventionRate.push(it.interventionRate);
@@ -262,19 +232,19 @@
             brainSurgeryRate.push(it.brainSurgeryRate);
             cesareanRate.push(it.cesareanRate);
         }
-    	
-    	myChart.setOption({        //加载数据图表
-        	//color:['#1e90ff','#f0ffff'],
+
+        myChart.setOption({ //加载数据图表
+            //color:['#1e90ff','#f0ffff'],
             title: {
                 text: ''
             },
-            tooltip: { 
-            	trigger: 'axis',
+            tooltip: {
+                trigger: 'axis',
                 axisPointer: {
                     type: 'shadow'
                 }
             },
-            
+
             grid: {
                 left: '0%',
                 right: '0%',
@@ -282,221 +252,239 @@
                 containLabel: true
             },
             legend: {
-            	type:"scroll",
-            	data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率','髋膝关节置换术死亡率','颅脑手术死亡率','剖宫产死亡率'],
-                bottom:0
+                type: "scroll",
+                data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率', '髋膝关节置换术死亡率', '颅脑手术死亡率', '剖宫产死亡率'],
+                bottom: 0
             },
             xAxis: {
-            	type: 'category',
+                type: 'category',
                 axisLabel: {
-                    interval:0,
-                    rotate:25//角度顺时针计算的
-                } ,
-                axisTick : {
-                    alignWithLabel : true
+                    interval: 0,
+                    rotate: 25 //角度顺时针计算的
                 },
-            	data: dataAxis,
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: dataAxis,
             },
             yAxis: {
-            	type: 'value'
+                type: 'value'
             },
             grid: {
                 bottom: '50px',
             },
-            series: [
-            	 {  type: 'bar',
-            		 barWidth : 5,
-                     itemStyle:{
-                         normal:{
-                             barBorderRadius:2,
-                         }
-                     },
-                name: '冠状动脉旁路移植术死亡率',
-                data: bypassGraftingRate},
-            	 {  type: 'bar',
-                	 barWidth : 5,
-                     itemStyle:{
-                         normal:{
-                             barBorderRadius:3,
-                         }
-                     },
-                   name: '经皮冠状动脉介入治疗死亡率',
-                   data: interventionRate},
-            	 {  type: 'bar',
-              	   barWidth : 5,
-                     itemStyle:{
-                         normal:{
-                             barBorderRadius:3,
-                         }
-                     },
-                     name: '髋膝关节置换术死亡率',
-                     data: replacementRate},
-            	 {  type: 'bar',
-                  	 barWidth : 5,
-                       itemStyle:{
-                           normal:{
-                               barBorderRadius:3,
-                           }
-                       },
-                     name: '颅脑手术死亡率',
-                     data: brainSurgeryRate},
-            	 {  type: 'bar',
-                    	 barWidth : 5,
-                         itemStyle:{
-                             normal:{
-                                 barBorderRadius:3,
-                             }
-                         },
-                     name: '剖宫产死亡率',
-                     data: cesareanRate}
-            	
-           ]
+            series: [{
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 2,
+                        }
+                    },
+                    name: '冠状动脉旁路移植术死亡率',
+                    data: bypassGraftingRate
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '经皮冠状动脉介入治疗死亡率',
+                    data: interventionRate
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '髋膝关节置换术死亡率',
+                    data: replacementRate
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '颅脑手术死亡率',
+                    data: brainSurgeryRate
+                },
+                {
+                    type: 'bar',
+                    barWidth: 5,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 3,
+                        }
+                    },
+                    name: '剖宫产死亡率',
+                    data: cesareanRate
+                }
+
+            ]
         });
-    	
+
     }
-    
-    
-    
-    function initSumChart(){
-    	var yearMonth=[],
-        bypassGraftingRate1 =[],
-        interventionRate1 =[],
-        replacementRate1 =[],
-        brainSurgeryRate1 =[],
-        cesareanRate1 =[];
-    	 var myChart = echarts.init(document.getElementById('sumChartDiv'));
-    	 var it={};
-    	 $.ajax({
-    	        type: "post",
-    	        async: true,            //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
-    	        url: "/qos/analysis/data/getMajorSurgeryByMonth",   
-    	        data:{"startTime":$("#startTime").val(),"endTime":$("#endTime").val()},
-    	        dataType: "json",        //返回数据形式为json
-    	        success: function (data) {
-    	           console.log(data.result);
-    	           if(data.result){
-    	           for (var i = 0; i < data.result.length; i++) {
-    	        	   var it = data.result[i];
-    	               yearMonth.push(it.year+"-"+it.month);
-    	           }
-    	           console.log(yearMonth);
-    	           
-    	           for (var i = 0; i < data.result.length; i++) {
-                       var row = data.result[i];
-                       row.bypassGraftingRate = getBypassGraftingRate(row);
-                       row.interventionRate = getInterventionRate(row);
-                       row.replacementRate = getReplacementRate(row);
-                       row.brainSurgeryRate = getBrainSurgeryRate(row);
-                       row.cesareanRate = getCesareanRate(row);
-                     
-                   } 
-    	           
-    	        for (var i = 0; i < data.result.length; i++) {
-    	               var it = data.result[i];
-    	               bypassGraftingRate1.push(it.bypassGraftingRate);
-    	               interventionRate1.push(it.interventionRate);
-    	               replacementRate1.push(it.replacementRate);
-    	               brainSurgeryRate1.push(it.brainSurgeryRate);
-    	               cesareanRate1.push(it.cesareanRate);
-    	               
-    	           }
-    	       	
-    	        
-    	        
-    	       	myChart.setOption({        //加载数据图表
-    	           	//color:['#1e90ff','#f0ffff'],
-    	               title: {
-    	                   text: ''
-    	               },
-    	               tooltip: {
-    	                   trigger: 'axis',
-    	                   axisPointer: {
-    	                       type: 'shadow'
-    	                   }
-    	               },
-    	               legend: {
-    	            	   type:"scroll",
-    	            	   data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率','髋膝关节置换术死亡率','颅脑手术死亡率','剖宫产死亡率'],
-    	                   bottom:0
-    	               },
-    	               xAxis: {
-    	                type: 'category',
-    	                boundaryGap: false,
-    	                
-    	               	data: yearMonth
-    	               },
-    	               grid: {
-    	                   left: '0%',
-    	                   right: '0%',
-    	                   bottom: '5%',
-    	                   containLabel: true
-    	               },
-    	               grid: {
-    	                   bottom: '50px',
-    	               },
-    	               yAxis: {type: 'value'},
-    	               series: [
-    	               	 {  type: 'line',
-    	               		areaStyle: {},
-    	                   label:{
-    	                   	normal:{
-    	                   	show:true,            //显示数字
-    	                   	position: 'top'        //这里可以自己选择位置
-    	                   	}
-    	                   	},
-    	                   name: '冠状动脉旁路移植术死亡率',
-    	                   data: bypassGraftingRate1},
-    	               	 {  type: 'line',
-    	                	   areaStyle: {},
-    	                        label:{
-    	                        	normal:{
-    	                        	show:true,            //显示数字
-    	                        	position: 'top'        //这里可以自己选择位置
-    	                        	}
-    	                        	},
-    	                      name: '经皮冠状动脉介入治疗死亡率',
-    	                      data: replacementRate1},
-    	               	 {  type: 'line',
-    	                    	  areaStyle: {},
-    	                        label:{
-    	                        	normal:{
-    	                        	show:true,            //显示数字
-    	                        	position: 'top'        //这里可以自己选择位置
-    	                        	}
-    	                        	},
-    	                        name: '髋膝关节置换术死亡率',
-    	                        data: interventionRate1},
-    	               	 {  type: 'line',
-    	                        	areaStyle: {},
-    	                        label:{
-    	                        	normal:{
-    	                        	show:true,            //显示数字
-    	                        	position: 'top'        //这里可以自己选择位置
-    	                        	}
-    	                        	},
-    	                        name: '颅脑手术死亡率',
-    	                        data: brainSurgeryRate1},
-    	               	 {  type: 'line',
-    	                        	areaStyle: {},
-    	                        label:{
-    	                        	normal:{
-    	                        	show:true,            //显示数字
-    	                        	position: 'top'        //这里可以自己选择位置
-    	                        	}
-    	                        	},
-    	                        name: '剖宫产死亡率',
-    	                        data: cesareanRate1}
-    	               	 
-    	                        
-    	              ]
-    	           });
-    	           }
-    	        },
-    	        error: function (errorMsg) {
-    	            //请求失败时执行该函数
-    	            myChart.hideLoading();
-    	        }
-    	    })
+
+
+
+    function initSumChart() {
+        var yearMonth = [],
+            bypassGraftingRate1 = [],
+            interventionRate1 = [],
+            replacementRate1 = [],
+            brainSurgeryRate1 = [],
+            cesareanRate1 = [];
+        var myChart = echarts.init(document.getElementById('sumChartDiv'));
+        var it = {};
+        $.ajax({
+            type: "post",
+            async: true, //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+            url: "/qos/analysis/data/getMajorSurgeryByMonth",
+            data: { "startTime": $("#startTime").val(), "endTime": $("#endTime").val() },
+            dataType: "json", //返回数据形式为json
+            success: function(data) {
+                console.log(data.result);
+                if (data.result) {
+                    for (var i = 0; i < data.result.length; i++) {
+                        var it = data.result[i];
+                        yearMonth.push(it.year + "-" + it.month);
+                    }
+                    console.log(yearMonth);
+
+                    for (var i = 0; i < data.result.length; i++) {
+                        var row = data.result[i];
+                        row.bypassGraftingRate = getBypassGraftingRate(row);
+                        row.interventionRate = getInterventionRate(row);
+                        row.replacementRate = getReplacementRate(row);
+                        row.brainSurgeryRate = getBrainSurgeryRate(row);
+                        row.cesareanRate = getCesareanRate(row);
+
+                    }
+
+                    for (var i = 0; i < data.result.length; i++) {
+                        var it = data.result[i];
+                        bypassGraftingRate1.push(it.bypassGraftingRate);
+                        interventionRate1.push(it.interventionRate);
+                        replacementRate1.push(it.replacementRate);
+                        brainSurgeryRate1.push(it.brainSurgeryRate);
+                        cesareanRate1.push(it.cesareanRate);
+
+                    }
+
+
+
+                    myChart.setOption({ //加载数据图表
+                        //color:['#1e90ff','#f0ffff'],
+                        title: {
+                            text: ''
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                        legend: {
+                            type: "scroll",
+                            data: ['冠状动脉旁路移植术死亡率', '经皮冠状动脉介入治疗死亡率', '髋膝关节置换术死亡率', '颅脑手术死亡率', '剖宫产死亡率'],
+                            bottom: 0
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+
+                            data: yearMonth
+                        },
+                        grid: {
+                            left: '0%',
+                            right: '0%',
+                            bottom: '5%',
+                            containLabel: true
+                        },
+                        grid: {
+                            bottom: '50px',
+                        },
+                        yAxis: { type: 'value' },
+                        series: [{
+                                type: 'line',
+                                areaStyle: {},
+                                label: {
+                                    normal: {
+                                        show: true, //显示数字
+                                        position: 'top' //这里可以自己选择位置
+                                    }
+                                },
+                                name: '冠状动脉旁路移植术死亡率',
+                                data: bypassGraftingRate1
+                            },
+                            {
+                                type: 'line',
+                                areaStyle: {},
+                                label: {
+                                    normal: {
+                                        show: true, //显示数字
+                                        position: 'top' //这里可以自己选择位置
+                                    }
+                                },
+                                name: '经皮冠状动脉介入治疗死亡率',
+                                data: replacementRate1
+                            },
+                            {
+                                type: 'line',
+                                areaStyle: {},
+                                label: {
+                                    normal: {
+                                        show: true, //显示数字
+                                        position: 'top' //这里可以自己选择位置
+                                    }
+                                },
+                                name: '髋膝关节置换术死亡率',
+                                data: interventionRate1
+                            },
+                            {
+                                type: 'line',
+                                areaStyle: {},
+                                label: {
+                                    normal: {
+                                        show: true, //显示数字
+                                        position: 'top' //这里可以自己选择位置
+                                    }
+                                },
+                                name: '颅脑手术死亡率',
+                                data: brainSurgeryRate1
+                            },
+                            {
+                                type: 'line',
+                                areaStyle: {},
+                                label: {
+                                    normal: {
+                                        show: true, //显示数字
+                                        position: 'top' //这里可以自己选择位置
+                                    }
+                                },
+                                name: '剖宫产死亡率',
+                                data: cesareanRate1
+                            }
+
+
+                        ]
+                    });
+                }
+            },
+            error: function(errorMsg) {
+                //请求失败时执行该函数
+                myChart.hideLoading();
+            }
+        })
     };
     </script>
 </body>
