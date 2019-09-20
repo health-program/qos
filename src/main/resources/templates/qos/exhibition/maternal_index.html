@@ -616,11 +616,8 @@
             let timeValue = [];
             let total = 0;
             let datas = [];
-            if (res.eventId == '13304') {
+            if (res.eventId === '13304') {
                 datas = mergeTotalNumArr(res.unitPoints);
-            }
-            if (datas || datas.length === 0) {
-                showChartInfo(chart,'暂无数据')
             }
             datas.forEach(function (data) {
                 dataValue.push(data.totalNum);
@@ -628,6 +625,10 @@
                 total += data.totalNum;
             });
             $("#yfscTotal").text(total + "人次");
+            if (total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
             var labelOption = {
                 normal: {
@@ -722,15 +723,16 @@
             if (res.eventId === '13313') {
                 datas = mergeTotalNumArr(res.unitPoints);
             }
-            if (datas || datas.length === 0) {
-                showChartInfo(chart,'暂无数据')
-            }
             datas.forEach(function (data) {
                 dataValue.push(data.totalNum);
                 timeValue.push(data.date);
                 total += data.totalNum;
             });
             $("#fnbTotal").text(total + "人次");
+            if (total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
             var labelOption = {
                 normal: {
@@ -918,7 +920,6 @@
         }, 0);
         return result === 0 ? '0' : result;
     }
-
     function getYearMonthData() {
         var result = [];
         for (var i = 12; i >0; i--) {

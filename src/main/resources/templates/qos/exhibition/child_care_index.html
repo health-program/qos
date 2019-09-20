@@ -243,8 +243,12 @@
                 chartData.push({value:male,name:"男性"},{value:female,name:"女性"})
             }
             chart.hideLoading();
-            if (newbornChildTotal && newbornHearingTotal) {
+            if (newbornChildTotal !== 0) {
                 generatorXsetlChart(xsetlChart);
+            }else {
+
+                    showChartInfo(xsetlChart,'暂无数据')
+
             }
             var labelOption = {
                 normal: {
@@ -476,6 +480,31 @@
             searchbar: '#searchbar'
         });
     }
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
 
     function sumTotalFormatterModal(data) {
         field = this.field;

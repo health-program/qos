@@ -143,9 +143,6 @@
                     bytData = mergeTotalNumArr(event.unitPoints);
                 }
             });
-            if (byyData.length === 0 && bytData.length === 0) {
-                showChartInfo(chart,'暂无数据')
-            }
             let byyValue = [];
             let bytValue = [];
             let timeValue = [];
@@ -162,6 +159,10 @@
             });
             $("#byt").text(bytValueTotal);
             $("#byy").text(byyValueTotal);
+            if (byyValueTotal === 0 && bytValueTotal === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
         let    option = {
                 color: ['#3398DB','#6087BF'],
@@ -267,9 +268,6 @@
             if (res.eventId == '13101') {
                 datas = mergeTotalNumArr(res.unitPoints);
             }
-            if ( datas.length === 0) {
-                showChartInfo(chart,'暂无数据')
-            }
             let dataValue = [];
             let timeValue = [];
             let total = 0;
@@ -279,6 +277,10 @@
                 total += data.totalNum;
             });
             $("#ywlc").text(total+"人");
+            if ( total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
             var labelOption = {
                 normal: {
@@ -376,9 +378,6 @@
                     qcData = mergeTotalNumArr(event.unitPoints);
                 }
             });
-            if (fzData.length === 0 && qcData.length === 0) {
-                showChartInfo(chart,'暂无数据')
-            }
             let fzValue = [];
             let qcValue = [];
             let timeValue = [];
@@ -395,6 +394,10 @@
             });
             $("#fz").text(fzValueTotal);
             $("#qc").text(qcValueTotal);
+            if (fzValueTotal === 0 && qcValueTotal === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
             var labelOption = {
                 normal: {
@@ -508,6 +511,10 @@
                 total += data.totalNum;
             });
             $("#fyxg").text(total+"人");
+            if ( total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             chart.hideLoading();
             var labelOption = {
                 normal: {
