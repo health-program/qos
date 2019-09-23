@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+<style type="text/css">
+    .table-hover>tbody>tr:hover>td {
+        cursor: pointer;
+    }
+</style>
 
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
@@ -52,7 +57,6 @@
         </div>
     </section>
     <div th:include="/qos/footer" />
-    <script type="text/javascript" src="/static/js/chart.js"></script>
     <script type="text/javascript">
     var table, monthChart, unitChart, requestParam, selectUnit;
     $(function() {
@@ -73,9 +77,7 @@
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
-                [
-                    { radio: true },
-                    {
+                [{
                         title: "医疗机构",
                         field: "unitName"
                     },
@@ -105,7 +107,11 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            onCheck: unitSelected,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function(params) {
                 params.eventIds = '12100,12101,12102,12103,12104';
                 requestParam = params;
@@ -508,7 +514,7 @@
                     areaStyle: {},
                     label: {
                         normal: {
-                           //show: true, //显示数字
+                            //show: true, //显示数字
                             position: 'top' //这里可以自己选择位置
                         }
                     },
@@ -520,7 +526,7 @@
                     areaStyle: {},
                     label: {
                         normal: {
-                           // show: true, //显示数字
+                            // show: true, //显示数字
                             position: 'top' //这里可以自己选择位置
                         }
                     },
@@ -532,7 +538,7 @@
                     areaStyle: {},
                     label: {
                         normal: {
-                           // show: true, //显示数字
+                            // show: true, //显示数字
                             position: 'top' //这里可以自己选择位置
                         }
                     },
@@ -544,7 +550,7 @@
                     areaStyle: {},
                     label: {
                         normal: {
-                           // show: true, //显示数字
+                            // show: true, //显示数字
                             position: 'top' //这里可以自己选择位置
                         }
                     },
