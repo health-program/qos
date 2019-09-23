@@ -5,4 +5,5 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 
 public interface FamilyDoctorUnitMapper extends CustomMapper<FamilyDoctorUnit>{
 
+    FamilyDoctorUnit getFamilyUnit();
 }

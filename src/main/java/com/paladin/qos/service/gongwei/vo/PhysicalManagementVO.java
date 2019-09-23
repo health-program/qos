@@ -1,9 +1,11 @@
 package com.paladin.qos.service.gongwei.vo;
 
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class PhysicalManagementVO {
 
-    private String managedCenter;
+    private String unitId;
 
     private Long oldPeopleNumber;
 
@@ -15,13 +17,14 @@ public class PhysicalManagementVO {
 
     private Double healthManageRate;
 
-    public String getManagedCenter() {
-        return managedCenter;
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
-    public void setManagedCenter(String managedCenter) {
-        this.managedCenter = managedCenter;
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitId);
     }
+
 
     public Long getOldPeopleNumber() {
         return oldPeopleNumber;

@@ -102,14 +102,16 @@
                 [
                     { title: "辖区", field: "unitName" },
                     { title: "常驻居民数", field: "peopleNumber" },
-                    { title: "活动健康档案数", field: "activeArchivesNumber" },
+                    { title: "健康档案数", field: "activeArchivesNumber" },
                     { title: "建档率", field: "createArchivesRate" ,
                         formatter: function(value, row, index) {
+                        if(value)
                             return value + "%";
                         }},
                     { title: "审核公开的健康档案数", field: "publicArchivesNumber" },
                     { title: "档案公开率", field: "publicArchivesRate",
                         formatter: function(value, row, index) {
+                            if(value)
                             return value + "%";
                         }}
                 ]
@@ -195,7 +197,7 @@
                 {
                     name:'建档率',
                     type:'pie',
-                    radius: ['50%', '70%'],
+                    radius: ['50%', '80%'],
                     avoidLabelOverlap: false,
                     label: {
                         normal: {
@@ -282,7 +284,7 @@
                 {
                     name:'档案公开率',
                     type:'pie',
-                    radius: ['50%', '70%'],
+                    radius: ['50%', '80%'],
                     avoidLabelOverlap: false,
                     label: {
                         normal: {

@@ -2,8 +2,16 @@ package com.paladin.qos.controller.gongwei;
 
 
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.analysis.impl.gongwei.archives.CreateArchivesRate;
+import com.paladin.qos.analysis.impl.gongwei.archives.PublicArchivesRate;
+import com.paladin.qos.analysis.impl.gongwei.physical.OldPeopleHealthManageRate;
+import com.paladin.qos.analysis.impl.gongwei.physical.OldPeoplePhysicalRate;
+import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.controller.gongwei.dto.PhysicalRequest;
+import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.gongwei.ArchivesManagementService;
+import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
 import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +27,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/qos/gongwei/physical")
@@ -26,6 +36,9 @@ public class PhysicalManagementController {
 
     @Autowired
     private ArchivesManagementService archivesManagementService;
+
+    @Autowired
+    private AnalysisService analysisService;
 
     @GetMapping("/index")
     public Object dataIndex(Model model) {
@@ -35,57 +48,42 @@ public class PhysicalManagementController {
 
     @RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object searchAll(PhysicalRequest request) {
-        String managedCenter = request.getManagedCenter();
-        String startDateStr = request.getStartDate();
-        String endDateStr = request.getEndDate();
-        Date startDate = null;
-        Date endDate = null;
-        try {
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-            if (!StringUtils.isEmptyOrWhitespace(startDateStr)) {
-                startDate = sf.parse(startDateStr);
+    public Object searchAll(AnalysisRequest request) {
+        //String unitId = request.getUnitId();
+        Date startDate = request.getStartTime();
+        Date endDate = request.getEndTime();
+
+        List<PhysicalManagementVO> physicalManagementVOArrayList=new ArrayList<>();
+
+        List<DataCountUnit> oldPeople = analysisService.countTotalNumByUnit(OldPeoplePhysicalRate.EVENT_ID,2, request.getStartTime(), request.getEndTime());
+        List<DataCountUnit> physicalPeople = analysisService.countEventNumByUnit(OldPeoplePhysicalRate.EVENT_ID,2, request.getStartTime(), request.getEndTime());
+        List<DataCountUnit> healthPeople = analysisService.countEventNumByUnit(OldPeopleHealthManageRate.EVENT_ID,2, request.getStartTime(), request.getEndTime());
+
+
+        Map<String, Long> physicalPeopleMap = physicalPeople.stream().collect(
+                Collectors.toMap(w -> w.getUnitId(),
+                        w -> w.getCount()));
+
+        Map<String, Long> healthPeopleMap = healthPeople.stream().collect(
+                Collectors.toMap(w -> w.getUnitId(),
+                        w -> w.getCount()));
+
+
+        for (DataCountUnit oldPeopleData:oldPeople){
+            PhysicalManagementVO physicalManagementVO=new PhysicalManagementVO();
+            String unitId=oldPeopleData.getUnitId();
+            if (!StringUtils.isEmpty(unitId)){
+                physicalManagementVO.setUnitId(unitId);
+                physicalManagementVO.setOldPeopleNumber(oldPeopleData.getCount());
+                physicalManagementVO.setPhysicalNumber(physicalPeopleMap.get(unitId));
+                physicalManagementVO.setCompletePhysicalNumber(healthPeopleMap.get(unitId));
+                physicalManagementVOArrayList.add(physicalManagementVO);
             }
-            if (!StringUtils.isEmptyOrWhitespace(endDateStr)){
-                endDate = sf.parse(endDateStr);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
-        //todo test
-        List<PhysicalManagementVO> physicalManagementVOList = new ArrayList<>();
-        PhysicalManagementVO physicalManagementVO1 = new PhysicalManagementVO();
-        physicalManagementVO1.setManagedCenter("张浦镇");
-        physicalManagementVO1.setOldPeopleNumber(8435l);
-        physicalManagementVO1.setPhysicalNumber(8032l);
-        physicalManagementVO1.setCompletePhysicalNumber(7937l);
+        return CommonResponse.getSuccessResponse(physicalManagementVOArrayList);
 
-        PhysicalManagementVO physicalManagementVO2 = new PhysicalManagementVO();
-        physicalManagementVO2.setManagedCenter("淀山湖镇");
-        physicalManagementVO2.setOldPeopleNumber(8861l);
-        physicalManagementVO2.setPhysicalNumber(7721l);
-        physicalManagementVO2.setCompletePhysicalNumber(7785l);
 
-        PhysicalManagementVO physicalManagementVO3 = new PhysicalManagementVO();
-        physicalManagementVO3.setManagedCenter("花桥镇");
-        physicalManagementVO3.setOldPeopleNumber(8024l);
-        physicalManagementVO3.setPhysicalNumber(6603l);
-        physicalManagementVO3.setCompletePhysicalNumber(7239l);
-
-        PhysicalManagementVO physicalManagementVO4 = new PhysicalManagementVO();
-        physicalManagementVO4.setManagedCenter("锦溪镇");
-        physicalManagementVO4.setOldPeopleNumber(8576l);
-        physicalManagementVO4.setPhysicalNumber(8412l);
-        physicalManagementVO4.setCompletePhysicalNumber(6953l);
-        physicalManagementVOList.add(physicalManagementVO1);
-        physicalManagementVOList.add(physicalManagementVO2);
-        physicalManagementVOList.add(physicalManagementVO3);
-        physicalManagementVOList.add(physicalManagementVO4);
-
-        return CommonResponse.getSuccessResponse(physicalManagementVOList);
-
-        // return CommonResponse.getSuccessResponse(archivesManagementService.findArchives(managedCenter,startDate,endDate));
     }
 
 }

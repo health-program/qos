@@ -5,6 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+
+import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
@@ -25,6 +29,8 @@ public class PressureManageRate extends GongWeiDataProcessor {
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
+	private static Logger logger = LoggerFactory.getLogger(PressureManageRate.class);
+
 	public static final String EVENT_ID = "22005";
 
 	@Override
@@ -39,8 +45,13 @@ public class PressureManageRate extends GongWeiDataProcessor {
 			return 0;
 		}
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-		return sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class)
-				.getPressureFollowNumber(getStringYear(startTime, endTime), gongWeiUnitId);
+		logger.info("startDate: " + startTime+ "endDate: "+endTime);
+		List<String> yearList=getStringYear(startTime, endTime);
+		logger.info("yearList: "+yearList.size());
+		SqlSessionTemplate st=sqlSessionContainer.getSqlSessionTemplate();
+		PublicHealthManagementMapper pm=st.getMapper(PublicHealthManagementMapper.class);
+		logger.info("mapper:" + st.getMapper(PublicHealthManagementMapper.class));
+		return pm.getPressureFollowNumber(yearList, gongWeiUnitId);
 	}
 
 	@Override
@@ -50,8 +61,11 @@ public class PressureManageRate extends GongWeiDataProcessor {
 			return 0;
 		}
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		logger.info("startDate: " + startTime+ "endDate: "+endTime);
+		List<String> yearList=getStringYear(startTime, endTime);
+		logger.info("yearList: "+yearList.size());
 		return sqlSessionContainer.getSqlSessionTemplate().getMapper(PublicHealthManagementMapper.class)
-				.getPressureManageNumber(getStringYear(startTime, endTime), gongWeiUnitId);
+				.getPressureManageNumber(yearList, gongWeiUnitId);
 	}
 
 	private List<String> getStringYear(Date startTime, Date endTime) {

@@ -107,20 +107,28 @@
 
     <!--高血压管理规范管理数-->
     <select id="getPressureManageNumber" resultType="java.lang.Long">
-        select sum(gf) from phis_chss.v_report_year_blood where reportyear in
-        <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
-            #{item} 
-        </foreach>
-        and porgcode= #{unitId};
+        select sum(gf) from phis_chss.v_report_year_blood where
+        1=1
+
+        and reportyear in
+       <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+
+        and porgcode= #{unitId}
     </select>
 
     <!--高血压管理随访数-->
     <select id="getPressureFollowNumber" resultType="java.lang.Long">
-        select sum(sf) from phis_chss.v_report_year_blood where reportyear in
-        <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
-            #{item} 
-        </foreach>
-        and porgcode=#{unitId};
+        select sum(sf) from phis_chss.v_report_year_blood where
+        1=1
+
+            and reportyear in
+            <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+
+        and porgcode=#{unitId}
     </select>
 
 
@@ -167,20 +175,28 @@
 
     <!--高血糖管理规范管理数-->
     <select id="getSugarManageNumber" resultType="java.lang.Long">
-          select sum(gf) from phis_chss.v_report_year_diabetes where reportyear in
-        <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
-            #{item} 
-        </foreach>
-           and porgcode= #{unitId};
+        select sum(gf) from phis_chss.v_report_year_diabetes where
+        1=1
+        <if test="yearList !=null and yearList.size >0">
+            and reportyear in
+            <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+           and porgcode= #{unitId}
     </select>
 
     <!--高血糖管理随访数-->
     <select id="getSugarFollowNumber" resultType="java.lang.Long">
-         select sum(sf) from phis_chss.v_report_year_diabetes where reportyear in
-        <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
-            #{item} 
-        </foreach>
-         and porgcode=#{unitId};
+        select sum(sf) from phis_chss.v_report_year_diabetes where
+        1=1
+        <if test="yearList !=null and yearList.size >0">
+            and reportyear in
+           <foreach collection="yearList" item="item" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+        </if>
+         and porgcode=#{unitId}
     </select>
 
     <!--有效转诊的可疑症状的患者数-->

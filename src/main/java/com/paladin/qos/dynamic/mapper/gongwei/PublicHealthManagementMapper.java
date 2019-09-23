@@ -26,7 +26,7 @@ public interface PublicHealthManagementMapper {
     Long getPressureNumber(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("unitId") String unitId);
 
     //高血压管理规范管理数
-    Long getPressureManageNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
+   Long getPressureManageNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);
 
     //高血压管理随访数
     Long getPressureFollowNumber(@Param("yearList")List<String> yearList, @Param("unitId") String unitId);

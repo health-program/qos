@@ -15,13 +15,12 @@ import java.util.List;
 public class PhysicalManagementService extends BaseExhibitionDataAcquire {
 
 	@Autowired
-	private SqlSessionContainer sqlSessionContainer;
+	private PhysicalManagementMapper physicalManagementMapper;
 
-	public List<PhysicalManagementVO> findPhysical(String managedCenter, Date startDate, Date endDate) {
-		sqlSessionContainer.setCurrentDataSource("sqlserver");
-		PhysicalManagementMapper mapper = sqlSessionContainer.getSqlSessionTemplate().getMapper(PhysicalManagementMapper.class);
+	public static final String EVENT_ID = "22003";
 
-		List<PhysicalManagementVO> physicalManagementVOArrayList = new ArrayList<>();
+	public PhysicalManagementVO findPhysical(String managedCenter, Date startDate, Date endDate) {
+//		List<PhysicalManagementVO> physicalManagementVOArrayList = new ArrayList<>();
 		// List<Archives> archivesList = mapper.getArchivesTotal(startDate, endDate);
 		// ArchivesManagementVO archivesManagementVO = null;
 		// for (Archives archives : archivesList) {
@@ -33,19 +32,9 @@ public class PhysicalManagementService extends BaseExhibitionDataAcquire {
 		// archivesManagementVO.setPublicArchivesNumber(archives.getPublicArchivesNumber());
 		// archivesManagementVOList.add(archivesManagementVO);
 		// }
-		return physicalManagementVOArrayList;
+		return physicalManagementMapper.getTotalPhysical(managedCenter,EVENT_ID);
 	}
 
-	private String getManagedCenterName(String managedCode) {
 
-		// todo 根据辖区code找对应辖区名称
-		return "";
-	}
-
-	private Long getPeopleNumber(String managedCode) {
-		// todo 根据辖区code找对应辖区人数
-
-		return null;
-	}
 
 }
