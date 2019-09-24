@@ -6,7 +6,8 @@
 		UPDATE data_processed_day
 		SET total_num=#{totalNum},
 		    event_num=#{eventNum},
-		    rate=#{rate}
+		    rate=#{rate},
+		    update_time=#{updateTime}
 		WHERE id=#{id}
 	</update>
 	

@@ -1,20 +1,10 @@
 package com.paladin.qos.service.analysis.data;
 
-import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataByUnit;
 
-public class DataCountUnit {
-
-	private String unitId;
+public class DataCountUnit extends DataByUnit{
 
 	private long count;
-
-	public String getUnitId() {
-		return unitId;
-	}
-
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
-	}
 
 	public long getCount() {
 		return count;
@@ -24,7 +14,4 @@ public class DataCountUnit {
 		this.count = count;
 	}
 
-	public String getUnitName() {
-		return DataConstantContainer.getUnitName(unitId);
-	}
 }

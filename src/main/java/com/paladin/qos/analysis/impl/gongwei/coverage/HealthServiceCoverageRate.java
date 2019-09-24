@@ -11,7 +11,7 @@ import org.thymeleaf.util.StringUtils;
 import java.util.Date;
 
 /**
- * 糖尿病患者和老年人可疑症状转诊率
+ * 老年人中医药健康服务覆盖率
  * 
  * @author wcw
  *

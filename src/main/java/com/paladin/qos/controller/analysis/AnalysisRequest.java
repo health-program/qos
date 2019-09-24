@@ -1,23 +1,13 @@
 package com.paladin.qos.controller.analysis;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.analysis.DataProcessManager;
+
 public class AnalysisRequest {
 
-	public static Date default_start_time;
-
-	static {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			default_start_time = format.parse("2019-01-01");
-		} catch (ParseException e) {
-		}
-	}
-
-	private Date startTime = default_start_time;
+	private Date startTime = DataProcessManager.DEFAULT_START_TIME;
 	private Date endTime = new Date();
 	private String unitId;
 	private String eventId;
@@ -32,7 +22,7 @@ public class AnalysisRequest {
 	}
 
 	public void setStartTime(Date startTime) {
-		this.startTime = startTime == null ? default_start_time : startTime;
+		this.startTime = startTime == null ? DataProcessManager.DEFAULT_START_TIME : startTime;
 	}
 
 	public Date getEndTime() {
