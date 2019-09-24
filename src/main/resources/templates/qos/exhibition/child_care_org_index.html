@@ -63,7 +63,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript">
     /*<![CDATA[*/
-    var table,dataVal;
+    var table,dataVal,requestParams,selectUnit;
     $(function () {
         initDataGrid();
     });
@@ -81,7 +81,17 @@
 
     function generatorJksChart(chart) {
         let jks = 0;
-        if (dataVal) {
+        let selectData = [];
+        let total = 0;
+        if ( selectUnit && selectUnit.length > 0 ) {
+            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+            selectData.forEach(data => {
+                jks += data.jks
+            });
+            dataVal.forEach(data => {
+                total += data.jks
+            });
+        }else {
             dataVal.forEach(data => {
                 jks += data.jks
             });
@@ -142,7 +152,7 @@
                             name:'儿童建卡数'
                         },
                         {
-                            value:jks * 0.2,
+                            value:total === 0 ? jks * 0.3 : (total -jks) * 0.08,
                             name:'invisible',
                             itemStyle : placeHolderStyle
                         }
@@ -154,13 +164,23 @@
     }
 
     function generatorXseChart(chart) {
-        let xsr = 0;
-          if (dataVal) {
-              dataVal.forEach(data => {
-                  xsr += data.xses
-              });
-          }
-        if (xsr === 0) {
+        let fss = 0;
+        let selectData = [];
+        let total = 0;
+        if ( selectUnit && selectUnit.length > 0 ) {
+            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+            selectData.forEach(data => {
+                fss += data.fss
+            });
+            dataVal.forEach(data => {
+                total += data.fss
+            });
+        }else {
+            dataVal.forEach(data => {
+                fss += data.fss
+            });
+        }
+        if (fss === 0) {
             showChartInfo(chart,'暂无数据');
             return false;
         }
@@ -182,8 +202,8 @@
         };
         option = {
             title: {
-                text: '新生儿数',
-                subtext: xsr,
+                text: '新生儿访视数',
+                subtext: fss,
                 x: 'center',
                 y: '38%',
                 textStyle: {
@@ -204,7 +224,7 @@
             },
             series: [
                 {
-                    name: '新生儿数',
+                    name: '新生儿访视数',
                     type: 'pie',
                     color: ['#44B7D3'], //环形图每块的颜色
                     clockWise: false,
@@ -212,11 +232,11 @@
                     itemStyle: dataStyle,
                     data: [
                         {
-                            value: xsr,
-                            name: '新生儿数'
+                            value: fss,
+                            name: '新生儿访视数'
                         },
                         {
-                            value: xsr * 0.2,
+                            value: total === 0 ? fss * 0.3 : (total -fss) * 0.03,
                             name: 'invisible',
                             itemStyle: placeHolderStyle
                         }
@@ -396,10 +416,22 @@
 
                 ]
             ],
-            url: '/qos/exhibition/child/search/org',
+            url: '/qos/analysis/data/get/unit',
             showFooter:true,
             pagination: false,
+            height:810,
             searchbar: '#searchbar',
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            clickToSelect: true,
+            queryParams: function(params) {
+                params.eventIds = '13321,13201,13202,13203';
+                requestParams = params;
+                return params;
+            },
             responseHandler: function(res) {
                 let fss = res['13321'] || [];
                 let male = res['13201'] || [];
@@ -422,14 +454,21 @@
         });
     }
 
+    function unitSelected(row) {
+        selectUnit = [];
+        selectUnit.push(row.unitId);
+        generatorXseChart(xseChart);
+        generatorJksChart(jksChart);
+    }
+
     function mergeOrgTotalNumArr(arr, arr1) {
         let newArr =  arr || [];
             arr1.reduce((newArr, obj) =>{
-                let originObj = newArr.find(point => point.unitName === obj.unitName);
+                let originObj = newArr.find(point => point.unitId === obj.unitId);
                 if (originObj) {
                     originObj.count += obj.count
                 } else {
-                    newArr.push({unitName:obj.unitName,count:obj.count})
+                    newArr.push({unitName:obj.unitName,count:obj.count,unitId:obj.unitId})
                 }
                 return  newArr;
             },newArr);
@@ -445,13 +484,14 @@
                     value.data.forEach(f => {
                         let x = {};
                         x['agencyName'] = f.unitName;
+                        x['unitId'] = f.unitId;
                         x[field] = f.count;
                         d.push(x)
                     });
                 }else {
                     d.forEach(c =>{
                         let value = data.find(d => d.name === field).data;
-                        let obj = value.find(a => a.unitName === c['agencyName']);
+                        let obj = value.find(a => a.unitId === c['unitId']);
                         if (obj) {
                             c[field] = obj.count;
                         }

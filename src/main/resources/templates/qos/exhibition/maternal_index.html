@@ -216,7 +216,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title" style="letter-spacing: 3px">围产期心脏病筛查</h3>
                         </div>
-                        <div class="box-body" style="height: 240px;overflow: auto">
+                        <div class="box-body wcq" style="height: 240px;overflow: auto">
                                 <table id="wcqDataGrid"></table>
                         </div>
                     </div>
@@ -835,6 +835,7 @@
             ],
             url: '/qos/exhibition/maternal/search/yftj',
             showFooter:true,
+            height:220,
             pagination: false,
             responseHandler: function (res) {
                 res = res || [];
@@ -883,8 +884,22 @@
             url: '/qos/exhibition/maternal/search/wcq',
             showFooter:true,
             pagination: false,
+            onLoadSuccess:tableHeight,
             searchbar: '#searchbar'
         });
+    }
+
+    function tableHeight(data) {
+        if ($(".wcq .fixed-table-body table").height() < $(".wcq .fixed-table-container").height()) {
+            $(".wcq .fixed-table-container").css({
+                "padding-bottom": 0,
+                "height": $(".wcq .fixed-table-body table").height() + 45
+            });
+            // 是当内容少时，使用搜索功能高度保持不变
+            wcqTable.resetView({height: "auto"});
+        } else {
+            $(".wcq .fixed-table-container").css({height: 220});
+        }
     }
 
 
