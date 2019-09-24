@@ -181,9 +181,8 @@
             var re = result[i];
             var rus = re.unitResults;
             var id = 'event_' + i;
+            var lostNum = 0;
 
-
-            ulHtml += '<li ' + (i == 0 ? 'class="active"' : '') + '><a href="#' + id + '" data-toggle="tab" aria-expanded="true">' + re.eventName + '</a></li>';
             contentHtml += '<div class="tab-pane ' + (i == 0 ? 'class="active"' : '') + '" id="' + id + '">';
             contentHtml += '<table class="table table-hover table-striped"><tbody>';
             for (var j = 0; j < rus.length; j++) {
@@ -196,10 +195,17 @@
 
                 if (ru.lostDays && ru.lostDays.length > 0) {
                     contentHtml += '<td><a href="javascript:showLostDay(' + i + ',' + j + ')">缺失' + ru.lostDays.length + '天</a></td>';
+                    lostNum += ru.lostDays.length;
                 } else {
                     contentHtml += '<td>数据完整</td>';
                 }
                 contentHtml += '</tr>';
+            }
+
+            if (lostNum > 0) {
+                ulHtml += '<li ' + (i == 0 ? 'class="active"' : '') + '><a href="#' + id + '" data-toggle="tab" aria-expanded="true" style="color:red">' + re.eventName + '(' + lostNum/rus.length + ')</a></li>';
+            } else {
+                ulHtml += '<li ' + (i == 0 ? 'class="active"' : '') + '><a href="#' + id + '" data-toggle="tab" aria-expanded="true">' + re.eventName + '</a></li>';
             }
 
             contentHtml += '</tbody></table>';

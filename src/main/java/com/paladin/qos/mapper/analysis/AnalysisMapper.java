@@ -45,4 +45,8 @@ public interface AnalysisMapper {
 
 	List<Integer> getSerialNumbers(@Param("eventId") String eventId, @Param("unitId") String unitId);
 
+	Integer getMaxSerialNumByEventAndUnit(@Param("eventId") String eventId, @Param("unitId") String unitId);
+
+	int removeDataOfDay(@Param("serialNumber") int serialNumber, @Param("eventId") String eventId);
+
 }

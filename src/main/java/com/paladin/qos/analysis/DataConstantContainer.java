@@ -78,9 +78,11 @@ public class DataConstantContainer implements VersionContainer {
 			event.setName(name);
 			event.setEnabled(enabled != null && enabled.intValue() == 1);
 			event.setEventType(dataEvent.getEventType());
+			event.setDataSource(dataEvent.getDataSource());
 			event.setTargetType(dataEvent.getTargetType());
 			event.setRealTimeEnabled(realTimeEnabled != null && realTimeEnabled.intValue() == 1);
 			event.setRealTimeInterval(realTimeInterval == null ? DEFAULT_REAL_TIME_INTERVAL : realTimeInterval);
+			event.setProcessBefore(dataEvent.getProcessBefore());
 
 			events.add(event);
 			eventMap.put(id, event);
@@ -90,12 +92,14 @@ public class DataConstantContainer implements VersionContainer {
 			String id = dataUnit.getId();
 			String name = dataUnit.getName();
 			Integer type = dataUnit.getType();
+			Integer orderNum = dataUnit.getOrderNum();
 
 			Unit unit = new Unit();
 			unit.setId(id);
 			unit.setName(name);
 			unit.setType(type);
 			unit.setSource(dataUnit);
+			unit.setOrderNum(orderNum == null ? 999999 : orderNum.intValue());
 
 			units.add(unit);
 			unitMap.put(id, unit);
@@ -104,13 +108,9 @@ public class DataConstantContainer implements VersionContainer {
 		units.sort(new Comparator<Unit>() {
 			@Override
 			public int compare(Unit o1, Unit o2) {
-				Integer i1 = o1.getSource().getOrderNum();
-				Integer i2 = o2.getSource().getOrderNum();
-				if (i1 == null)
-					return 1;
-				if (i2 == null)
-					return -1;
-				return i1.intValue() > i2.intValue() ? 1 : -1;
+				int i1 = o1.getOrderNum();
+				int i2 = o2.getOrderNum();
+				return i1 > i2 ? 1 : -1;
 			}
 		});
 
@@ -168,6 +168,16 @@ public class DataConstantContainer implements VersionContainer {
 		return events;
 	}
 
+	public static List<Event> getEventListByDataSource(String dataSouce) {
+		List<Event> events = new ArrayList<>();
+		for (Event event : events) {
+			if (event.getDataSource().equals(dataSouce)) {
+				events.add(event);
+			}
+		}
+		return events;
+	}
+
 	public static List<Unit> getUnitList() {
 		return units;
 	}
@@ -215,6 +225,8 @@ public class DataConstantContainer implements VersionContainer {
 		private String name;
 		private int eventType;
 		private int targetType;
+		private String dataSource;
+		private int processBefore;
 		private boolean realTimeEnabled;
 		private int realTimeInterval;
 		private boolean enabled;
@@ -274,6 +286,22 @@ public class DataConstantContainer implements VersionContainer {
 		public void setRealTimeInterval(int realTimeInterval) {
 			this.realTimeInterval = realTimeInterval;
 		}
+
+		public String getDataSource() {
+			return dataSource;
+		}
+
+		public void setDataSource(String dataSource) {
+			this.dataSource = dataSource;
+		}
+
+		public int getProcessBefore() {
+			return processBefore;
+		}
+
+		public void setProcessBefore(int processBefore) {
+			this.processBefore = processBefore;
+		}
 	}
 
 	public static class Unit {
@@ -284,6 +312,7 @@ public class DataConstantContainer implements VersionContainer {
 		private String id;
 		private String name;
 		private int type;
+		private int orderNum;
 
 		public String getId() {
 			return id;
@@ -315,6 +344,14 @@ public class DataConstantContainer implements VersionContainer {
 
 		public void setSource(DataUnit source) {
 			this.source = source;
+		}
+
+		public int getOrderNum() {
+			return orderNum;
+		}
+
+		public void setOrderNum(int orderNum) {
+			this.orderNum = orderNum;
 		}
 	}
 

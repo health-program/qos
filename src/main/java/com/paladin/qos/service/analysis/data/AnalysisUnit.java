@@ -1,26 +1,12 @@
 package com.paladin.qos.service.analysis.data;
 
-import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataByUnit;
 
-public class AnalysisUnit {
-	
-	private String unitId;
+public class AnalysisUnit extends DataByUnit{
 	
 	private long eventNum;
 	private long totalNum;
 	
-	public String getUnitName() {
-		return DataConstantContainer.getUnitName(unitId);
-	}
-
-	public String getUnitId() {
-		return unitId;
-	}
-
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
-	}
-
 	public long getEventNum() {
 		return eventNum;
 	}
