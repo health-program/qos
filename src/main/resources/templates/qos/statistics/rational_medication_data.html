@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-6" style="padding-right: 0">
 	            <div class="nav-tabs-custom">
 		            <ul class="nav nav-tabs">
 		                <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
@@ -80,13 +80,12 @@
 		drugChart.resize();
 		drugFeeChart.resize();
 	});
-	
+
     var $table1 = $('#dataGrid1');
-    var $table2 = $('#dataGrid2');
-    var $table3 = $('#dataGrid3');
+    var table,table1,dataVal,dataVal1,selectUnit,chartData;
     $(function() {
-    	dataReslut();
-    	
+        buildTable2();
+        buildTable3();
     	 laydate.render({
              elem: '#createTime',
              type: 'month',
@@ -153,18 +152,23 @@
         })
     }
     
-	function buildTable1(arr){
-		
+	function buildTable1(){
 		 columns= [
-              { title: "医疗机构", field: "unitName" },
-              { title: "就医总人次", field: "total" },
-              { title: "就医患者使用药品数", field: "drugNum"},
-              { title: "就医人均使用药品数", field: "drugAvgCount" },
-              { title: "就医患者药品总费用(元)", field: "totalMoney" },
-              { title: "每次就诊人均药费(元)", field: "averageMoney" }
-           ]
-		var datas = [];
-		for (var i = 0; i < arr.length; i++) {
+              { title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "unitName",align:'center'  },
+              { title: "就医总人次", field: "count" ,align:'center'},
+              { title: "就医患者使用药瓶数", field: "drugNum",align:'center'},
+              { title: "就医人均使用药瓶数", field: "drugAvgCount" ,align:'center'},
+              { title: "就医患者药品总费用(元)", field: "totalMoney" ,align:'center'},
+              { title: "每次就诊人均药费(元)", field: "averageMoney",align:'center' }
+           ];
+
+		 let datas = [];
+
+         mergeOrgTotalNumArr(dataVal,datas);
+         mergeOrgTotalNumArr(dataVal1,datas);
+
+
+	/*	for (var i = 0; i < arr.length; i++) {
 			 row = {};
 			 row['unitName'] = arr[i].unitName;
 			 var tatal = arr[i].oPDCount + arr[i].inPatientCount;
@@ -187,57 +191,196 @@
 			 }
 			 
 			 datas.push(row);
-		}
+		}*/
+
         $table1.bootstrapTable('destroy').bootstrapTable({
             columns: columns,
             data: datas,
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid1").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            }
         });
-        chart1(datas);
-        chart2(datas);
+
+        chartData = datas.filter(function(data) { return data.unitId !== 'total'});
+
+        chart1();
+        chart2();
   	}
-	
-	function buildTable2(arr){
-		columns= [
-	               	{ title: "医疗机构", field: "unitName" },
-                    { title: "门急诊人次", field: "oPDCount" },
-                    { title: "门急诊使用药品数", field: "oPDDrugCount" },
-                    { title: "门急诊人均使用药品数", field: "oPDDrugAvg" },
-                    { title: "门急诊药品总费用(元)", field: "oPDMoney" },
-                    { title: "门急诊每次人均药费(元)", field: "oPDAverageMoney" }
-	            ]
-	        $table2.bootstrapTable('destroy').bootstrapTable({
-	            columns: columns,
-	            data: arr,
-	        });
+
+  function unitSelected(row) {
+      if (row.unitId === 'total') return;
+      selectUnit = row.unitId;
+      chart1();
+      chart2();
+  }
+
+  function mergeOrgTotalNumArr(arr,newArr) {
+        let drugAvgTotal = 0;
+        let averageMoneyTotal = 0;
+      arr.reduce((newArr, obj) =>{
+          let originObj = newArr.find(point => point.unitId === obj.unitId);
+          if (originObj) {
+              let number = 0;
+              let number1 = 0;
+               originObj.count += obj.ev31001 ? obj.ev31001 : (obj.ev31004 ? obj.ev31004  : 0 );
+               originObj.drugNum += obj.ev31003 || obj.ev31006 ;
+               originObj.totalMoney += obj.ev31002 || obj.ev31005 ;
+              if (originObj.count) {
+                  number = originObj.drugNum / originObj.count;
+                  number1 = originObj.totalMoney / originObj.count;
+              }
+              originObj.drugAvgCount = Math.round(number);
+              originObj.averageMoney =  number1.toFixed(2) * 1;
+              drugAvgTotal += originObj.drugAvgCount;
+              averageMoneyTotal += originObj.averageMoney;
+          }else {
+              newArr.push({
+                  unitName:obj.unitName,
+                  count:obj.ev31001 ? obj.ev31001 : (obj.ev31004 ? obj.ev31004  : 0 ),
+                  unitId:obj.unitId,
+                  drugNum:obj.ev31003 || obj.ev31006,
+                  totalMoney:obj.ev31002 || obj.ev31005,
+                  drugAvgCount:0,
+                  averageMoney:0
+              })
+          }
+          return  newArr;
+      },newArr);
+      let totalObj = newArr.find(point => point.unitId === 'total');
+      totalObj.drugAvgCount = drugAvgTotal;
+      totalObj.averageMoney = averageMoneyTotal;
+  }
+
+
+  function buildTable2(){
+        table = $.createTable("#dataGrid2", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "unitName"},
+                    { title: "门急诊人次", field: "ev31001" },
+                    { title: "门急诊使用药瓶数", field: "ev31003" },
+                    { title: "门急诊人均使用药瓶数", field: "oPDDrugAvg" ,formatter:function (value, row, index) {
+                        let number = 0;
+                        if (row.ev31001 !== 0) {
+                            number  = row.ev31003 / row.ev31001;
+                        }
+                        return Math.round(number);
+                    }},
+                    { title: "门急诊药品总费用(元)", field: "ev31002" },
+                    { title: "门急诊每次人均药费(元)", field: "oPDAverageMoney" ,formatter:function (value, row, index) {
+                            let number = 0;
+                            if (row.ev31001 !== 0) {
+                                number  = row.ev31002 / row.ev31001;
+                            }
+                            return number.toFixed(2);
+                        }}
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            queryParams: function(params) {
+                params.eventIds = '31001,31002,31003';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+                if (!response) {
+                    return null;
+                }
+
+                var data = {};
+
+                convertCount2TableData(response, '31001', data);
+                convertCount2TableData(response, '31002', data);
+                convertCount2TableData(response, '31003', data);
+
+                var result = [];
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+                dataVal = result|| [];
+
+                return  result;
+
+            }
+        });
 	}
 
-	function buildTable3(arr){
-		columns= [
-					{ title: "医疗机构", field: "unitName"},
-					{ title: "住院人次", field: "inPatientCount"},
-					{ title: "住院患者使用药品数", field: "inPatientDrugCount" },
-					{ title: "住院人均使用药品数", field: "inPatientDrugAvg" },
-					{ title: "住院药品总费用(元)", field: "inPatientMoney" },
-					{ title: "住院每次人均药费(元)", field: "inPatietAverageMoney" }
-	            ]
-	        $table3.bootstrapTable('destroy').bootstrapTable({
-	            columns: columns,
-	            data: arr,
-	        });
+	function buildTable3(){
+        table1 = $.createTable("#dataGrid3", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "unitName"},
+                    { title: "住院人次", field: "ev31004" },
+                    { title: "住院患者使用药瓶数", field: "ev31006" },
+                    { title: "住院人均使用药瓶数", field: "inPatientDrugAvg" ,formatter:function (value, row, index) {
+                            let number = 0;
+                            if (row.ev31004 !== 0) {
+                                number  = row.ev31006 / row.ev31004;
+                            }
+                            return Math.round(number);
+                        }},
+                    { title: "住院药品总费用(元)", field: "ev31005" },
+                    { title: "住院每次人均药费(元)", field: "inPatietAverageMoney" ,formatter:function (value, row, index) {
+                            let number = 0;
+                            if (row.ev31004 !== 0) {
+                                number  = row.ev31005 / row.ev31004;
+                            }
+                            return number.toFixed(2);
+                        }}
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            queryParams: function(params) {
+                params.eventIds = '31004,31005,31006';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+                if (!response) {
+                    return null;
+                }
+
+                var data = {};
+
+                convertCount2TableData(response, '31004', data);
+                convertCount2TableData(response, '31005', data);
+                convertCount2TableData(response, '31006', data);
+
+                var result = [];
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+                dataVal1 = result|| [];
+                buildTable1();
+                return   result;
+            }
+        });
 	}
 
    
     var drugChart = echarts.init(document.getElementById('drugsChartDiv'));
     var drugFeeChart = echarts.init(document.getElementById('drugFeeChartDiv'));
     
-    function chart1(datas){
+    function chart1(){
+
+        let datas = selectUnit ? chartData.filter(d => d.unitId === selectUnit) : chartData ;
+
     	if(datas){
     		drugChart.showLoading({
  	           text: '数据正在努力加载...',
  	           textStyle: { fontSize : 30 , color: '#444' },
  	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
- 	       	}); 
-    		
+ 	       	});
+
     		var xAxis = [],series = [];
     		datas.sort(compare('drugAvgCount'));
     		for(var i=0;i<datas.length;i++){
@@ -248,7 +391,7 @@
     	}
     	var option = {
     			title: {
-			        text: '人均使用药品数排名',
+			        text:  xAxis.length === 1 ? '人均使用药瓶数排名(医疗机构: '+ xAxis[0] +')' :'人均使用药瓶数排名',
 			    },
     			color : [ '#3398DB' ],
     			tooltip : {
@@ -274,7 +417,7 @@
     				data : xAxis,
     				 axisLabel: {
     		                 interval:0,
-    		                 rotate:50//角度顺时针计算的
+    		                 rotate:datas.length ===1 ? 0 : 50//角度顺时针计算的
     		                } ,
     				axisTick : {
     					alignWithLabel : true
@@ -287,16 +430,17 @@
     			}
     			],
     			series : [ {
-    				name : '人数',
+    				name : '就医人均使用药瓶数(瓶)',
     				type : 'bar',
-    					barWidth:20,
     				data : series
     			} ]
     		};
     	drugChart.setOption(option,true);
     }
     
-    function chart2(datas){
+    function chart2(){
+        let datas = selectUnit ? chartData.filter(d => d.unitId === selectUnit) : chartData ;
+
     	if(datas){
     		drugFeeChart.showLoading({
   	           text: '数据正在努力加载...',
@@ -313,9 +457,26 @@
     		
     		drugFeeChart.hideLoading();
     	}
+        var labelOption = {
+            normal: {
+                show: true,
+                position: 'top',
+                distance: 15,
+                align: 'center',
+                verticalAlign: 'top',
+                rotate: 0,
+                formatter: '{c}',
+                fontSize: 10,
+                rich: {
+                    name: {
+                        textBorderColor: '#fff'
+                    }
+                }
+            }
+        };
     	var option = {
     			title: {
-			        text: '人均药费排名',
+                    text:  xAxis.length === 1 ? '人均药费排名(医疗机构: '+ xAxis[0] +')' :'人均药费排名',
 			    },
     			color : [ '#3398DB' ],
     			tooltip : {
@@ -341,7 +502,7 @@
     				data : xAxis,
     				 axisLabel: {
     		                 interval:0,
-    		                 rotate:50//角度顺时针计算的
+                             rotate:datas.length ===1 ? 0 : 50//角度顺时针计算的
     		                } ,
     				axisTick : {
     					alignWithLabel : true
@@ -356,7 +517,7 @@
     			series : [ {
     				name : '每次就诊人均药费(元)',
     				type : 'bar',
-    					barWidth:20,
+                    label: labelOption,
     				data : series
     			} ]
     		};
@@ -370,7 +531,47 @@
             return value2 - value1;
         }
     }
-    
+
+  function convertCount2TableData(originData, eventId, data) {
+      var eventData = originData[eventId],
+          fieldName = 'ev' + eventId,
+          total = 0;
+
+      eventData && eventData.forEach(function(item) {
+          var id = item.unitId;
+          unitData = data[id];
+          if (!unitData) {
+              unitData = {
+                  unitId: id,
+                  unitName: item.unitName
+              };
+              data[id] = unitData;
+          }
+          unitData[fieldName] = item.count;
+          total += item.count;
+      });
+
+      var totalData = data['total'];
+      if (!totalData) {
+          totalData = {
+              unitId: 'total',
+              unitName: '合计',
+          }
+          data['total'] = totalData;
+      }
+      totalData[fieldName] = total;
+  }
+
+  function getRate(item, fixed) {
+      var a = item.eventNum,
+          b = item.totalNum,
+          c = 0;
+      if (a && b) {
+          c = a / b * 100;
+      }
+      return c.toFixed(fixed || 2) + '%';
+  }
+
     
 	//]]>
     </script>
