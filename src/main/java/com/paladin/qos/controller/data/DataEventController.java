@@ -42,10 +42,10 @@ public class DataEventController extends ControllerSupport {
         return "/qos/data/data_event_index";
     }
 
-    @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/find", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object findPage(DataEventQuery query) {
-        return CommonResponse.getSuccessResponse(dataEventService.searchPage(query));
+        return CommonResponse.getSuccessResponse(dataEventService.searchAll(query));
     }
     
     @GetMapping("/get")
