@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/css/index.css">
+<link rel="stylesheet" href="/static/css/quality.css">
+
+<body id="body">
+    <nav id="nav">
+        <span class='index_left text-00e4ff left'>
+            <img src="../../../static/image/index/home.png" />全区域医疗服务质量展示
+        </span>
+        <div class="middle">
+         <!--   <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
+        </div>
+        <div class='right'>
+            <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+        </div>
+    </nav>
+        <div id="quailty_middle">
+            <div id="quailty_middle_left">
+                <div class="quailty_middle_hospitel">
+                    <div class="quailty_bottom_header1">
+                        医院就诊top5
+                    </div>
+                    <div id="middle_hospitel">
+
+                    </div>
+                </div>
+                <div class="quailty_middle_social">
+                    <div class="quailty_bottom_header1">
+                        社区就诊top5
+                    </div>
+                    <div id="medicalAdvice">
+
+                    </div>
+                </div>
+            </div>
+            <div id="quailty_middle_map"></div>
+            <div id="quailty_middle_right">
+                <div class="quailty_right_pay">
+                    <div class="quailty_bottom_header2">
+                        支付方式对比
+                    </div>
+
+                    <div id="paycomparsion">
+
+                    </div>
+                </div>
+                <div class="quailty_right_income">
+                    <div class="quailty_bottom_header2">
+                        收入分类
+                    </div>
+                    <div id="incomeKind">
+
+                    </div>
+                </div>
+                <div class="quailty_right_antibacterial">
+                    <div class="quailty_bottom_header2">
+                        抗菌药物使用top5
+                    </div>
+                    <div id="antibacterial"></div>
+                </div>
+            </div>
+        </div>
+        <div id="quailty_bottom">
+            <div class="quailty_bottom_left">
+                <div class="quailty_bottom_header">
+                    就诊人次时间走势
+                </div>
+                <div id="medicaladvice">
+
+                </div>
+            </div>
+            <div class="quailty_bottom_right">
+                <div class="quailty_bottom_header">
+                    患者列表
+                </div>
+                <div>
+                    <div class="header_bg quailty_bottom_right_header">
+                        <span class="quailty_serial">序号</span>
+                        <span class="quailty_seek">就诊机构</span>
+                        <span class="quailty_department">就诊科室</span>
+                        <span class="quailty_name">患者姓名</span>
+                        <span class="quailty_sex">患者性别</span>
+                        <span class="quailty_date">就诊日期</span>
+                        <span class="quailty_sick">诊断疾病</span>
+                     </div>
+                    <div id="box" class="quailty_bottom_right_box">
+                        <ul id="list1">
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">756</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">567</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">43</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">8678</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">87</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">55</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">6</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">8</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">9</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">423</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">3</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">1</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">123</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">序号</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">3344</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">序号</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">1111</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">序号</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">31231233</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">序号</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">123123</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">序号</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">32321</span>
+                            </div>
+                            <div class="header quailty_bottom_right_header_title">
+                                <span class="quailty_serial">22</span>
+                                <span class="quailty_seek">就诊机构</span>
+                                <span class="quailty_department">就诊科室</span>
+                                <span class="quailty_name">患者姓名</span>
+                                <span class="quailty_sex">患者性别</span>
+                                <span class="quailty_date">就诊日期</span>
+                                <span class="quailty_sick">诊断疾病</span>
+                            </div>
+                        </ul>
+                        <ul id="list2"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<div th:include="/qos/footer" />
+<script>
+$(function() {
+   var fontColor = 'rgba(255,255,255,0.5)';
+   let data=[
+    {
+        name:'急诊人次',
+        list:[
+            {xdate:'星期一',enName:"Mon",value:"3"},
+            {xdate:'星期二',enName:"Tues",value:"5"},
+            {xdate:'星期三',enName:"Wed",value:"7"},
+            {xdate:'星期四',enName:"Thurs",value:"2"},
+            {xdate:'星期五',enName:"Fri",value:"5"},
+            {xdate:'星期六',enName:"Sat",value:"3"},
+            {xdate:'星期日',enName:"sun",value:"9"},
+            ]
+     },
+     {
+        name:'入院人次',
+        list:[
+            {xdate:'星期一',enName:"Mon",value:"3"},
+            {xdate:'星期二',enName:"Tues",value:"5"},
+            {xdate:'星期三',enName:"Wed",value:"7"},
+            {xdate:'星期四',enName:"Thurs",value:"2"},
+            {xdate:'星期五',enName:"Fri",value:"5"},
+            {xdate:'星期六',enName:"Sat",value:"3"},
+            {xdate:'星期日',enName:"sun",value:"9"},
+            ]
+      },
+    {name:'普通门诊人次',
+    list:[
+            {xdate:'星期一',enName:"Mon",value:"7"},
+            {xdate:'星期二',enName:"Tues",value:"2"},
+            {xdate:'星期三',enName:"Wed",value:"5"},
+            {xdate:'星期四',enName:"Thurs",value:"8"},
+            {xdate:'星期五',enName:"Fri",value:"1"},
+            {xdate:'星期六',enName:"Sat",value:"3"},
+            {xdate:'星期日',enName:"sun",value:"6"},
+            ]},
+    ];
+    let datelist = [];
+    let safeList = [];
+    let danger = [];
+    let safeList1 = [];
+    data[0].list.forEach(function(value,index){
+        datelist.push(data[0].list[index].enName);
+         safeList.push(data[0].list[index].value);
+         danger.push(data[1].list[index].value);
+         safeList1.push(data[2].list[index].value);
+    });
+medicaladviceoption ={
+
+		grid: {
+	        left: '5%',
+            right: '5%',
+            top:'20%',
+	        bottom: '5%',
+	        containLabel: true
+		},
+		tooltip : {
+			show: true,
+			trigger: 'item'
+		},
+		legend: {
+			show:true,
+			x:'center',
+			y:'35',
+			icon: 'stack',
+			itemWidth:15,
+			itemHeight:5,
+			textStyle:{
+				color:'rgba(255,255,255,1)' ,
+				fontSize:15
+			},
+			nameTextStyle :{
+			   color:'rgba(255,255,255,1)'
+			},
+			data:[data[0].name,data[1].name,data[2].name]
+		},
+		xAxis : [
+	        {
+	            type : 'category',
+	            boundaryGap : false,
+	            axisLabel:{
+	            	color: fontColor,
+	            	fontSize:16
+	            },
+	            axisLine:{
+               		show:true,
+               		lineStyle:{
+		            	color:'rgba(255,255,255,0.1)',
+		            }
+				},
+				axisTick:{
+	            	show:false,
+	            },
+	            splitLine:{
+	            	show:true,
+		            lineStyle:{
+		            	color:'rgba(255,255,255,0.05)',
+		            }
+		        },
+	            data :datelist
+	        }
+	    ],
+	    yAxis : [
+			{
+				type : 'value',
+				axisLabel : {
+					formatter: '{value}',
+					textStyle:{
+						color:fontColor,
+						fontSize:16
+					}
+				},
+				axisLine:{
+					lineStyle:{
+						color:'rgba(255,255,255,0.1)',
+					}
+				},
+				axisTick:{
+	            	show:false,
+	            },
+				splitLine:{
+					show:true,
+					lineStyle:{
+						color:'rgba(255,255,255,0.05)',
+					}
+				}
+			}
+			],
+		series : [
+			{
+				name:data[0].name,
+				type:'line',
+				smooth: true , //true 为平滑曲线，false为直线
+				// smooth:true,  //这个是把线变成曲线
+	            itemStyle: {
+			        normal: {
+						color:'#0092f6',
+			            lineStyle: {
+							color: "#0092f6",
+							width:1
+			            },
+			            areaStyle: {
+							color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+								offset: 0,
+								color: 'rgba(0,255,255,0)'
+							}, {
+								offset: 1,
+								color: 'rgba(0,255,255,1)'
+							}]),
+			            }
+			        }
+				},
+				data:safeList
+			},
+			{
+				name:data[2].name,
+				type:'line',
+				smooth: true , //true 为平滑曲线，false为直线
+				// smooth:true,  //这个是把线变成曲线
+	            itemStyle: {
+			        normal: {
+						color:'#0092f6',
+			            lineStyle: {
+							color: "#0092f6",
+							width:1
+			            },
+			            areaStyle: {
+							color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+								offset: 0,
+								color: 'rgba(0,255,255,0)'
+							}, {
+								offset: 1,
+								color: 'rgba(0,255,255,1)'
+							}]),
+			            }
+			        }
+				},
+				data:safeList1
+			},
+			{
+				name:data[1].name,
+				type:'line',
+				smooth: true , //true 为平滑曲线，false为直线
+	            itemStyle: {
+			        normal: {
+			            color:'rgba(251,14,68,0.7)',
+			            lineStyle: {
+							color: "rgba(251,14,68,0.8)",
+							width:1
+			            },
+			            areaStyle: {
+							//color: '#94C9EC'
+							color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [{
+								offset: 0,
+								color: 'rgba(251,14,68,0)'
+							}, {
+								offset: 1,
+								color: 'rgba(251,14,68,0.9)'
+							}]),
+			            }
+			        }
+				},
+
+				data:danger
+			}
+		]
+	};
+  var myChartMedicaladvice = echarts.init(document.getElementById('medicaladvice'));
+	  myChartMedicaladvice.setOption(medicaladviceoption);
+
+
+
+
+	  //无缝滚动开始
+	var box = document.getElementById("box");
+    var l1 = document.getElementById("list1");
+    var l2 = document.getElementById("list2");
+    l2.innerHTML = l1.innerHTML; //克隆list1的数据，使得list2和list1的数据一样
+    function scrollup() {
+        if (box.scrollTop >= l1.offsetHeight) { //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
+            box.scrollTop = 0;
+        } else {
+            box.scrollTop++;
+        }
+    }
+
+    var scrollMove = setInterval(scrollup, 30); //数值越大，滚动速度越慢
+
+    //鼠标经过时，滚动停止
+    box.onmouseover = function() {
+        clearInterval(scrollMove)
+    }
+
+    //鼠标离开时，滚动继续
+    box.onmouseout = function() {
+        scrollMove = setInterval(scrollup, 30);
+    }
+	//无缝滚动结束
+
+
+
+//医院就诊top5开始
+quailty_middle_hospitelOption = {
+    legend: {
+        name: [],
+        //orient 排列方式,默认水平
+        orient: 'vertical',
+        //align 排列方式为垂直的话,对齐方式由align决定
+        align: 'left',
+        right: 15,
+        top: 'top',
+        textStyle: {
+            color: '#fff',
+            fontSize: 14,
+        },
+    },
+    tooltip: {
+        //trigger(触发类型)，可选'item','axis','none'
+        trigger: 'axis',
+        axisPointer: {
+            //指示器类型,可选'line','shadow','cross'
+            type: 'shadow'
+        }
+    },
+    xAxis: {
+        name: '/元',
+        type: 'value',
+        position: 'bottom',
+        axisLabel: {
+            show: true,
+            color: '#fff',
+            fontSize: 14,
+        },
+        splitLine: {
+            show: false
+        },
+        axisLine: {
+            // show:false,
+            lineStyle: {
+                color: '#FFFFFF'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+
+    },
+    yAxis: [{
+        type: 'category',
+        //是否反向坐标轴
+        inverse: true,
+        //axisTick 坐标轴刻度相关设置
+        axisTick: {
+            show: false
+        },
+        //axixLine 坐标轴轴线相关设置
+        axisLine: {
+            lineStyle: {
+                color: '#FFFFFF',
+            }
+        },
+        data: ['扬州炒饭', '龙门花甲', '黄焖鸡米饭', '麻辣烫', '回锅肉盖浇饭'],
+        //axisLabel 坐标轴刻度标签的相关设置
+        axisLabel: {
+            show: true,
+            color: '#fff',
+             fontSize: 14
+        }
+    }, ],
+    series: [{
+            name: '运送费',
+             position: 'bottom',
+            type: 'bar',
+            stack: '费用',
+            data: [2.5, 2, 1.5, 2.5, 4],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#00C1FF',
+            },
+
+        },
+        {
+            name: '餐盒费',
+            //type决定图表类型
+            type: 'bar',
+            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
+            stack: '费用',
+            data: [2, 3, 2, 2, 2.5],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#51FFAE',
+            },
+        },
+        {
+            name: '食品费',
+            //type决定图表类型
+            type: 'bar',
+            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
+            stack: '费用',
+            data: [15, 25, 18, 20, 20],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#CEC608',
+            },
+        },
+      ]
+};
+  var quailty_middle_hospitel_id = echarts.init(document.getElementById('middle_hospitel'));
+	  quailty_middle_hospitel_id.setOption(quailty_middle_hospitelOption);
+  //医院就诊top5结束
+
+
+  //社区就诊开始
+   var medicalAdvice_id = echarts.init(document.getElementById('medicalAdvice'));
+   var medicalAdviceOption={
+    legend: {
+        name: [],
+        //orient 排列方式,默认水平
+        orient: 'align',
+        //align 排列方式为垂直的话,对齐方式由align决定
+        align: 'left',
+        right: 15,
+        top: 'top',
+        textStyle: {
+            color: '#fff',
+            fontSize: 14,
+        },
+    },
+    tooltip: {
+        //trigger(触发类型)，可选'item','axis','none'
+        trigger: 'axis',
+        axisPointer: {
+            //指示器类型,可选'line','shadow','cross'
+            type: 'shadow'
+        }
+    },
+    xAxis: {
+        name: '',
+        type: 'value',
+        position: 'bottom',
+        axisLabel: {
+            show: true,
+            color: '#fff',
+            fontSize: 14,
+        },
+        splitLine: {
+            show: false
+        },
+        axisLine: {
+            // show:false,
+            lineStyle: {
+                color: '#FFFFFF'
+            }
+        },
+        axisTick: {
+            show: false
+        },
+
+    },
+    yAxis: [{
+        type: 'category',
+        //是否反向坐标轴
+        inverse: true,
+        //axisTick 坐标轴刻度相关设置
+        axisTick: {
+            show: false
+        },
+        //axixLine 坐标轴轴线相关设置
+        axisLine: {
+            lineStyle: {
+                color: '#FFFFFF',
+            }
+        },
+        data: ['扬州炒饭', '龙门花甲', '黄焖鸡米饭', '麻辣烫', '回锅肉盖浇饭'],
+        //axisLabel 坐标轴刻度标签的相关设置
+        axisLabel: {
+            show: true,
+            color: '#fff',
+            fontSize: 14
+        }
+    }, ],
+    series: [{
+            name: '运送费',
+            type: 'bar',
+            stack: '费用',
+            data: [2.5, 2, 1.5, 2.5, 4],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#00C1FF',
+            },
+
+        },
+        {
+            name: '餐盒费',
+            //type决定图表类型
+            type: 'bar',
+            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
+            stack: '费用',
+            data: [2, 3, 2, 2, 2.5],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#51FFAE',
+            },
+        },
+        {
+            name: '食品费',
+            //type决定图表类型
+            type: 'bar',
+            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
+            stack: '费用',
+            data: [15, 25, 18, 20, 20],
+            barWidth: '30%',
+            itemStyle: {
+                color: '#CEC608',
+            },
+        },
+      ]
+};
+
+    medicalAdvice_id.setOption(medicalAdviceOption);
+
+  //社区就诊结束
+
+
+
+
+  //支付方式对比开始
+  var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
+  var paycomparsionOption={
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+
+    visualMap: {
+        show: false,
+        min: 80,
+        max: 600,
+        inRange: {
+            colorLightness: [0, 1]
+        }
+    },
+    series : [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '50%'],
+            data:[
+                {value:335, name:'直接访问'},
+                {value:310, name:'邮件营销'},
+                {value:274, name:'联盟广告'},
+                {value:235, name:'视频广告'},
+                {value:400, name:'搜索引擎'}
+            ].sort(function (a, b) { return a.value - b.value; }),
+            roseType: 'radius',
+            label: {
+                normal: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    },
+                    smooth: 0.2,
+                    length: 10,
+                    length2: 20
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: '#c23531',
+                    shadowBlur: 200,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            },
+
+            animationType: 'scale',
+            animationEasing: 'elasticOut',
+            animationDelay: function (idx) {
+                return Math.random() * 200;
+            }
+        }
+    ]
+};
+
+   paycomparsion_id.setOption(paycomparsionOption);
+  //支付方式对比结束
+
+
+
+
+  //收入分类开始
+    var incomeKind_id = echarts.init(document.getElementById('incomeKind'));
+    var incomeKindOption =  {
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+         bottom: 10,
+        left: 'center',
+        data: ['西凉', '益州','兖州']
+    },
+    series : [
+        {
+            type: 'pie',
+            radius : '65%',
+            center: ['50%', '50%'],
+            selectedMode: 'single',
+            data:[
+                {
+                    value:1548,
+                    name: '幽州'
+                },
+                {value:535, name: '荆州'},
+                {value:735, name: '西凉'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+   incomeKind_id.setOption(incomeKindOption);
+  //收入分类结束
+
+
+  //抗菌药物使用开始
+    var antibacterial = echarts.init(document.getElementById('antibacterial'));
+
+        var dataStyle = {
+        normal: {
+            label: {
+                show: false
+            },
+            labelLine: {
+                show: false
+            }
+        }
+    };
+    var placeHolderStyle = {
+        normal: {
+            color: 'rgba(0,0,0,0)',
+            label: {
+                show: false
+            },
+            labelLine: {
+                show: false
+            }
+        },
+        emphasis: {
+            color: 'rgba(0,0,0,0)'
+        }
+    };
+
+    var antibacterialOption ={
+            color: ['#4DFFE3','#4DE0FF','#4DFF8F','#ADFF4D'],
+            tooltip : {
+                show: true,
+                formatter: "{b} : {c}"
+            },
+
+            legend: {
+                top: "13.5%",
+                x: 'right',
+                left: "42%",
+                itemWidth:0,itemHeight:0,
+                data: ['已婚已育','已婚未育','未婚' ,'学生'],
+                itemGap: 38,
+                textStyle: {
+                    color: '#fff',
+                    align:'right',
+                    x: 'right',
+                    textAlign:'right'
+                },
+
+                selectedMode: true,
+                orient: "vertical",
+
+            },
+            series: [
+                {
+                name: 'Line 4',
+                type: 'pie',
+                clockWise: true,
+                hoverAnimation: false,
+                radius: ['65%', '75%'],
+                itemStyle: dataStyle,
+
+            data: [{
+                value: 7645434,
+                name: '已婚已育'
+            }, {
+                value: 3612343,
+                name: '总数',
+                tooltip: {
+                    show: false
+                },
+                itemStyle: placeHolderStyle
+            }
+
+            ]
+        }, {
+            name: 'Line 3',
+            type: 'pie',
+            clockWise: true,
+            radius: ['50%', '60%'],
+            itemStyle: dataStyle,
+            hoverAnimation: false,
+
+            data: [{
+                value: 2632321,
+                name: '已婚未育'
+            }, {
+                value: 2212343,
+                name: '总数',
+                tooltip: {
+                    show: false
+                },
+                itemStyle: placeHolderStyle
+            }]
+        }
+            ]
+        };
+
+           antibacterial.setOption(antibacterialOption);
+  //抗菌药物使用结束
+
+})
+</script>
+
+
+</html>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head th:include="/qos/header" />
 <link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
+<link rel="stylesheet" href="/static/css/index.css">
+<link rel="stylesheet" href="/static/css/doctor.css">
 <script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
 <script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
+<script type="text/javascript" src="/static/js/poper.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
 
 <body id="body">
@@ -155,13 +158,29 @@
             </div>
             <div class="roll">
                 <div class="header header_bg">
-                    <span>社区名称▼</span>
+                    <span>
+                        <select>
+                            <option>社区名称</option>
+                        </select>
+                    </span>
                     <span>团队名称</span>
                     <span>姓名</span>
                     <span>年龄</span>
-                    <span>职称▼</span>
-                    <span>工作岗位▼</span>
-                    <span>是否团队长▼</span>
+                    <span>
+                        <select>
+                            <option>职位</option>
+                        </select>
+                    </span>
+                    <span>
+                        <select>
+                            <option>工作岗位</option>
+                        </select>
+                    </span>
+                    <span>
+                        <select>
+                            <option>是否团队长</option>
+                        </select>
+                    </span>
                 </div>
                 <div id="box">
                     <ul id="list1">
@@ -354,7 +373,7 @@
             </div>
             <div class="bg_opacity position-relative ml40">
                 <div class="header line">签约医生门诊就诊率</div>
-                <div id="signingDoctor" style="width:500px;height:300px;"></div>
+                <div id="signingDoctor"></div>
             </div>
         </div>
     </div>
@@ -515,9 +534,8 @@ $(function() {
 
 })
 </script>
-<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+
+
 <script type="text/javascript"></script>
 
 </html>

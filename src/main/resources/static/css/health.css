@@ -1,0 +1,43 @@
+/*基本公共卫生*/
+.public-health{
+	width:1729px;
+	height:315px;
+	margin:33px auto 33px;
+}
+.public-health ul li{
+   width:236px;
+    height:110px;
+	background:#343A50;
+	color:#ffffff;
+	line-height:110px;
+	font-size:19px;
+	float:left;
+	margin-right:11px;
+	margin-bottom:11px;
+}
+.public-health ul li img{
+	margin:15px;
+}
+.public-health ul li:hover{
+	background:#535d82;
+	cursor:pointer;
+}
+.healthfile{
+	width:100%;
+	margin:auto;
+	font-size:40px;
+	color:#00CEFF;
+	text-align:center;
+	background: url(../../static/image/index/line.png) no-repeat bottom center;
+	margin-bottom:20px;
+}
+
+ul li{
+  list-style-type:none
+}
+
+.mr90{
+    margin-left:3vw!important;
+    margin-right:3vw!important;
+}
+

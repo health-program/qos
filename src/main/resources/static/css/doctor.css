@@ -1,0 +1,35 @@
+#middle .middle{
+  width:40vw;
+}
+
+#box,.roll{
+  height:38vh;
+}
+
+@media screen and (max-width: 1920px) and (min-width: 1400px){
+    #middle .bg_opacity {
+        background: url(../../static/image/index/opacitybg.png);
+        background-size: 100% 100%;
+        width: 50vh;
+        height: 26.5vh;
+        margin: 10px 0px 10px 0px;
+    }
+
+#doctor,
+        #individualization,
+        #effective,
+        #visiting,
+        #signingDoctor {
+            width: 52vh;
+            height: 20vh;
+        }
+}
+
+
+.carousel-inner{
+  height:40vh;
+}
+
+#middle{
+  margin-top:4vh;
+}

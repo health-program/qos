@@ -91,7 +91,7 @@
 }
 
 .absolute1 {
-    padding-right: 80px;
+    padding-right:7vh;
 }
 
 * {
@@ -100,8 +100,8 @@
 }
 
 #body {
-    width: 1900px !important;
-    overflow-x: auto;
+    width: 100%;
+    overflow-x: hidden;
     height: 100% !important;
     background: url('../../static/image/index/indexbg.jpg') no-repeat scroll !important;
 }
@@ -135,7 +135,7 @@
 }
 
 .fourclass .left img {
-    margin: 30px 20px 30px 30px;
+    margin: 1.5vh 1vh 1.5vh 1.5vh;
 }
 
 .fourclass .right {
@@ -155,42 +155,39 @@
 
 #middle {
     min-width: 100% !important;
+    margin-left:2vh;
 }
 
-#middle .left {
-    width: 28%;
-    display: inline-block;
-    float: left;
-}
+
 
 #middle .middle {
-    width: 43%;
     display: inline-block;
     float: left;
     margin-top: -10px;
 }
 
 #allmap {
-    margin-top: 20px;
+   margin-top: 20px;
 }
+
+
 
 #middle .right {
-    width: 29%;
-    display: inline-block;
-    float: right;
+  width: 51vh;
+  display: inline-block;
+  float: left;
+  margin-left: 2vh;
 }
 
-#middle .bg_opacity {
-    background: url('../../static/image/index/opacitybg.png');
-    background-size: 100% 100%;
-    width: 500px;
-    height: 331px;
-    margin: 10px 0px 10px 0px;
+
+
+#emergency3,#emergency2,#emergency1{
+    height: 20vh;
 }
 
 #middle .header {
     background: url('../../static/image/index/line.png') no-repeat bottom center;
-    width: 511px;
+    width: 50vh;
     height: 40px;
     text-align: center;
     line-height: 40px;
@@ -212,6 +209,7 @@
     background: #00b4b1;
 }
 
+
 #chartmain,
 #emergency,
 #emergency1,
@@ -222,9 +220,10 @@
 #effective,
 #visiting,
 #signingDoctor {
-    width: 500px;
-    height: 300px
+    width: 50vh;
+    height: 20vh;
 }
+
 
 .anchorBL {
     display: none;
@@ -418,4 +417,85 @@ select {
     position: absolute;
     top: 30px;
     z-index: 99999;
+}
+
+
+@media screen and (min-width:1300px) and (max-width:1400px){
+     #allmap {
+         width:63vh;
+         margin-left:8vh;
+          height:67vh;
+    }
+
+    #middle .bg_opacity {
+        background: url('../../static/image/index/opacitybg.png');
+        background-size: 100% 100%;
+        width: 60vh;
+        height: 21.5vh;
+        margin: 10px 0px 10px 0px;
+    }
+
+    #middle .left {
+        width: 53vh;
+        display: inline-block;
+        float: left;
+    }
+}
+
+
+@media screen and (min-width:10px) and (max-width:1399px){
+      #allmap {
+             width:50vh;
+             height:75vh;
+        }
+
+        #middle .bg_opacity {
+            background: url('../../static/image/index/opacitybg.png');
+            background-size: 100% 100%;
+            width: 52vh;
+            height: 24.5vh;
+            margin: 10px 0px 10px 0px;
+        }
+
+        #middle .left {
+            width: 52vh;
+            display: inline-block;
+            float: left;
+        }
+
+
+        #chartmain,
+        #emergency,
+        #emergency1,
+        #emergency2,
+        #emergency3，#emergency5，#emergency7,
+        #doctor,
+        #individualization,
+        #effective,
+        #visiting,
+        #signingDoctor {
+            width: 52vh;
+            height: 20vh;
+        }
+}
+
+@media screen and (min-width:1400px) and (max-width:1920px){
+     #allmap {
+         width:80vh;
+          height:75vh;
+    }
+
+    #middle .bg_opacity {
+        background: url('../../static/image/index/opacitybg.png');
+        background-size: 100% 100%;
+        width: 50vh;
+        height: 24.5vh;
+        margin: 10px 0px 10px 0px;
+    }
+
+    #middle .left {
+        width: 53vh;
+        display: inline-block;
+        float: left;
+    }
 }

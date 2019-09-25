@@ -1,0 +1,175 @@
+.quailty_bottom_left{
+   background: url(../../static/image/index/opacitybg.png);
+       background-size: 100% 100%;
+       width:49.2vw;
+       height: 31.8vh;
+       margin: 0px 0px 2px 0px;
+       float:left;
+}
+#medicaladvice{
+       width:49.2vw;
+       height: 20.8vh;
+}
+.quailty_bottom_right{
+       background: url(../../static/image/index/doctor/roll.png);
+       background-size: 100% 100%;
+       width:49.2vw;
+       height: 31.8vh;
+       margin: 0px 0px 2px 0px;
+        float:right;
+}
+
+.quailty_bottom_header{
+    background: url(../../static/image/index/line.png) no-repeat bottom center;
+    width: 49.2vw;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #19D1FF;
+}
+
+.quailty_bottom_header1{
+    background: url(../../static/image/index/line.png) no-repeat bottom center;
+    width: 29.2vw;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #19D1FF;
+}
+.quailty_bottom_header2{
+    background: url(../../static/image/index/line.png) no-repeat bottom center;
+    width: 23.17vw;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #19D1FF;
+}
+
+#box,.roll{
+  height:38vh;
+}
+
+#boxex{
+  height:25vh;
+}
+
+.quailty_bottom_right_header span{
+  color: #00e4ff;
+}
+
+.quailty_bottom_right_header_title span{
+ color: #00e4ff;
+}
+
+.quailty_serial{
+  width:4vw;
+  display:inline-block;
+  float:left;
+  margin-left:0.5vw;
+}
+.quailty_seek{
+  width:12vw;
+  display:inline-block;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.quailty_department{
+   width:6vw;
+  display:inline-block;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.quailty_name{
+ width:5.5vw;
+  display:inline-block;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.quailty_sex{
+ width:5.2vw;
+  display:inline-block;
+  float:left;
+}
+.quailty_date{
+ width:6.6vw;
+  display:inline-block;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.quailty_sick{
+ width:8.34vw;
+  display:inline-block;
+  float:left;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.quailty_bottom_right_box{
+  height:24vh!important;
+}
+
+.quailty_bottom_right_header_title{
+  height:3vh;
+  line-height:3vh;
+}
+#quailty_middle_left{
+  width:29.2vw;
+  height:59vh;
+  margin-right:2vw;
+  float:left;
+}
+
+#quailty_middle_map{
+  width:43.2vw;
+  height:59vh;
+  margin-right:2vw;
+  float:left;
+}
+#quailty_middle_right{
+ width:23.2vw;
+  height:59vh;
+  float:left;
+}
+#quailty_middle,#quailty_bottom{
+width:100vw;
+}
+.quailty_middle_hospitel,.quailty_middle_social{
+  background: url(../../static/image/index/opacitybg.png);
+       background-size: 100% 100%;
+       width:29.2vw;
+       height: 28.5vh;
+       margin: 2px 0px 2px 0px;
+       float:left;
+}
+.quailty_middle_hospitel{
+  margin: 1.2vh 0px 2px 0px;
+}
+.quailty_right_pay,.quailty_right_income,.quailty_right_antibacterial{
+         background: url(../../static/image/index/opacitybg.png);
+         background-size: 100% 100%;
+         width:23.17vw;
+         height: 19.23vh;
+         margin: 2px 0px 2px 0px;
+         float:left;
+}
+
+
+#medicalAdvice,#middle_hospitel{
+width:29vw;
+ height:24vh;
+}
+#paycomparsion,#incomeKind,#antibacterial{
+   width: 23.17vw;
+    height: 16.23vh;
+}

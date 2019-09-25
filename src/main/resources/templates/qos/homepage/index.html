@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
+<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <head th:include="/qos/header" />
 <link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
+<link rel="stylesheet" href="/static/css/index.css">
+<script type="text/javascript" src="/static/assets/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
 <script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
@@ -29,7 +32,7 @@
                 <img src="../../../static/image/index/index_people.png" />
             </div>
             <div class="right">
-                <div class="text-ffffff top">本月总门急诊人次</div>
+                <div class="text-ffffff top">本月总门急诊人</div>
                 <div class="text-3df37e bottom">40.5W<span class="fz18">人</span></div>
             </div>
         </div>
@@ -81,7 +84,7 @@
             </div>
         </div>
         <div class="middle">
-            <div id="allmap" style="height:1000px;width:700px;background:black;"></div>
+            <div id="allmap"></div>
             <input id="site" type="text" style="display:none">
             <input id="longitude" type="text" value="121.047817" style="display:none">
             <input id="latitude" type="text" value="31.395795" style="display:none">
@@ -111,12 +114,13 @@
                     <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
                     <div><span class='greenline middle-line'></span><span class="text-ffffff">出院人数</span></div>
                 </div>
-                <div id="emergency3" style="width:500px;height:300px;"></div>
+                <div id="emergency3"></div>
             </div>
         </div>
     </div>
+    <div th:include="/qos/footer" />
 </body>
-<div th:include="/qos/footer" />
+
 <script>
 $(function() {
     //指定图标的配置和数据
@@ -298,7 +302,16 @@ $(function() {
 
     var myChartEmergency3 = echarts.init(document.getElementById('emergency3'));
     myChartEmergency3.setOption(people);
-    // 住院/出院人次数结束
+
+    window.onresize = function(){
+        myChart.resize();
+        myChartEmergency.resize();
+        myChartEmergency1.resize();
+        myChartEmergency2.resize();
+        myChartEdoctor.resize();
+        myChartEmergency3.resize();
+     }
+
 })
 </script>
 <script>
@@ -380,8 +393,6 @@ function init() {
         var p0 = markerArr[i].point.split(",")[0]; //
         var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来
         point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
-        console.log('11111111111' + p0)
-        console.log('2222222222' + p1)
         var myIcon = new BMap.Icon("logo2.png", new BMap.Size(90, 53));
         marker2[i] = new window.BMap.Marker(point[i], { icon: myIcon });
         map.addOverlay(marker[i]);
@@ -434,6 +445,27 @@ function init() {
 }
 init()
 </script>
-<script type="text/javascript"></script>
+<script type="text/javascript">
+   $(function(){
+        $.ajax({
+           url:'/index',
+           type:'post',
+           data:{name:'张三',age:12},
+           success:function(data){
+              $('p').html(data);
+           },
+           error:function(error){
+              console.log(error)
+           }
+
+           })
+
+   })
+
+
+
+
+
+</script>
 
 </html>
