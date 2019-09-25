@@ -95,6 +95,16 @@
         return x.toFixed(2) * 1;
     }
 
+
+    function getRate(totalNumber, eventNumber) {
+        var c = 0;
+        if (eventNumber && totalNumber) {
+            c = eventNumber / totalNumber * 100;
+        }
+        return c.toFixed(2) ;
+    }
+
+
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
@@ -102,14 +112,16 @@
                 [
                     { title: "辖区", field: "unitName" },
                     { title: "常驻居民数", field: "peopleNumber" },
-                    { title: "活动健康档案数", field: "activeArchivesNumber" },
+                    { title: "健康档案数", field: "activeArchivesNumber" },
                     { title: "建档率", field: "createArchivesRate" ,
                         formatter: function(value, row, index) {
+                        if(value)
                             return value + "%";
                         }},
                     { title: "审核公开的健康档案数", field: "publicArchivesNumber" },
                     { title: "档案公开率", field: "publicArchivesRate",
                         formatter: function(value, row, index) {
+                            if(value)
                             return value + "%";
                         }}
                 ]
@@ -125,11 +137,26 @@
             },
             responseHandler: function(res) {
                 sumData = res || [];
+                var totalPeopleNumber=0;
+                var totalActiveArchivesNumber=0;
+                var totalPublicArchivesNumber=0;
                 for (var i = 0; i < sumData.length; i++) {
                     var row = sumData[i];
+                    totalPeopleNumber+=row.peopleNumber;
+                    totalActiveArchivesNumber+=row.activeArchivesNumber;
+                    totalPublicArchivesNumber+=row.publicArchivesNumber;
                     row.createArchivesRate = getActiveRate(row);
                     row.publicArchivesRate = getPublicRate(row);
                 }
+                var total={
+                    "unitName" : "合计",
+                    "peopleNumber" :totalPeopleNumber,
+                    "activeArchivesNumber":totalActiveArchivesNumber,
+                    "createArchivesRate" : getRate(totalPeopleNumber,totalActiveArchivesNumber),
+                    "publicArchivesNumber":totalPublicArchivesNumber,
+                    "publicArchivesRate":getRate(totalActiveArchivesNumber,totalPublicArchivesNumber)
+                }
+                sumData.push(total);
 
                 initPieChart1();
                 initPieChart2();
@@ -195,7 +222,7 @@
                 {
                     name:'建档率',
                     type:'pie',
-                    radius: ['50%', '70%'],
+                    radius: ['50%', '80%'],
                     avoidLabelOverlap: false,
                     label: {
                         normal: {
@@ -282,7 +309,7 @@
                 {
                     name:'档案公开率',
                     type:'pie',
-                    radius: ['50%', '70%'],
+                    radius: ['50%', '80%'],
                     avoidLabelOverlap: false,
                     label: {
                         normal: {

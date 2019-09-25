@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-            <div class="box box-solid" style="margin-top: 310px;">
+            <div class="box box-solid" style="margin-top: 350px;">
                 <div id="columnarDiv" class="box-body" style="height: 450px">
                 </div>
             </div>
@@ -72,7 +72,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
-    var table, sumChart, dayChart, sumData, requestParams;
+    var table, sumChart, dayChart, sumData, requestParams,result;
     $(function() {
         var day=new Date();
         day.setTime(day.getTime());
@@ -85,64 +85,51 @@
         initTable();
     });
 
-    function getPhysicalRate(row) {
-        var e = row.physicalNumber,
-            t = row.oldPeopleNumber;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
-
-    function getHealthManageRate(row) {
-        var e = row.completePhysicalNumber,
-            t = row.oldPeopleNumber;
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
-        }
-        return x.toFixed(2) * 1;
-    }
 
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
-                    { title: "辖区", field: "managedCenter" },
-                    { title: "老年人数", field: "oldPeopleNumber" },
-                    { title: "老年人体检数", field: "physicalNumber" },
-                    { title: "老年人体检率", field: "physicalRate" ,
-                        formatter: function(value, row, index) {
-                            return value + "%";
-                        }},
-                    { title: "有完整年度体检的老年人数", field: "completePhysicalNumber" },
-                    { title: "老年人健康管理率", field: "healthManageRate",
-                        formatter: function(value, row, index) {
-                            return value + "%";
-                        }}
+                    { title: "辖区", field: "unitName" },
+                    { title: "老年人数", field: "ev22003total" },
+                    { title: "老年人体检数", field: "ev22003event" },
+                    { title: "老年人体检率", field: "ev22003" },
+                    { title: "有完整年度体检的老年人数", field: "ev22012event" },
+                    { title: "老年人健康管理率", field: "ev22012"}
                 ]
             ],
-            url: '/qos/gongwei/physical/search/all',
+            url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-
+            onCheck: function(row) {
+                console.log("on check");
+            },
+            onUncheck: function(row) {
+                console.log("on uncheck");
+            },
             queryParams: function(params) {
+                params.eventIds = '22003,22012';
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
-                sumData = res || [];
-                for (var i = 0; i < sumData.length; i++) {
-                    var row = sumData[i];
-                    row.physicalRate = getPhysicalRate(row);
-                    row.healthManageRate = getHealthManageRate(row);
+            responseHandler: function(response) {
+                var data = {};
+                convertTableData('22003',response, data);
+                convertTableData('22012',response, data);
+
+
+
+                sumData = []
+                for (var o in data) {
+                    sumData.push(data[o]);
                 }
 
+                result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
                 initPieChart1();
                 initPieChart2();
                 initColumnarDiv();
@@ -151,32 +138,71 @@
         });
     }
 
+    function convertTableData(eventId,originData, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            event = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+            unitData[fieldName+'total'] = item.totalNum;
+            unitData[fieldName+'event'] = item.eventNum;
+            total += item.totalNum;
+            event += item.eventNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate({
+            totalNum: total,
+            eventNum: event
+        });
+        totalData[fieldName+'total']=total;
+        totalData[fieldName+'event']=event;
+    }
+
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+
 
     function initPieChart1() {
-        if (!sumChart) {
-            var dom = document.getElementById("pieChartDiv1");
-            var pieChart1 = echarts.init(dom);
 
-        }
+        var dom = document.getElementById("pieChartDiv1");
+        var pieChart1 = echarts.init(dom);
+
+        var remainRate=0;
         if (sumData==0){
             showChartInfo(pieChart1, '暂无数据显示');
             return false;
         }
-
-        var sumOpen=0;
-        var sumUse=0;
-        var occupyRate=0;
-        var remainRate=0;
-        var pieMessage;
-        for (var i = 0; i < sumData.length; i++) {
-            var it = sumData[i];
-            sumOpen+=it.oldPeopleNumber;
-            sumUse+=it.physicalNumber;
-        }
-        var x = sumUse * 100 / sumOpen;
-        occupyRate=x.toFixed(2) * 1;
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=occupyRate+"%";
+        var it=sumData[sumData.length - 1];
+        var rate=it.ev22003;
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
 
         var option = {
 
@@ -190,7 +216,7 @@
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: pieMessage+'\n'+'老年人体检率',
+                    text: rate+'%\n'+'老年人体检率',
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 30,
@@ -219,7 +245,7 @@
                     },
                     data:[
                         {
-                            value:occupyRate,
+                            value:rate,
                             name:'老年人体检率'
                         },
                         {
@@ -246,20 +272,12 @@
             showChartInfo(pieChart2, '暂无数据显示');
             return false;
         }
-        var sumOpen=0;
-        var sumUse=0;
-        var occupyRate=0;
+        var rate=0;
         var remainRate=0;
-        var pieMessage;
-        for (var i = 0; i < sumData.length; i++) {
-            var it = sumData[i];
-            sumOpen+=it.oldPeopleNumber;
-            sumUse+=it.completePhysicalNumber;
-        }
-        var x = sumUse * 100 / sumOpen;
-        occupyRate=x.toFixed(2) * 1;
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=occupyRate+"%";
+        var it=sumData[sumData.length - 1];
+        rate=it.ev22012;
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
 
         var option = {
 
@@ -273,7 +291,7 @@
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: pieMessage+'\n'+'健康管理率',
+                    text: rate+'%\n'+'健康管理率',
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 30,
@@ -302,7 +320,7 @@
                     },
                     data:[
                         {
-                            value:occupyRate,
+                            value:rate,
                             name:'健康管理率'
                         },
                         {
@@ -333,12 +351,12 @@
         var oldPeopleNumberValue = [];
         var physicalNumberValue = [];
         var completePhysicalNumberValue = [];
-
-        sumData.forEach(function(item){
-            managedName.push(item.managedCenter);
-            oldPeopleNumberValue.push({name:item.mamanagedCenter,value:item.oldPeopleNumber});
-            physicalNumberValue.push({name:item.mamanagedCenter,value:item.physicalNumber});
-            completePhysicalNumberValue.push({name:item.mamanagedCenter,value:item.completePhysicalNumber});
+        result.pop();
+        result.forEach(function(item){
+            managedName.push(item.unitName);
+            oldPeopleNumberValue.push({name:item.unitName,value:item.ev22003total});
+            physicalNumberValue.push({name:item.unitName,value:item.ev22003event});
+            completePhysicalNumberValue.push({name:item.unitName,value:item.ev22012event});
         })
 
         var	option = {
@@ -362,7 +380,7 @@
                 type: 'category',
                 axisLabel: {
                     interval:0,
-                    rotate:25//角度顺时针计算的
+                    rotate:20//角度顺时针计算的
                 } ,
                 axisTick : {
                     alignWithLabel : true
@@ -375,6 +393,7 @@
 
             grid: {
                 bottom: '70px',
+                y:15
             },
             series: [
                 {

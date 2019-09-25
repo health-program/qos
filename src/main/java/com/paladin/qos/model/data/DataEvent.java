@@ -24,8 +24,14 @@ public class DataEvent {
 	// 数据目标类型， 医院 or 社区 or 所有
 	private Integer targetType;
 
+	// 数据源
+	private String dataSource;
+	
 	// 
 	private String content;
+	
+	// 处理前多少天数据
+	private Integer processBefore;
 	
 	// 是否需要实时
 	private Integer realTimeEnabled;
@@ -98,6 +104,22 @@ public class DataEvent {
 
 	public void setRealTimeEnabled(Integer realTimeEnabled) {
 		this.realTimeEnabled = realTimeEnabled;
+	}
+
+	public String getDataSource() {
+		return dataSource;
+	}
+
+	public void setDataSource(String dataSource) {
+		this.dataSource = dataSource;
+	}
+
+	public Integer getProcessBefore() {
+		return processBefore;
+	}
+
+	public void setProcessBefore(Integer processBefore) {
+		this.processBefore = processBefore;
 	}
 
 }

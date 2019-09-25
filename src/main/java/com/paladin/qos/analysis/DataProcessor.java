@@ -40,16 +40,6 @@ public abstract class DataProcessor {
 	// }
 
 	/**
-	 * 获取调度计划日期，非执行该方法的日期，而是生成哪一天的数据，一般或昨天
-	 * 
-	 * @return
-	 */
-	public Date getScheduleDate() {
-		Date yesterday = new Date(System.currentTimeMillis() - TimeUtil.MILLIS_IN_DAY);
-		return TimeUtil.toDayTime(yesterday);
-	}
-
-	/**
 	 * 处理数据，开始结束时间应当已经处理过（按照timeType），例如开始时间2019-8-13 00:00:00，结束时间为2019-8-14
 	 * 00:00:00，不能带时分秒
 	 * 

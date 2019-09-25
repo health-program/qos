@@ -63,7 +63,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript">
     /*<![CDATA[*/
-    var table,dataVal;
+    var table,dataVal,requestParams,selectUnit;
     $(function () {
         initDataGrid();
     });
@@ -81,7 +81,17 @@
 
     function generatorZyjkChart(chart) {
         let jks = 0;
-        if (dataVal) {
+        let selectData = [];
+        let total = 0;
+        if ( selectUnit && selectUnit.length > 0 ) {
+            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+            selectData.forEach(data => {
+                jks += data.zyjk
+            });
+            dataVal.forEach(data => {
+                total += data.yffs
+            });
+        }else {
             dataVal.forEach(data => {
                 jks += data.zyjk
             });
@@ -142,7 +152,7 @@
                             name:'早孕建卡数'
                         },
                         {
-                            value:jks * 0.2,
+                            value:total === 0 ? jks * 0.3 : (total -jks) * 0.05,
                             name:'invisible',
                             itemStyle : placeHolderStyle
                         }
@@ -155,7 +165,17 @@
 
     function generatorYffsChart(chart) {
         let yffs = 0;
-        if (dataVal) {
+        let total = 0;
+        let selectData = [];
+        if ( selectUnit && selectUnit.length > 0 ) {
+            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+            selectData.forEach(data => {
+                yffs += data.yffs
+            });
+            dataVal.forEach(data => {
+                total += data.yffs
+            });
+        }else {
             dataVal.forEach(data => {
                 yffs += data.yffs
             });
@@ -216,7 +236,7 @@
                             name:'孕妇产后访视数'
                         },
                         {
-                            value:yffs * 0.2,
+                            value: total === 0 ? yffs * 0.3 : (total -yffs) * 0.05,
                             name:'invisible',
                             itemStyle : placeHolderStyle
                         }
@@ -396,10 +416,22 @@
 
                 ]
             ],
-            url: '/qos/exhibition/maternal/search/org',
+            url: '/qos/analysis/data/get/unit',
             showFooter:true,
             pagination: false,
+            height:810,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            clickToSelect: true,
             searchbar: '#searchbar',
+            queryParams: function(params) {
+                params.eventIds = '13320,13319,13314';
+                requestParams = params;
+                return params;
+            },
             responseHandler: function(res) {
                 let zyjk = res['13320'] || [];
                 let yfjk = res['13319'] || [];
@@ -421,6 +453,24 @@
         });
     }
 
+    function unitSelected(row) {
+        selectUnit = [];
+        selectUnit.push(row.unitId);
+        generatorZyjkChart(zyjkChart);
+        generatorYffsChart(yffsChart);
+    }
+
+    function unitUnSelected(row) {
+        if (selectUnit && selectUnit.length > 0 ) {
+            let index = selectUnit.indexOf(row.unitId);
+            if (index > -1) {
+                selectUnit.splice(index, 1);
+            }
+            generatorZyjkChart(zyjkChart);
+            generatorYffsChart(yffsChart);
+        }
+    }
+
     function initTableData(data, fields) {
         let d = [];
         if (fields && fields.length > 0) {
@@ -430,13 +480,14 @@
                     value.data.forEach(f => {
                         let x = {};
                         x['agencyName'] = f.unitName;
+                        x['unitId'] = f.unitId;
                         x[field] = f.count;
                         d.push(x)
                     });
                 }else {
                     d.forEach(c =>{
                         let value = data.find(d => d.name === field).data;
-                        let obj = value.find(a => a.unitName === c['agencyName']);
+                        let obj = value.find(a => a.unitId === c['unitId']);
                         if (obj) {
                             c[field] = obj.count;
                         }

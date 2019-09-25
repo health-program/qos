@@ -37,16 +37,16 @@
     <!-- 签约居民中心就诊人次数 -->
     <select id="singingAgencyOPDpersonNum" resultType="com.paladin.qos.service.familydoctor.vo.DataFamilyVO">
         SELECT o.MANAGEDCENTERCODE unitId,o.IDNUMBER idCard FROM phis_chss.v_fha_person_sign_main_org o where o.signcode ='1'
-        and o.CREATEDTIME &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and o.CREATEDTIME &lt; to_date(#{startTime},'yyyy-mm-dd')
+        and o.CREATEDTIME &gt;= #{startTime}
+        and o.CREATEDTIME &lt; #{endTime}
         and o.MANAGEDCENTERCODE = #{unitId}
     </select>
 
     <select id="registerOPD" resultType="long">
-        select r.orgcode unitId,r.idcardno idCard from phis_webhis.v_Opr_Register r 
+        select count(1) from phis_webhis.v_Opr_Register r 
         where length(r.idcardno)=18
-        and o.CREATEDTIME &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and o.CREATEDTIME &lt; to_date(#{startTime},'yyyy-mm-dd')
+        and o.CREATEDTIME &gt;= #{startTime}
+        and o.CREATEDTIME &lt; #{endTime}
         and r.idcardno in     
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.idCard}
@@ -60,15 +60,15 @@
     <select id="singingAgencyOPDTotal" resultType="String">
         SELECT o.IDNUMBER idCard FROM phis_chss.v_fha_person_sign_main_org o
         where o.signcode ='1'
-        and o.CREATEDTIME &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and o.CREATEDTIME &lt; to_date(#{startTime},'yyyy-mm-dd')
+        and o.CREATEDTIME &gt;= #{startTime} 
+        and o.CREATEDTIME &lt; #{endTime}
         and o.MANAGEDCENTERCODE = #{unitId}
     </select>
     <select id="registerOPDtotal" resultType="String">
         select r.idcardno idCard from phis_webhis.v_Opr_Register r 
         where length(r.idcardno)=18
-        and r.REGDATE &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and r.REGDATE &lt; to_date(#{startTime},'yyyy-mm-dd')
+        and r.REGDATE &gt;= #{startTime}
+        and r.REGDATE &lt; #{endTime}
         and r.orgcode = #{unitId}
         and r.idcardno in
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
@@ -80,14 +80,14 @@
         select m.CREATEDUNITCODE unitId,m.CENTERDOCTORNAME name from
         phis_chss.v_fha_person_sign_main_org o left join phis_chss.v_fha_person_sign_main m on o.CODE=m.CODE
         where m.CENTERDOCTORNAME is not null
-        and m.CREATEDTIME &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and m.CREATEDTIME &lt; to_date(#{startTime},'yyyy-mm-dd')
+        and m.CREATEDTIME &gt;= #{startTime}
+        and m.CREATEDTIME &lt; #{endTime}
         and m.CREATEDUNITCODE = #{unitId}
     </select>
     <select id="docnameOPDnum" resultType="long">
         select count(1) from phis_webhis.v_Opr_Register r 
-        where r.REGDATE &gt;= to_date(#{startTime},'yyyy-mm-dd')
-        and r.REGDATE &lt; to_date(#{startTime},'yyyy-mm-dd')
+        where r.REGDATE &gt;= #{startTime}
+        and r.REGDATE &lt; #{endTime}
         and r.docname in
         <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
             #{item.name} 
@@ -102,7 +102,7 @@
         select count(1) from phis_chss.v_fha_person_sign_main_org o
         left join phis_chss.v_fha_person_main m on o.CODE = m.CODE
         where o.SIGNCODE = '1'
-        and m.LINKB is not null;
+        and m.LINKB is not null 
         and o.CREATEDTIME &gt;= #{startTime}
         and o.CREATEDTIME &lt; #{endTime}
         and o.MANAGEDCENTERCODE = #{unitId}

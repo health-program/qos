@@ -143,4 +143,17 @@
 		AND event_id=#{eventId}
 	</select>
 
+	<select id="getMaxSerialNumByEventAndUnit" resultType="Integer">
+		SELECT MAX(serial_number)
+		FROM data_processed_day
+		WHERE unit_id=#{unitId}
+		AND event_id=#{eventId}
+	</select>
+
+	<delete id="removeDataOfDay">
+		DELETE FROM data_processed_day
+		WHERE serial_number=#{serialNumber}
+		AND event_id=#{eventId}
+	</delete>
+
 </mapper>

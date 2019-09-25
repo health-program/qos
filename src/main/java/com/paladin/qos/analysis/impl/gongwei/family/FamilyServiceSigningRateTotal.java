@@ -37,7 +37,7 @@ public class FamilyServiceSigningRateTotal extends GongWeiDataProcessor {
 		if (StringUtil.isEmpty(unit)) {
 			return 0;
 		}
-		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).signingNum(startTime, endTime, unit);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingResidentNum(startTime, endTime, unit);
 	}
 
 	@Override
@@ -47,6 +47,6 @@ public class FamilyServiceSigningRateTotal extends GongWeiDataProcessor {
 		if (StringUtil.isEmpty(unit)) {
 			return 0;
 		}
-		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingResidentNum(startTime, endTime, unit);
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).signingNum(startTime, endTime, unit);
 	}
 }

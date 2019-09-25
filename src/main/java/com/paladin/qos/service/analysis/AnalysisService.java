@@ -1,6 +1,8 @@
 package com.paladin.qos.service.analysis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.paladin.framework.core.exception.BusinessException;
+import com.paladin.qos.analysis.DataByUnit;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.DataConstantContainer.Unit;
@@ -244,7 +247,10 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
 	}
 
 	/**
@@ -257,7 +263,10 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
 	}
 
 	/**
@@ -310,7 +319,10 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countTotalNumByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
 	}
 
 	/**
@@ -323,7 +335,10 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countTotalNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
 	}
 
 	/**
@@ -335,7 +350,10 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<DataCountUnit> result = analysisMapper.countEventNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
 	}
 
 	/**
@@ -348,7 +366,25 @@ public class AnalysisService {
 	 * @return
 	 */
 	public List<DataCountUnit> countEventNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+		List<DataCountUnit> result = analysisMapper.countEventNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate));
+		orderByUnit(result);
+		return result;
+	}
+
+	// 单位排序
+	private void orderByUnit(List<? extends DataByUnit> list) {
+		if (list != null && list.size() > 0) {
+			Collections.sort(list, new Comparator<DataByUnit>() {
+				@Override
+				public int compare(DataByUnit o1, DataByUnit o2) {
+					String uid1 = o1.getUnitId();
+					String uid2 = o1.getUnitId();
+					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+				}
+			});
+		}
+
 	}
 
 	/**
@@ -392,7 +428,7 @@ public class AnalysisService {
 			ValidateEventResult result = new ValidateEventResult();
 			result.setEventId(eventId);
 			result.setUnitResults(unitResults);
-			
+
 			results.add(result);
 		}
 
@@ -420,7 +456,7 @@ public class AnalysisService {
 				lostNums.add(sn);
 			}
 		}
-		
+
 		if (nums != null && nums.size() > 0) {
 			int first = nums.get(0);
 			int last = nums.get(nums.size() - 1);
@@ -456,8 +492,8 @@ public class AnalysisService {
 					return null;
 				}
 
-				Date startTime = TimeUtil.getOnePastDay(45);
-				Date endTime = TimeUtil.getOnePastDay(30);
+				Date startTime = TimeUtil.getTodayBefore(45);
+				Date endTime = TimeUtil.getTodayBefore(30);
 
 				long begin = System.currentTimeMillis();
 
@@ -504,6 +540,27 @@ public class AnalysisService {
 			}
 		}
 		return results;
+	}
+
+	/**
+	 * 获取事件、单位当前处理到的日期
+	 * 
+	 * @param eventId
+	 * @return
+	 */
+	public Integer getCurrentDayOfEventAndUnit(String eventId, String unitId) {
+		return analysisMapper.getMaxSerialNumByEventAndUnit(eventId, unitId);
+	}
+
+	/**
+	 * 删除某天某事件数据
+	 * 
+	 * @param serialNumber
+	 * @param eventId
+	 * @return
+	 */
+	public int removeDataOfDay(int serialNumber, String eventId) {
+		return analysisMapper.removeDataOfDay(serialNumber, eventId);
 	}
 
 }
