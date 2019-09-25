@@ -372,6 +372,18 @@ public class AnalysisService {
 		return result;
 	}
 
+	/**
+	 * 获取事件发生总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public long getTotalNumOfEvent(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.getTotalNumOfEvent(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
 	// 单位排序
 	private void orderByUnit(List<? extends DataByUnit> list) {
 		if (list != null && list.size() > 0) {
