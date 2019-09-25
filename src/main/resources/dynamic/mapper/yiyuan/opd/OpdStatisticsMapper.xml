@@ -5,22 +5,22 @@
 	<!-- 门诊人次 -->
 	<select id="OPDTotal" resultType="long">
 		select count(1) from RegisterRecord 
-		where REC_DT &gt;= #{startTime} and REC_DT &lt; #{endTime} and organ_code =#{unitId};
+		where REC_DT &gt;= #{startTime} and REC_DT &lt; #{endTime} and organ_code =#{unitId}
 	</select>
 	
 	<!-- 门急诊使用药品数 -->
 	<select id="OPDDrugxyTotal" resultType="long">
 		select count(1) from WM_PrescriptionDetails where (OP_EM_HP_MARK ='1' OR OP_EM_HP_MARK='2') and 
-		RX_DT &gt;= #{startTime} and RX_DT &lt; #{endTime} and organ_code =#{unitId};
+		RX_DT &gt;= #{startTime} and RX_DT &lt; #{endTime} and organ_code =#{unitId}
 	</select>
 	<select id="OPDDrugzyTotal" resultType="long">
 		select count(1) from CM_PrescriptionDetails where (OP_EM_HP_MARK ='1' OR OP_EM_HP_MARK='2') and
-		RX_DT &gt;= #{startTime} and RX_DT &lt; #{endTime} and organ_code =#{unitId};
+		RX_DT &gt;= #{startTime} and RX_DT &lt; #{endTime} and organ_code =#{unitId}
 	</select>
 	
 	<!-- 门急诊药品总费用(元) -->
 	<select id="OPDMoneyTotal" resultType="long">
-		select sum(cost_01) from ED_Outpa_Inpa_Charge_Stat 
+		select coalesce(sum(cost_02),0) from ED_Outpa_Inpa_Charge_Stat 
 		where stat_date &gt;= #{startTime} and stat_date &lt; #{endTime} and organ_code =#{unitId}
 	</select>
 	
@@ -38,7 +38,7 @@
 	
 	<!-- 住院药品总费用(元) -->
 	<select id="HospitalizationMoneyTotal" resultType="long">
-		select sum(cost_02) from ED_Outpa_Inpa_Charge_Stat 
+		select coalesce(sum(cost_02),0) from ED_Outpa_Inpa_Charge_Stat 
 		where stat_date &gt;= #{startTime} and stat_date &lt; #{endTime} and organ_code =#{unitId}
 	</select>
 	
