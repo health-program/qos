@@ -32,21 +32,22 @@ public class FamilyPersonalizedSigningRateTotal extends GongWeiDataProcessor {
 
 	@Override
 	public long getTotalNum(Date startTime, Date endTime, String unitId) {
+	    sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
+		String unit = getMappingUnitId(unitId);
+		if (StringUtil.isEmpty(unit)) {
+			return 0;
+		}
+		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingTotal(startTime, endTime, unit);
+	}
+
+	@Override
+	public long getEventNum(Date startTime, Date endTime, String unitId) {
+		
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
 		String unit = getMappingUnitId(unitId);
 		if (StringUtil.isEmpty(unit)) {
 			return 0;
 		}
 		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingServeNum(startTime, endTime, unit);
-	}
-
-	@Override
-	public long getEventNum(Date startTime, Date endTime, String unitId) {
-		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_GONGWEI);
-		String unit = getMappingUnitId(unitId);
-		if (StringUtil.isEmpty(unit)) {
-			return 0;
-		}
-		return sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).singingTotal(startTime, endTime, unit);
 	}
 }
