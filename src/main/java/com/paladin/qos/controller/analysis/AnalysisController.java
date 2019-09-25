@@ -255,4 +255,11 @@ public class AnalysisController {
 		return 0;
 	}
 
+	
+	@GetMapping("/constant/event")
+	@ResponseBody
+	public Object getEvent() {
+		return CommonResponse.getSuccessResponse(DataConstantContainer.getEventList());
+	}
+	
 }

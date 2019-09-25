@@ -3,9 +3,9 @@
 
 <head th:include="/qos/header" />
 <style type="text/css">
-    .table-hover>tbody>tr:hover>td {
-        cursor: pointer;
-    }
+.table-hover>tbody>tr:hover>td {
+    cursor: pointer;
+}
 </style>
 
 <body>
@@ -124,11 +124,11 @@
 
                 var data = {};
 
-                convertRate2TableData(response, '12100', data);
-                convertRate2TableData(response, '12101', data);
-                convertRate2TableData(response, '12102', data);
-                convertRate2TableData(response, '12103', data);
-                convertRate2TableData(response, '12104', data);
+                convertTableData(response, '12100', data, true);
+                convertTableData(response, '12101', data, true);
+                convertTableData(response, '12102', data, true);
+                convertTableData(response, '12103', data, true);
+                convertTableData(response, '12104', data, true);
 
                 var result = []
                 for (var o in data) {
@@ -141,8 +141,8 @@
         });
     }
 
-    function convertRate2TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
+    function convertTableData(rawData, eventId, data, isRate) {
+        var eventData = rawData[eventId],
             fieldName = 'ev' + eventId,
             total = 0,
             event = 0;
@@ -157,9 +157,15 @@
                 };
                 data[id] = unitData;
             }
-            unitData[fieldName] = getRate(item);
-            total += item.totalNum;
-            event += item.eventNum;
+
+            if (isRate) {
+                unitData[fieldName] = getRate(item);
+                total += item.totalNum;
+                event += item.eventNum;
+            } else {
+                unitData[fieldName] = item.count;
+                total += item.count;
+            }
         });
 
         var totalData = data['total'];
@@ -170,40 +176,11 @@
             }
             data['total'] = totalData;
         }
-        totalData[fieldName] = getRate({
+
+        totalData[fieldName] = isRate ? getRate({
             totalNum: total,
             eventNum: event
-        });
-    }
-
-    function convertCount2TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.totalNum;
-            total += item.totalNum;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
+        }) : total;
     }
 
     function getRate(item, fixed) {
@@ -223,7 +200,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed || 2);
     }
 
     function convertUnitChartData(data, eventId, isRate) {

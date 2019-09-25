@@ -88,7 +88,7 @@ public class AnalysisService {
 			return DataConstantContainer.getCommunityList();
 		}
 
-		return null;
+		return DataConstantContainer.getUnitList();
 	}
 
 	// 查找多个或所有医院时，可改为在SQL中处理，暂时为遍历医院一个个查找
