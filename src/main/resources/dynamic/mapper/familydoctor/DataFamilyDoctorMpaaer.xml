@@ -43,7 +43,7 @@
     </select>
 
     <select id="registerOPD" resultType="long">
-        select r.orgcode unitId,r.idcardno idCard from phis_webhis.v_Opr_Register r 
+        select count(1) from phis_webhis.v_Opr_Register r 
         where length(r.idcardno)=18
         and o.CREATEDTIME &gt;= #{startTime}
         and o.CREATEDTIME &lt; #{endTime}

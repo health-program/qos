@@ -43,6 +43,8 @@ public class DataConstantContainer implements VersionContainer {
 	private DataEventService dataEventService;
 	@Autowired
 	private DataUnitService dataUnitService;
+	@Autowired
+	private DataProcessManager dataProcessManager;
 
 	private static Map<String, Event> eventMap;
 	private static Map<String, Unit> unitMap;
@@ -151,6 +153,7 @@ public class DataConstantContainer implements VersionContainer {
 		DataConstantContainer.hospitals = Collections.unmodifiableList(hospitals);
 		DataConstantContainer.communities = Collections.unmodifiableList(communities);
 
+		dataProcessManager.readLastProcessedDay(null);		
 		return true;
 	}
 
@@ -170,7 +173,7 @@ public class DataConstantContainer implements VersionContainer {
 
 	public static List<Event> getEventListByDataSource(String dataSouce) {
 		List<Event> events = new ArrayList<>();
-		for (Event event : events) {
+		for (Event event : DataConstantContainer.events) {
 			if (event.getDataSource().equals(dataSouce)) {
 				events.add(event);
 			}

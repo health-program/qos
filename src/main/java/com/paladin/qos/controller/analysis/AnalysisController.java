@@ -94,7 +94,7 @@ public class AnalysisController {
 		}
 	}
 
-	@PostMapping("/data/process/schedule")
+	@GetMapping("/data/process/schedule")
 	@ResponseBody
 	public Object processDataSchedule() {
 		dataProcessManager.processSchedule();

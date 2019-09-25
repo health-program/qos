@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -64,11 +65,22 @@ public class DataProcessManager {
 	// 最近处理时间map
 	private Map<String, Map<String, Long>> lastProcessedDayMap = new HashMap<>();
 
+	@Value("${qos.simple-mode}")
+	private boolean simpleMode = false;
+
 	/**
 	 * 读取最近一次处理的时间
 	 */
-	public void readLastProcessedDay() {
-		List<Event> events = DataConstantContainer.getEventList();
+	public synchronized void readLastProcessedDay(List<Event> events) {
+		if (simpleMode) {
+			return;
+		}
+
+		logger.info("-------------开始读取最近事件处理日期-------------");
+		if (events == null) {
+			events = DataConstantContainer.getEventList();
+		}
+
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 		for (Event event : events) {
 			String eventId = event.getId();
@@ -97,12 +109,14 @@ public class DataProcessManager {
 				}
 			}
 		}
+
+		logger.info("-------------读取最近事件处理日期结束-------------");
 	}
 
 	/**
 	 * 每天22点开始修复数据，修复到凌晨5点，等到数据修复差不多时需要调整时间为每天凌晨后，避免处理时间截止到前天而不是昨天
 	 */
-	@Scheduled(cron = "0 0 19 * * ?")
+	@Scheduled(cron = "0 0 18 * * ?")
 	public void processSchedule() {
 		if (executorService == null) {
 			executorService = new ThreadPoolExecutor(5, 5, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256), // 使用有界队列，避免OOM
@@ -110,7 +124,8 @@ public class DataProcessManager {
 		}
 
 		// 根据定时时间修改，例如晚上10点到明天凌晨5点，则加7个小时时间
-		long threadEndTime = System.currentTimeMillis() + 10 * 60 * 60 * 1000;
+		long threadEndTime = System.currentTimeMillis() + 11 * 60 * 60 * 1000;
+
 		executorService.execute(new RepairThread(DataConstantContainer.getEventListByDataSource(DSConstant.DS_FUYOU), null, threadEndTime, 0, 0, 0));
 		executorService.execute(new RepairThread(DataConstantContainer.getEventListByDataSource(DSConstant.DS_GONGWEI), null, threadEndTime, 0, 0, 0));
 		executorService.execute(new RepairThread(DataConstantContainer.getEventListByDataSource(DSConstant.DS_JCYL), null, threadEndTime, 0, 0, 0));
@@ -156,6 +171,7 @@ public class DataProcessManager {
 		@Override
 		public void run() {
 			try {
+				logger.info("--------->开始修复数据任务<---------");
 				for (Event event : events) {
 					String eventId = event.getId();
 					int targetType = event.getTargetType();
@@ -187,7 +203,11 @@ public class DataProcessManager {
 							Date start = new Date(startTime);
 							startTime += TimeUtil.MILLIS_IN_DAY;
 							Date end = new Date(startTime);
-							processDataForOneDay(start, end, unitId, dataProcessor);
+							boolean success = processDataForOneDay(start, end, unitId, dataProcessor);
+
+							if (!success) {
+								break;
+							}
 
 							if (++count >= maxRepairCount) {
 								break;
@@ -218,6 +238,8 @@ public class DataProcessManager {
 				}
 			} finally {
 				finished = true;
+				logger.info("--------->修复数据任务结束<---------");
+				readLastProcessedDay(events);
 			}
 		}
 
@@ -240,11 +262,12 @@ public class DataProcessManager {
 	}
 
 	// 处理一天的数据
-	private void processDataForOneDay(Date start, Date end, String unitId, DataProcessor processor) {
+	private boolean processDataForOneDay(Date start, Date end, String unitId, DataProcessor processor) {
 		try {
 			RateMetadata rateMetadata = processor.processByDay(start, end, unitId);
 			if (rateMetadata != null) {
 				saveProcessedDataForDay(rateMetadata);
+				return true;
 			}
 		} catch (Exception ex) {
 			logger.error("处理数据失败！日期：" + start + "，事件：" + processor.getEventId() + "，医院：" + unitId, ex);
@@ -261,6 +284,7 @@ public class DataProcessManager {
 				logger.error("持久化处理数据异常错误", ex2);
 			}
 		}
+		return false;
 	}
 
 	// 保存按天处理的数据
