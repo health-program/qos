@@ -65,6 +65,13 @@ public class TimeUtil {
 		return new Date(millis);
 	}
 
+	/**
+	 * 获取时间段相差天数
+	 * 
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	public static long getIntervalDays(long start, long end) {
 		start = start - ((start + timeZone.getOffset(start)) % MILLIS_IN_DAY);
 		long endd = (end + timeZone.getOffset(end)) % MILLIS_IN_DAY;
@@ -75,6 +82,13 @@ public class TimeUtil {
 		}
 	}
 
+	/**
+	 * 获取时间段内流水号列表
+	 * 
+	 * @param startTime
+	 * @param endTime
+	 * @return
+	 */
 	public static List<Integer> getSerialNumberByDay(Date startTime, Date endTime) {
 		if (startTime == null || endTime == null) {
 			return null;
@@ -99,12 +113,24 @@ public class TimeUtil {
 		return sns;
 	}
 
+	/**
+	 * 获取流水号
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static int getSerialNumberByDay(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		return getSerialNumberByDay(c);
 	}
 
+	/**
+	 * 获取流水号
+	 * 
+	 * @param c
+	 * @return
+	 */
 	public static int getSerialNumberByDay(Calendar c) {
 		int year = c.get(Calendar.YEAR);
 		int month = c.get(Calendar.MONTH) + 1;
@@ -113,6 +139,12 @@ public class TimeUtil {
 		return year * 10000 + month * 100 + day;
 	}
 
+	/**
+	 * 获取月流水号
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static int getSerialNumberByMonth(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
@@ -123,12 +155,24 @@ public class TimeUtil {
 		return year * 100 + month;
 	}
 
+	/**
+	 * 获取年份
+	 * 
+	 * @param date
+	 * @return
+	 */
 	public static int getYear(Date date) {
 		Calendar c = Calendar.getInstance();
 		c.setTime(date);
 		return c.get(Calendar.YEAR);
 	}
 
+	/**
+	 * 是否今天
+	 * 
+	 * @param time
+	 * @return
+	 */
 	public static boolean isToday(Date time) {
 		if (time == null)
 			return false;
@@ -142,6 +186,12 @@ public class TimeUtil {
 		return millis == nowMillis;
 	}
 
+	/**
+	 * 是否今天或以后的时间
+	 * 
+	 * @param time
+	 * @return
+	 */
 	public static boolean isAfterOrEqualToday(Date time) {
 		if (time == null)
 			return false;
@@ -155,8 +205,26 @@ public class TimeUtil {
 		return millis >= nowMillis;
 	}
 
-	public static Date getOnePastDay(int pastDays) {
+	/**
+	 * 获取今天过去某天
+	 * 
+	 * @param pastDays
+	 * @return
+	 */
+	public static Date getTodayBefore(int pastDays) {
 		long millis = System.currentTimeMillis();
+		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
+		return new Date(millis - MILLIS_IN_DAY * pastDays);
+	}
+
+	/**
+	 * 获取某天的过去几天
+	 * 
+	 * @param millis
+	 * @param pastDays
+	 * @return
+	 */
+	public static Date getDateBefore(long millis, int pastDays) {
 		millis = millis - ((millis + timeZone.getOffset(millis)) % MILLIS_IN_DAY);
 		return new Date(millis - MILLIS_IN_DAY * pastDays);
 	}
@@ -164,8 +232,7 @@ public class TimeUtil {
 	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public static void main(String[] args) throws Exception {
-		Date time = format.parse("2019-8-13 00:00:00");
-		Date time2 = format.parse("2019-8-15 01:00:00");
-		System.out.println(getIntervalDays(time.getTime(), time2.getTime()));
+		System.out.println(format.format(getTodayBefore(1)));
 	}
+
 }

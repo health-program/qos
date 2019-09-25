@@ -61,27 +61,33 @@ public class AnalysisController {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
-		if (endDate == null) {
-			endDate = new Date();
-		}
-
-		if (unitIds == null || unitIds.size() == 0) {
-			List<Unit> units = DataConstantContainer.getUnitList();
-			unitIds = new ArrayList<>();
-			for (Unit unit : units) {
-				unitIds.add(unit.getId());
+		List<Unit> units = null;
+		if (unitIds != null && unitIds.size() > 0) {
+			units = new ArrayList<>(unitIds.size());
+			for (String unitId : unitIds) {
+				Unit unit = DataConstantContainer.getUnit(unitId);
+				if (unit != null) {
+					units.add(unit);
+				}
 			}
 		}
 
-		if (unitIds == null || unitIds.size() == 0) {
-			List<Unit> units = DataConstantContainer.getUnitList();
-			unitIds = new ArrayList<>();
-			for (Unit unit : units) {
-				unitIds.add(unit.getId());
+		List<Event> events = null;
+		if (eventIds != null && eventIds.size() > 0) {
+			events = new ArrayList<>(eventIds.size());
+			for (String eventId : eventIds) {
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					events.add(event);
+				}
 			}
 		}
 
-		if (dataProcessManager.processDataByThread(startDate, endDate, unitIds, eventIds)) {
+		if (events == null || events.size() == 0) {
+			return CommonResponse.getFailResponse("请传入事件");
+		}
+
+		if (dataProcessManager.processDataByThread(startDate, endDate, units, events)) {
 			return CommonResponse.getSuccessResponse();
 		} else {
 			return CommonResponse.getFailResponse("有正在处理中的数据");
@@ -99,19 +105,6 @@ public class AnalysisController {
 	@ResponseBody
 	public Object getProcessDataStatus() {
 		return CommonResponse.getSuccessResponse(dataProcessManager.getProcessDataStatus());
-	}
-
-	@PostMapping("/data/process/day")
-	@ResponseBody
-	public Object processDataOneDay(AnalysisRequest request) {
-		List<String> eventIds = request.getEventIds();
-		List<String> unitIds = request.getUnitIds();
-		Date startDate = request.getStartTime();
-		startDate = TimeUtil.toDayTime(startDate);
-		Date endDate = new Date(startDate.getTime() + TimeUtil.MILLIS_IN_DAY);
-
-		dataProcessManager.processData(startDate, endDate, unitIds, eventIds);
-		return CommonResponse.getSuccessResponse();
 	}
 
 	@PostMapping("/data/validate")

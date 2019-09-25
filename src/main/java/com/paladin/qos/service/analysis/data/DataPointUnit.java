@@ -2,25 +2,17 @@ package com.paladin.qos.service.analysis.data;
 
 import java.util.List;
 
-import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataByUnit;
 
-public class DataPointUnit<T> {
+public class DataPointUnit<T> extends DataByUnit{
 
-	private String unitId;
 	private List<T> points;
 
 	public DataPointUnit(String unitId, List<T> points) {
-		this.unitId = unitId;
+		this.setUnitId(unitId);
 		this.points = points;
 	}
-	
-	public String getUnitId() {
-		return unitId;
-	}
 
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
-	}
 
 	public List<T> getPoints() {
 		return points;
@@ -28,10 +20,6 @@ public class DataPointUnit<T> {
 
 	public void setPoints(List<T> points) {
 		this.points = points;
-	}
-
-	public String getUnitName() {
-		return DataConstantContainer.getUnitName(unitId);
 	}
 
 }

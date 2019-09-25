@@ -1,5 +1,7 @@
 package com.paladin.qos.model.data;
 
+import java.util.Date;
+
 import javax.persistence.Id;
 
 public class DataProcessedDay {
@@ -50,6 +52,9 @@ public class DataProcessedDay {
 
 	// 比率
 	private Integer rate;
+	
+	// 更新时间
+	private Date updateTime;
 
 	public String getId() {
 		return id;
@@ -153,6 +158,14 @@ public class DataProcessedDay {
 
 	public void setUnitType(Integer unitType) {
 		this.unitType = unitType;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
 
