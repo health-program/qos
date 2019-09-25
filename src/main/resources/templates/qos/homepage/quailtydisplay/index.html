@@ -576,10 +576,19 @@ quailty_middle_hospitelOption = {
         },
         data: ['扬州炒饭', '龙门花甲', '黄焖鸡米饭', '麻辣烫', '回锅肉盖浇饭'],
         //axisLabel 坐标轴刻度标签的相关设置
+
         axisLabel: {
             show: true,
             color: '#fff',
-             fontSize: 14
+             fontSize: 14,
+          interval: 0,
+          formatter: function(value) {
+            if (value.length > 2) {
+              return value.substring(0, 2) + "...";
+            } else {
+              return value;
+            }
+          }
         }
     }, ],
     series: [{
@@ -688,10 +697,18 @@ quailty_middle_hospitelOption = {
         },
         data: ['扬州炒饭', '龙门花甲', '黄焖鸡米饭', '麻辣烫', '回锅肉盖浇饭'],
         //axisLabel 坐标轴刻度标签的相关设置
-        axisLabel: {
+         axisLabel: {
             show: true,
             color: '#fff',
-            fontSize: 14
+             fontSize: 14,
+          interval: 0,
+          formatter: function(value) {
+            if (value.length > 2) {
+              return value.substring(0, 2) + "...";
+            } else {
+              return value;
+            }
+          }
         }
     }, ],
     series: [{

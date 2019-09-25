@@ -6,6 +6,18 @@
   height:38vh;
 }
 
+.roll{
+ width:41vw;
+  height:37vh;
+  background-size:100% 100%!important;
+
+}
+
+.roll .header{
+  height:35px!important;
+  line-height:35px!important;
+}
+
 @media screen and (max-width: 1920px) and (min-width: 1400px){
     #middle .bg_opacity {
         background: url(../../static/image/index/opacitybg.png);
@@ -32,4 +44,8 @@
 
 #middle{
   margin-top:4vh;
+}
+
+.carousel-item{
+  display:none;
 }
