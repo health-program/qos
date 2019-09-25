@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.paladin.data.dynamic.SqlSessionContainer;
+import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.impl.gongwei.GongWeiDataProcessor;
 import com.paladin.qos.dynamic.DSConstant;
 import com.paladin.qos.dynamic.mapper.familydoctor.DataFamilyDoctorMapper;
@@ -66,13 +68,20 @@ public class FamilySingingAgencyOPDTotal extends GongWeiDataProcessor {
 		List<String> singingAgencyOPDTotal = sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class)
 				.singingAgencyOPDTotal(startTime, endTime, unitId);
 		if (singingAgencyOPDTotal != null && singingAgencyOPDTotal.size() > 0) {
-			sqlSessionContainer.setCurrentDataSource(DSConstant.DS_YIYUAN);
+			sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
 			List<String> registerOPDtotal = sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).registerOPDtotal(startTime,
 					endTime, unitId, singingAgencyOPDTotal);
 			if (registerOPDtotal != null && registerOPDtotal.size() > 0) {
-				sqlSessionContainer.setCurrentDataSource(DSConstant.DS_YIYUAN);
-				tatol = sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).hospitalOPDTotal(startTime, endTime, unitId,
-						registerOPDtotal);
+			    
+			    List<Unit> units =DataConstantContainer.getHospitalList();
+				 for (Unit u : units) {
+				     String dbCode = u.getSource().getDbCode();
+					if (dbCode != null && dbCode.length() > 0) {
+					    sqlSessionContainer.setCurrentDataSource(dbCode);
+						tatol += sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).hospitalOPDTotal(startTime, endTime, unitId,
+								registerOPDtotal);
+					}
+				}
 			}
 		}
 		return tatol;
