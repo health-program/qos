@@ -44,7 +44,7 @@ public class FamilySingingDoctorOPDTotal extends GongWeiDataProcessor {
 					d.setUnitId(getMappingUnitId(d.getUnitId()));
 				}
 			}
-			sqlSessionContainer.setCurrentDataSource(DSConstant.DS_YIYUAN);
+			sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
 			tatal += sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).docnameOPDnum(startTime, endTime, vo);
 		}
 		return tatal;
@@ -70,7 +70,7 @@ public class FamilySingingDoctorOPDTotal extends GongWeiDataProcessor {
 						d.setUnitId(unit);
 					}
 				}
-				sqlSessionContainer.setCurrentDataSource(DSConstant.DS_YIYUAN);
+				sqlSessionContainer.setCurrentDataSource(DSConstant.DS_JCYL);
 				tatal += sqlSessionContainer.getSqlSessionTemplate().getMapper(DataFamilyDoctorMapper.class).registerOPD(startTime, endTime, newList);
 			}
 		}
