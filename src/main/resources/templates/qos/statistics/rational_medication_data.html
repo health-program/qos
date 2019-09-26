@@ -36,27 +36,27 @@
             <div class="col-md-6" style="padding-right: 0">
 	            <div class="nav-tabs-custom">
 		            <ul class="nav nav-tabs">
-		                <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
-		                <li class=""><a href="#mz" data-toggle="tab" aria-expanded="false">门诊统计</a></li>
-		                <li class=""><a href="#zy" data-toggle="tab" aria-expanded="false">住院统计</a></li>
-		            </ul>
+                        <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
+                        <li class=""><a href="#mz" data-toggle="tab" aria-expanded="false">门诊统计</a></li>
+                        <li class=""><a href="#zy" data-toggle="tab" aria-expanded="false">住院统计</a></li>
+                    </ul>
 		            <div class="tab-content">
-			            <div class="tab-pane active" id="hz">
-				            <div class="box-solid">
-								<table id="dataGrid1"></table>
-							</div>
-			            </div>
-			            <div class="tab-pane" id="mz">
-							<div class="box-solid">
-								<table id="dataGrid2"></table>
-							</div>            
-			            </div>
-			            <div class="tab-pane" id="zy">
-							<div class="box-solid">
-								<table id="dataGrid3"></table>
-							</div>            
-			            </div>
-		            </div>
+                        <div class="tab-pane active" id="hz">
+                            <div class="box-solid">
+                                <table id="dataGrid1"></table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="mz">
+                            <div class="box-solid">
+                                <table id="dataGrid2"></table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="zy">
+                            <div class="box-solid">
+                                <table id="dataGrid3"></table>
+                            </div>
+                        </div>
+                    </div>
 	            </div>
             </div>
             <div class="col-md-6">
@@ -85,7 +85,6 @@
     var table,table1,dataVal,dataVal1,selectUnit,chartData;
     $(function() {
         buildTable2();
-        buildTable3();
     	 laydate.render({
              elem: '#createTime',
              type: 'month',
@@ -94,7 +93,7 @@
          });
     });
     
-    function dataReslut(){
+    /*function dataReslut(){
     	var unitId = $("#unitId").val();
     	var date = $("#createTime").val();
     	$.post("/qos/medication/find?unitId="+unitId+"&date="+date,function(res){
@@ -150,7 +149,7 @@
         	buildTable2(arr);
         	buildTable3(arr);
         })
-    }
+    }*/
     
 	function buildTable1(){
 		 columns= [
@@ -305,6 +304,8 @@
                 }
                 dataVal = result|| [];
 
+                buildTable3();
+
                 return  result;
 
             }
@@ -389,6 +390,24 @@
     		}
     		drugChart.hideLoading();
     	}
+
+        var labelOption = {
+            normal: {
+                show: true,
+                position: 'top',
+                distance: 15,
+                align: 'center',
+                verticalAlign: 'top',
+                rotate: 0,
+                formatter: '{c}',
+                fontSize: 15,
+                rich: {
+                    name: {
+                        textBorderColor: '#fff'
+                    }
+                }
+            }
+        };
     	var option = {
     			title: {
 			        text:  xAxis.length === 1 ? '人均使用药瓶数排名(医疗机构: '+ xAxis[0] +')' :'人均使用药瓶数排名',
@@ -432,6 +451,7 @@
     			series : [ {
     				name : '就医人均使用药瓶数(瓶)',
     				type : 'bar',
+                    label: labelOption,
     				data : series
     			} ]
     		};
