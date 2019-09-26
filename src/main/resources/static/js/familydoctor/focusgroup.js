@@ -1,7 +1,15 @@
  var dataMap={}
 $(function(){
 
-
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2);
+    }
 
 
     $("#selectID").change(function(){

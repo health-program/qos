@@ -23,6 +23,20 @@ public class HomePageController {
   	public String familyIndex(HttpServletRequest request){
   	    return "/qos/homepage/familydoctor/index";
   	}
+
+
+
+
+	@RequestMapping(value = "/publichealth")
+	public String publichealthIndex(HttpServletRequest request){
+		return "/qos/homepage/publichealth/index";
+	}
+
+
+	@RequestMapping(value = "/quailtydisplay")
+	public String quailtydisplayIndex(HttpServletRequest request){
+		return "/qos/homepage/quailtydisplay/index";
+	}
 }
 
 

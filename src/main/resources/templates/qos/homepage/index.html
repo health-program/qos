@@ -119,6 +119,7 @@
         </div>
     </div>
     <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/comprehensive/outpatient.js"></script>
 </body>
 
 <script>
@@ -210,9 +211,9 @@ $(function() {
                     color: function(d) { return "#" + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16); }
 
                     // 定制显示（按顺序）
-                    /*   color: function(params) { 
-                          var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000']; 
-                          return colorList[params.dataIndex] 
+                    /*   color: function(params) {
+                          var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000'];
+                          return colorList[params.dataIndex]
                       } */
                 },
             },
@@ -222,9 +223,7 @@ $(function() {
         }]
     };
     //初始化echarts实例
-    var myChartEmergency = echarts.init(document.getElementById('emergency'));
-    myChartEmergency.setOption(emergencyoption);
-    //急诊人数结束
+
 
 
     var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
@@ -445,27 +444,6 @@ function init() {
 }
 init()
 </script>
-<script type="text/javascript">
-   $(function(){
-        $.ajax({
-           url:'/index',
-           type:'post',
-           data:{name:'张三',age:12},
-           success:function(data){
-              $('p').html(data);
-           },
-           error:function(error){
-              console.log(error)
-           }
 
-           })
-
-   })
-
-
-
-
-
-</script>
 
 </html>
