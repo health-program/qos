@@ -575,4 +575,10 @@ public class AnalysisService {
 		return analysisMapper.removeDataOfDay(serialNumber, eventId);
 	}
 
+	public List<DataCountUnit> countGetBedByUnit(String eventId, int unitType) {
+		List<DataCountUnit> result = analysisMapper.countGetBedByUnit(eventId, unitType);
+		orderByUnit(result);
+		return result;
+	}
+
 }

@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+                
+                <div class="box box-solid">
+                    
+                   <div id="ring1ChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                
+                <!-- <div class="box box-solid">
+                    
+                   <div id="ring2ChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div> -->
+                
+                <div class="box box-solid">
+                    
+                   <div id="ring3ChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="moneyChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                
+                <div class="box box-solid">
+                    <div id="dashChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                
+                <div class="box box-solid">
+                    <div id="recipeChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table,  recipeChart,moneyChart,ring1Chart,ring2Chart,ring3Chart,dashChart, requestParam, selectUnit;
+	$(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { 
+                    	title: "医疗机构", 
+                    	field: "unitName"
+                    },
+                    { 
+                    	title: "处方数量", 
+                    	field: "ev16001"
+                    },
+                    { 
+                    	title: "处方总额", 
+                    	field: "ev16002"
+                    },
+                    { 
+                    	title: "最大处方金额", 
+                    	field: "ev16003"
+                    },
+                    { 
+                    	title: "最小处方金额", 
+                    	field: "ev16004"
+                    },
+                    { 
+                    	title: "平均处方金额", 
+                    	field: "ev16005",
+                    	formatter: function(value, row, index) {
+                    		if(row.ev16001==0){
+                    			return "0"
+                    		}else{
+                    			return (row.ev16002/row.ev16001/100).toFixed(2) * 1;
+                    		}
+                            
+                       }  
+                    },
+                    { 
+                    	title: "门诊中医处方数占比", 
+                    	field: "ev16006"
+                    },
+                    { 
+                    	title: "门诊中药饮片占比", 
+                    	field: "ev16007"
+                    },
+                    { 
+                    	title: "门诊中医非药物治疗处方占比", 
+                    	field: "ev16008"
+                    },
+                   /*  { title: "静脉输液率", field: "intravenousRate",
+                    	formatter: function(value, row, index) {
+                            return value + "%";
+                       }
+                    }, */
+                    { 
+                    	title: "激素使用率", 
+                    	field: "ev16010"
+                    },
+                    { 
+                    	title: "抗菌药物使用率", 
+                    	field: "ev16011"
+                    },
+                    { 
+                    	title: "一联抗生素使用率", 
+                    	field: "ev16012"
+                    },
+                    { 
+                    	title: "二联抗生素使用率", 
+                    	field: "ev16013"
+                    },
+                    { 
+                    	title: "三联抗生素使用率", 
+                    	field: "ev16014"
+                    }
+                    
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            onCheck: unitSelected,
+            queryParams: function(params) {
+            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16010,160111,16012,16013,16014';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	
+            	if (!response) {
+                    return null;
+                }
+
+                var data = {};
+                convertCount2TableData(response, '16001', data);
+                convertCount2TableData(response, '16002', data);
+                convertCount2TableData(response, '16003', data);
+                convertCount2TableData(response, '16004', data);
+                
+                convertRate2TableData(response, '16005', data);//平均处方金额
+                
+                convertRate2TableData(response, '16006', data);
+                convertRate2TableData(response, '16007', data);
+                convertRate2TableData(response, '16008', data);
+                convertRate2TableData(response, '16010', data);
+                convertRate2TableData(response, '16011', data);
+                convertRate2TableData(response, '16012', data);
+                convertRate2TableData(response, '16013', data);
+                convertRate2TableData(response, '16014', data);
+                
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+
+                initRecipeChart(response);
+                initMoneyChart(response);
+                ring1ChartDiv(response);
+                //ring2ChartDiv(response);静脉输液率
+                ring3ChartDiv(response);
+                dashChartDiv(response);
+                return result;
+            }
+        });
+    }
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+   
+    function convertRate2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            event = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+            total += item.totalNum;
+            event += item.eventNum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate({
+            totalNum: total,
+            eventNum: event
+        });
+    }
+    
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed);
+    }
+    
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
+    function initRecipeChart(data){
+    	var ev16001 = convertUnitChartData(data, '16001', false);
+    	
+        if (!recipeChart) {
+        	recipeChart = echarts.init(document.getElementById('recipeChartDiv'));
+        }
+    	
+    	var option = {        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['处方数量'],
+                bottom:0
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev16001.unit,
+            },
+            yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '处方数量',
+                data: ev16001.values}
+                     
+           ]
+        };
+    	recipeChart.setOption(option, true);
+    }
+    
+    
+    function initMoneyChart(data){
+    	var ev16001 = convertUnitChartData(data, '16001', false);
+    	var ev16002 = convertUnitChartData(data, '16002', false);
+    	var ev16003 = convertUnitChartData(data, '16003', false);
+    	var ev16004 = convertUnitChartData(data, '16004', false);
+    	var ev16005 = {};
+    	var unit = [];
+    	var values16005 = [];
+    	for (var i=0;i<16;i++) {
+    		values16005.push((ev16002.values[i]/ev16001.values[i]/100).toFixed(2)*1);
+        }
+    	ev16005.unit = ev16001.unit;
+    	ev16005.values = values16005;
+    	
+        if (!moneyChart) {
+        	moneyChart = echarts.init(document.getElementById('moneyChartDiv'));
+        }
+    	
+    	var option = {        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['最大处方金额','平均处方金额','最小处方金额'],
+                bottom:0
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev16001.unit,
+            },
+            yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '最大处方金额',
+                data: ev16003.values},
+                {  type: 'bar',
+           		 barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:2,
+                        }
+                    },
+               name: '平均处方金额',
+               data: ev16005.values},
+               {  type: 'bar',
+          		 barWidth : 5,
+                   itemStyle:{
+                       normal:{
+                           barBorderRadius:2,
+                       }
+                   },
+              name: '最小处方金额',
+              data: ev16004.values}
+                     
+           ]
+        };
+    	moneyChart.setOption(option, true);
+    }
+    
+    function toPoint(percent){
+		 	var str=percent.replace("%","");
+		        str= str/100;
+		 	return str;
+	}
+
+    
+    function ring1ChartDiv(response){
+    	var data = {};
+
+        //convertCount2TableData(response, '15001', data);
+        convertRate2TableData(response, '16011', data);
+
+        var result = []
+        for (var o in data) {
+            result.push(data[o]);
+        }
+        
+        if (!ring1Chart) {
+        	ring1Chart = echarts.init(document.getElementById('ring1ChartDiv'));
+        }
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        
+        occupyRate=toPoint(result[0].ev16011).toFixed(2);
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=result[0].ev16011 ;
+        
+        var option = {
+
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'抗菌药物使用率',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'抗菌药物使用率',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
+
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'抗菌药物使用率'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
+        ring1Chart.setOption(option, true);
+    }
+    
+    function ring3ChartDiv(response){
+    	var data = {};
+
+        //convertCount2TableData(response, '15001', data);
+        convertRate2TableData(response, '16010', data);
+
+        var result = []
+        for (var o in data) {
+            result.push(data[o]);
+        }
+        
+        if (!ring3Chart) {
+        	ring3Chart = echarts.init(document.getElementById('ring3ChartDiv'));
+        }
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        
+        occupyRate=toPoint(result[0].ev16010).toFixed(2);
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=result[0].ev16010 ;
+        
+        var option = {
+
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'激素使用率',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'激素使用率',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
+
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'激素使用率'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
+        ring3Chart.setOption(option, true);
+    }
+    
+    
+    function dashChartDiv(response){
+    	var data = {};
+    	 convertRate2TableData(response, '16012', data);
+    	 convertRate2TableData(response, '16013', data);
+    	 convertRate2TableData(response, '16014', data);
+
+         var result = []
+         for (var o in data) {
+             result.push(data[o]);
+         }
+         
+         var oneRate=0;
+         var twoRate=0;
+         var threeRate;
+         console.log(result);
+         oneRate=toPoint(result[0].ev16012).toFixed(2);
+         twoRate=toPoint(result[0].ev16013).toFixed(2);
+         threeRate=toPoint(result[0].ev16014).toFixed(2);
+         pieMessage=result[0].ev16012 ;
+    	if (!dashChart) {
+        	dashChart = echarts.init(document.getElementById('dashChartDiv'));
+        }
+    	var option = {
+    		    tooltip : {
+    		        formatter: "{a} <br/>{c} {b}"
+    		    },
+    			    toolbox: {
+    		        show: true,
+    		        feature: {
+    		            restore: {show: true},
+    		            saveAsImage: {show: true}
+    		        }
+    		    },
+    		    series : [
+    		        {
+    		            name: '一联抗生素使用率',
+    		            type: 'gauge',
+    		            z: 3,
+    		            min: 0,
+    		            max: 1,
+    		            splitNumber: 10,
+    		            radius: '80%',
+    		            axisLine: {            // 坐标轴线
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    width: 10
+    		                }
+    		            },
+    		            axisTick: {            // 坐标轴小标记
+    		                length: 15,        // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            splitLine: {           // 分隔线
+    		                length: 20,         // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            axisLabel: {
+    		                backgroundColor: 'auto',
+    		                borderRadius: 2,
+    		                color: '#eee',
+    		                padding: 3,
+    		                textShadowBlur: 2,
+    		                textShadowOffsetX: 1,
+    		                textShadowOffsetY: 1,
+    		                textShadowColor: '#222'
+    		            },
+    		            title : {
+    		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+    		                fontWeight: 'bolder',
+    		                fontSize: 15,
+    		                fontStyle: 'italic'
+    		            },
+    		            detail : {
+    		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+    		                formatter: result[0].ev16012,
+    		                fontWeight: 'bolder',
+    		                borderRadius: 3,
+    		                backgroundColor: '#444',
+    		                borderColor: '#aaa',
+    		                shadowBlur: 5,
+    		                shadowColor: '#333',
+    		                shadowOffsetX: 0,
+    		                shadowOffsetY: 5,
+    		                borderWidth: 2,
+    		                textBorderColor: '#000',
+    		                textBorderWidth: 2,
+    		                textShadowBlur: 2,
+    		                textShadowColor: '#fff',
+    		                textShadowOffsetX: 0,
+    		                textShadowOffsetY: 0,
+    		                fontFamily: 'Arial',
+    		                width: 100,
+    		                color: '#eee',
+    		                rich: {}
+    		            },
+    		            data:[{value: oneRate, name: '一联抗生素使用率'}]
+    		        },
+    		        {
+    		            name: '二联抗生素使用率',
+    		            type: 'gauge',
+    		            center: ['20%', '55%'],    // 默认全局居中
+    		            radius: '65%',
+    		            min:0,
+    		            max:1,
+    		            endAngle:45,
+    		            splitNumber:10,
+    		            axisLine: {            // 坐标轴线
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    width: 8
+    		                }
+    		            },
+    		            axisTick: {            // 坐标轴小标记
+    		                length:10,        // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            splitLine: {           // 分隔线
+    		                length:20,         // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            pointer: {
+    		                width:5
+    		            },
+    		            title: {
+    		                offsetCenter: [0, '-30%'],       // x, y，单位px
+    		            },
+    		            detail: {
+    		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+    		            	formatter:result[0].ev16012
+    		            },
+    		            data:[{value: twoRate, name: '二联抗生素使用率'}]
+    		        },
+    		        {
+    		            name: '三联抗生素使用率',
+    		            type: 'gauge',
+    		            center: ['80%', '55%'],    // 默认全局居中
+    		            radius: '65%',
+    		            min:0,
+    		            max:1,
+    		            startAngle:135,
+    		            endAngle:-45,
+    		            splitNumber:10,
+    		            axisLine: {            // 坐标轴线
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    width: 8
+    		                }
+    		            },
+    		            axisTick: {            // 坐标轴小标记
+    		                length:10,        // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            splitLine: {           // 分隔线
+    		                length:20,         // 属性length控制线长
+    		                lineStyle: {       // 属性lineStyle（详见lineStyle）控制线条样式
+    		                    color: 'auto'
+    		                }
+    		            },
+    		            pointer: {
+    		                width:5
+    		            },
+    		            title: {
+    		                offsetCenter: [0, '-30%'],       // x, y，单位px
+    		            },
+    		            detail: {
+    		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
+    		            	formatter:result[0].ev16012
+    		            },
+    		            data:[{value: threeRate, name: '三联抗生素使用率'}]
+    		        }
+    		    ]
+    		};
+    	dashChart.setOption(option, true);
+    }
+    </script>
+</body>
+
+</html>

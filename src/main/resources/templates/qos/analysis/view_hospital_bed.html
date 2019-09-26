@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="monthChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="unitChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table, monthChart, unitChart, requestParam, selectUnit;
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+     //1.病床使用率
+    function getBedInUsedRate(row) {
+        var e = row.bedEventNum,
+            t = row.bedTotalNum;
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1; 
+    }
+    
+
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { 
+                    	title: "医疗机构", 
+                    	field: "unitName"
+                    },
+                    { 
+                    	title: "住院人次数", 
+                    	field: "ev14001"
+                    },
+                    { 
+                    	title: "出院人次数", 
+                    	field: "ev14002"
+                    },
+                    { 
+                    	title: "在院人数", 
+                    	field: "ev14003"
+                    },
+                    { 
+                    	title: "额定床位", 
+                    	field: "ev14004"
+                    },
+                    { 
+                    	title: "使用床位", 
+                    	field: "ev14005"
+                    },
+                    { 
+                    	title: "病床使用率", 
+                    	field: "ev14006"
+                    }
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            onCheck: unitSelected,
+            queryParams: function(params) {
+            	console.log(params);
+            	params.eventIds = '14001,14002,14003,14005,14006';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+                var data = {};
+                
+               var a = response[14001];
+               
+               var b = {};
+               response[14004] = getBed("14004")[14004];
+               
+                convertCount2TableData(response, '14001', data);
+                convertCount2TableData(response, '14002', data);
+                convertCount2TableData(response, '14003', data);
+                convertCount2TableData(response, '14004', data);//TODO
+                  
+                convertCount2TableData(response, '14005', data);
+                convertRate2TableData(response, '14006', data);
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+
+                initUnitChart(response);
+                return result;
+            }
+        });
+    }
+    
+    function getBed(eventId){
+    	var a = {};
+    	 $.ajax({
+             url: "/qos/analysis/data/get/bed",
+             type: "post",
+             async: false,
+             data: {
+                 'eventId': eventId
+             },
+             success: function (r) {
+            	 console.log(r);
+                  if (r.status == 1) {
+                	  a =  r.result;
+                 }
+             }
+         });
+    	 return a;
+    }
+    
+    
+    function convertRate2TableData(originData, eventId, data) {
+		var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, event = 0;
+
+		eventData && eventData.forEach(function(item) {
+			var id = item.unitId;
+			unitData = data[id];
+			if (!unitData) {
+				unitData = {
+					unitId : id,
+					unitName : item.unitName
+				};
+				data[id] = unitData;
+			}
+			unitData[fieldName] = getRate(item);
+			total += item.totalNum;
+			event += item.eventNum;
+		});
+
+		var totalData = data['total'];
+		if (!totalData) {
+			totalData = {
+				unitId : 'total',
+				unitName : '合计',
+			}
+			data['total'] = totalData;
+		}
+		totalData[fieldName] = getRate({
+			totalNum : total,
+			eventNum : event
+		});
+	}
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed);
+    }
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
+    
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+
+     function initUnitChart(data) {
+    	 var ev14001 = convertUnitChartData(data, '14001', false);
+     	 var ev14002 = convertUnitChartData(data, '14002', false);
+     	 var ev14003 = convertUnitChartData(data, '14003', false);
+     	if (!unitChart) {
+            unitChart = echarts.init(document.getElementById('unitChartDiv'));
+        }
+    	var option = {        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['住院人次数', '出院人次数','在院人数'],
+                bottom:0
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev14001.unit,
+            },
+            yAxis: {
+            	type: 'value'
+            },
+            
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '住院人次数',
+                data: ev14001.values},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                   name: '出院人次数',
+                   data: ev14002.values},
+            	 {  type: 'bar',
+              	   barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     name: '在院人数',
+                     data: ev14003.values}
+                     
+           ]
+        };
+    	unitChart.setOption(option, true);
+    }
+    
+     function convertMonthChartData(data, eventId, isRate) {
+         var eventData = data[eventId],
+             unitPoints = eventData.unitPoints,
+             month = [],
+             valuesMap = {},
+             totalValues = [];
+
+         var first = true;
+
+         unitPoints && unitPoints.forEach(function(unitPoint) {
+             var points = unitPoint.points,
+                 unitId = unitPoint.unitId;
+
+             var values = valuesMap[unitId];
+             if (!values) {
+                 values = [];
+                 valuesMap[unitId] = values;
+             }
+
+             for (var i = 0; i < points.length; i++) {
+                 var point = points[i];
+                 if (first) {
+                     month.push(point.year + '-' + point.month);
+                 }
+
+                 values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                 var totalVal = totalValues[i];
+                 if (!totalVal) {
+                     totalVal = {
+                         totalNum: point.totalNum,
+                         eventNum: point.eventNum
+                     }
+                     totalValues[i] = totalVal;
+                 } else {
+                     totalVal.totalNum += point.totalNum;
+                     totalVal.eventNum += point.eventNum;
+                 }
+             }
+
+             first = false;
+         });
+
+         var totalVals = [];
+         for (var j = 0; j < totalValues.length; j++) {
+             var tv = totalValues[j];
+             totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+         }
+
+         valuesMap.total = totalVals;
+         return {
+             month: month,
+             valuesMap: valuesMap
+         }
+     }
+     var month14001, month14002; 
+     
+     function initMonthChart(response) {
+         if (!response) {
+             $.postAjax('/qos/analysis/data/get/month/instalments', requestParam, initMonthChart);
+             return;
+         }
+
+         month14001 = convertMonthChartData(response, '14001', false);
+         month14002 = convertMonthChartData(response, '14002', false);
+
+         drawMonthChart('total');
+     }
+     function drawMonthChart(){
+    	 var unitId = selectUnit || 'total';
+
+         if (!monthChart) {
+             monthChart = echarts.init(document.getElementById('monthChartDiv'));
+         }
+    	 var option = {        //加载数据图表
+	           	//color:['#1e90ff','#f0ffff'],
+	               title: {
+	                   text: ''
+	               },
+	               tooltip: {
+	                   trigger: 'axis',
+	                   formatter: function(params, ticket, callback) {
+	                       var html = params[0].axisValueLabel + '：';
+	                       for (var i = 0; i < params.length; i++) {
+	                           var param = params[i];
+	                           html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+	                       }
+	                       return html;
+	                   },
+	                   axisPointer: {
+	                       type: 'shadow'
+	                   }
+	               },
+	               legend: {
+	            	type:"scroll",
+	               	data: ['住院人数', '出院人数'],
+	                   bottom:0
+	               },
+	               xAxis: {
+	                   type: 'category',
+	                   boundaryGap: false,
+	                   axisLabel: {
+	                       interval: 0,
+	                       rotate: 40 //角度顺时针计算的
+	                   },
+	                   data: month14001.month
+	               },
+	               yAxis: {type: 'value'},
+	               series: [
+	               	 {  type: 'line',
+	               		areaStyle: {},
+	                   label:{
+	                   	normal:{
+	                   	show:true,            //显示数字
+	                   	position: 'top'        //这里可以自己选择位置
+	                   	}
+	                   	},
+	                   name: '住院人数',
+	                   data: month14001.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                	   areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                      name: '出院人数',
+	                      data: month14002.valuesMap[unitId]}
+	                        
+	              ]
+	           };
+    	 monthChart.setOption(option, true);
+    };  
+    </script>
+</body>
+
+</html>
