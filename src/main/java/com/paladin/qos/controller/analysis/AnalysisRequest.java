@@ -3,11 +3,11 @@ package com.paladin.qos.controller.analysis;
 import java.util.Date;
 import java.util.List;
 
-import com.paladin.qos.analysis.DataProcessManager;
+import com.paladin.qos.analysis.DataConstantContainer;
 
 public class AnalysisRequest {
 
-	private Date startTime = DataProcessManager.DEFAULT_START_TIME;
+	private Date startTime = DataConstantContainer.DEFAULT_START_TIME;
 	private Date endTime = new Date();
 	private String unitId;
 	private String eventId;
@@ -22,7 +22,7 @@ public class AnalysisRequest {
 	}
 
 	public void setStartTime(Date startTime) {
-		this.startTime = startTime == null ? DataProcessManager.DEFAULT_START_TIME : startTime;
+		this.startTime = startTime == null ? DataConstantContainer.DEFAULT_START_TIME : startTime;
 	}
 
 	public Date getEndTime() {

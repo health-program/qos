@@ -1,57 +1,33 @@
 package com.paladin.qos.controller.gongwei;
 
 
-import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.gongwei.dto.PressureSugarRequest;
-import com.paladin.qos.service.gongwei.ArchivesManagementService;
-import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.controller.gongwei.dto.PressureSugarRequest;
+import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
 
 @Controller
 @RequestMapping("/qos/gongwei/pressureSugar")
 public class PressureSugarManagementController {
 
-    @Autowired
-    private ArchivesManagementService archivesManagementService;
 
     @GetMapping("/index")
     public Object dataIndex(Model model) {
         return "/qos/exhibition/pressureSugar_index";
     }
 
-
     @RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object searchAll(PressureSugarRequest request) {
-        String managedCenter = request.getManagedCenter();
-        String startDateStr = request.getStartDate();
-        String endDateStr = request.getEndDate();
-        Date startDate = null;
-        Date endDate = null;
-        try {
-            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-            if (!StringUtils.isEmptyOrWhitespace(startDateStr)) {
-                startDate = sf.parse(startDateStr);
-            }
-            if (!StringUtils.isEmptyOrWhitespace(endDateStr)){
-                endDate = sf.parse(endDateStr);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         //todo test
         List<PressureSugarManagementVO> pressureSugarManagementVOList = new ArrayList<>();

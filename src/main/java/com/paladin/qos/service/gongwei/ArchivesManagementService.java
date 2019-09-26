@@ -1,17 +1,13 @@
 package com.paladin.qos.service.gongwei;
 
-import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.analysis.DataConstantContainer;
-import com.paladin.qos.mapper.gongwei.ArchivesManagementMapper;
-import com.paladin.qos.model.gongwei.Archives;
-import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
-import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.paladin.qos.mapper.gongwei.ArchivesManagementMapper;
+import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
+import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
 
 
 @Service

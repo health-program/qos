@@ -1,15 +1,13 @@
 package com.paladin.qos.service.gongwei;
 
-import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.mapper.gongwei.PhysicalManagementMapper;
-import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
-import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.paladin.qos.mapper.gongwei.PhysicalManagementMapper;
+import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
+import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
 
 @Service
 public class PhysicalManagementService extends BaseExhibitionDataAcquire {

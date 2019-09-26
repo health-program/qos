@@ -1,14 +1,10 @@
 package com.paladin.qos.controller.analysis;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,9 +14,6 @@ import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
-import com.paladin.qos.service.analysis.data.AnalysisUnit;
-import com.paladin.qos.service.analysis.data.HospitalAndBed;
-import com.paladin.qos.service.analysis.data.PatientsNum;
 /**
  * 住院人次数，出院人次数，在院人数，额定床位，使用床位，病床使用率
  * @author FM
