@@ -49,4 +49,6 @@ public interface AnalysisMapper {
 
 	int removeDataOfDay(@Param("serialNumber") int serialNumber, @Param("eventId") String eventId);
 
+	long getTotalNumOfEvent(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
+
 }

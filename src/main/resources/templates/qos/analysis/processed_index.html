@@ -47,6 +47,8 @@
                 </div>
             </div>
         </div>
+        <div class="row" id="infoBoxRow">
+        </div>
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
@@ -68,6 +70,7 @@
         showMonthChart();
         showUnitChart();
         showTable();
+        showTotalInfoBox();
     }
 
     function readRequestParam() {
@@ -362,16 +365,21 @@
             tableData.push(data[o]);
         }
 
-        var columns = [];
+        var columns = [{
+            title: '单位',
+            align: 'center',
+            field: 'unitName'
+        }];
+
         selectEvents.forEach(function(event) {
             columns.push({
                 title: event.name,
+                align: 'center',
                 field: 'ev' + event.id
             });
         });
 
         $("#tableGrid").bootstrapTable({ columns: columns, data: tableData })
-
     }
 
     function convertTableData(rawData, eventId, data, isRate) {
@@ -414,6 +422,28 @@
             totalNum: total,
             eventNum: event
         }) : total;
+    }
+
+    // -----------------------
+    // 显示总数信息BOX
+    // -----------------------
+
+    function showTotalInfoBox() {
+        $.postAjax('/qos/analysis/data/get/total', requestParam, function(rawData) {
+            var html = "";
+            selectEvents.forEach(function(event) {
+                html += '<div class="col-md-3 col-sm-6 col-xs-12">' +
+                    '    <div class="info-box">' +
+                    '        <span class="info-box-icon bg-green"><i class="fa fa-flag-o"></i></span>' +
+                    '        <div class="info-box-content">' +
+                    '            <span class="info-box-text">' + event.name + '</span>' +
+                    '            <span class="info-box-number">' + rawData[event.id] + '</span>' +
+                    '        </div>' +
+                    '    </div>' +
+                    '</div>';
+            });
+            $("#infoBoxRow").html(html);
+        });
     }
     </script>
 </body>

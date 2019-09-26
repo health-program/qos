@@ -136,6 +136,14 @@
 		GROUP BY unit_id
 	</select>
 	
+	<select id="getTotalNumOfEvent" resultType="Long">
+		SELECT sum(total_num) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+	</select>
+			
 	<select id="getSerialNumbers" resultType="Integer">
 		SELECT serial_number
 		FROM data_processed_day

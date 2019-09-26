@@ -203,7 +203,7 @@ public class AnalysisController {
 
 	@RequestMapping(value = "/data/get/unit", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public Object getProcessedDataByCount(AnalysisRequest request) {
+	public Object getProcessedDataByUnit(AnalysisRequest request) {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 
@@ -242,8 +242,31 @@ public class AnalysisController {
 				}
 			}
 		}
-
 		return CommonResponse.getErrorResponse();
+	}
+
+	@RequestMapping(value = "/data/get/total", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getProcessedDataTotal(AnalysisRequest request) {
+		Date startDate = request.getStartTime();
+		Date endDate = request.getEndTime();
+
+		List<String> eventIds = request.getEventIds();
+
+		if (eventIds != null && eventIds.size() > 0) {
+			Map<String, Long> map = new HashMap<>();
+			for (String eventId : eventIds) {
+				Event event = DataConstantContainer.getEvent(eventId);
+				if (event != null) {
+					long count = analysisService.getTotalNumOfEvent(eventId,  startDate, endDate);
+					map.put(eventId, count);
+				}
+			}
+			return CommonResponse.getSuccessResponse(map);
+		} else {
+			String eventId = request.getEventId();
+			return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId,  startDate, endDate));
+		}
 	}
 
 	private int getUnitType(Event event) {
@@ -255,11 +278,10 @@ public class AnalysisController {
 		return 0;
 	}
 
-	
 	@GetMapping("/constant/event")
 	@ResponseBody
 	public Object getEvent() {
 		return CommonResponse.getSuccessResponse(DataConstantContainer.getEventList());
 	}
-	
+
 }
