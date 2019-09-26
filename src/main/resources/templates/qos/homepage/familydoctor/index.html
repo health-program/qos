@@ -21,31 +21,34 @@
             <img src="../../../static/image/index/home.png" />家庭医生
         </span>
         <div class="middle">
-            <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>
+            <a href=""> <span class="text-00e4ff"> 昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+            <a href=""> <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span></a>
         </div>
         <div class='right'>
-            <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+            <a href=""><span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+            <a href=""><span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+            <a href=""><span class="text-00B4FF"><i class="circle">•</i>家庭医生</span></a>
         </div>
     </nav>
     <div id="middle">
         <div class="left position-relative">
             <div class="bg_opacity">
                 <div class="header line">重点人群签约率</div>
-                <div class="fr width100 text-align-right pr-100 position-absolute absolute1 absolute2">
+                <div class="fr width100 text-align-right pr-70 position-absolute absolute1 absolute2">
                     <div class="mb5">
-                        <select>
-                            <option>请选择</option>
-                            <option>2019-6</option>
-                        </select>
+
                     </div>
                     <div>
-                        <select>
-                            <option>请选择</option>
-                            <option>请11111</option>
+                        <select id="selectID">
+                            <option value="21021">残疾人签约率</option>
+                            <option value="21022">高血压患者签约率</option>
+                            <option value="21023">糖尿病患者签约率</option>
+                            <option value="21024">孕产妇签约率</option>
+                            <option value="21025">0-6周岁儿童签约率</option>
+                            <option value="21026">65周岁及以上老年人签约率</option>
+                            <option value="21027">严重肺结核患者签约率</option>
+                            <option value="21028">重精神障碍患者签约率</option>
+                            <option value="21029">疾病筛查高危人员签约率</option>
                         </select>
                     </div>
                 </div>
@@ -254,6 +257,7 @@
 <script type="text/javascript" src="/static/js/familydoctorVisit.js"></script>
 <script type="text/javascript" src="/static/js/familydoctorDoctorVisit.js"></script>
 <script type="text/javascript" src="/static/js/familydoctorAssessment.js"></script>
+<script type="text/javascript" src="/static/js/familydoctor/focusgroup.js"></script>
 <script>
 $(function() {
 
@@ -266,53 +270,7 @@ $(function() {
 <!--    myChart2.setOption(option);-->
 
 
-    //急诊人数开始
-    //指定图标的配置和数据
-    var emergencyoption = {
-        xAxis: {
-            type: 'category',
-            data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
-            axisLine: {
-                lineStyle: {
-                    color: '#19d1ff',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            }
-        },
-        yAxis: {
-            type: 'value',
-            splitLine: {
-                show: false
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#19d1ff',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            }
-        },
-        series: [{
-            itemStyle: {
-                normal: {
-                    // 随机显示
-                    color: function(d) { return "#" + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16); }
 
-                    // 定制显示（按顺序）
-                    /*   color: function(params) { 
-                          var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000']; 
-                          return colorList[params.dataIndex] 
-                      } */
-                },
-            },
-            barWidth: 30,
-            data: [120, 200, 150, 80, 70],
-            type: 'bar'
-        }]
-    };
-    //初始化echarts实例
-    var myChartEmergency = echarts.init(document.getElementById('emergency'));
-    myChartEmergency.setOption(emergencyoption);
-    //急诊人数结束
 
 
     // 无缝滚动
@@ -342,7 +300,7 @@ $(function() {
         scrollMove = setInterval(scrollup, 30);
     }
 
-})
+ })
 </script>
 
 

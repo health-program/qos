@@ -13,6 +13,12 @@ $(function(){
         success: function (rawData) {
        var  month21003Data=convertMonthChartData(rawData.result, '21003', true); //
        var option = {
+        tooltip: {
+                             trigger: 'axis',
+                             axisPointer: {
+                                 type: 'shadow'
+                             }
+                         },
         xAxis: {
             type: 'category',
             data: month21003Data.month,

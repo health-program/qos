@@ -38,6 +38,8 @@
 }
 
 
+
+
 .carousel-inner{
   height:40vh;
 }
@@ -48,4 +50,9 @@
 
 .carousel-item{
   display:none;
+}
+
+.pr-70{
+  padding-right: 2vw;
+  margin-top: 1.5vw;
 }
