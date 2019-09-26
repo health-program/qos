@@ -31,7 +31,7 @@ $(function(){
     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
-           eventIds:'13002'
+           eventIds:'22001'
        }
 
 
@@ -41,18 +41,13 @@ $(function(){
         data:arr,
         success: function (rawData) {
            rawData = rawData.result;
+           /*dataMap['13002']=convertUnitChartData(rawData, '13002', true)*/
 
-           var dataMap=convertUnitChartData(rawData, '13002', true); //
+           var dataMap=convertUnitChartData(rawData, '22001', true); //
 
 
               //急诊人数开始
                  var emergencyoption = {
-                   dataZoom:{
-                       realtime:true, //拖动滚动条时是否动态的更新图表数据
-                       height:25,//滚动条高度
-                       start:40,//滚动条开始位置（共100等份）
-                       end:100//结束位置（共100等份）
-                   },
                    tooltip: {
                                  trigger: 'axis',
                                  axisPointer: {
@@ -61,6 +56,20 @@ $(function(){
                              },
                      xAxis: {
                          type: 'category',
+                           axisLabel:{
+
+                           interval:0,
+
+                           rotate:40
+
+                           },
+                           grid:{
+
+                             left:'10%',
+
+                             bottom:'35%'
+
+                             },
                          data: dataMap['unit'],
 
                          axisLine: {
@@ -85,6 +94,12 @@ $(function(){
                                           rotate:30
                                      }
                      },
+                     dataZoom:{
+                             realtime:true, //拖动滚动条时是否动态的更新图表数据
+                              height:25,//滚动条高度
+                              start:40,//滚动条开始位置（共100等份）
+                             end:100//结束位置（共100等份）
+                      },
                      yAxis: {
                          type: 'value',
                          splitLine: {
@@ -105,14 +120,22 @@ $(function(){
 
                              },
                          },
+                         grid:{
+
+                         left:'10%',
+
+                         bottom:'85%'
+
+                         },
                          barWidth: 15,
                          data: dataMap['values'],
                          type: 'bar'
                      }]
                  };
                  //初始化echarts实例
-                 var myChartEmergency = echarts.init(document.getElementById('emergency'));
-                 myChartEmergency.setOption(emergencyoption);
+                  var myChartEmergency2 = echarts.init(document.getElementById('emergency2'));
+                  myChartEmergency2.setOption(emergencyoption);
+
                    //急诊人数结束
          }
     });

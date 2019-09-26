@@ -91,7 +91,7 @@
         </div>
         <div class="right">
             <div class="bg_opacity  position-relative">
-                <div class="header line">家庭医生团队情况</div>
+                <div class="header line">政策扶持人员签约率</div>
                 <div class="fr width100 text-align-right pr-20">
                     <div>
                         <select>
@@ -105,7 +105,7 @@
                 <div id="emergency1"></div>
             </div>
             <div class="bg_opacity">
-                <div class="header line">昆山门急诊人次数</div>
+                <div class="header line">常驻人口建档率率</div>
                 <div id="emergency2"></div>
             </div>
             <div class="bg_opacity position-relative">
@@ -120,6 +120,8 @@
     </div>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/comprehensive/outpatient.js"></script>
+    <script type="text/javascript" src="/static/js/comprehensive/familydoctor.js"></script>
+    <script type="text/javascript" src="/static/js/comprehensive/permanent.js"></script><!--常驻-->
 </body>
 
 <script>
@@ -229,12 +231,9 @@ $(function() {
     var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
     myChartEmergency1.setOption(emergencyoption);
 
-    var myChartEmergency2 = echarts.init(document.getElementById('emergency2'));
-    myChartEmergency2.setOption(emergencyoption);
 
 
-    var myChartEdoctor = echarts.init(document.getElementById('doctor'));
-    myChartEdoctor.setOption(emergencyoption);
+
 
     // 住院/出院人次数开始
 
