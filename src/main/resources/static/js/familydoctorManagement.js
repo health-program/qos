@@ -62,6 +62,16 @@ $(function(){
     var myChart = echarts.init(document.getElementById('chartmain'));
     myChart.setOption(option);
 
+
+        window.addEventListener("resize", function () {
+            myChart.resize();
+        });
+
+
+
+
+
+
          }
     });
 

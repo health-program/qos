@@ -64,8 +64,22 @@ $(function(){
          var myChart4 = echarts.init(document.getElementById('signingDoctor'));
          myChart4.setOption(option);
 
+
+     window.addEventListener("resize", function () {
+                         myChart4.resize();
+    });
+
+
+
+
+
+
          }
     });
+
+
+
+
 
 
 

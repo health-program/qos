@@ -7,7 +7,7 @@ $(function(){
            eventIds:'21003'
          }
       $.ajax({
-         type : "post",    //请求类型
+       type : "post",    //请求类型
         url : "/qos/analysis/data/get/month/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
@@ -61,6 +61,13 @@ $(function(){
     //初始化echarts实例
      var myChart3 = echarts.init(document.getElementById('visiting'));
       myChart3.setOption(option);
+
+
+       window.addEventListener("resize", function () {
+                             myChart3.resize();
+                         });
+
+
 
          }
     });

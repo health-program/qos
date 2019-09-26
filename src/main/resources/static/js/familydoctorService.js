@@ -62,6 +62,13 @@ $(function(){
    var myChart1 = echarts.init(document.getElementById('individualization'));
        myChart1.setOption(option);
 
+
+        window.addEventListener("resize", function () {
+                              myChart1.resize();
+                          });
+
+
+
          }
     });
 
