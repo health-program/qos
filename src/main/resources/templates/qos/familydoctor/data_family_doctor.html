@@ -492,66 +492,18 @@ margin-top: 16px;
 		});
 		var eventIds = '21005,21006,21007,21008,21009,21010,21011,21012,21013,21014,21015,21016,21017,21018,21019,21020';
 		function initData() {
-			$.postAjax('/qos/analysis/data/get/unit',{'eventIds':eventIds},function (response) {
-				var data = {};
-				convertCount2TableData(response, '21005', data);
-				convertCount2TableData(response, '21006', data);
-				convertCount2TableData(response, '21007', data);
-				convertCount2TableData(response, '21008', data);
-				convertCount2TableData(response, '21009', data);
-				convertCount2TableData(response, '21010', data);
-				convertCount2TableData(response, '21011', data);
-				convertCount2TableData(response, '21012', data);
-				convertCount2TableData(response, '21013', data);
-				convertCount2TableData(response, '21014', data);
-				convertCount2TableData(response, '21015', data);
-				convertCount2TableData(response, '21016', data);
-				convertCount2TableData(response, '21017', data);
-				convertCount2TableData(response, '21018', data);
-				convertCount2TableData(response, '21019', data);
-				convertCount2TableData(response, '21020', data);
-
-				let totals = data.total;
+			$.postAjax('/qos/analysis/data/get/total',{'eventIds':eventIds},function (response) {
 
 				let ids = eventIds.split(",");
 
 				ids.forEach(function(id) {
 					let s = "#"+id;
-					$(s).text(totals[id]);
+					$(s).text(response[id]);
 				})
 
 			})
 		}
 
-		function convertCount2TableData(originData, eventId, data) {
-			var eventData = originData[eventId],
-					fieldName = eventId,
-					total = 0;
-
-			eventData && eventData.forEach(function(item) {
-				var id = item.unitId;
-				unitData = data[id];
-				if (!unitData) {
-					unitData = {
-						unitId: id,
-						unitName: item.unitName
-					};
-					data[id] = unitData;
-				}
-				unitData[fieldName] = item.count;
-				total += item.count;
-			});
-
-			var totalData = data['total'];
-			if (!totalData) {
-				totalData = {
-					unitId: 'total',
-					unitName: '合计',
-				};
-				data['total'] = totalData;
-			}
-			totalData[fieldName] = total;
-		}
 
 		//定时任务
 		function timeoutFunc(config, func) {
