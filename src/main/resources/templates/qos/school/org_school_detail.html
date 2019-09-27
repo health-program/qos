@@ -29,6 +29,7 @@
 	        editFormClass: false,
 	        columns: [
 					{ title: "学校名称", isListData:true, name: "parentSchoolId", inputType: "SELECT-TREE-SERVER", idField:'id',nameField:'schoolFullName', parentField:'parentId',url:"/qos/org/school/name/find/all" },
+					{ title: "学年", name: "schoolYear", inputType: "DATE",attr:{class: "form-control tonto-datepicker-year"} },
 					{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 					{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
 					{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },

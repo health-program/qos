@@ -58,6 +58,9 @@ public class OrgSchoolDTO {
 		
 	//学生总人数
 	private Integer total;
+	
+	//学年
+	private String schoolYear;
 
 	private List<OrgSchoolPeopleDTO> people;
 
@@ -211,6 +214,14 @@ public class OrgSchoolDTO {
 
 	public void setTotal(Integer total) {
 	    this.total = total;
+	}
+
+	public String getSchoolYear() {
+	    return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+	    this.schoolYear = schoolYear;
 	}
 	
 }
