@@ -36,7 +36,6 @@ $(function(){
 
         var  unit13003Data13003=rawData.result['13003'].sort(compareBigToSmall('count'));
         var unit13003DataArray= unit13003Data13003.slice(0,5)
-        alert('qiand'+unit13003DataArray.length)
          // 排名最高的已经有了
 
 
@@ -61,8 +60,7 @@ $(function(){
                    }
               }
 
-alert(999)
-var newast13001 = {}
+ var newast13001 = {}
     newast13001['13001']=unit13001DatanewArray
  var  unit13001DatanewArrayunit13001DatanewArray=convertUnitChartData(newast13001, '13001', false);
 
@@ -72,11 +70,9 @@ var newast13001 = {}
   var  unit13002DatanewArrayunit13002DatanewArray=convertUnitChartData(newast13002, '13002', false);
 
 
-       debugger
 
          //社区就诊开始
-
-                  var medicalAdviceOption={
+          var medicalAdviceOption={
                    legend: {
                        name: [],
                        orient: 'align',
@@ -145,27 +141,27 @@ var newast13001 = {}
                    }, ],
                    series: [
                           {
-                            name: '门诊人次',
-                            position: 'bottom',
+                            name: '门诊人次23',
+                            position: 'top',
                             type: 'bar',
                             stack: '费用',
                             data: unit13001DatanewArrayunit13001DatanewArray.values,
                            //data: [2.5, 2, 1.5, 2.5, 4],
-                           barWidth: '30%',
+                           barWidth: '80%',
                            itemStyle: {
                                color: '#567db8',
                            },
                         },
                         {
-                         name: '急诊人次',
-                           position: 'bottom',
+                         name: '急诊人次3',
+                           position: 'top',
                            type: 'bar',
                             stack: '费用',
                            data: unit13002DatanewArrayunit13002DatanewArray.values,
                            // data: [2, 3, 2, 2, 2.5],
-                           barWidth: '30%',
+                           barWidth: '80%',
                            itemStyle: {
-                                color: 'red',
+                                color: '#4aa4d4',
                            },
                          }
                      ]
