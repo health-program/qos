@@ -13,7 +13,7 @@ $(function(){
 
 
     $("#selectID").change(function(){
-       echartses()
+       paycomparsionOption()
     })
 
     function convertMonthChartData(data, eventId, isRate) {
@@ -37,23 +37,19 @@ $(function(){
     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
-           eventIds:'31009,31010'  // 伟华
+           eventIds:'31009,31010',  // 伟华
+           startTime:'2019-08-27'
        }
 
+        alert(7)
 
       $.ajax({
-       type : "post",    //请求类型
-        url : "/qos/analysis/data/get/day/instalments",//请求的 URL地址
+        type : "post",    //请求类型
+        url : "/qos/analysis/data/get/total",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-
-           var  month31009Data=convertMonthChartData(rawData.result, '31009', false); //
-           var  month31010Data=convertMonthChartData(rawData.result, '31010', false); //
-
-
-
-
-           echartses()
+            debugger
+           paycomparsionOption()
 
          }
     });
@@ -64,73 +60,74 @@ $(function(){
 
 
 
-var echartses=function(id){
+var paycomparsionOption=function(id){
   var eventId = $("#selectID").val();
     var data = dataMap[eventId];
    //急诊人数开始
       //指定图标的配置和数据
-      var emergencyoption = {
-        tooltip: {
-                      trigger: 'axis',
-                      axisPointer: {
-                          type: 'shadow'
-                      }
-                  },
+     
+  var paycomparsionOption={
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
 
-         dataZoom:{
-                   realtime:true, //拖动滚动条时是否动态的更新图表数据
-                   height:25,//滚动条高度
-                   start:40,//滚动条开始位置（共100等份）
-                   end:65//结束位置（共100等份）
-          },
-         xAxis: {
-              type: 'category',
-              data: data.unit,
+    visualMap: {
+        show: false,
+        min: 80,
+        max: 600,
+        inRange: {
+            colorLightness: [0, 1]
+        }
+    },
+    series : [
+        {
+            name:'访问来源',
+            type:'pie',
+            radius : '55%',
+            center: ['50%', '50%'],
+            data:[
+                {value:335, name:'直接访问'},
+                {value:400, name:'搜索引擎'}
+            ].sort(function (a, b) { return a.value - b.value; }),
+            roseType: 'radius',
+            label: {
+                normal: {
+                    textStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    lineStyle: {
+                        color: 'rgba(255, 255, 255, 0.3)'
+                    },
+                    smooth: 0.2,
+                    length: 10,
+                    length2: 20
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: '#c23531',
+                    shadowBlur: 200,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            },
 
-              axisLine: {
-                  lineStyle: {
-                      color: '#19d1ff',
-                      width: 1, //这里是为了突出显示加上的
-                  }
-              },
+            animationType: 'scale',
+            animationEasing: 'elasticOut',
+            animationDelay: function (idx) {
+                return Math.random() * 200;
+            }
+        }
+    ]
+};
 
-               grid: {
-                              left: 45,
-                              right: 20,
-                              bottom: 10,
-                              containLabel: true
-               }
-
-          },
-          yAxis: {
-              type: 'value',
-              splitLine: {
-                  show: false
-              },
-              axisLine: {
-                  lineStyle: {
-                      color: '#19d1ff',
-                      width: 1, //这里是为了突出显示加上的
-                  }
-              }
-          },
-          series: [{
-              itemStyle: {
-                  normal: {
-                      // 随机显示
-                      color: function(d) { return "#" + '439AFF'; }
-
-                  },
-              },
-              barWidth: 15,
-              data: data.values,
-              type: 'bar'
-          }]
-      };
       //初始化echarts实例
-
-      var myChartEmergency = echarts.init(document.getElementById('emergency'));
-      myChartEmergency.setOption(emergencyoption);
+   var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
+      paycomparsion_id.setOption(paycomparsionOption);
       //急诊人数结束
 }
 

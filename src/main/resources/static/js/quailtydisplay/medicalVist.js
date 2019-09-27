@@ -26,7 +26,6 @@ $(function(){
         url : "/qos/analysis/data/get/day/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-        alert(8888)
 
       var arr13001Month=[]
       var arr13001MonthY=[]

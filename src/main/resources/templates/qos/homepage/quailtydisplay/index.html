@@ -118,9 +118,10 @@
 </body>
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/quailtydisplay/common.js"></script><!--旭武封装的方法的month等-->
-<script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
+
 <script type="text/javascript" src="/static/js/quailtydisplay/communityVist.js"></script><!--社区就诊top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
+<script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
 <script>
 $(function() {
 
@@ -273,80 +274,6 @@ quailty_middle_hospitelOption = {
   var quailty_middle_hospitel_id = echarts.init(document.getElementById('middle_hospitel'));
 	  quailty_middle_hospitel_id.setOption(quailty_middle_hospitelOption);
   //医院就诊top5结束
-
-
-
-
-
-
-  //支付方式对比开始
-  var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
-  var paycomparsionOption={
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-
-    visualMap: {
-        show: false,
-        min: 80,
-        max: 600,
-        inRange: {
-            colorLightness: [0, 1]
-        }
-    },
-    series : [
-        {
-            name:'访问来源',
-            type:'pie',
-            radius : '55%',
-            center: ['50%', '50%'],
-            data:[
-                {value:335, name:'直接访问'},
-                {value:310, name:'邮件营销'},
-                {value:274, name:'联盟广告'},
-                {value:235, name:'视频广告'},
-                {value:400, name:'搜索引擎'}
-            ].sort(function (a, b) { return a.value - b.value; }),
-            roseType: 'radius',
-            label: {
-                normal: {
-                    textStyle: {
-                        color: 'rgba(255, 255, 255, 0.3)'
-                    }
-                }
-            },
-            labelLine: {
-                normal: {
-                    lineStyle: {
-                        color: 'rgba(255, 255, 255, 0.3)'
-                    },
-                    smooth: 0.2,
-                    length: 10,
-                    length2: 20
-                }
-            },
-            itemStyle: {
-                normal: {
-                    color: '#c23531',
-                    shadowBlur: 200,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            },
-
-            animationType: 'scale',
-            animationEasing: 'elasticOut',
-            animationDelay: function (idx) {
-                return Math.random() * 200;
-            }
-        }
-    ]
-};
-
-   paycomparsion_id.setOption(paycomparsionOption);
-  //支付方式对比结束
-
-
 
 
   //收入分类开始
