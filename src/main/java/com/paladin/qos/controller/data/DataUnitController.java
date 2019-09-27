@@ -1,47 +1,31 @@
 package com.paladin.qos.controller.data;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import javax.validation.Valid;
-
-import com.paladin.qos.analysis.impl.yiyuan.opd.HospitalizationBedTotal;
-import com.paladin.qos.controller.analysis.AnalysisRequest;
-import com.paladin.qos.service.analysis.AnalysisService;
-import com.paladin.qos.service.analysis.data.AnalysisMonth;
-import com.paladin.qos.service.analysis.data.DataCountUnit;
-import com.paladin.qos.service.analysis.data.DataPointMonth;
-import com.paladin.qos.service.analysis.data.DataResult;
-import com.paladin.qos.service.data.vo.BedReportVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.util.StringUtils;
-
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.controller.data.dto.DataUnitExportCondition;
-import com.paladin.qos.controller.data.dto.DataUtilRequest;
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.data.dto.DataUnitDTO;
 import com.paladin.qos.service.data.dto.DataUnitQuery;
+import com.paladin.qos.service.data.vo.BedReportVO;
 import com.paladin.qos.service.data.vo.DataUnitVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/qos/data/unit")
@@ -179,7 +163,7 @@ public class DataUnitController extends ControllerSupport {
 		for (DataUnit dataUnit:dataUnitList){
 			BedReportVO bedReportVO=new BedReportVO();
 			if (dataUnit.getType()==1){
-				AnalysisMonth analysisMonth=dataUnitService.getBedReportByQuery(dataUnit.getId(),HospitalizationBedTotal.EVENT_ID,request.getStartTime(),request.getEndTime());
+				DataPointMonth analysisMonth=dataUnitService.getBedReportByQuery(dataUnit.getId(),"22013",request.getStartTime(),request.getEndTime());
 				if (null!=analysisMonth){
 					bedReportVO.setUnitName(dataUnit.getId());
 					bedReportVO.setBedNumber(dataUnit.getBedNumber());

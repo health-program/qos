@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.data.DataUnitMapper">
 
-    <select id="getBedReportByQuery" resultType="com.paladin.qos.service.analysis.data.AnalysisMonth" >
+    <select id="getBedReportByQuery" resultType="com.paladin.qos.service.analysis.data.DataPointMonth" >
         SELECT
         year,
         MONTH ,
@@ -12,8 +12,8 @@
         data_processed_day
         where unit_id =#{unitId}
         and event_id=#{eventId}
-        AND serial_number>=#{start}
-        AND serial_number&lt;=#{end}
+        AND serial_number<![CDATA[>=]]> #{start}
+        AND serial_number<![CDATA[<=]]>#{end}
         GROUP BY `year`, `month`
     </select>
     
