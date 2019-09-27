@@ -46,11 +46,10 @@ $(function(){
         url : "/qos/analysis/data/get/day/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-                debugger
+
            var  month31009Data=convertMonthChartData(rawData.result, '31009', false); //
            var  month31010Data=convertMonthChartData(rawData.result, '31010', false); //
-           alert('支付方fr式')
-             debugger
+
 
 
 
