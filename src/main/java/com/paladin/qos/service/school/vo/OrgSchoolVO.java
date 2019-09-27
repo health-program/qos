@@ -61,6 +61,9 @@ public class OrgSchoolVO {
 	//学生总人数
 	private Integer total;
 	
+	//学年
+	private String schoolYear;
+	
 	private List<OrgSchoolPeople> people;
 
 	// 
@@ -268,6 +271,14 @@ public class OrgSchoolVO {
 
 	public void setPeople(List<OrgSchoolPeople> people) {
 	    this.people = people;
+	}
+
+	public String getSchoolYear() {
+	    return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+	    this.schoolYear = schoolYear;
 	}
 
 }
