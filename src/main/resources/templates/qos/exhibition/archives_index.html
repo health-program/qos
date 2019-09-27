@@ -140,6 +140,7 @@
                 return params;
             },
             responseHandler: function(res) {
+                var data = {};
                 sumData = res || [];
                 var totalPeopleNumber=0;
                 var totalActiveArchivesNumber=0;
@@ -161,6 +162,7 @@
                     "publicArchivesRate":getRate(totalActiveArchivesNumber,totalPublicArchivesNumber)
                 }
                 sumData.push(total);
+                dataVal = data|| [];
 
                 initPieChart1();
                 initPieChart2();
