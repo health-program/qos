@@ -1,4 +1,6 @@
  var dataMap={}
+   var  data31009;
+   var  data31010;
 $(function(){
 
     function getRateNum(item, fixed) {
@@ -38,20 +40,20 @@ $(function(){
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
            eventIds:'31009,31010',  // 伟华
-           startTime:'2019-08-27'
+           startTime:'2018-12-10'
        }
-
-        alert(7)
 
       $.ajax({
         type : "post",    //请求类型
         url : "/qos/analysis/data/get/total",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-            debugger
-           paycomparsionOption()
 
-         }
+        data31009 = rawData.result['31009']
+        data31010 = rawData.result['31010']
+
+        paycomparsionOption()
+       }
     });
 
 
@@ -87,8 +89,8 @@ var paycomparsionOption=function(id){
             radius : '55%',
             center: ['50%', '50%'],
             data:[
-                {value:335, name:'直接访问'},
-                {value:400, name:'搜索引擎'}
+                {value:data31009, name:'医保'},
+                {value:data31010, name:'自费'}
             ].sort(function (a, b) { return a.value - b.value; }),
             roseType: 'radius',
             label: {
