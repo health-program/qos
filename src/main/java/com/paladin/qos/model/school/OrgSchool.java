@@ -61,6 +61,9 @@ public class OrgSchool extends BaseModel {
 	
 	//学生总人数
 	private Integer total;
+	
+	//学年
+	private String schoolYear;
 
 	public String getId() {
 		return id;
@@ -204,6 +207,14 @@ public class OrgSchool extends BaseModel {
 
 	public void setTotal(Integer total) {
 	    this.total = total;
+	}
+
+	public String getSchoolYear() {
+	    return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+	    this.schoolYear = schoolYear;
 	}
 
 }
