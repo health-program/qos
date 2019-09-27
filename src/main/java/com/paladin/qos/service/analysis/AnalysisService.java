@@ -15,9 +15,11 @@ import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
 import com.paladin.qos.model.data.DataUnit;
-import com.paladin.qos.service.analysis.data.AnalysisMonth;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
+import com.paladin.qos.service.analysis.data.DataCountDay;
+import com.paladin.qos.service.analysis.data.DataCountMonth;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
+import com.paladin.qos.service.analysis.data.DataCountYear;
 import com.paladin.qos.service.analysis.data.DataPointDay;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointUnit;
@@ -41,29 +43,29 @@ public class AnalysisService {
 	// ----------------------------------->查找某事件某医院在时间段内按时间粒度统计数据<-----------------------------------
 
 	public DataPointUnit<DataPointDay> getDataPointUnitOfDay(String eventId, String unitId, Date startDate, Date endDate) {
-		List<DataPointDay> points = analysisMapper.getDataPointOfDay(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
+		List<DataPointDay> points = analysisMapper.getDataPointOfDayByUnit(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
 				TimeUtil.getSerialNumberByDay(endDate));
 		return new DataPointUnit<DataPointDay>(unitId, points);
 	}
 
 	public DataPointUnit<DataPointMonth> getDataPointUnitOfMonth(String eventId, String unitId, Date startDate, Date endDate) {
-		List<DataPointMonth> points = analysisMapper.getDataPointOfMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
+		List<DataPointMonth> points = analysisMapper.getDataPointOfMonthByUnit(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
 				TimeUtil.getSerialNumberByDay(endDate));
 		return new DataPointUnit<DataPointMonth>(unitId, points);
 	}
 
 	public DataPointUnit<DataPointYear> getDataPointUnitOfYear(String eventId, String unitId, int startYear, int endYear) {
-		List<DataPointYear> points = analysisMapper.getDataPointOfYear(eventId, unitId, startYear, endYear);
+		List<DataPointYear> points = analysisMapper.getDataPointOfYearByUnit(eventId, unitId, startYear, endYear);
 		return new DataPointUnit<DataPointYear>(unitId, points);
 	}
 
 	public DataPointUnit<DataPointWeekYear> getDataPointUnitOfWeekYear(String eventId, String unitId, int startYear, int endYear) {
-		List<DataPointWeekYear> points = analysisMapper.getDataPointOfWeekYear(eventId, unitId, startYear, endYear);
+		List<DataPointWeekYear> points = analysisMapper.getDataPointOfWeekYearByUnit(eventId, unitId, startYear, endYear);
 		return new DataPointUnit<DataPointWeekYear>(unitId, points);
 	}
 
 	public DataPointUnit<DataPointWeekMonth> getDataPointUnitOfWeekMonth(String eventId, String unitId, Date startDate, Date endDate) {
-		List<DataPointWeekMonth> points = analysisMapper.getDataPointOfWeekMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
+		List<DataPointWeekMonth> points = analysisMapper.getDataPointOfWeekMonthByUnit(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
 				TimeUtil.getSerialNumberByDay(endDate));
 		return new DataPointUnit<DataPointWeekMonth>(unitId, points);
 	}
@@ -259,6 +261,31 @@ public class AnalysisService {
 	}
 
 	/**
+	 * 按日分组获取时间段内所有单位某事件的发生概率
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataPointDay> getAnalysisResultByDay(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.getDataPointOfDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按日分组获取时间段内所有单位某事件的发生概率
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataPointDay> getAnalysisResultByDay(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.getDataPointOfDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
 	 * 按月分组获取时间段内所有单位某事件的发生概率
 	 * 
 	 * @param eventId
@@ -266,8 +293,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.getDataPointOfMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
@@ -279,24 +306,33 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultGroupByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.getDataPointOfMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
 	}
 
 	/**
-	 * 
-	 * 按月分组获取时间段内某单位某事件的发生概率
+	 * 按年分组获取时间段内所有单位某事件的发生概率
 	 * 
 	 * @param eventId
-	 * @param unitId
 	 * @param startDate
 	 * @param endDate
 	 * @return
 	 */
-	public List<AnalysisMonth> getAnalysisResultByMonth(String eventId, String unitId, Date startDate, Date endDate) {
-		return analysisMapper.getAnalysisResultOfUnitGroupByMonth(eventId, unitId, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointYear> getAnalysisResultByYear(String eventId, int startYear, int endYear) {
+		return analysisMapper.getDataPointOfYear(eventId, 0, startYear, endYear);
+	}
+
+	/**
+	 * 按年分组获取时间段内所有单位某事件的发生概率
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataPointYear> getAnalysisResultByYear(String eventId, int unitType, int startYear, int endYear) {
+		return analysisMapper.getDataPointOfYear(eventId, unitType, startYear, endYear);
 	}
 
 	/**
@@ -362,6 +398,156 @@ public class AnalysisService {
 	}
 
 	/**
+	 * 按日获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountDay> countTotalNumByDay(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按日获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountDay> countTotalNumByDay(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按日获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountDay> countEventNumByDay(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按日获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountDay> countEventNumByDay(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountMonth> countTotalNumByMonth(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountMonth> countTotalNumByMonth(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countTotalNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountMonth> countEventNumByMonth(String eventId, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按月获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountMonth> countEventNumByMonth(String eventId, int unitType, Date startDate, Date endDate) {
+		return analysisMapper.countEventNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	}
+
+	/**
+	 * 按年获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountYear> countTotalNumByYear(String eventId, int startYear, int endYear) {
+		return analysisMapper.countTotalNumByYear(eventId, 0, startYear, endYear);
+	}
+
+	/**
+	 * 按年获取时间段内某事件的总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountYear> countTotalNumByYear(String eventId, int unitType, int startYear, int endYear) {
+		return analysisMapper.countTotalNumByYear(eventId, unitType, startYear, endYear);
+	}
+
+	/**
+	 * 按年获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountYear> countEventNumByYear(String eventId, int startYear, int endYear) {
+		return analysisMapper.countEventNumByYear(eventId, 0, startYear, endYear);
+	}
+
+	/**
+	 * 按年获取时间段内某事件的事件总数
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountYear> countEventNumByYear(String eventId, int unitType, int startYear, int endYear) {
+		return analysisMapper.countEventNumByYear(eventId, unitType, startYear, endYear);
+	}
+
+	/**
 	 * 获取事件发生总数
 	 * 
 	 * @param eventId
@@ -388,7 +574,6 @@ public class AnalysisService {
 
 	}
 
-
 	/**
 	 * 获取事件、单位当前处理到的日期
 	 * 
@@ -410,8 +595,15 @@ public class AnalysisService {
 		return analysisMapper.removeDataOfDay(serialNumber, eventId);
 	}
 
-	public List<DataCountUnit> countGetBedByUnit(String eventId, int unitType) {
-		List<DataCountUnit> result = analysisMapper.countGetBedByUnit(eventId, unitType);
+	/**
+	 * 按单位获取最近一次数据
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @return
+	 */
+	public List<DataCountUnit> getLastCountByUnit(String eventId, int unitType) {
+		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType);
 		orderByUnit(result);
 		return result;
 	}
