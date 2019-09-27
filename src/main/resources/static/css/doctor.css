@@ -56,3 +56,18 @@
   padding-right: 2vw;
   margin-top: 1.5vw;
 }
+#middle .middle{
+  width:45vw!important;
+}
+
+.roll{
+  width:45vw!important;
+}
+
+.doctor-mid-bg{
+  margin-right:3vw!important;
+}
+
+.doctor-mid-bg:nth-child(4n){
+  margin-right:0px!important;
+}

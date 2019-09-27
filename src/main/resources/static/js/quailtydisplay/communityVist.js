@@ -70,7 +70,6 @@ $(function(){
   var  unit13002DatanewArrayunit13002DatanewArray=convertUnitChartData(newast13002, '13002', false);
 
 
-
          //社区就诊开始
           var medicalAdviceOption={
                    legend: {
