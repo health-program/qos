@@ -65,7 +65,7 @@
                     </div>
                 </div>
                 <div class="col-md-4" style="padding-left: 0">
-                    <div class="box box-solid" style="margin-bottom: 5px">
+                    <div class="box box-solid" style="margin-bottom: 7px">
                         <div class="box-header with-border" style="padding-bottom: 3px">
                             <h3 class="box-title" style="letter-spacing: 3px">婚前检查</h3>
                         </div>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
                 <div class="col-md-4" style="padding-left: 0">
-                    <div class="box box-solid" style="margin-bottom: 5px">
+                    <div class="box box-solid" style="margin-bottom: 7px">
                         <div class="box-header with-border"  style="padding-bottom: 3px">
                             <h3 class="box-title" style="letter-spacing: 3px">孕妇建卡</h3>
                         </div>
@@ -287,29 +287,12 @@
     function initMaternalLeftData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/left",{startTime : startTime, endTime : endTime},function (res) {
-            let gwycfData = [];
-            let yqjcData = [];
-            let yffsData = [];
-            let etfsData = [];
-            let yfswData = [];
-            res.forEach(event => {
-                if (event.eventId === '13305') {
-                    gwycfData = mergeTotalNumArr(event.unitPoints);
-                    $("#gwycf").text(getTotalFromAr(gwycfData));
-                } else if (event.eventId === '13303') {
-                    yqjcData = mergeTotalNumArr(event.unitPoints);
-                    $("#yqjc").text(getTotalFromAr(yqjcData));
-                } else if (event.eventId === '13314') {
-                    yffsData = mergeTotalNumArr(event.unitPoints);
-                } else if (event.eventId === '13321') {
-                    etfsData = mergeTotalNumArr(event.unitPoints);
-                } else if (event.eventId === '13306') {
-                    yfswData = mergeTotalNumArr(event.unitPoints);
-                    $("#yfsw").text(getTotalFromAr(yfswData));
-                }
-            });
-            $("#chfs").text(getTotalFromAr(yffsData)+getTotalFromAr(etfsData));
+        var eventIds = '13305,13303,13314,13321,13306';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
+            $("#gwycf").text(res['13305']);
+            $("#yqjc").text(res['13303']);
+            $("#yfsw").text(res['13306']);
+            $("#chfs").text(res['13314'] + res['13321']);
         })
     }
 
@@ -317,26 +300,12 @@
     function initMaternalRightUpData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/up",{startTime : startTime, endTime : endTime},function (res) {
-            let ysrsData = [];
-            let yspsData = [];
-            let gjaData = [];
-            let rxaData = [];
-            res.forEach(event => {
-                if (event.eventId === '13317') {
-                    ysrsData = mergeTotalNumArr(event.unitPoints);
-                    $("#ysrs").text(getTotalFromAr(ysrsData));
-                } else if (event.eventId === '13318') {
-                    yspsData = mergeTotalNumArr(event.unitPoints);
-                    $("#ysps").text(getTotalFromAr(yspsData));
-                } else if (event.eventId === '13307') {
-                    gjaData = mergeTotalNumArr(event.unitPoints);
-                    $("#gja").text(getTotalFromAr(gjaData));
-                } else if (event.eventId === '13308') {
-                    rxaData = mergeTotalNumArr(event.unitPoints);
-                    $("#rxa").text(getTotalFromAr(rxaData));
-                }
-            });
+        var eventIds = '13317,13318,13307,13308';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
+            $("#ysrs").text(res['13317']);
+            $("#ysps").text(res['13318']);
+            $("#gja").text(res['13307']);
+            $("#rxa").text(res['13308']);
         })
     }
 
@@ -344,26 +313,12 @@
     function initMaternalRightDownData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/down",{startTime : startTime, endTime : endTime},function (res) {
-            let mdjcData = [];
-            let mdgrData = [];
-            let ygjcData = [];
-            let yggrData = [];
-            res.forEach(event => {
-                if (event.eventId === '13309') {
-                    mdjcData = mergeTotalNumArr(event.unitPoints);
-                    $("#mdjc").text(getTotalFromAr(mdjcData));
-                } else if (event.eventId === '13310') {
-                    mdgrData = mergeTotalNumArr(event.unitPoints);
-                    $("#mdgr").text(getTotalFromAr(mdgrData));
-                } else if (event.eventId === '13311') {
-                    ygjcData = mergeTotalNumArr(event.unitPoints);
-                    $("#ygjc").text(getTotalFromAr(ygjcData));
-                } else if (event.eventId === '13312') {
-                    yggrData = mergeTotalNumArr(event.unitPoints);
-                    $("#yggr").text(getTotalFromAr(yggrData));
-                }
-            });
+        var eventIds = '13309,13310,13311,13312';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
+            $("#mdjc").text(res['13309']);
+            $("#mdgr").text(res['13310']);
+            $("#ygjc").text(res['13311']);
+            $("#yggr").text(res['13312']);
         })
     }
 
@@ -403,19 +358,11 @@
         });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/hqjc",{ startTime : startTime, endTime : endTime},function (res) {
+        var eventIds = '13301,13302';
+        $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime, endTime : endTime,eventIds:eventIds},function (res) {
             let chartData = [];
             if (res) {
-                let maleData = [];
-                let femaleData = [];
-                res.forEach(event => {
-                    if (event.eventId === '13301') {
-                        maleData = mergeTotalNumArr(event.unitPoints);
-                    } else if (event.eventId === '13302') {
-                        femaleData = mergeTotalNumArr(event.unitPoints);
-                    }
-                });
-                chartData.push({value:getTotalFromAr(maleData),name:"男性"},{value:getTotalFromAr(femaleData),name:"女性"})
+                chartData.push({value:res['13301'],name:"男性"},{value:res['13302'],name:"女性"})
             }
             chart.hideLoading();
             var labelOption = {
@@ -468,18 +415,10 @@
         });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/yfjk",{ startTime : startTime, endTime : endTime},function (res) {
-            let preData = [];
-            let earlyData = [];
-            res.forEach(event => {
-                if (event.eventId === '13319') {
-                    preData = mergeTotalNumArr(event.unitPoints);
-                } else if (event.eventId === '13320') {
-                    earlyData = mergeTotalNumArr(event.unitPoints);
-                }
-            });
-            let total = getTotalFromAr(preData);
-            let earlyPregnancyCardNumber = getTotalFromAr(earlyData);
+        var eventIds = '13319,13320';
+        $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime, endTime : endTime,eventIds:eventIds},function (res) {
+            let total = res['13319'];
+            let earlyPregnancyCardNumber = res['13320'];
             let data = [];
             data.push({value:total-earlyPregnancyCardNumber, name:'非早孕建卡数' },{value:earlyPregnancyCardNumber, name:'早孕建卡数'});
             let percentage = '0.00%';
@@ -611,19 +550,17 @@
         });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/maternal/search/yfsc",{  startTime : startTime, endTime : endTime}, function (res) {
-            let dataValue = [];
-            let timeValue = [];
+        let eventIds = '13304';
+        $.postAjax("/qos/analysis/data/get/month/instalments",{  startTime : startTime, endTime : endTime,'eventIds':eventIds}, function (res) {
             let total = 0;
             let datas = [];
-            if (res.eventId === '13304') {
-                datas = mergeTotalNumArr(res.unitPoints);
+            let time = [];
+            if (res) {
+                let month13304 = convertMonthChartData(res, '13304', false);
+                datas = month13304.valuesMap['total'];
+                time = month13304.month;
+                total = datas.reduce((previousValue, currentValue) => previousValue + currentValue )
             }
-            datas.forEach(function (data) {
-                dataValue.push(data.totalNum);
-                timeValue.push(data.date);
-                total += data.totalNum;
-            });
             $("#yfscTotal").text(total + "人次");
             if (total === 0) {
                 showChartInfo(chart,'暂无数据');
@@ -639,7 +576,7 @@
                     verticalAlign: 'top',
                     rotate: 0,
                     formatter: '{c}',
-                    fontSize: 12,
+                    fontSize: 15,
                     rich: {
                         name: {
                             textBorderColor: '#fff'
@@ -673,14 +610,14 @@
                 grid: {
                     left: '2%',
                     right: '1%',
-                    bottom: '10%',
+                    bottom: '5%',
                     containLabel: true
                 },
                 calculable: true,
                 xAxis: [
                     {
                         type: 'category',
-                        data: timeValue,
+                        data: time,
                         axisTick: {
                             alignWithLabel: true
                         }
@@ -699,12 +636,78 @@
                         barWidth: '70%',
                         label: labelOption,
                         barGap: 0,
-                        data: dataValue,
+                        data: datas,
                     }
                 ]
             };
             chart.setOption(option,true);
         });
+    }
+
+    function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2);
     }
 
     function generatorFnscChartChart(chart) {
@@ -777,7 +780,7 @@
                 grid: {
                     left: '2%',
                     right: '1%',
-                    bottom: '10%',
+                    bottom: '5%',
                     containLabel: true
                 },
                 calculable: true,

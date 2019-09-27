@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+	<tt:constant enumcode="data-event-type,data-unit-type" />
+	<!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+	<section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="monthChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="unitChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	<div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+	<script type="text/javascript">
+	var table, monthChart, unitChart, requestParam, selectUnit;
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+
+
+		function initTable() {
+			table = $
+					.createTable(
+							"#dataGrid",
+							{
+								idField : "id",
+								columns : [ [
+										
+										{
+											title : "医疗机构",
+											field : "unitName"
+										},
+										{
+											title : "住院死亡率",
+											field : "ev10100"
+										},
+										{
+											title : "新生儿住院<br>总死亡率",
+											field : "ev10110"
+										},
+										{
+											title : "新生儿手术患者<br>住院死亡率",
+											field : "ev10111"
+										},
+										{
+											title : "新生儿非手术患者<br>住院死亡率",
+											field : "ev10112"
+										},
+										{
+											title : "新生儿患者出生<br>体重<=750克死亡率", field: "ev10113"
+                                        },
+					                   
+		                                 { 
+                                        	title: "新生儿患者出生<br>体重751-1000克死亡率", 
+                                        	field: "ev10114"
+					                    },
+					                    { 
+					                    	title: "新生儿患者出生<br>体重1001-1800克死亡率", 
+					                    	field: "ev10115",
+					                    	
+					                    },
+                                        { 
+					                    	title: "新生儿患者出生<br>体重>=1801克死亡率",
+											field : "ev10116"
+										} ] ],
+								url : '/qos/analysis/data/get/unit',
+								pagination : false,
+								searchbar : '#searchbar',
+								clickToSelect : true,
+								onClickRow: function(row, tr) {
+					                $("#dataGrid").find(".selected").removeClass('selected');
+					                $(tr).addClass('selected');
+					                unitSelected(row);
+					            },
+								onCheck: unitSelected,
+								queryParams : function(params) {
+									params.eventIds = '10100,10110,10111,10112,10113,10114,10115,10116';
+									requestParam = params;
+									return params;
+								},
+								responseHandler : function(response) {
+									var data = {};
+
+									convertRate2TableData(response, '10100',data);
+									convertRate2TableData(response, '10110',data);
+									convertRate2TableData(response, '10111',data);
+									convertRate2TableData(response, '10112',data);
+									convertRate2TableData(response, '10113',data);
+									convertRate2TableData(response, '10114',data);
+									convertRate2TableData(response, '10115',data);
+									convertRate2TableData(response, '10116',data);
+
+									var result = []
+									for ( var o in data) {
+										result.push(data[o]);
+									}
+									initUnitChart(response);
+									return result;
+								}
+							});
+		}
+
+		function convertRate2TableData(originData, eventId, data) {
+			var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, event = 0;
+
+			eventData && eventData.forEach(function(item) {
+				var id = item.unitId;
+				unitData = data[id];
+				if (!unitData) {
+					unitData = {
+						unitId : id,
+						unitName : item.unitName
+					};
+					data[id] = unitData;
+				}
+				unitData[fieldName] = getRate(item);
+				total += item.totalNum;
+				event += item.eventNum;
+			});
+
+			var totalData = data['total'];
+			if (!totalData) {
+				totalData = {
+					unitId : 'total',
+					unitName : '合计',
+				}
+				data['total'] = totalData;
+			}
+			totalData[fieldName] = getRate({
+				totalNum : total,
+				eventNum : event
+			});
+		}
+
+		function convertCount2TableData(originData, eventId, data) {
+			var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0;
+
+			eventData && eventData.forEach(function(item) {
+				var id = item.unitId;
+				unitData = data[id];
+				if (!unitData) {
+					unitData = {
+						unitId : id,
+						unitName : item.unitName
+					};
+					data[id] = unitData;
+				}
+				unitData[fieldName] = item.totalNum;
+				total += item.totalNum;
+			});
+
+			var totalData = data['total'];
+			if (!totalData) {
+				totalData = {
+					unitId : 'total',
+					unitName : '合计',
+				}
+				data['total'] = totalData;
+			}
+			totalData[fieldName] = total;
+		}
+
+		function getRate(item, fixed) {
+			var a = item.eventNum, b = item.totalNum, c = 0;
+			if (a > 0 && b > 0)
+			if (a && b) {
+				c = a / b * 100;
+			}
+			return c.toFixed(fixed || 2) + '%';
+		}
+		
+		function getRateNum(item, fixed) {
+	        var a = item.eventNum,
+	            b = item.totalNum,
+	            c = 0;
+	        if (a && b) {
+	            c = a / b * 100;
+	        }
+	        return c.toFixed(fixed);
+	    }
+		
+		function convertUnitChartData(data, eventId, isRate) {
+	        var edata = data[eventId],
+	            max = 0,
+	            unit = [],
+	            values = [];
+	        edata && edata.forEach(function(item) {
+	            var r = isRate ? getRateNum(item) : item.totalNum;
+	            max = Math.max(r, max);
+	            values.push(r);
+	            unit.push(item.unitName);
+	        });
+	        return {
+	            max: max,
+	            unit: unit,
+	            values: values
+	        }
+	    }
+
+		 function initUnitChart(data) {
+			var ev10100 = convertUnitChartData(data, '10100', true);
+	        var ev10110 = convertUnitChartData(data, '10110', true);
+	        var ev10111 = convertUnitChartData(data, '10111', true);
+	        var ev10112 = convertUnitChartData(data, '10112', true);
+	        var ev10113 = convertUnitChartData(data, '10113', true);
+	        var ev10114 = convertUnitChartData(data, '10114', true);
+	        var ev10115 = convertUnitChartData(data, '10115', true);
+	        var ev10116 = convertUnitChartData(data, '10116', true);
+
+	        if (!unitChart) {
+	            unitChart = echarts.init(document.getElementById('unitChartDiv'));
+	        }
+			
+	        var option ={        //加载数据图表
+		    	//color:['#1e90ff','#f0ffff'],
+		        title: {
+		            text: '住院死亡率柱状图'
+		        },
+		        tooltip: {
+	                trigger: 'axis',
+	                formatter: function(params, ticket, callback) {
+	                    var html = params[0].axisValueLabel + '：';
+	                    for (var i = 0; i < params.length; i++) {
+	                        var param = params[i];
+	                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value + '%';
+	                    }
+	                    return html;
+	                },
+	                axisPointer: {
+	                    type: 'shadow'
+	                }
+	            },
+		        
+	            grid: {
+	                left: 45,
+	                right: 20,
+	                bottom: 50,
+	                containLabel: true
+	            },
+		        legend: {
+		        	type:"scroll",
+		        	data: ['住院死亡率', '新生儿住院总死亡率','新生儿手术患者住院死亡率','新生儿非手术患者住院死亡率','新生儿患者出生体重<=750克死亡率','新生儿患者出生体重751-1000克死亡率','新生儿患者出生体重1001-1800克死亡率','新生儿患者出生体重>=1801克死亡率'],
+		            bottom:0
+		        },
+		        xAxis: {
+	                type: 'category',
+	                axisLabel: {
+	                    interval: 0,
+	                    rotate: 20 //角度顺时针计算的
+	                },
+	                axisTick: {
+	                    alignWithLabel: true
+	                },
+	                data: ev10100.unit,
+	            },
+	            yAxis: {
+	                axisLabel: {
+	                    formatter: function(val) {
+	                        return val + '%';
+	                    }
+	                },
+	                type: 'value',
+	                max: 10
+	            },
+		        
+		        series: [
+		        	 {  type: 'bar',
+		        		 barWidth : 5,
+		                 itemStyle:{
+		                     normal:{
+		                         barBorderRadius:2,
+		                     }
+		                 },
+		            name: '住院死亡率',
+		            data: ev10100.values},
+		        	 {  type: 'bar',
+		            	 barWidth : 5,
+		                 itemStyle:{
+		                     normal:{
+		                         barBorderRadius:3,
+		                     }
+		                 },
+		               name: '新生儿住院总死亡率',
+		               data: ev10110.values},
+		        	 {  type: 'bar',
+		          	   barWidth : 5,
+		                 itemStyle:{
+		                     normal:{
+		                         barBorderRadius:3,
+		                     }
+		                 },
+		                 name: '新生儿手术患者住院死亡率',
+		                 data: ev10111.values},
+		        	 {  type: 'bar',
+		              	 barWidth : 5,
+		                   itemStyle:{
+		                       normal:{
+		                           barBorderRadius:3,
+		                       }
+		                   },
+		                 name: '新生儿非手术患者住院死亡率',
+		                 data: ev10112.values},
+		        	 {  type: 'bar',
+		                	 barWidth : 5,
+		                     itemStyle:{
+		                         normal:{
+		                             barBorderRadius:3,
+		                         }
+		                     },
+		                 name: '新生儿患者出生体重<=750克死亡率',
+                     data: ev10113.values},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     	name: '新生儿患者出生体重751-1000克死亡率',
+                     data: ev10114.values},
+            	 {  type: 'bar',
+               	    barWidth : 5,
+                    itemStyle:{
+                        normal:{
+                            barBorderRadius:3,
+                        }
+                    },
+                     	name: '新生儿患者出生体重1001-1800克死亡率',
+                     data: ev10115.values},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     	name: '新生儿患者出生体重>=1801克死亡率',
+		                 data: ev10116.values}
+		                 
+		       ]
+		    };
+			
+	        unitChart.setOption(option, true);
+		}
+		 
+		  function convertMonthChartData(data, eventId, isRate) {
+		        var eventData = data[eventId],
+		            unitPoints = eventData.unitPoints,
+		            month = [],
+		            valuesMap = {},
+		            totalValues = [];
+
+		        var first = true;
+
+		        unitPoints && unitPoints.forEach(function(unitPoint) {
+		            var points = unitPoint.points,
+		                unitId = unitPoint.unitId;
+
+		            var values = valuesMap[unitId];
+		            if (!values) {
+		                values = [];
+		                valuesMap[unitId] = values;
+		            }
+
+		            for (var i = 0; i < points.length; i++) {
+		                var point = points[i];
+		                if (first) {
+		                    month.push(point.year + '-' + point.month);
+		                }
+
+		                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+		                var totalVal = totalValues[i];
+		                if (!totalVal) {
+		                    totalVal = {
+		                        totalNum: point.totalNum,
+		                        eventNum: point.eventNum
+		                    }
+		                    totalValues[i] = totalVal;
+		                } else {
+		                    totalVal.totalNum += point.totalNum;
+		                    totalVal.eventNum += point.eventNum;
+		                }
+		            }
+
+		            first = false;
+		        });
+
+		        var totalVals = [];
+		        for (var j = 0; j < totalValues.length; j++) {
+		            var tv = totalValues[j];
+		            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+		        }
+
+		        valuesMap.total = totalVals;
+		        return {
+		            month: month,
+		            valuesMap: valuesMap
+		        }
+		    }
+		 
+		 var month10100, month10110, month10111, month10112, month10113, month10114, month10115, month10116;
+
+		    function initMonthChart(response) {
+		        if (!response) {
+		            $.postAjax('/qos/analysis/data/get/month/instalments', requestParam, initMonthChart);
+		            return;
+		        }
+
+		        month10100 = convertMonthChartData(response, '10100', true);
+		        month10110 = convertMonthChartData(response, '10110', true);
+		        month10111 = convertMonthChartData(response, '10111', true);
+		        month10112 = convertMonthChartData(response, '10112', true);
+		        month10113 = convertMonthChartData(response, '10113', true);
+		        month10114 = convertMonthChartData(response, '10114', true);
+		        month10115 = convertMonthChartData(response, '10115', true);
+		        month10116 = convertMonthChartData(response, '10116', true);
+
+		        drawMonthChart('total');
+		    }
+		
+		
+		function drawMonthChart(){
+			var unitId = selectUnit || 'total';
+
+	        if (!monthChart) {
+	            monthChart = echarts.init(document.getElementById('monthChartDiv'));
+	        }      
+			var option = {        //加载数据图表
+		           	//color:['#1e90ff','#f0ffff'],
+		               title: {
+		                   text: '住院死亡率趋势图'
+		               },
+		               tooltip: {
+		                   trigger: 'axis',
+		                   formatter: function(params, ticket, callback) {
+		                       var html = params[0].axisValueLabel + '：';
+		                       for (var i = 0; i < params.length; i++) {
+		                           var param = params[i];
+		                           html += '<br/>' + param.marker + param.seriesName + '：' + param.value + '%';
+		                       }
+		                       return html;
+		                   },
+		                   axisPointer: {
+		                       type: 'shadow'
+		                   }
+		               },
+		               legend: {
+		            	type:"scroll",
+		               	data: ['住院死亡率', '新生儿住院总死亡率','新生儿手术患者住院死亡率','新生儿非手术患者住院死亡率','新生儿患者出生体重<=750克死亡率','新生儿患者出生体重751-1000克死亡率','新生儿患者出生体重1001-1800克死亡率','新生儿患者出生体重>=1801克死亡率'],
+		                   bottom:0
+		               },
+		               xAxis: {
+		                   type: 'category',
+		                   boundaryGap: false,
+		                   axisLabel: {
+		                       interval: 0,
+		                       rotate: 40 //角度顺时针计算的
+		                   },
+		                   data: month10100.month
+		               },
+		               grid: {
+		                   left: 45,
+		                   right: 20,
+		                   bottom: 40,
+		                   containLabel: true
+		               },
+		               yAxis: {
+		                   axisLabel: {
+		                       formatter: function(val) {
+		                           return val + '%';
+		                       }
+		                   },
+		                   type: 'value',
+		                   max: 10
+		               },
+		               series: [
+		               	 {  type: 'line',
+		               		areaStyle: {},
+		                   label:{
+		                   	normal:{
+		                   	show:true,            //显示数字
+		                   	position: 'top'        //这里可以自己选择位置
+		                   	}
+		                   	},
+		                   name: '住院死亡率',
+		                   data: month10100.valuesMap[unitId]},
+		               	 {  type: 'line',
+		                	   areaStyle: {},
+		                        label:{
+		                        	normal:{
+		                        	show:true,            //显示数字
+		                        	position: 'top'        //这里可以自己选择位置
+		                        	}
+		                        	},
+		                      name: '新生儿住院总死亡率',
+		                      data: month10110.valuesMap[unitId]},
+		               	 {  type: 'line',
+		                    	  areaStyle: {},
+		                        label:{
+		                        	normal:{
+		                        	show:true,            //显示数字
+		                        	position: 'top'        //这里可以自己选择位置
+		                        	}
+		                        	},
+		                        name: '新生儿手术患者住院死亡率',
+		                        data: month10111.valuesMap[unitId]},
+		               	 {  type: 'line',
+		                        	areaStyle: {},
+		                        label:{
+		                        	normal:{
+		                        	show:true,            //显示数字
+		                        	position: 'top'        //这里可以自己选择位置
+		                        	}
+		                        	},
+		                        name: '新生儿非手术患者住院死亡率',
+		                        data: month10112.valuesMap[unitId]},
+		               	 {  type: 'line',
+		                        	areaStyle: {},
+		                        label:{
+		                        	normal:{
+		                        	show:true,            //显示数字
+		                        	position: 'top'        //这里可以自己选择位置
+		                        	}
+		                        	},
+		                        name: '新生儿患者出生体重<=750克死亡率',
+		                        data: month10113.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                        	areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                        	name: '新生儿患者出生体重751-1000克死亡率',
+	                        	data: month10114.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                        	areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                        	name: '新生儿患者出生体重1001-1800克死亡率',
+	                        	data: month10115.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                        	areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                        	name: '新生儿患者出生体重>=1801克死亡率',
+	                        	data: month10116.valuesMap[unitId]}
+		                        
+		              ]
+		           }
+			monthChart.setOption(option, true);
+		}; 
+	</script>
+</body>
+
+</html>
