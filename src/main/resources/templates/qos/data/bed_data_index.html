@@ -81,6 +81,14 @@
         return x.toFixed(2) * 1;
     }
 
+    function getTotalRate(totalNumber, eventNumber) {
+        var c = 0;
+        if (eventNumber && totalNumber) {
+            c = eventNumber / totalNumber * 100;
+        }
+        return c.toFixed(2) ;
+    }
+
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
@@ -118,10 +126,27 @@
             },
             responseHandler: function(res) {
                 sumData = res || [];
+                var bedNumber=0;
+                var openBedNumber=0;
+                var userBedNumber=0;
                 for (var i = 0; i < sumData.length; i++) {
                     var row = sumData[i];
+                    bedNumber+=row.bedNumber;
+                    openBedNumber+=row.openBedNumber;
+                    userBedNumber+=row.userBedNumber;
                     row.userBedRate = getRate(row);
                 }
+
+                var total={
+                    "unitName" : "合计",
+                    "bedNumber" :bedNumber,
+                    "openBedNumber":openBedNumber,
+                    "userBedNumber" :userBedNumber,
+                    "userBedRate":getTotalRate(openBedNumber,userBedNumber),
+                }
+
+                sumData.push(total);
+
                 initSumChart();
                 initPieChart();
 
@@ -224,7 +249,7 @@
                 {
                     name: '床位占用率',
                     type: 'bar',
-                    barWidth : 50,
+                    barWidth : 30,
                     itemStyle:{
                         normal:{
                             barBorderRadius:3,

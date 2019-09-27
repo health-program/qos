@@ -60,7 +60,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
-    var table, sumChart, dayChart, sumData, requestParams;
+    var table, sumChart, dayChart, sumData, requestParams,selectUnit,dataVal;
     $(function() {
         var day=new Date();
         day.setTime(day.getTime());
@@ -130,7 +130,11 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function(params) {
                 requestParams = params;
                 return params;
@@ -167,6 +171,12 @@
     }
 
 
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        initPieChart1();
+        initPieChart2();
+    }
+
     function initPieChart1() {
         if (!sumChart) {
             var dom = document.getElementById("pieChartDiv1");
@@ -183,6 +193,10 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
+
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
+
         for (var i = 0; i < sumData.length; i++) {
             var it = sumData[i];
             sumOpen+=it.peopleNumber;

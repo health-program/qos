@@ -1,9 +1,21 @@
 package com.paladin.qos.controller.data;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.paladin.qos.analysis.impl.yiyuan.opd.HospitalizationBedTotal;
+import com.paladin.qos.controller.analysis.AnalysisRequest;
+import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.AnalysisMonth;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
+import com.paladin.qos.service.analysis.data.DataPointMonth;
+import com.paladin.qos.service.analysis.data.DataResult;
+import com.paladin.qos.service.data.vo.BedReportVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +50,8 @@ public class DataUnitController extends ControllerSupport {
 	@Autowired
 	private DataUnitService dataUnitService;
 
+	@Autowired
+	private AnalysisService analysisService;
 	@GetMapping("/index")
 	public String index() {
 		return "/qos/data/data_unit_index";
@@ -145,16 +159,44 @@ public class DataUnitController extends ControllerSupport {
 
 	@RequestMapping(value = "/bed/processing", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
-	public Object getAntibioticsData(DataUtilRequest request) {
-		String unitId=request.getUnitId();
-		String dateStr=request.getDate();
-		String yearStr="";
-		String monthStr="";
-		if (!StringUtils.isEmpty(dateStr)){
-			String[] arr = dateStr.split("-");
-			yearStr=arr[0];
-			monthStr=arr[1];
+	public Object getAntibioticsData(AnalysisRequest request) {
+//		String unitId=request.getUnitId();
+//		String dateStr=request.getDate();
+//		String yearStr="";
+//		String monthStr="";
+//		if (!StringUtils.isEmpty(dateStr)){
+//			String[] arr = dateStr.split("-");
+//			yearStr=arr[0];
+//			monthStr=arr[1];
+//		}
+		List<DataUnit> dataUnitList=dataUnitService.findAll();
+
+//		Map<String, Integer> dataUnitMap = dataUnitList.stream().collect(
+//				Collectors.toMap(w -> w.getId(),
+//						w -> w.getBedNumber()));
+
+		List<BedReportVO> bedReportVOList=new ArrayList<>();
+		for (DataUnit dataUnit:dataUnitList){
+			BedReportVO bedReportVO=new BedReportVO();
+			if (dataUnit.getType()==1){
+				AnalysisMonth analysisMonth=dataUnitService.getBedReportByQuery(dataUnit.getId(),HospitalizationBedTotal.EVENT_ID,request.getStartTime(),request.getEndTime());
+				if (null!=analysisMonth){
+					bedReportVO.setUnitName(dataUnit.getId());
+					bedReportVO.setBedNumber(dataUnit.getBedNumber());
+					bedReportVO.setOpenBedNumber(analysisMonth.getTotalNum());
+					bedReportVO.setUserBedNumber(analysisMonth.getEventNum());
+					bedReportVOList.add(bedReportVO);
+				}
+			}
 		}
-		return CommonResponse.getSuccessResponse(dataUnitService.getBedReportByQuery(unitId,monthStr,yearStr));
+
+//		AnalysisMonth analysisMonths=dataUnitService.getBedReportByQuery(request.getUnitId(),HospitalizationBedTotal.EVENT_ID,request.getStartTime(),request.getEndTime());
+//
+//		List<BedReportVO> bedReportVOList=new ArrayList<>();
+//		for (AnalysisMonth a:analysisMonths){
+//			BedReportVO bedReportVO=new BedReportVO();
+//			bedReportVO.setUnitName(analysisMonths.);
+//		}
+		return CommonResponse.getSuccessResponse(bedReportVOList);
 		}
 }

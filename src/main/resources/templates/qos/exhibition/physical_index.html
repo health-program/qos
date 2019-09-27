@@ -72,7 +72,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
-    var table, sumChart, dayChart, sumData, requestParams,result;
+    var table, sumChart, dayChart, sumData, requestParams,result,selectUnit,dataVal;
     $(function() {
         var day=new Date();
         day.setTime(day.getTime());
@@ -109,6 +109,11 @@
             onUncheck: function(row) {
                 console.log("on uncheck");
             },
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function(params) {
                 params.eventIds = '22003,22012';
                 requestParams = params;
@@ -120,12 +125,13 @@
                 convertTableData('22012',response, data);
 
 
-
                 sumData = []
                 for (var o in data) {
                     sumData.push(data[o]);
                 }
 
+                dataVal = data|| [];
+                debugger;
                 result = []
                 for (var o in data) {
                     result.push(data[o]);
@@ -136,6 +142,13 @@
                 return sumData;
             }
         });
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        initPieChart1();
+        initPieChart2();
+        // initColumnarDiv();
     }
 
     function convertTableData(eventId,originData, data) {
@@ -194,13 +207,15 @@
         var dom = document.getElementById("pieChartDiv1");
         var pieChart1 = echarts.init(dom);
 
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
+
         var remainRate=0;
         if (sumData==0){
             showChartInfo(pieChart1, '暂无数据显示');
             return false;
         }
-        var it=sumData[sumData.length - 1];
-        var rate=it.ev22003;
+        var rate=total.ev22003;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
 
@@ -272,10 +287,12 @@
             showChartInfo(pieChart2, '暂无数据显示');
             return false;
         }
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
         var rate=0;
         var remainRate=0;
-        var it=sumData[sumData.length - 1];
-        rate=it.ev22012;
+        // var it=sumData[sumData.length - 1];
+        rate=total.ev22012;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
 
@@ -345,6 +362,9 @@
             showChartInfo(sumChart, '暂无数据显示');
             return false;
         }
+
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
 
         var managedName = [];
 
