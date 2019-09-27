@@ -14,8 +14,10 @@ import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
+
 /**
  * 住院人次数，出院人次数，在院人数，额定床位，使用床位，病床使用率
+ * 
  * @author FM
  *
  */
@@ -25,8 +27,7 @@ public class HospitalAndBedController {
 
 	@Autowired
 	private AnalysisService analysisService;
-	
-	
+
 	private int getUnitType(Event event) {
 		int targetType = event.getTargetType();
 		if (targetType == DataEvent.TARGET_TYPE_COMMUNITY)
@@ -35,29 +36,29 @@ public class HospitalAndBedController {
 			return 1;
 		return 0;
 	}
-	
+
 	@RequestMapping(value = "/data/get/bed", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getBed(AnalysisRequest request) {
 
 		String eventId = request.getEventId();
-		if (eventId != null && eventId !="") {
+		if (eventId != null && eventId != "") {
 			Map<String, Object> map = new HashMap<>();
-			
+
 			Event event = DataConstantContainer.getEvent(eventId);
 			if (event != null) {
 				int eventType = event.getEventType();
 				int unitType = getUnitType(event);
 				if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-					Object item = analysisService.countGetBedByUnit(eventId, unitType);
+					Object item = analysisService.getLastCountByUnit(eventId, unitType);
 					if (item != null) {
 						map.put(eventId, item);
 					}
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
-		} 
+		}
 		return CommonResponse.getErrorResponse();
 	}
-	
+
 }
