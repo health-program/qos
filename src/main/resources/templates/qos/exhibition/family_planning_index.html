@@ -332,19 +332,17 @@
         });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/family/search/ywlc",{ startTime : startTime, endTime : endTime},function (res) {
+        let eventIds = '13101';
+        $.postAjax("/qos/analysis/data/get/month/instalments",{ startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
             let datas = [];
-            if (res.eventId == '13101') {
-                datas = mergeTotalNumArr(res.unitPoints);
-            }
-            let dataValue = [];
-            let timeValue = [];
+            let time = [];
             let total = 0;
-            datas.forEach(function (data) {
-                dataValue.push(data.totalNum);
-                timeValue.push(data.date);
-                total += data.totalNum;
-            });
+            if (res) {
+                let month13101 = convertMonthChartData(res, '13101', false);
+                datas = month13101.valuesMap['total'];
+                time = month13101.month;
+                total = datas.reduce((previousValue, currentValue) => previousValue + currentValue )
+            }
             $("#ywlc").text(total+"人");
             if ( total === 0) {
                 showChartInfo(chart,'暂无数据');
@@ -402,7 +400,7 @@
                 xAxis: [
                     {
                         type: 'category',
-                        data: timeValue,
+                        data: time,
                         axisTick: {
                             alignWithLabel: true
                         }
@@ -421,7 +419,7 @@
                         smooth: true,
                         label: labelOption,
                         barGap: 0,
-                        data: dataValue,
+                        data: datas,
                     }
                 ]
             };

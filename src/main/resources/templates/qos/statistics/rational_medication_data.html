@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css" />
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <!--   <section class="content-header">
@@ -73,6 +74,7 @@
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   //<![CDATA[
 	//图表自适应大小      
@@ -195,7 +197,10 @@
         $table1.bootstrapTable('destroy').bootstrapTable({
             columns: columns,
             data: datas,
+            striped: true, //是否显示行间隔色
             clickToSelect: true,
+            fixedColumns: true,
+            fixedNumber: 1, //固定列数,
             onClickRow: function(row, tr) {
                 $("#dataGrid1").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');

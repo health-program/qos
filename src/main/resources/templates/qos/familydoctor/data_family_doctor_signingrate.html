@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css" />
 
 <body>
     <tt:constant enumcode="data-unit-type" />
@@ -107,6 +108,7 @@
 	</section>
     <div th:include="/qos/footer" />
 	<script type="text/javascript" src="/static/js/chart.js"></script>
+	<script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   	//<![CDATA[
 	//图表自适应大小      
@@ -156,6 +158,8 @@
 			url: '/qos/analysis/data/get/unit',
             pagination: false,
 			height : 430,
+			fixedColumns: true,
+			fixedNumber: 1, //固定列数,
             searchbar: '#searchbar',
 			clickToSelect: true,
 			onClickRow: function(row, tr) {
