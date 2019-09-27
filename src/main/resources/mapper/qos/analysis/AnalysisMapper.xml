@@ -6,7 +6,6 @@
 		SELECT year, 
 		   month,
 		   day,
-		   rate,
 	       event_num AS eventNum,
 	       total_num AS totalNum
 		FROM data_processed_day
@@ -164,4 +163,14 @@
 		AND event_id=#{eventId}
 	</delete>
 
+
+   <select id="countGetBedByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		select unit_id AS unitId,total_num as count from data_processed_day 
+		where event_id = #{eventId} 
+		and serial_number = (select MAX(serial_number) from data_processed_day where event_id=#{eventId})
+		 
+		<if test="unitType != 0">
+		  AND unit_type=#{unitType}
+        </if>
+	</select>
 </mapper>

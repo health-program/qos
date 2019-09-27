@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css" />
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <!--   <section class="content-header">
@@ -36,27 +37,27 @@
             <div class="col-md-6" style="padding-right: 0">
 	            <div class="nav-tabs-custom">
 		            <ul class="nav nav-tabs">
-		                <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
-		                <li class=""><a href="#mz" data-toggle="tab" aria-expanded="false">门诊统计</a></li>
-		                <li class=""><a href="#zy" data-toggle="tab" aria-expanded="false">住院统计</a></li>
-		            </ul>
+                        <li class="active"><a href="#hz" data-toggle="tab" aria-expanded="true">汇总统计</a></li>
+                        <li class=""><a href="#mz" data-toggle="tab" aria-expanded="false">门诊统计</a></li>
+                        <li class=""><a href="#zy" data-toggle="tab" aria-expanded="false">住院统计</a></li>
+                    </ul>
 		            <div class="tab-content">
-			            <div class="tab-pane active" id="hz">
-				            <div class="box-solid">
-								<table id="dataGrid1"></table>
-							</div>
-			            </div>
-			            <div class="tab-pane" id="mz">
-							<div class="box-solid">
-								<table id="dataGrid2"></table>
-							</div>            
-			            </div>
-			            <div class="tab-pane" id="zy">
-							<div class="box-solid">
-								<table id="dataGrid3"></table>
-							</div>            
-			            </div>
-		            </div>
+                        <div class="tab-pane active" id="hz">
+                            <div class="box-solid">
+                                <table id="dataGrid1"></table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="mz">
+                            <div class="box-solid">
+                                <table id="dataGrid2"></table>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="zy">
+                            <div class="box-solid">
+                                <table id="dataGrid3"></table>
+                            </div>
+                        </div>
+                    </div>
 	            </div>
             </div>
             <div class="col-md-6">
@@ -73,6 +74,7 @@
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   //<![CDATA[
 	//图表自适应大小      
@@ -85,7 +87,6 @@
     var table,table1,dataVal,dataVal1,selectUnit,chartData;
     $(function() {
         buildTable2();
-        buildTable3();
     	 laydate.render({
              elem: '#createTime',
              type: 'month',
@@ -94,7 +95,7 @@
          });
     });
     
-    function dataReslut(){
+    /*function dataReslut(){
     	var unitId = $("#unitId").val();
     	var date = $("#createTime").val();
     	$.post("/qos/medication/find?unitId="+unitId+"&date="+date,function(res){
@@ -150,7 +151,7 @@
         	buildTable2(arr);
         	buildTable3(arr);
         })
-    }
+    }*/
     
 	function buildTable1(){
 		 columns= [
@@ -196,7 +197,10 @@
         $table1.bootstrapTable('destroy').bootstrapTable({
             columns: columns,
             data: datas,
+            striped: true, //是否显示行间隔色
             clickToSelect: true,
+            fixedColumns: true,
+            fixedNumber: 1, //固定列数,
             onClickRow: function(row, tr) {
                 $("#dataGrid1").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
@@ -305,6 +309,8 @@
                 }
                 dataVal = result|| [];
 
+                buildTable3();
+
                 return  result;
 
             }
@@ -389,6 +395,24 @@
     		}
     		drugChart.hideLoading();
     	}
+
+        var labelOption = {
+            normal: {
+                show: true,
+                position: 'top',
+                distance: 15,
+                align: 'center',
+                verticalAlign: 'top',
+                rotate: 0,
+                formatter: '{c}',
+                fontSize: 15,
+                rich: {
+                    name: {
+                        textBorderColor: '#fff'
+                    }
+                }
+            }
+        };
     	var option = {
     			title: {
 			        text:  xAxis.length === 1 ? '人均使用药瓶数排名(医疗机构: '+ xAxis[0] +')' :'人均使用药瓶数排名',
@@ -432,6 +456,7 @@
     			series : [ {
     				name : '就医人均使用药瓶数(瓶)',
     				type : 'bar',
+                    label: labelOption,
     				data : series
     			} ]
     		};

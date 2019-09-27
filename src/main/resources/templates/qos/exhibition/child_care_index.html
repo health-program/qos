@@ -159,30 +159,17 @@
     function initChildCareManagement() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/child/search/all",{startTime : startTime, endTime : endTime},function (res) {
-            let etjkData = [];
-            let jbscData = [];
-            let csqxData = [];
-            let etryData = [];
-            let yeswData = [];
-            res.forEach(event => {
-                if (event.eventId === '13203') {
-                    etjkData = mergeTotalNumArr(event.unitPoints);
-                    $("#etjk").text(getTotalFromAr(etjkData));
-                } else if (event.eventId === '13204') {
-                    jbscData = mergeTotalNumArr(event.unitPoints);
-                    $("#jbsc").text(getTotalFromAr(jbscData));
-                } else if (event.eventId === '13205') {
-                    csqxData = mergeTotalNumArr(event.unitPoints);
-                    $("#csqx").text(getTotalFromAr(csqxData));
-                } else if (event.eventId === '13207') {
-                    etryData = mergeTotalNumArr(event.unitPoints);
-                    $("#etry").text(getTotalFromAr(etryData));
-                } else if (event.eventId === '13206') {
-                    yeswData = mergeTotalNumArr(event.unitPoints);
-                    $("#yesw").text(getTotalFromAr(yeswData));
-                }
-            });
+        var eventIds = '13203,13204,13205,13207,13206';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,eventIds:eventIds},function (res) {
+            $("#etjk").text(res['13203']);
+
+            $("#jbsc").text(res['13204']);
+
+            $("#csqx").text(res['13205']);
+
+            $("#etry").text(res['13207']);
+
+            $("#yesw").text(res['13206']);
         })
     }
     function getTotalFromAr(data) {
@@ -221,25 +208,14 @@
         });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        $.postAjax("/qos/exhibition/child/search/xsrfm",{startTime : startTime, endTime : endTime},function (res) {
+        var eventIds = '13201,13202,13211';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,eventIds:eventIds},function (res) {
             let chartData = [];
             if (res) {
-                let maleData = [];
-                let femaleData = [];
-                let tlData = [];
-                res.forEach(event => {
-                    if (event.eventId === '13201') {
-                        maleData = mergeTotalNumArr(event.unitPoints);
-                    } else if (event.eventId === '13202') {
-                        femaleData = mergeTotalNumArr(event.unitPoints);
-                    } else if (event.eventId === '13211') {
-                        tlData = mergeTotalNumArr(event.unitPoints);
-                    }
-                });
-                let male = getTotalFromAr(maleData);
-                let female = getTotalFromAr(femaleData);
+                let male = res['13201'];
+                let female = res['13202'];
                 newbornChildTotal = male + female;
-                newbornHearingTotal = getTotalFromAr(tlData);
+                newbornHearingTotal = res['13211'];
                 chartData.push({value:male,name:"男性"},{value:female,name:"女性"})
             }
             chart.hideLoading();

@@ -1,8 +1,11 @@
 package com.paladin.qos.analysis;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,17 @@ public class DataConstantContainer implements VersionContainer {
 	public String getId() {
 		return container_id;
 	}
+	
+	/** 默认开始处理时间 */
+	public static Date DEFAULT_START_TIME;
+
+	static {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			DEFAULT_START_TIME = format.parse("2019-01-01");
+		} catch (ParseException e) {
+		}
+	}
 
 	private final static String TYPE_EVENT = "data-event-type";
 	private final static String TYPE_UNIT = "data-unit-type"; // 所有单位
@@ -43,8 +57,6 @@ public class DataConstantContainer implements VersionContainer {
 	private DataEventService dataEventService;
 	@Autowired
 	private DataUnitService dataUnitService;
-	@Autowired
-	private DataProcessManager dataProcessManager;
 
 	private static Map<String, Event> eventMap;
 	private static Map<String, Unit> unitMap;
@@ -153,7 +165,6 @@ public class DataConstantContainer implements VersionContainer {
 		DataConstantContainer.hospitals = Collections.unmodifiableList(hospitals);
 		DataConstantContainer.communities = Collections.unmodifiableList(communities);
 
-		dataProcessManager.readLastProcessedDay(null);		
 		return true;
 	}
 

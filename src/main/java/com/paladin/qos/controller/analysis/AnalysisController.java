@@ -1,6 +1,5 @@
 package com.paladin.qos.controller.analysis;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
-import com.paladin.qos.analysis.DataConstantContainer.Unit;
-import com.paladin.qos.analysis.DataProcessManager;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
@@ -33,15 +30,7 @@ import com.paladin.qos.service.analysis.data.DataResult;
 public class AnalysisController {
 
 	@Autowired
-	private DataProcessManager dataProcessManager;
-
-	@Autowired
 	private AnalysisService analysisService;
-
-	@GetMapping("/process/index")
-	public Object processIndex() {
-		return "/qos/analysis/process_index";
-	}
 
 	@GetMapping("/processed/index")
 	public Object dataIndex() {
@@ -51,74 +40,6 @@ public class AnalysisController {
 	@GetMapping("/view/{name}")
 	public Object viewInex(@PathVariable("name") String name) {
 		return "/qos/analysis/view_" + name;
-	}
-
-	@PostMapping("/data/process")
-	@ResponseBody
-	public Object processData(AnalysisRequest request) {
-		List<String> eventIds = request.getEventIds();
-		List<String> unitIds = request.getUnitIds();
-		Date startDate = request.getStartTime();
-		Date endDate = request.getEndTime();
-
-		List<Unit> units = null;
-		if (unitIds != null && unitIds.size() > 0) {
-			units = new ArrayList<>(unitIds.size());
-			for (String unitId : unitIds) {
-				Unit unit = DataConstantContainer.getUnit(unitId);
-				if (unit != null) {
-					units.add(unit);
-				}
-			}
-		}
-
-		List<Event> events = null;
-		if (eventIds != null && eventIds.size() > 0) {
-			events = new ArrayList<>(eventIds.size());
-			for (String eventId : eventIds) {
-				Event event = DataConstantContainer.getEvent(eventId);
-				if (event != null) {
-					events.add(event);
-				}
-			}
-		}
-
-		if (events == null || events.size() == 0) {
-			return CommonResponse.getFailResponse("请传入事件");
-		}
-
-		if (dataProcessManager.processDataByThread(startDate, endDate, units, events)) {
-			return CommonResponse.getSuccessResponse();
-		} else {
-			return CommonResponse.getFailResponse("有正在处理中的数据");
-		}
-	}
-
-	@GetMapping("/data/process/schedule")
-	@ResponseBody
-	public Object processDataSchedule() {
-		dataProcessManager.processSchedule();
-		return CommonResponse.getSuccessResponse();
-	}
-
-	@GetMapping("/data/process/status")
-	@ResponseBody
-	public Object getProcessDataStatus() {
-		return CommonResponse.getSuccessResponse(dataProcessManager.getProcessDataStatus());
-	}
-
-	@PostMapping("/data/validate")
-	@ResponseBody
-	public Object validateProcessedData(AnalysisRequest request) {
-		Date startDate = request.getStartTime();
-		Date endDate = request.getEndTime();
-		return CommonResponse.getSuccessResponse(analysisService.validateProcessedData(startDate, endDate));
-	}
-
-	@PostMapping("/data/test")
-	@ResponseBody
-	public Object testProcessor() {
-		return CommonResponse.getSuccessResponse(analysisService.testProcessors());
 	}
 
 	@PostMapping("/data/get/day/instalments")

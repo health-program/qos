@@ -1,13 +1,9 @@
 package com.paladin.qos.mapper.gongwei;
 
-import java.util.Date;
-import java.util.List;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
 
 import com.paladin.qos.service.gongwei.vo.PhysicalManagementVO;
-import org.apache.ibatis.annotations.Param;
-
-import com.paladin.qos.model.gongwei.Physical;
-import org.springframework.stereotype.Service;
 
 @Service
 public interface PhysicalManagementMapper {

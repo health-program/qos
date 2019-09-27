@@ -50,8 +50,7 @@ public class DataProcessedDay {
 	// 事件总数
 	private Long eventNum;
 
-	// 比率
-	private Integer rate;
+	private Integer confirmed;
 	
 	// 更新时间
 	private Date updateTime;
@@ -135,15 +134,7 @@ public class DataProcessedDay {
 	public void setEventNum(Long eventNum) {
 		this.eventNum = eventNum;
 	}
-
-	public Integer getRate() {
-		return rate;
-	}
-
-	public void setRate(Integer rate) {
-		this.rate = rate;
-	}
-
+	
 	public Integer getSerialNumber() {
 		return serialNumber;
 	}
@@ -166,6 +157,14 @@ public class DataProcessedDay {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public Integer getConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(Integer confirmed) {
+		this.confirmed = confirmed;
 	}
 
 

@@ -1,21 +1,17 @@
 package com.paladin.qos.service.gongwei;
 
-import com.paladin.data.dynamic.SqlSessionContainer;
-import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
-import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+import com.paladin.qos.service.exhibition.BaseExhibitionDataAcquire;
+import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
+
 
 @Service
 public class PressureSugarManagementService extends BaseExhibitionDataAcquire {
-
-    @Autowired
-    private SqlSessionContainer sqlSessionContainer;
 
     public List<PressureSugarManagementVO> findPressureAndSugar (String managedCenter, Date startDate, Date endDate) {
         List<PressureSugarManagementVO> pressureSugarManagementVOList=new ArrayList<>();

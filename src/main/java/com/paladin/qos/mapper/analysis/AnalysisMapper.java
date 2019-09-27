@@ -51,4 +51,6 @@ public interface AnalysisMapper {
 
 	long getTotalNumOfEvent(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
+	List<DataCountUnit> countGetBedByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType);
+
 }

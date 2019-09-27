@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <!--   <section class="content-header">
+        <h1>数据展示</h1>
+    </section> -->
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    
+                   <div id="ringChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="pieChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="monthChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="unitChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table, monthChart, unitChart,ringChart,pieChart, requestParam, selectUnit;
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+     
+  //1.药占比
+    function getDrugMoneyRate(row) {
+        var e = row.drugMoney,
+            t = row.totalMoney;
+        if (t == 0) return 0;
+        var x = e * 100 / t;
+        if (x < 0.005) {
+            return 0;
+        }
+        return x.toFixed(2) * 1; 
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+					{
+					    title: "医疗机构",
+					    field: "unitName"
+					},
+                    { 
+						title: "合计总收入", 
+						field: "ev15001",
+						formatter: function(value, row, index) {
+                            return value/100;                            
+                       }
+                    },
+                    { 
+                    	title: "医疗收入", 
+                    	field: "ev15002",
+                    	formatter: function(value, row, index) {
+                    		return value/100;
+                       }  
+                    },
+                    { 
+                    	title: "药品收入", 
+                    	field: "ev15003",
+                    	formatter: function(value, row, index) {
+                            return value/100;                            
+                       }  
+                    },
+                     { 
+                    	title: "药占比", 
+                    	field: "drugMoneyRate" ,
+                    	formatter: function(value, row, index) {
+                    		if(row.ev15001==0){
+                    			return "0%"
+                    		}else{
+                    			return (row.ev15003/row.ev15001*100).toFixed(2) * 1+"%";
+                    		}
+                            
+                       }  
+                    }, 
+                    { 
+                    	title: "其他收入", 
+                    	field: "ev15004",
+                    	formatter: function(value, row, index) {
+                    		if(row.ev15004==null){
+                    			return 0;
+                    		}else{
+                    			return value/100;
+                    		}
+                    		
+                       }  
+                    }
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            onCheck: unitSelected,
+            queryParams: function(params) {
+            	params.eventIds = '15001,15002,15003,15004';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+                var data = {};
+
+                convertCount2TableData(response, '15001', data);
+                convertCount2TableData(response, '15002', data);
+                convertCount2TableData(response, '15003', data);
+                convertCount2TableData(response, '15004', data);
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+
+                initUnitChart(response);
+                ringChartDiv(response);
+                pieChartDiv(response);
+                return result;
+            }
+        });
+    }
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed);
+    }
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count/100;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
+    
+
+
+     function initUnitChart(data) {
+    	 var ev15001 = convertUnitChartData(data, '15001', false);
+     	var ev15002 = convertUnitChartData(data, '15002', false);
+     	var ev15003 = convertUnitChartData(data, '15003', false);
+     	var ev15004 = convertUnitChartData(data, '15004', false);
+         if (!unitChart) {
+             unitChart = echarts.init(document.getElementById('unitChartDiv'));
+         }
+    	 
+    	 
+    	var option = {        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: { 
+            	trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['合计总收入', '医疗收入','药品收入','其他收入'],
+                bottom:0
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev15001.unit,
+            },
+            yAxis: {
+            	type: 'value'
+            },
+            
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '合计总收入',
+                data: ev15001.values},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                   name: '医疗收入',
+                   data: ev15002.values},
+            	 {  type: 'bar',
+              	   barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     name: '药品收入',
+                     data: ev15003.values},
+            	 {  type: 'bar',
+                  	 barWidth : 5,
+                       itemStyle:{
+                           normal:{
+                               barBorderRadius:3,
+                           }
+                       },
+                     name: '其他收入',
+                     data: ev15004.values}
+                     
+           ]
+        };
+    	unitChart.setOption(option, true);
+    }
+     
+     function convertMonthChartData(data, eventId, isRate) {
+         var eventData = data[eventId],
+             unitPoints = eventData.unitPoints,
+             month = [],
+             valuesMap = {},
+             totalValues = [];
+
+         var first = true;
+
+         unitPoints && unitPoints.forEach(function(unitPoint) {
+             var points = unitPoint.points,
+                 unitId = unitPoint.unitId;
+
+             var values = valuesMap[unitId];
+             if (!values) {
+                 values = [];
+                 valuesMap[unitId] = values;
+             }
+
+             for (var i = 0; i < points.length; i++) {
+                 var point = points[i];
+                 if (first) {
+                     month.push(point.year + '-' + point.month);
+                 }
+
+                 values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                 var totalVal = totalValues[i];
+                 if (!totalVal) {
+                     totalVal = {
+                         totalNum: point.totalNum,
+                         eventNum: point.eventNum
+                     }
+                     totalValues[i] = totalVal;
+                 } else {
+                     totalVal.totalNum += point.totalNum;
+                     totalVal.eventNum += point.eventNum;
+                 }
+             }
+
+             first = false;
+         });
+
+         var totalVals = [];
+         for (var j = 0; j < totalValues.length; j++) {
+             var tv = totalValues[j];
+             totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+         }
+
+         valuesMap.total = totalVals;
+         return {
+             month: month,
+             valuesMap: valuesMap
+         }
+     }
+     var month15001, month15002, month15003, month15004;
+     
+     function initMonthChart(response) {
+         if (!response) {
+             $.postAjax('/qos/analysis/data/get/month/instalments', requestParam, initMonthChart);
+             return;
+         }
+
+         month15001 = convertMonthChartData(response, '15001', false);
+         month15002 = convertMonthChartData(response, '15002', false);
+         month15003 = convertMonthChartData(response, '15003', false);
+         month15004 = convertMonthChartData(response, '15004', false);
+
+         drawMonthChart('total');
+     }
+     
+     function drawMonthChart(){
+    	 
+    	 var unitId = selectUnit || 'total';
+
+         if (!monthChart) {
+             monthChart = echarts.init(document.getElementById('monthChartDiv'));
+         }
+    	 var option = {        //加载数据图表
+	           	//color:['#1e90ff','#f0ffff'],
+	               title: {
+	                   text: ''
+	               },
+	               tooltip: {
+	                   trigger: 'axis',
+	                   formatter: function(params, ticket, callback) {
+	                       var html = params[0].axisValueLabel + '：';
+	                       for (var i = 0; i < params.length; i++) {
+	                           var param = params[i];
+	                           html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+	                       }
+	                       return html;
+	                   },
+	                   axisPointer: {
+	                       type: 'shadow'
+	                   }
+	               },
+	               legend: {
+	            	type:"scroll",
+	               	data: ['合计收入', '医疗收入','药品收入','其他收入'],
+	                   bottom:0
+	               },
+	               xAxis: {
+	                   type: 'category',
+	                   boundaryGap: false,
+	                   axisLabel: {
+	                       interval: 0,
+	                       rotate: 40 //角度顺时针计算的
+	                   },
+	                   data: month15001.month
+	               },
+	               yAxis: {type: 'value'},
+	               series: [
+	               	 {  type: 'line',
+	               		areaStyle: {},
+	                   label:{
+	                   	normal:{
+	                   	show:true,            //显示数字
+	                   	position: 'top'        //这里可以自己选择位置
+	                   	}
+	                   	},
+	                   name: '合计收入',
+	                   data: month15001.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                	   areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                      name: '医疗收入',
+	                      data: month15002.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                    	  areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                        name: '药品收入',
+	                        data: month15003.valuesMap[unitId]},
+	               	 {  type: 'line',
+	                        	areaStyle: {},
+	                        label:{
+	                        	normal:{
+	                        	show:true,            //显示数字
+	                        	position: 'top'        //这里可以自己选择位置
+	                        	}
+	                        	},
+	                        name: '其他收入',
+	                        data: month15004.valuesMap[unitId]}
+	                        
+	              ]
+	           };
+    	 monthChart.setOption(option, true);
+    }; 
+    
+    function ringChartDiv(response){
+    	var data = {};
+
+        convertCount2TableData(response, '15001', data);
+        convertCount2TableData(response, '15003', data);
+
+        var result = []
+        for (var o in data) {
+            result.push(data[o]);
+        }
+        
+        if (!ringChart) {
+        	ringChart = echarts.init(document.getElementById('ringChartDiv'));
+        }
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        if(result[result.length-1].ev15001==0){
+        	x = 0
+        }else{
+        	x = result[result.length-1].ev15003/result[result.length-1].ev15001*100;
+        }
+        occupyRate=x.toFixed(2) * 1;
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
+        
+        var option = {
+
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'药占比',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'药占比',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
+
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'药占比'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
+        ringChart.setOption(option, true);
+    }
+    
+    function pieChartDiv(response){
+    	var data = {};
+
+        convertCount2TableData(response, '15001', data);
+        convertCount2TableData(response, '15002', data);
+        convertCount2TableData(response, '15003', data);
+        convertCount2TableData(response, '15004', data);
+
+        var result = []
+        for (var o in data) {
+            result.push(data[o]);
+        }
+        console.log(result);
+        if (!pieChart) {
+        	pieChart = echarts.init(document.getElementById('pieChartDiv'));
+        }
+        var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+       // chartData.push({value:getTotalFromAr(maleData),name:"男性"},{value:getTotalFromAr(femaleData),name:"女性"})
+        var charData = [];
+        var x = result[result.length-1].ev15002/result[result.length-1].ev15001*100;
+        var x1 = (result[result.length-1].ev15002/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
+        var y = result[result.length-1].ev15003/result[result.length-1].ev15001*100;
+        var y1 = (result[result.length-1].ev15003/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
+        if(result[result.length-1].ev15004==null){
+        	var z = 0;
+        	var z1 =  "0%";
+        }else{
+        	var z = result[result.length-1].ev15004/result[result.length-1].ev15001*100;
+        	var z1 = (result[result.length-1].ev15004/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
+        }
+        
+        
+        charData.push({value:x,name:"医疗收入"},{value:y,name:"药品收入"},{value:z,name:"其他收入"})
+        var option = {
+                color: [ '#67E0E3', '#37A2DA','#B9B9B9'], //环形图每块的颜色
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{b} : {c}个 ({d}%)"
+                },
+                series: [
+                    {
+                        name: '占比',
+                        type: 'pie',
+                        radius : '95%',
+                        center: ['50%', '50%'],
+                        barGap: 0,
+                        label:labelOption,
+                        data: charData,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+        
+        pieChart.setOption(option, true);
+    }
+    </script>
+</body>
+
+</html>
