@@ -20,10 +20,6 @@ import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
-import com.paladin.qos.service.analysis.data.DataPointDay;
-import com.paladin.qos.service.analysis.data.DataPointMonth;
-import com.paladin.qos.service.analysis.data.DataPointYear;
-import com.paladin.qos.service.analysis.data.DataResult;
 
 @Controller
 @RequestMapping("/qos/analysis")
@@ -48,14 +44,16 @@ public class AnalysisController {
 		List<String> eventIds = request.getEventIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
+		boolean byUnit = request.getByUnit() == 1;
 
 		if (eventIds != null && eventIds.size() > 0) {
-			Map<String, DataResult<DataPointDay>> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			for (String eventId : eventIds) {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					DataResult<DataPointDay> item = analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate);
+					Object item = byUnit ? analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate)
+							: analysisService.getAnalysisResultByDay(eventId, unitType, startDate, endDate);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -74,14 +72,16 @@ public class AnalysisController {
 		List<String> eventIds = request.getEventIds();
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
+		boolean byUnit = request.getByUnit() == 1;
 
 		if (eventIds != null && eventIds.size() > 0) {
-			Map<String, DataResult<DataPointMonth>> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			for (String eventId : eventIds) {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					DataResult<DataPointMonth> item = analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate);
+					Object item = byUnit ? analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate)
+							: analysisService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -101,15 +101,17 @@ public class AnalysisController {
 		Date endDate = request.getEndTime();
 		int startYear = TimeUtil.getYear(startDate);
 		int endYear = TimeUtil.getYear(endDate);
+		boolean byUnit = request.getByUnit() == 1;
 
 		List<String> eventIds = request.getEventIds();
 		if (eventIds != null && eventIds.size() > 0) {
-			Map<String, DataResult<DataPointYear>> map = new HashMap<>();
+			Map<String, Object> map = new HashMap<>();
 			for (String eventId : eventIds) {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					DataResult<DataPointYear> item = analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear);
+					Object item = byUnit ? analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear)
+							: analysisService.getAnalysisResultByYear(eventId, unitType, startYear, endYear);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -179,14 +181,14 @@ public class AnalysisController {
 			for (String eventId : eventIds) {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
-					long count = analysisService.getTotalNumOfEvent(eventId,  startDate, endDate);
+					long count = analysisService.getTotalNumOfEvent(eventId, startDate, endDate);
 					map.put(eventId, count);
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
 		} else {
 			String eventId = request.getEventId();
-			return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId,  startDate, endDate));
+			return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId, startDate, endDate));
 		}
 	}
 

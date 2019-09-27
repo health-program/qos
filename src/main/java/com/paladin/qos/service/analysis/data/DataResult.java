@@ -1,6 +1,5 @@
 package com.paladin.qos.service.analysis.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.paladin.qos.analysis.DataConstantContainer;
@@ -16,13 +15,6 @@ public class DataResult<T> {
 		this.eventId = eventId;
 		this.dataType = dataType;
 		this.unitPoints = unitPoints;
-	}
-
-	public DataResult(String eventId, int dataType, DataPointUnit<T> unitPoint) {
-		this.eventId = eventId;
-		this.dataType = dataType;
-		this.unitPoints = new ArrayList<>();
-		this.unitPoints.add(unitPoint);
 	}
 	
 	public String getEventName() {

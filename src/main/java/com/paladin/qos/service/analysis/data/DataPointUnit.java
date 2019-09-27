@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.paladin.qos.analysis.DataByUnit;
 
-public class DataPointUnit<T> extends DataByUnit{
+public class DataPointUnit<T> extends DataByUnit {
 
 	private List<T> points;
 
@@ -12,7 +12,6 @@ public class DataPointUnit<T> extends DataByUnit{
 		this.setUnitId(unitId);
 		this.points = points;
 	}
-
 
 	public List<T> getPoints() {
 		return points;
