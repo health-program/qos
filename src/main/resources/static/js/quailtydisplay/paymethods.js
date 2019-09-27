@@ -1,5 +1,4 @@
 $(function(){
-
     //支付方式对比
          var arr = {
            eventIds:'21004'

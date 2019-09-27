@@ -79,7 +79,14 @@ var echartses=function(id){
                           type: 'shadow'
                       }
                   },
-          xAxis: {
+
+         dataZoom:{
+                   realtime:true, //拖动滚动条时是否动态的更新图表数据
+                   height:25,//滚动条高度
+                   start:40,//滚动条开始位置（共100等份）
+                   end:65//结束位置（共100等份）
+          },
+         xAxis: {
               type: 'category',
               data: data.unit,
 
