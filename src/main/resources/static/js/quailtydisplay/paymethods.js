@@ -48,17 +48,11 @@ $(function(){
         url : "/qos/analysis/data/get/total",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-
         data31009 = rawData.result['31009']
         data31010 = rawData.result['31010']
-
         paycomparsionOption()
        }
     });
-
-
-
-
 
 
 
@@ -67,13 +61,13 @@ var paycomparsionOption=function(id){
     var data = dataMap[eventId];
    //急诊人数开始
       //指定图标的配置和数据
-     
+      alert(788999)
   var paycomparsionOption={
+   color: ['#4DFFE3','#4DE0FF','#4DFF8F','#ADFF4D'],
     tooltip : {
         trigger: 'item',
         formatter: "{a} <br/>{b} : {c} ({d}%)"
     },
-
     visualMap: {
         show: false,
         min: 80,
@@ -116,17 +110,11 @@ var paycomparsionOption=function(id){
                     shadowBlur: 200,
                     shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-            },
-
-            animationType: 'scale',
-            animationEasing: 'elasticOut',
-            animationDelay: function (idx) {
-                return Math.random() * 200;
             }
+
         }
     ]
 };
-
       //初始化echarts实例
    var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
       paycomparsion_id.setOption(paycomparsionOption);
