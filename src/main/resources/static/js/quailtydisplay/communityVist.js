@@ -140,7 +140,7 @@ $(function(){
                    }, ],
                    series: [
                           {
-                            name: '门诊人次23',
+                            name: '门诊人次',
                             position: 'top',
                             type: 'bar',
                             stack: '费用',
@@ -152,7 +152,7 @@ $(function(){
                            },
                         },
                         {
-                         name: '急诊人次3',
+                         name: '急诊人次',
                            position: 'top',
                            type: 'bar',
                             stack: '费用',
