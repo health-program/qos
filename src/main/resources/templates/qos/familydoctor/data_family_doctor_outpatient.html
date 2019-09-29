@@ -9,19 +9,17 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
-                            <option value="">请选择医疗机构</option>
-                            </select>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
-                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
                         </div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                             </div>
                         </div>
@@ -90,25 +88,30 @@
 		qyjmzxjzrcsChart.resize();
 		qyjmjtysjzzsChart.resize();
 	});
+	
+	 function unitSelected(row) {
+	        selectUnit = row.unitId;
+	    }
     
     
-    var table, dataVal, requestParams;
+    var table, dataVal, requestParams,selectUnit,responseData;
     $(function() {
-    	
-    	ndfwyxlylChartMethod();
-    	qyjgmzjzlChartMethod();
-    	qyysmzjzlChartMethod();
-    	qyjmzxjzrcsChartMethod();
-    	qyjmjtysjzzsChartMethod();
-    	
-         laydate.render({
-             elem: '#createTime',
-             type: 'year',
-             max:'nowTime',
-             value:''
-         });
-        initTable();
+        refresh();
     });
+    
+    function refresh() {
+        table ? table.refresh() : initTable();
+        selectUnit=null;
+    }
+    
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        qyysmzjzlChartMethod(responseData);
+    	qyjmzxjzrcsChartMethod(responseData);
+    	qyjmjtysjzzsChartMethod(responseData);
+    }
+    
+   
     var currentElement;
 
     function initTable() {
@@ -116,48 +119,146 @@
             idField: "id",
             columns: [
                 [
-                    { checkbox: true }, 
-                    { title: "医疗机构", field: "unitName" },
-                    { title: "年度服务有效履约率", field: "totalInfection" , formatter: getRate},
-                    { title: "签约居民中心就诊人次数", field: "operatingDepartmentsInfection" , formatter: getRate},
-                    { title: "签约居民就诊总次数", field: "operatingPartInfection" , formatter: getRate},
-                    { title: "签约机构门诊就诊率", field: "operatingRiskInfection" , formatter: getRate},
-                    { title: "签约居民家庭医生就诊率", field: "lungInfection" , formatter: getRate},
-                    { title: "签约居民中心就诊总次数", field: "newBornInfection" , formatter: getRate},
-                    { title: "签约医生门诊就诊率", field: "newBornInfection" , formatter: getRate}
+                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
+                    { title: "年度服务有效履约率", field: "a" },
+                    { title: "签约居民中心就诊人次数", field: "event21003"},
+                    { title: "签约居民就诊总次数", field: "total21003"},
+                    { title: "签约机构门诊就诊率", field: "reat21003"},
+                    { title: "签约居民家庭医生就诊率", field: "event21004"},
+                    { title: "签约居民中心就诊总次数", field: "total21004"},
+                    { title: "签约医生门诊就诊率", field: "reat21004"}
                 ]
             ],
-            url: '',
+            url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            onCheck: function(row) {
-                console.log("on check");
-                console.log(row);
-
-            },
-            onUncheck: function(row) {
-                console.log("on uncheck");
-                console.log(row);
+            height : 480,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
             },
             queryParams: function(params) {
+            	params.eventIds = '21003,21004';
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
-            	dataVal = res || [];
-                return dataVal;
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+
+           	 var data = {};
+
+                convertCountTableData(response, '21003', data);
+                convertCountTableData(response, '21004', data);
+
+                var result = [];
+                  var event21003=0,total21003=0,reat21003=0,
+        	    	total21004=0,event21004=0,reat21004=0;  
+                for (var o in data) {
+               	 event21003+=data[o].event21003;
+               	 total21003+=data[o].total21003;
+               	 event21004+=data[o].event21004;
+               	 total21004+=data[o].total21004;  
+                    result.push(data[o]);
+                    if(o=='total'){
+               		 var a = 0;
+               		 data[o].event21003 = event21003;
+               		 data[o].total21003 = total21003;
+    	               	if(event21003 && total21003){
+    	               		a = event21003/total21003*100
+    	               	}
+    	              	data[o].reat21003 = a.toFixed(2)+'%';
+    	               	var b = 0;
+    	               	data[o].event21004 = event21004;
+    	              	data[o].total21004 = total21004;
+    	               	if(event21004 && total21004){
+    	               		b = event21004/total21004*100
+    	               	}
+    	               	data[o].reat21004 = b.toFixed(2)+'%'; 
+               	 }
+                }
+                responseData =response;
+                ndfwyxlylChartMethod(response);
+            	qyjgmzjzlChartMethod(response);
+            	qyysmzjzlChartMethod(responseData);
+            	qyjmzxjzrcsChartMethod(responseData);
+            	qyjmjtysjzzsChartMethod(responseData);
+                return result;
             }
         });
     }
     
-    function getRate(value, row, index) {
-        if (value)
-        return value.toFixed(2) + "%";
+    
+    function convertCountTableData(originData, eventId, data) {
+        var eventData = originData[eventId];
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName,
+                };
+                data[id] = unitData;
+            }
+             if(eventId == '21003'){
+            	 unitData['event21003'] = item.eventNum;
+            	 unitData['total21003'] = item.totalNum;
+            	 unitData['reat21003'] = getRate(item); 
+            }
+			if(eventId == '21004'){
+				unitData['event21004'] = item.eventNum;
+				unitData['total21004'] = item.totalNum;
+           		unitData['reat21004'] = getRate(item); 
+            } 
+        });
+         var totalData = data['total'];
+            totalData = {
+                unitId: 'total',
+                unitName: '合计'
+            }
+            data['total'] = totalData;
+            totalData['event21003'] = 0;
+            totalData['total21003'] = 0;
+            totalData['event21004'] = 0;
+          	totalData['total21004'] = 0;
     }
     
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+    
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata.sort(compare('eventNum'));
+        edata && edata.forEach(function(item) {
+            var r = isRate ? item.eventNum : 0;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        };
+    }
+
     var qyjmzxjzrcsChart = echarts.init(document.getElementById('qyjmzxjzrcsChart'));
-    function qyjmzxjzrcsChartMethod(){
+    function qyjmzxjzrcsChartMethod(response){
+    	var ev21003= convertUnitChartData(response, '21003', true);
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -182,7 +283,7 @@
     		                interval:0,
     		                rotate:70//角度顺时针计算的
     		                } ,
-    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            data: ev21003.unit,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -199,7 +300,7 @@
     		            name:'签约居民中心就诊人次数',
     		            type:'bar',
     		            barWidth: '60%',
-    		            data:[]
+    		            data:ev21003.values
     		        }
     		    ]
     		};
@@ -208,7 +309,8 @@
     
     
     var qyjmjtysjzzsChart = echarts.init(document.getElementById('qyjmjtysjzzsChart'));
-    function qyjmjtysjzzsChartMethod(){
+    function qyjmjtysjzzsChartMethod(response){
+    	var ev21004= convertUnitChartData(response, '21004', true);
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -233,7 +335,7 @@
     		                interval:0,
     		                rotate:70//角度顺时针计算的
     		                } ,
-    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            data: ev21004.unit,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -249,15 +351,63 @@
     		            name:'签约居民家庭医生就诊总数',
     		            type:'bar',
     		            barWidth: '60%',
-    		            data:[]
+    		            data:ev21004.values
     		        }
     		    ]
     		};
     	qyjmjtysjzzsChart.setOption(option,true);
     }
+    
+    function convertChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            valuesMap = {};
+        	var first = true;
+        	var total1 = 0,total2 = 0;
+        eventData && eventData.forEach(function(unitPoint) {
+            var unitId = unitPoint.unitId;
+            var values = valuesMap[unitId];
+            var eventNum=unitPoint.eventNum,
+            	totalNum=unitPoint.totalNum;
+            var rate=0;
+            if(eventNum && totalNum){
+            	rate=(eventNum/totalNum*100).toFixed(2);
+            }
+            if (!values) {
+              values = {
+              		eventNum:eventNum,
+                  	totalNum:totalNum,
+                  	rate:rate,
+                  	total:eventNum+totalNum
+              };
+              valuesMap[unitId] = values;
+            }
+            total1 += unitPoint.eventNum;
+            total2 += unitPoint.totalNum;
+            first = false;
+        });
+        var totalData = valuesMap['total'];
+        if (!totalData) {
+        	 var rate=0;
+        	if(total1 && total2){
+        		rate=(total1/total2*100).toFixed(2);
+        	}
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+                eventNum:total1,
+                totalNum:total2,
+                rate:rate
+            }
+            valuesMap['total'] = totalData;
+        }
+	return valuesMap;
+        
+    }
    
+    //年度服务有效履约率
     var ndfwyxlylChart = echarts.init(document.getElementById('ndfwyxlylChart'));
-    function ndfwyxlylChartMethod(){
+    function ndfwyxlylChartMethod(response){
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -269,7 +419,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: '90%'+'\n'+'年度服务有效履约率',
+                        text: '0%'+'\n'+'年度服务有效履约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -298,11 +448,11 @@
                         },
                         data:[
                             {
-                                value:'90',
+                                value:'0',
                                 name:'年度服务有效履约率'
                             },
                             {
-                                value:'10',
+                                value:'1',
                                 name:'',
                                 hoverAnimation:false,
                                 tooltip:{
@@ -317,7 +467,9 @@
     }
     
     var qyjgmzjzlChart = echarts.init(document.getElementById('qyjgmzjzlChart'));
-    function qyjgmzjzlChartMethod(){
+    function qyjgmzjzlChartMethod(responseData){
+    	var unitId = selectUnit || 'total';
+    	var res=convertChartData(responseData, '21003', true);
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -329,7 +481,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: '90%'+'\n'+'签约机构门诊就诊率',
+                        text: res[unitId].rate+'%'+'\n'+'签约机构门诊就诊率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -358,11 +510,11 @@
                         },
                         data:[
                             {
-                                value:'90',
+                                value:res[unitId].eventNum,
                                 name:'签约机构门诊就诊率'
                             },
                             {
-                                value:'10',
+                                value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
                                 name:'',
                                 hoverAnimation:false,
                                 tooltip:{
@@ -377,7 +529,9 @@
     } 
     
     var qyysmzjzlChart = echarts.init(document.getElementById('qyysmzjzlChart'));
-    function qyysmzjzlChartMethod(){
+    function qyysmzjzlChartMethod(responseData){
+    	var unitId = selectUnit || 'total';
+    	var res=convertChartData(responseData, '21004', true);
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -389,7 +543,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: '90%'+'\n'+'签约医生门诊就诊率',
+                        text: res[unitId].rate+'%'+'\n'+'签约医生门诊就诊率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -418,11 +572,11 @@
                         },
                         data:[
                             {
-                                value:'90',
+                                value:res[unitId].eventNum,
                                 name:'签约医生门诊就诊率'
                             },
                             {
-                                value:'10',
+                                value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
                                 name:'',
                                 hoverAnimation:false,
                                 tooltip:{
@@ -435,7 +589,14 @@
             };
     	qyysmzjzlChart.setOption(option,true);
     } 
-
+    
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return value2 - value1;
+        }
+    }
   	//]]>
     </script>
 </body>

@@ -1,21 +1,23 @@
 package com.paladin.qos.service.data.vo;
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class BedReportVO {
 
     private String unitName;
 
     private Integer bedNumber;
 
-    private Integer openBedNumber;
+    private Long openBedNumber;
 
-    private Integer userBedNumber;
+    private Long userBedNumber;
 
     private Double userBedRate;
 
-    public String getUnitName() {
-        return unitName;
-    }
 
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitName);
+    }
     public void setUnitName(String unitName) {
         this.unitName = unitName;
     }
@@ -28,19 +30,19 @@ public class BedReportVO {
         this.bedNumber = bedNumber;
     }
 
-    public Integer getOpenBedNumber() {
+    public Long getOpenBedNumber() {
         return openBedNumber;
     }
 
-    public void setOpenBedNumber(Integer openBedNumber) {
+    public void setOpenBedNumber(Long openBedNumber) {
         this.openBedNumber = openBedNumber;
     }
 
-    public Integer getUserBedNumber() {
+    public Long getUserBedNumber() {
         return userBedNumber;
     }
 
-    public void setUserBedNumber(Integer userBedNumber) {
+    public void setUserBedNumber(Long userBedNumber) {
         this.userBedNumber = userBedNumber;
     }
 

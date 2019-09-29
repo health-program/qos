@@ -10,19 +10,17 @@
     <section class="content">
         <div class="box box-solid">
             <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
-                            <option value="">请选择医疗机构</option>
-                            </select>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
-                         <div class="col-md-2">
-                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
-                        </div> 
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                             </div>
                         </div>
@@ -42,7 +40,7 @@
 			</div>
             <div class="col-md-6">
                 <div class="box box-solid">
-                    <div id="drugsChartDiv" class="box-body" style="height: 400px">
+                    <div id="drugsChartDiv" class="box-body" style="height: 350px">
                     </div>
                 </div>
                 <div class="box box-solid">
@@ -62,19 +60,19 @@
 		drugFeeChart.resize();
 	});
 	
-    
-    var table,arrValue;
+    var table,arrValue,requestParams,selectUnit;
     $(function() {
-    	
-    	 laydate.render({
-             elem: '#createTime',
-             type: 'month',
-             max:'nowTime',
-             value:''
-         });
-    	
         initTable();
+        referral();
+        refresh();
+        initDayChart();
     });
+    
+    function refresh() {
+        table ? table.refresh() : initTable();
+        referral();
+        
+    }
 
 
     function initTable() {
@@ -82,119 +80,199 @@
             idField: "id",
             columns: [
                 [
-                    { title: "医疗机构", field: "unitName" },
-                    { title: "门急诊总人次", field: "oPDCount" },
-                    { title: "门急诊总费用(元)", field: "oPDMoney" },
-                    { title: "门急诊人均费用(元)", field: "oPDAverageMoney" },
-                    { title: "住院人次", field: "inPatientCount" },
-                    { title: "住院费用(元)", field: "inPatientMoney" },
-                    { title: "住院人均费用(元)", field: "inPatietAverageMoney" },
+                    { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
+                    { title: "门急诊总人次", field: "ev31001" },
+                    { title: "门急诊总费用(元)", field: "ev31002" },
+                    { title: "门急诊人均费用(元)", field: "opdAvg" },
+                    { title: "住院人次", field: "ev31004" },
+                    { title: "住院费用(元)", field: "ev31005" },
+                    { title: "住院人均费用(元)", field: "inPatietAvg" },
                     { title: "转入人次", field: "inPersonCount" },
                     { title: "转出人次", field: "outPersonCount" }
                 ]
             ],
-            url: '/qos/expenses/find',
+            url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function(params) {
+            	params.eventIds = '31001,31002,31004,31005';
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
-                sumData = res || [];
-                var arr = [];
-                
-                for (var i = 0; i < sumData.length; i++) {
-                  if (i == 0) arr.push(sumData[i]);
-                  b = false;
-                  if (arr.length > 0 && i > 0) {
-                    for (var j = 0; j < arr.length; j++) {
-                      if (arr[j].unitId == sumData[i].unitId) {
-                    	  if(sumData[i].oPDCount != 0)arr[j].oPDCount = sumData[i].oPDCount;
-                    	  if(sumData[i].oPDMoney != 0)arr[j].oPDMoney = sumData[i].oPDMoney;
-                    	  
-                    	  var oPDMoney = sumData[i].oPDMoney;
-                    	  var oPDCount = arr[j].oPDCount;
-                    	  if(oPDMoney != 0 && oPDCount !=0)
-                    		  	arr[j].oPDAverageMoney = (oPDMoney/oPDCount).toFixed(2);
-                    	  
-                    	  if(sumData[i].inPatientCount != 0)arr[j].inPatientCount = sumData[i].inPatientCount;
-                    	  if(sumData[i].inPatientMoney != 0)arr[j].inPatientMoney = sumData[i].inPatientMoney;
-                    	  
-                    	  var inPatientMoney = sumData[i].inPatientMoney;
-                    	  var inPatientCount = arr[j].inPatientCount;
-                    	  
-                    	  if(inPatientMoney != 0 && inPatientCount != 0)
-                    		  arr[j].inPatietAverageMoney = (inPatientMoney/inPatientCount).toFixed(2);
-                    	  
-                    	  if(sumData[i].inPersonCount != 0)arr[j].inPersonCount = sumData[i].inPersonCount;
-                    	  if(sumData[i].outPersonCount != 0)arr[j].outPersonCount = sumData[i].outPersonCount;
-                        b = true;
-                      }
-                    }
-                    if (!b) {
-                      arr.push(sumData[i]);
-                    }
-                  }
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
                 }
-                arrValue = arr;
-                chart1(drugChart)
+                var data = {};
+                convertRate2TableData(response, '31001', data);
+                convertRate2TableData(response, '31002', data);
+                convertRate2TableData(response, '31004', data);
+                convertRate2TableData(response, '31005', data);
+                
+                var result = [];
+                var inPersonTotal = 0,outPersonTotal = 0;
+                	 for (var o in data) {
+                		 data[o].inPersonCount = 0;
+                		 data[o].outPersonCount = 0;
+                		 if(referrals !=null && referrals.length>0){
+                			 for(var i=0;i<referrals.length;i++){ 
+                        		 if(referrals[i].unitId == o){
+                        			 data[o].inPersonCount = referrals[i].inPersonCount;
+                        			 inPersonTotal+=referrals[i].inPersonCount;
+                        			 data[o].outPersonCount = referrals[i].outPersonCount;
+                        			 outPersonTotal+=referrals[i].outPersonCount;
+                        		 }
+                        	 }
+                		 }
+                		 
+                     	var opdAvg = 0,inPatietAvg = 0;
+                     	
+                     	var ev31002 = data[o].ev31002;
+                     	var ev31001 = data[o].ev31001;
+                     	if(ev31001 && ev31002)opdAvg = (ev31002/ev31001).toFixed(2);
+                     	data[o].opdAvg =opdAvg;
+                     	
+                     	var ev31005 = data[o].ev31005;
+                     	var ev31004 = data[o].ev31004;
+                     	if(ev31005 && ev31004)inPatietAvg = (ev31005/ev31004).toFixed(2);
+                     	data[o].inPatietAvg =inPatietAvg;
+                     	if(data[o].unitId =='total'){
+                     		data[o].inPersonCount=inPersonTotal;
+                         	data[o].outPersonCount=outPersonTotal;	
+                     	}
+                         result.push(data[o]);	
+                     }
+                
+                arrValue = result;
                 chart2(drugFeeChart)
-                return arr;
+                result.sort(compare('ev31002','asc'));
+                return result;
             }
         });
     }
     
+    var referrals =[];
+    function referral(){
+    	var startTime = $("#startTime").val();
+    	var endTime = $("#endTime").val();
+    	var referral =$.post('/qos/expenses/referral/count',{'startTime':startTime,'endTime':endTime},function(res){
+    		referrals = res.result;
+    	})
+    }
+    
+    function convertRate2TableData(originData, eventId, data) {
+    	 var eventData = originData[eventId],
+         fieldName = 'ev' + eventId,
+         total = 0;
+       var eventData = originData[eventId];
+       eventData && eventData.forEach(function(item) {
+           var id = item.unitId;
+           unitData = data[id];
+           if (!unitData) {
+               unitData = {
+                   unitId: id,
+                   unitName: item.unitName,
+               };
+               data[id] = unitData;
+           }
+           	unitData[fieldName] = item.count;
+           	total += item.count;
+       });
+       var totalData = data['total'];
+       if (!totalData) {
+           totalData = {
+               unitId: 'total',
+               unitName: '合计',
+           }
+           data['total'] = totalData;
+       }
+       totalData[fieldName] = total;
+   }
+    
     var drugChart = echarts.init(document.getElementById('drugsChartDiv'));
     var drugFeeChart = echarts.init(document.getElementById('drugFeeChartDiv'));
     
+    
+    function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+        	
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(tv.totalNum);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+    
+    var month31001, month31004;
+    function initDayChart(response) {
+        if (!response) {
+        	requestParams.eventIds='31001,31004';
+            $.postAjax('/qos/analysis/data/get/month/instalments', requestParams, initDayChart);
+            return;
+        }
+
+        month31001 = convertMonthChartData(response, '31001', true);
+        month31004 = convertMonthChartData(response, '31004', true);
+
+        chart1('total');
+    }
+    
     function chart1(){
-    	var xAxisData = dataAll();
-    	drugChart.showLoading({
-	           text: '数据正在努力加载...',
-	           textStyle: { fontSize : 30 , color: '#444' },
-	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
-	       	}); 
-    	var resultAll = [];
-    	var date = [];
-    	var opCount = [];
-    	var inCount = [];
-    	var unitId = $("#unitId").val();
-    	var createTime = $("#createTime").val();
-    	$.get('/qos/expenses/find/month',{"unitId":unitId,"date":createTime},function(res){
-    		debugger;
-    		var dataValue = res.result;
-    		if(dataValue){
-    				for(var i=0; i<dataValue.length;i++){
-    					if (i == 0) resultAll.push(dataValue[i]);
-    	                  b = false;
-    	                  for (var j = 0; j < resultAll.length; j++) {
-    	                	  if (dataValue[i].typeMonth == resultAll[j].typeMonth) {
-    	                		  if(dataValue[i].oPDCount != 0)resultAll[j].oPDCount = dataValue[i].oPDCount;
-    	                		  if(dataValue[i].inPatientCount != 0)resultAll[j].inPatientCount = dataValue[i].inPatientCount;
-    	                		  b = true;
-    	                	  }
-    	                  }
-    	                  if (!b) resultAll.push(dataValue[i]);
-        			}
-    		}
-    		
-    		for(var i=0; i<xAxisData.length;i++){
-				for(var j=0;j<resultAll.length;j++){
-					if(xAxisData[i] == resultAll[j].typeMonth){
-						date.push(xAxisData[i]);
-		    			opCount.push({name:xAxisData[i],value:resultAll[j].oPDCount});
-		    			inCount.push({name:xAxisData[i],value:resultAll[j].inPatientCount})
-		    			break;
-					}
-					if(j == resultAll.length-1){
-						date.push(xAxisData[i]);
-						opCount.push({name:xAxisData[i],value:0});
-		    			inCount.push({name:xAxisData[i],value:0})
-					}
-				}
-			}
-    		drugChart.hideLoading();
+    	 var unitId = selectUnit || 'total';
+    	 
         	option = {
         		    title: {
         		        text: '按日期分布'
@@ -226,7 +304,7 @@
         		        {
         		            type : 'category',
         		            boundaryGap : false,
-        		            data :date,
+        		            data :month31001.month,
         		            axisLabel: {
        		                 interval:0,
        		                 rotate:50//角度顺时针计算的
@@ -253,7 +331,7 @@
               	                        }
               	                    }
     			            },
-        		            data:opCount
+        		            data:month31001.valuesMap[unitId]
         		        },
         		        {
         		            name:'住院人次',
@@ -269,24 +347,25 @@
              	                        }
              	                    }
     		            },
-        		            data:inCount
+        		            data:month31004.valuesMap[unitId]
         		        }
         		    ]
         		};
         	drugChart.setOption(option,true);
-    	})
+    	}
     	
-
-    }
     
     function chart2(){
     	if(arrValue){
+    		var data = arrValue;
+    			data.sort(compare('ev31001','desc'));
     		 var oPDCountSeries =[],oPDCountxAxis =[];
-    		 for (var i = 0; i < arrValue.length; i++) {
-    			 oPDCountxAxis.push(arrValue[i].unitName);
-    	         oPDCountSeries.push({name:arrValue[i].unitName,value:arrValue[i].oPDCount});
+    		 for (var i = 0; i < data.length; i++) {
+    			 if(data[i].unitId != 'total'){
+    				 oPDCountxAxis.push(data[i].unitName);
+        	         oPDCountSeries.push({name:data[i].unitName,value:data[i].ev31001});
+    			 }
     		 }
-    		
     		var option = {
         			title: {
     			        text: '门急诊总人次排名',
@@ -351,6 +430,21 @@
 	        }
 		return dataArr.sort();
 	}
+    
+    function compare(property,sort){
+        return function(a,b){
+        	var data;
+            var value1 = a[property];
+            var value2 = b[property];
+            if(sort =='asc'){
+            	data = value1 - value2;
+            }
+			if(sort =='desc'){
+				data = value2 - value1;
+            }
+            return data;
+        }
+    }
     
 	//]]>
     </script>
