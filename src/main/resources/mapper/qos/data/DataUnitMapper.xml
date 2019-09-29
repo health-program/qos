@@ -4,17 +4,16 @@
 
     <select id="getBedReportByQuery" resultType="com.paladin.qos.service.analysis.data.DataPointMonth" >
         SELECT
-        year,
-        MONTH ,
         sum(total_num) as totalNum,
         SUM(event_num) as eventNum
         FROM
         data_processed_day
         where unit_id =#{unitId}
         and event_id=#{eventId}
-        AND serial_number<![CDATA[>=]]> #{start}
-        AND serial_number<![CDATA[<=]]>#{end}
-        GROUP BY `year`, `month`
+        AND year <![CDATA[>=]]> #{startYear}
+        AND month <![CDATA[>=]]> #{startMonth}
+        and year <![CDATA[<=]]> #{endYear}
+        and month <![CDATA[<=]]> #{endMonth}
     </select>
     
     <select id="selectData" resultType="com.paladin.qos.service.data.vo.DataUnitVO">

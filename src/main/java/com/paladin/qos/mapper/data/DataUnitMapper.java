@@ -13,8 +13,8 @@ import java.util.List;
 public interface DataUnitMapper extends CustomMapper<DataUnit>{
 
 
-    DataPointMonth getBedReportByQuery(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("start") int start,
-                                       @Param("end") int end);
+    DataPointMonth getBedReportByQuery(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("startYear") int startYear,
+                                       @Param("startMonth") int startMonth,@Param("endYear") int endYear,@Param("endMonth") int endMonth);
 
     List<DataUnitVO> selectData(String[] array);
 }

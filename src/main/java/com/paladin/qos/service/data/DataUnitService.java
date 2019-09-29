@@ -20,7 +20,17 @@ public class DataUnitService extends ServiceSupport<DataUnit> {
 	private DataUnitMapper dataUnitMapper;
 
 	public DataPointMonth getBedReportByQuery(String unitId, String eventId, Date startDate, Date endDate) {
-		return dataUnitMapper.getBedReportByQuery(eventId,unitId, TimeUtil.getSerialNumberByDay(startDate),TimeUtil.getSerialNumberByDay(endDate));
+		return dataUnitMapper.getBedReportByQuery(eventId,unitId, getYearInt(startDate),getMonthInt(startDate),getYearInt(endDate),getMonthInt(endDate));
+	}
+
+	private int getYearInt (Date date){
+		int dateInt=TimeUtil.getSerialNumberByMonth(date);
+		return dateInt / 100 ;
+	}
+
+	private int getMonthInt (Date date){
+		int dateInt=TimeUtil.getSerialNumberByMonth(date);
+		return dateInt % 100 ;
 	}
 
 	public List<DataUnitVO> selectData() {
