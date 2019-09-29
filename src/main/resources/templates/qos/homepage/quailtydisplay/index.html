@@ -61,6 +61,14 @@
                 <div class="quailty_right_income">
                     <div class="quailty_bottom_header2">
                         收入分类
+                        <select id="incomeSelect">
+                            <option value="15005">
+                                医保
+                            </option>
+                            <option value="15006">
+                               自费
+                            </option>
+                        </select>
                     </div>
                     <div id="incomeKind">
 
@@ -122,6 +130,7 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/communityVist.js"></script><!--社区就诊top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
+<script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
 <script>
 $(function() {
 
@@ -276,45 +285,7 @@ quailty_middle_hospitelOption = {
   //医院就诊top5结束
 
 
-  //收入分类开始
-    var incomeKind_id = echarts.init(document.getElementById('incomeKind'));
-    var incomeKindOption =  {
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-         bottom: 10,
-        left: 'center',
-        data: ['西凉', '益州','兖州']
-    },
-    series : [
-        {
-            type: 'pie',
-            radius : '65%',
-            center: ['50%', '50%'],
-            selectedMode: 'single',
-            data:[
-                {
-                    value:1548,
-                    name: '幽州'
-                },
-                {value:535, name: '荆州'},
-                {value:735, name: '西凉'}
-            ],
-            itemStyle: {
-                emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        }
-    ]
-};
 
-   incomeKind_id.setOption(incomeKindOption);
-  //收入分类结束
 
 
   //抗菌药物使用开始

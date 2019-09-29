@@ -51,9 +51,7 @@ $(function(){
 
 
          //社区就诊开始
-
-
-                         medicaladviceoption ={
+           medicaladviceoption ={
                                   tooltip : {
                                       trigger: 'axis'
                                   },
@@ -103,7 +101,16 @@ $(function(){
                                           name:'急诊人次',
                                           type:'line',
                                           stack: '总量',
-                                          areaStyle: {normal: {}},
+                                          areaStyle: {normal: {
+                                              color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
+                                                      offset: 0, color: '#74a5d4' // 0% 处的颜色
+                                               }, {
+                                               offset: 0.4, color: '#74a5d4' // 100% 处的颜色
+                                                }, {
+                                               offset: 1, color: '#74a5d4' // 100% 处的颜色
+                                                }]
+                                         ), //背景渐变色
+                                          }},
                                           data: arr13002MonthY, // total 如果是单位，就改成该单位的id
                                       },
                                        {
@@ -117,14 +124,23 @@ $(function(){
                                           name:'普通门诊人次',
                                          type:'line',
                                          stack: '总量',
-                                         areaStyle: {normal: {}},
+                                         areaStyle: {normal: {
+                                              color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
+                                             offset: 0, color: '#6e90ba' // 0% 处的颜色
+                                         }, {
+                                              offset: 0.4, color: '#6e90ba' // 100% 处的颜色
+                                         }, {
+                                              offset: 1, color: '#6e90ba' // 100% 处的颜色
+                                        }]
+                                        ), //背景渐变色
+                                         }},
                                          data:arr13001MonthY
                                         }
                                   ]
                               };
 
            var myChartMedicaladvice = echarts.init(document.getElementById('medicaladvice'));
-         	  myChartMedicaladvice.setOption(medicaladviceoption);
+         	   myChartMedicaladvice.setOption(medicaladviceoption);
 
 
                     //初始化echarts实例

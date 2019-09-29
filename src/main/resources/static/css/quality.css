@@ -173,3 +173,7 @@ width:29vw;
    width: 23.17vw;
     height: 16.23vh;
 }
+
+#selectID,#incomeSelect{
+  width:5vw;
+}
