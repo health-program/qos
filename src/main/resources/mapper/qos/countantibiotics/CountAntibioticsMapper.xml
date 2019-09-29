@@ -60,4 +60,9 @@
 			and (DATE_FORMAT(c.create_time,'%Y%m') = DATE_FORMAT(#{month},'%Y%m'))
 		</if>
 	</select>
+	
+	<select id="percent" resultType="com.paladin.qos.service.countantibiotics.vo.CountAntibioticsPercentVO" >
+		select unit_id AS unitId, COALESCE (SUM(user_rate) ,0) AS userRate from count_antibiotics 
+		GROUP BY unit_id order BY userRate DESC LIMIT 5
+	</select>
 </mapper>

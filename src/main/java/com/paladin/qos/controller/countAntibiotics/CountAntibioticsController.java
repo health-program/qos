@@ -56,6 +56,13 @@ public class CountAntibioticsController extends ControllerSupport {
 	public Object findAll(CountAntibioticsQuery query) {
 		return CommonResponse.getSuccessResponse(countAntibioticsService.searchFindPage(query));
 	}
+	
+	
+	@RequestMapping(value = "/find/percent", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object percent(){
+	    return CommonResponse.getSuccessResponse(countAntibioticsService.percent());
+	}
 
 	// 查看详情
 	@GetMapping("/detail")
