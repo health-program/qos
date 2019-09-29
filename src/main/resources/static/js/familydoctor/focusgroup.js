@@ -149,9 +149,4 @@ var echartses=function(id){
 }
 
 
-
-
-
-
-
 })

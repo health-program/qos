@@ -49,7 +49,6 @@ $(function(){
 
 
 
-
          //社区就诊开始
            medicaladviceoption ={
                                   tooltip : {
@@ -117,7 +116,16 @@ $(function(){
                                           name:'入院人次',
                                           type:'line',
                                           stack: '总量',
-                                          areaStyle: {normal: {}},
+                                          areaStyle: {normal: {
+                                                  color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
+                                                         offset: 0, color: '#79a0d8' // 0% 处的颜色
+                                                 }, {
+                                                          offset: 0.4, color: '#79a0d8' // 100% 处的颜色
+                                                }, {
+                                                          offset: 1, color: '#79a0d8' // 100% 处的颜色
+                                               }]
+                                                   ), //背景渐变色
+                                               }},
                                           data: arr14001MonthY
                                        },
                                        {

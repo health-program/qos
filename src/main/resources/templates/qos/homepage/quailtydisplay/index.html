@@ -46,10 +46,10 @@
                         支付方式对比
                         <select id="selectID">
                             <option value="31009">
-                               社区
+                                医院
                             </option>
                             <option value="31010">
-                               医院
+                                社区
                             </option>
                         </select>
                     </div>
@@ -61,14 +61,25 @@
                 <div class="quailty_right_income">
                     <div class="quailty_bottom_header2">
                         收入分类
-                        <select id="incomeSelect">
+                        <!--<select id="incomeSelect">
                             <option value="15005">
                                 医保
                             </option>
                             <option value="15006">
                                自费
                             </option>
+                        </select>-->
+
+                        <select id="incomeSelect">
+                            <option value="31009">
+                                医院
+                            </option>
+                            <option value="31010">
+                                社区
+                            </option>
                         </select>
+
+
                     </div>
                     <div id="incomeKind">
 
@@ -128,16 +139,14 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/common.js"></script><!--旭武封装的方法的month等-->
 
 <script type="text/javascript" src="/static/js/quailtydisplay/communityVist.js"></script><!--社区就诊top5-->
+<script type="text/javascript" src="/static/js/quailtydisplay/hospitalVist.js"></script><!--医院就诊top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
 <script>
 $(function() {
 
-
-
-
-	  //无缝滚动开始
+	//无缝滚动开始
 	var box = document.getElementById("box");
     var l1 = document.getElementById("list1");
     var l2 = document.getElementById("list2");
@@ -162,127 +171,6 @@ $(function() {
         scrollMove = setInterval(scrollup, 30);
     }
 	//无缝滚动结束
-
-
-
-//医院就诊top5开始
-quailty_middle_hospitelOption = {
-    legend: {
-        name: [],
-        //orient 排列方式,默认水平
-        orient: 'vertical',
-        //align 排列方式为垂直的话,对齐方式由align决定
-        align: 'left',
-        right: 15,
-        top: 'top',
-        textStyle: {
-            color: '#fff',
-            fontSize: 14,
-        },
-    },
-    tooltip: {
-        //trigger(触发类型)，可选'item','axis','none'
-        trigger: 'axis',
-        axisPointer: {
-            //指示器类型,可选'line','shadow','cross'
-            type: 'shadow'
-        }
-    },
-    xAxis: {
-        name: '/元',
-        type: 'value',
-        position: 'bottom',
-        axisLabel: {
-            show: true,
-            color: '#fff',
-            fontSize: 14,
-        },
-        splitLine: {
-            show: false
-        },
-        axisLine: {
-            // show:false,
-            lineStyle: {
-                color: '#FFFFFF'
-            }
-        },
-        axisTick: {
-            show: false
-        },
-
-    },
-    yAxis: [{
-        type: 'category',
-        //是否反向坐标轴
-        inverse: true,
-        //axisTick 坐标轴刻度相关设置
-        axisTick: {
-            show: false
-        },
-        //axixLine 坐标轴轴线相关设置
-        axisLine: {
-            lineStyle: {
-                color: '#FFFFFF',
-            }
-        },
-        data: ['扬州炒饭', '龙门花甲', '黄焖鸡米饭', '麻辣烫', '回锅肉盖浇饭'],
-        //axisLabel 坐标轴刻度标签的相关设置
-
-        axisLabel: {
-            show: true,
-            color: '#fff',
-             fontSize: 14,
-          interval: 0,
-          formatter: function(value) {
-            if (value.length > 2) {
-              return value.substring(0, 2) + "...";
-            } else {
-              return value;
-            }
-          }
-        }
-    }, ],
-    series: [{
-            name: '运送费',
-             position: 'bottom',
-            type: 'bar',
-            stack: '费用',
-            data: [2.5, 2, 1.5, 2.5, 4],
-            barWidth: '30%',
-            itemStyle: {
-                color: '#00C1FF',
-            },
-
-        },
-        {
-            name: '餐盒费',
-            //type决定图表类型
-            type: 'bar',
-            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
-            stack: '费用',
-            data: [2, 3, 2, 2, 2.5],
-            barWidth: '30%',
-            itemStyle: {
-                color: '#51FFAE',
-            },
-        },
-        {
-            name: '食品费',
-            //type决定图表类型
-            type: 'bar',
-            //stack 数据堆叠，同个类目轴上系列配置相同的stack值可以堆叠放置。
-            stack: '费用',
-            data: [15, 25, 18, 20, 20],
-            barWidth: '30%',
-            itemStyle: {
-                color: '#CEC608',
-            },
-        },
-      ]
-};
-  var quailty_middle_hospitel_id = echarts.init(document.getElementById('middle_hospitel'));
-	  quailty_middle_hospitel_id.setOption(quailty_middle_hospitelOption);
-  //医院就诊top5结束
 
 
 
