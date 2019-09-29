@@ -97,6 +97,8 @@ $(function(){
                               show: true,
                               color: '#fff',
                               fontSize: 14,
+                              interval:0,
+                              rotate:40
                           },
                           splitLine: {
                               show: false
@@ -127,9 +129,9 @@ $(function(){
                         axisLabel: {
                            show: true,
                            color: '#fff',
-                            fontSize: 14,
-                         interval: 0,
-                         formatter: function(value) {
+                           fontSize: 14,
+                           interval:0,
+                           formatter: function(value) {
                            if (value.length > 2) {
                              return value.substring(0, 2) + "...";
                            } else {
