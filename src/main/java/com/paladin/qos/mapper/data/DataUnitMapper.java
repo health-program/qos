@@ -1,10 +1,9 @@
 package com.paladin.qos.mapper.data;
 
-import com.paladin.qos.model.data.DataUnit;
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
-import com.paladin.qos.service.data.vo.BedReportVO;
+import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.data.vo.DataUnitVO;
-
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,9 @@ import java.util.List;
 @Service
 public interface DataUnitMapper extends CustomMapper<DataUnit>{
 
-    List<BedReportVO> getBedReportByQuery(@Param("unitId") String unitId, @Param("month") String month,@Param("year") String year);
-    
+
+    DataPointMonth getBedReportByQuery(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("startYear") int startYear,
+                                       @Param("startMonth") int startMonth,@Param("endYear") int endYear,@Param("endMonth") int endMonth);
+
     List<DataUnitVO> selectData(String[] array);
 }

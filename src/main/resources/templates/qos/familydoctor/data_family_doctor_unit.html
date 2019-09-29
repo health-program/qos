@@ -30,7 +30,7 @@
         </div>
 			<div class="col-md-4">
 				<div class="box box-solid">
-					<div id="pieChart" class="box-body" style="height: 620px">
+					<div id="pieChart" class="box-body" style="height: 495px">
 					</div>
 				</div>
 			</div>
@@ -46,10 +46,16 @@
 		pieChart.resize();
 	});
     
-    
-    var table, dataVal,dataAll, requestParams;
+	
+	 function unitSelected(row) {
+		 debugger;
+	        selectUnit = row.unitId;
+	        pieChart1();
+	    }
+	
+    var table, dataVal,dataAll, requestParams,selectUnit;
     $(function() {
-    	regionType();
+    	regionTypes();
     	
          laydate.render({
              elem: '#createTime',
@@ -66,8 +72,7 @@
             idField: "id",
             columns: [
                 [
-                    { checkbox: true }, 
-                    { title: "社区", field: "unitId",enumcode: "region-type"},
+                    { title: "&emsp;&emsp;&emsp;&emsp;&emsp;社区&emsp;&emsp;&emsp;&emsp;&emsp;", field: "unitName"},
                     { title: "团队数量", field: "teamNum"},
                     { title: "工作室数量", field: "studioNum"},
                     { title: "医生人数", field: "doctorNum"},
@@ -82,20 +87,22 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            onCheck: function(row) {
-                console.log("on check");
-                console.log(row);
-
-            },
-            onUncheck: function(row) {
-                console.log("on uncheck");
-                console.log(row);
+            height:475,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
             },
             queryParams: function(params) {
                 requestParams = params;
                 return params;
             },
             responseHandler: function(res) {
+            	if (!res) {
+                    return null;
+                }
+           	 	var data = {};
+            	
             	dataVal = res || [];
             	if(dataVal){
             		var arr = [];
@@ -122,38 +129,102 @@
            				}
            			}
             	}
-            	dataAll = arr;
+            	
+            	 convertCountTableData(arr, data);
+            	 var result = [];
+            	 for (var o in data) {
+            		 result.push(data[o]);
+            	 }
+            	dataAll = result;
             	teamChart1();
             	studioChart1();
             	pieChart1();
-                return arr;
+                return result;
             }
         });
     }
+    
+    
+    function convertCountTableData(originData, data) {
+    	var teamNum=0,studioNum=0,doctorNum=0,nurseNum=0,healthCoordinatorNum=0,
+    		healthManageNum=0,dietitianNum=0,consultantNum=0;
+        var eventData = originData;
+        eventData && eventData.forEach(function(item) {
+        	teamNum+=item.teamNum;
+        	studioNum+=item.studioNum;
+        	consultantNum+=item.consultantNum;
+        	doctorNum+=item.doctorNum;
+        	nurseNum+=item.nurseNum;
+        	healthCoordinatorNum+=item.healthCoordinatorNum;
+        	healthManageNum+=item.healthManageNum;
+        	dietitianNum+=item.dietitianNum;
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                data[id] = item;
+            }
+        });
+         var totalData = data['total'];
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+                teamNum:teamNum,
+                studioNum:studioNum,
+                doctorNum:doctorNum,
+                nurseNum:nurseNum,
+                healthCoordinatorNum:healthCoordinatorNum,
+                healthManageNum:healthManageNum,
+                dietitianNum:dietitianNum,
+                consultantNum:consultantNum
+            }
+            data['total'] = totalData;
+    }
+    
     
     var teamChart = echarts.init(document.getElementById('teamChart'));
     function teamChart1(){
     	var dataSort = [];
     	var xAxisValue=[],seriesValue=[];
     	if(dataAll){
-    		var region = regionType();
-        	 for (var i = 0; i < region.length; i++) {
-        		 for(var j=0;j<dataAll.length;j++){
-        			if(region[i].value == dataAll[j].unitId){
-        				dataSort.push({name:region[i].name,value:dataAll[j].teamNum});
-        				break;
-        			}
-        			if(j == dataAll.length-1){
-        				dataSort.push({name:region[i].name,value:0});
- 					}
-        		 }
-        	 }
-        	 dataSort.sort(compare('value'));
-        	 for (var i = 0; i < dataSort.length; i++) {
-        		xAxisValue.push(dataSort[i].name);
- 				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
-        	 }
+    		var region = regionType;
+    		if(region){
+    			 for (var i = 0; i < region.length; i++) {
+            		 for(var j=0;j<dataAll.length;j++){
+            			if(region[i].value == dataAll[j].unitId){
+            				dataSort.push({name:region[i].name,value:dataAll[j].teamNum});
+            				break;
+            			}
+            			if(j == dataAll.length-1){
+            				dataSort.push({name:region[i].name,value:0});
+     					}
+            		 }
+            	 }
+            	 dataSort.sort(compare('value'));
+            	 for (var i = 0; i < dataSort.length; i++) {
+            		xAxisValue.push(dataSort[i].name);
+     				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
+            	 }
+    		}
     	}
+    	
+    	var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 12,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+    	
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -194,6 +265,7 @@
     		            name:'团队数量',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:seriesValue
     		        }
     		    ]
@@ -207,25 +279,44 @@
     	var dataSort = [];
     	var xAxisValue=[],seriesValue=[];
     	if(dataAll){
-    		var region = regionType();
-        	 for (var i = 0; i < region.length; i++) {
-        		 for(var j=0;j<dataAll.length;j++){
-        			if(region[i].value == dataAll[j].unitId){
-        				dataSort.push({name:region[i].name,value:dataAll[j].studioNum});
-        				break;
-        			}
-        			if(j == dataAll.length-1){
-        				dataSort.push({name:region[i].name,value:0});
- 					}
-        		 }
-        	 }
-        	 dataSort.sort(compare('value'));
-        	 for (var i = 0; i < dataSort.length; i++) {
-        		xAxisValue.push(dataSort[i].name);
- 				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
-        	 }
+    		var region = regionType;
+    		if(region){
+    			for (var i = 0; i < region.length; i++) {
+           		 for(var j=0;j<dataAll.length;j++){
+           			if(region[i].value == dataAll[j].unitId){
+           				dataSort.push({name:region[i].name,value:dataAll[j].studioNum});
+           				break;
+           			}
+           			if(j == dataAll.length-1){
+           				dataSort.push({name:region[i].name,value:0});
+    					}
+           		 }
+           	 }
+           	 dataSort.sort(compare('value'));
+           	 for (var i = 0; i < dataSort.length; i++) {
+           		xAxisValue.push(dataSort[i].name);
+    				seriesValue.push({name:dataSort[i].name,value:dataSort[i].value});
+           	 }
+    		}
     	}
     	
+    	var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 12,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -266,6 +357,7 @@
     		            name:'工作室数量',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:seriesValue
     		        }
     		    ]
@@ -273,20 +365,46 @@
     	studioChart.setOption(option,true);
     }
     
+    
+    function convertChartData(data, isRate) {
+    
+        var eventData = data,
+            valuesMap = {};
+        	var first = true;
+        eventData && eventData.forEach(function(unitPoint) {
+            var unitId = unitPoint.unitId;
+            var values = valuesMap[unitId];
+            if (!values) {
+              values = {
+        		  teamNum:unitPoint.teamNum,
+                  studioNum:unitPoint.studioNum,
+                  doctorNum:unitPoint.doctorNum,
+                  nurseNum:unitPoint.nurseNum,
+                  healthCoordinatorNum:unitPoint.healthCoordinatorNum,
+                  healthManageNum:unitPoint.healthManageNum,
+                  dietitianNum:unitPoint.dietitianNum,
+                  consultantNum:unitPoint.consultantNum
+              };
+              valuesMap[unitId] = values;
+            }
+            first = false;
+        });
+	return valuesMap;
+        
+    }
+    
+    
     var pieChart = echarts.init(document.getElementById('pieChart'));
     function pieChart1(){
-    	if(dataAll == null){
+    	debugger;
+    	var unitId = selectUnit || 'total';
+    	var res=convertChartData(dataAll, true);
+    	var total= res[unitId].doctorNum+res[unitId].nurseNum+res[unitId].healthCoordinatorNum
+    	+res[unitId].healthManageNum+res[unitId].dietitianNum+res[unitId].consultantNum;
+    	
+    	if(total == 0){
     		showChartInfo2(pieChart,'暂无数据显示');
     	}else{
-    		var ys=0,hs=0,xty=0,jkgls=0,yys=0,xlzxs=0;
-    		for(var i=0;i<dataAll.length;i++){
-    			ys+=dataAll[i].doctorNum;
-    			hs+=dataAll[i].nurseNum;
-    			xty+=dataAll[i].healthCoordinatorNum;
-    			jkgls+=dataAll[i].healthManageNum;
-    			yys+=dataAll[i].dietitianNum;
-    			xlzxs+=dataAll[i].consultantNum;
-    		}
     		option = {
         		    tooltip : {
         		        trigger: 'item',
@@ -299,7 +417,7 @@
         		            radius : '70%',
         		            center: ['50%', '50%'],
         		            data:[
-        		                {value:ys,
+        		                {value:res[unitId].doctorNum,
         		                name:'医生',
         		                itemStyle : {
                	                    normal : {
@@ -307,7 +425,7 @@
                	                    }
     	  				           }
         		                },
-        		                {value:hs,
+        		                {value:res[unitId].nurseNum,
         		                name:'护士',
         		                itemStyle : {
                   	                    normal : {
@@ -315,7 +433,7 @@
                   	                    }
        	  				           }    		                
         		                	},
-        		                {value:xty,
+        		                {value:res[unitId].healthCoordinatorNum,
         		                name:'协调员',
         		                itemStyle : {
                   	                    normal : {
@@ -323,7 +441,7 @@
                   	                    }
        	  				           }  
         		                },
-        		                {value:jkgls,
+        		                {value:res[unitId].healthManageNum,
         		                name:'健康管理师',
         		                itemStyle : {
                   	                    normal : {
@@ -331,7 +449,7 @@
                   	                    }
        	  				           }  
         		                },
-        		                {value:yys,
+        		                {value:res[unitId].dietitianNum,
         		                name:'营养师',
         		                itemStyle : {
                   	                    normal : {
@@ -339,7 +457,7 @@
                   	                    }
        	  				           }  
         		                },
-        		                {value:xlzxs,
+        		                {value:res[unitId].consultantNum,
         		                name:'心理咨询师',
         		                itemStyle : {
                   	                    normal : {
@@ -383,16 +501,16 @@
         pieChart.setOption(msgOption)
     };
     
-    function regionType(){
-    	var regionType =[];
-    	var value = $.parseJSON($("#tonto_constant_value").text());
-        var region = value["region-type"];
-        for (var i = 0; i < region.length; i++) {
-        	var w=region[i].value.indexOf("社");
-        	var name =region[i].value.substring(3, w);
-        	regionType.push({name:name,value:region[i].key})
-        }
-        return regionType;
+    var regionType =[];
+    function regionTypes(){
+    	$.post('/qos/family/doctor/unit/find/all',function(res){
+    		var result =res.result;
+    		for (var i = 0; i < result.length; i++) {
+            	var w=result[i].unit.indexOf("社");
+            	var name =result[i].unit.substring(3, w);
+            	regionType.push({name:name,value:result[i].id})
+            }
+    	})
     }
    
     function compare(property){

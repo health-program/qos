@@ -14,6 +14,7 @@ import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.countantibiotics.CountAntibioticsMapper;
 import com.paladin.qos.model.countantibiotics.CountAntibiotics;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
+import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsPercentVO;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 
 @Service
@@ -31,6 +32,11 @@ public class CountAntibioticsService extends ServiceSupport<CountAntibiotics> {
 		}
 		countAntibioticsMapper.selecttoAll(query);
 		return new PageResult<>(page);
+	}
+	
+	
+	public List<CountAntibioticsPercentVO> percent(){
+	    return countAntibioticsMapper.percent();
 	}
 
 	public int judge(String unitId) {

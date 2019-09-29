@@ -7,21 +7,19 @@
     <tt:constant enumcode="data-unit-type" />
     </section>
     <section class="content">
-        <div class="box box-solid">
-            <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
-                            <option value="">请选择医疗机构</option>
-                            </select>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
-                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
                         </div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                             </div>
                         </div>
@@ -57,13 +55,13 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="box box-solid">
-					<div id="jkglqylChart" class="box-body" style="height: 210px">
+					<div id="jkglqylChart" class="box-body" style="height: 235px">
 					</div>
 					</div>
 				</div>
 				<div class="col-md-12">
 					<div class="box box-solid">
-					<div id="gxhfwqylChart" class="box-body" style="height: 210px">
+					<div id="gxhfwqylChart" class="box-body" style="height: 235px">
 					</div>
 					</div>
 				</div>
@@ -84,22 +82,23 @@
 	});
     
     
-    var table, dataVal, requestParams;
-    $(function() {
-    	
-    	jkglqylChart1();
-    	gxhfwqylChart1();
-    	jkglfwbqysChart1();
-    	qygxhfwsChart1();
-    	
-         laydate.render({
-             elem: '#createTime',
-             type: 'year',
-             max:'nowTime',
-             value:''
-         });
-        initTable();
-    });
+	 var table, monthChart, unitChart, requestParam, selectUnit,responseData;
+	    $(function() {
+	        refresh();
+	    });
+
+	    function refresh() {
+	        table ? table.refresh() : initTable();
+	        selectUnit=null;
+	    }
+
+	    function unitSelected(row) {
+	        selectUnit = row.unitId;
+	        jkglqylChart1(responseData);
+	        gxhfwqylChart1(responseData)
+	    }
+	   
+ 
     var currentElement;
 
     function initTable() {
@@ -107,47 +106,144 @@
             idField: "id",
             columns: [
                 [
-                    { checkbox: true }, 
-                    { title: "医疗机构", field: "unitName" },
-                    { title: "签约健康管理服务包签约数", field: "totalInfection" , formatter: getRate},
-                    { title: "就签居民数", field: "operatingDepartmentsInfection" , formatter: getRate},
-                    { title: "综全健康管理服务包签约率", field: "operatingPartInfection" , formatter: getRate},
-                    { title: "签约个性化服务数", field: "operatingRiskInfection" , formatter: getRate},
-                    { title: "签约总数", field: "lungInfection" , formatter: getRate},
-                    { title: "个性化服务签约率", field: "newBornInfection" , formatter: getRate}
+                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
+                    { title: "签约健康管理服务包签约数", field: "event21001" },
+                    { title: "就签居民数", field: "total21001"},
+                    { title: "综合健康管理服务包签约率", field: "reat21001"},
+                    { title: "签约个性化服务数", field: "event21002"},
+                    { title: "签约总数", field: "total21002"},
+                    { title: "个性化服务签约率", field: "reat21002"}
                 ]
             ],
-            url: '',
+            url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            onCheck: function(row) {
-                console.log("on check");
-                console.log(row);
-
-            },
-            onUncheck: function(row) {
-                console.log("on uncheck");
-                console.log(row);
+            height : 475,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
             },
             queryParams: function(params) {
+            	params.eventIds = '21001,21002';
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
-            	dataVal = res || [];
-                return dataVal;
+            responseHandler: function(response) {
+            	 if (!response) {
+                     return null;
+                 }
+
+            	 var data = {};
+
+                 convertCountTableData(response, '21001', data);
+                 convertCountTableData(response, '21002', data);
+
+                 var result = [];
+                   var event21001=0,total21001=0,reat21001=0,
+         	    	total21002=0,event21002=0,reat21002=0;  
+                 for (var o in data) {
+                	 event21001+=data[o].event21001;
+                	 total21001+=data[o].total21001;
+                	 event21002+=data[o].event21002;
+                	 total21002+=data[o].total21002;  
+                     result.push(data[o]);
+                     if(o=='total'){
+                		 var a = 0;
+                		 data[o].event21001 = event21001;
+                		 data[o].total21001 = total21001;
+     	               	if(event21001 && total21001){
+     	               		a = event21001/total21001*100
+     	               	}
+     	              	data[o].reat21001 = a.toFixed(2)+'%';
+     	               	var b = 0;
+     	               	data[o].event21002 = event21002;
+     	              	data[o].total21002 = total21002;
+     	               	if(event21002 && total21002){
+     	               		b = event21002/total21002*100
+     	               	}
+     	               	data[o].reat21002 = b.toFixed(2)+'%'; 
+                	 }
+                 }
+                 jkglfwbqysChart1(response);
+                 qygxhfwsChart1(response);
+                 responseData =response;
+                 jkglqylChart1(responseData);
+                 gxhfwqylChart1(responseData);
+                 return result;
             }
         });
     }
     
-    function getRate(value, row, index) {
-        if (value)
-        return value.toFixed(2) + "%";
+    function convertCountTableData(originData, eventId, data) {
+        var eventData = originData[eventId];
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName,
+                };
+                data[id] = unitData;
+            }
+             if(eventId == '21001'){
+            	 unitData['event21001'] = item.eventNum;
+            	 unitData['total21001'] = item.totalNum;
+            	 unitData['reat21001'] = getRate(item); 
+            }
+			if(eventId == '21002'){
+				unitData['event21002'] = item.eventNum;
+				unitData['total21002'] = item.totalNum;
+           		unitData['reat21002'] = getRate(item); 
+            } 
+        });
+         var totalData = data['total'];
+            totalData = {
+                unitId: 'total',
+                unitName: '合计'
+            }
+            data['total'] = totalData;
+            totalData['event21001'] = 0;
+            totalData['total21001'] = 0;
+            totalData['event21002'] = 0;
+          	totalData['total21002'] = 0;
     }
     
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+     
+     function convertUnitChartData(data, eventId, isRate) {
+         var edata = data[eventId],
+             max = 0,
+             unit = [],
+             values = [];
+         edata.sort(compare('eventNum'));
+         edata && edata.forEach(function(item) {
+             var r = isRate ? item.eventNum : 0;
+             max = Math.max(r, max);
+             values.push(r);
+             unit.push(item.unitName);
+         });
+         return {
+             max: max,
+             unit: unit,
+             values: values
+         };
+     }
+
+    
     var jkglfwbqysChart = echarts.init(document.getElementById('jkglfwbqysChart'));
-    function jkglfwbqysChart1(){
+    function jkglfwbqysChart1(response){
+    	 var ev21001= convertUnitChartData(response, '21001', true);
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -172,7 +268,7 @@
     		                interval:0,
     		                rotate:50//角度顺时针计算的
     		                } ,
-    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            data: ev21001.unit,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -188,7 +284,7 @@
     		            name:'签约健康管理服务包签约数',
     		            type:'bar',
     		            barWidth: '60%',
-    		            data:[]
+    		            data:ev21001.values
     		        }
     		    ]
     		};
@@ -197,7 +293,8 @@
     
     
     var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
-    function qygxhfwsChart1(){
+    function qygxhfwsChart1(response){
+    	var ev21002= convertUnitChartData(response, '21002', true);
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -222,7 +319,7 @@
     		                interval:0,
     		                rotate:50//角度顺时针计算的
     		                } ,
-    		            data: ['中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心','中华园社区卫生服务中心','蓬朗社区卫生服务中心','石浦社区卫生服务中心'],
+    		            data: ev21002.unit,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -238,22 +335,74 @@
     		            name:'签约个性化服务数',
     		            type:'bar',
     		            barWidth: '60%',
-    		            data:[]
+    		            data:ev21002.values
     		        }
     		    ]
     		};
     	qygxhfwsChart.setOption(option,true);
     }
+    
+    
+    function convertChartData(data, eventId, isRate) {
+    	debugger;
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            valuesMap = {};
+        	var first = true;
+        	var total1 = 0,total2 = 0;
+        eventData && eventData.forEach(function(unitPoint) {
+            var unitId = unitPoint.unitId;
+            var values = valuesMap[unitId];
+            var eventNum=unitPoint.eventNum,
+            	totalNum=unitPoint.totalNum;
+            var rate=0;
+            if(eventNum && totalNum){
+            	rate=(eventNum/totalNum*100).toFixed(2);
+            }
+            if (!values) {
+              values = {
+              		eventNum:eventNum,
+                  	totalNum:totalNum,
+                  	rate:rate,
+                  	total:eventNum+totalNum
+              };
+              valuesMap[unitId] = values;
+            }
+            total1 += unitPoint.eventNum;
+            total2 += unitPoint.totalNum;
+            first = false;
+        });
+        var totalData = valuesMap['total'];
+        if (!totalData) {
+        	 var rate=0;
+        	if(total1 && total2){
+        		rate=(total1/total2*100).toFixed(2);
+        	}
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+                eventNum:total1,
+                totalNum:total2,
+                rate:rate
+            }
+            valuesMap['total'] = totalData;
+        }
+	return valuesMap;
+        
+    }
+    
    
     var jkglqylChart = echarts.init(document.getElementById('jkglqylChart'));
-    function jkglqylChart1(){
+    function jkglqylChart1(responseData){
+    	var unitId = selectUnit || 'total';
+    	var res=convertChartData(responseData, '21001', true);
     	var option = {
                 tooltip: {
                     trigger: 'item',
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
                 title: {
-                    text: '综合健康管理',
+                    text: '综合健康管理服务包签约率',
                 },
                 color: ['#3398DB','#999999'],
                 graphic: [{ //环形图中间添加文字
@@ -261,7 +410,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: '90%'+'\n'+'服务包签约率',
+                        text: res[unitId].rate+'%'+'\n'+'服务包签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -290,12 +439,12 @@
                         },
                         data:[
                             {
-                                value:'90',
+                                value:res[unitId].eventNum,
                                 name:'综合健康管理服务包签约率'
                             },
                             {
-                                value:'10',
-                                name:'',
+                                value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
+                                name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{
                                       show:false,
@@ -310,6 +459,8 @@
     
     var gxhfwqylChart = echarts.init(document.getElementById('gxhfwqylChart'));
     function gxhfwqylChart1(){
+    	var unitId = selectUnit || 'total';
+    	var res=convertChartData(responseData, '21002', true);
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -324,7 +475,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: '90%'+'\n'+'个性化服务签约率',
+                        text: res[unitId].rate+'%'+'\n'+'个性化服务签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -353,12 +504,12 @@
                         },
                         data:[
                             {
-                                value:'90',
+                                value:res[unitId].eventNum,
                                 name:'个性化服务签约率'
                             },
                             {
-                                value:'10',
-                                name:'',
+                                value:res[unitId].totalNum-res[unitId].eventNum,
+                                name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{
                                       show:false,
@@ -371,6 +522,13 @@
     	gxhfwqylChart.setOption(option,true);
     }
 
+    function compare(property){
+        return function(a,b){
+            var value1 = a[property];
+            var value2 = b[property];
+            return value2 - value1;
+        }
+    }
   	//]]>
     </script>
 </body>

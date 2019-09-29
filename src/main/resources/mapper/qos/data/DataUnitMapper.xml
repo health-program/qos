@@ -2,25 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.data.DataUnitMapper">
 
-    <select id="getBedReportByQuery" resultType="com.paladin.qos.service.data.vo.BedReportVO" >
+    <select id="getBedReportByQuery" resultType="com.paladin.qos.service.analysis.data.DataPointMonth" >
         SELECT
-        u.name as unitName,
-        u.bed_number as bedNumber,
-        sum(i.P_O_BED) as openBedNumber,
-        SUM(i.P_OC_BED) as userBedNumber
+        sum(total_num) as totalNum,
+        SUM(event_num) as eventNum
         FROM
-        data_unit AS u
-        LEFT JOIN in_workload AS i ON ORGAN_CODE = u.id
-        WHERE 1=1
-        <if test="unitId != null and unitId !='' ">
-        and u.id =#{unitId}
-        </if>
-        <if test="month != null and month !='' and year !=null and year !=''">
-        and i.REP_TYPE = #{month}
-        and i.REP_YEAR = #{year}
-        </if>
-        GROUP BY
-        u.id
+        data_processed_day
+        where unit_id =#{unitId}
+        and event_id=#{eventId}
+        AND year <![CDATA[>=]]> #{startYear}
+        AND month <![CDATA[>=]]> #{startMonth}
+        and year <![CDATA[<=]]> #{endYear}
+        and month <![CDATA[<=]]> #{endMonth}
     </select>
     
     <select id="selectData" resultType="com.paladin.qos.service.data.vo.DataUnitVO">

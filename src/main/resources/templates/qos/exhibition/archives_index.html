@@ -47,11 +47,15 @@
         </div>
         <div class="col-md-4">
             <div class="box box-solid">
-                <div id="pieChartDiv1" class="box-body" style="height: 300px">
+                <div id="pieChartDiv1" class="box-body" style="height: 250px">
                 </div>
             </div>
             <div class="box box-solid">
-                <div id="pieChartDiv2" class="box-body" style="height: 300px">
+                <div id="pieChartDiv2" class="box-body" style="height: 250px">
+                </div>
+            </div>
+            <div class="box box-solid">
+                <div id="pieChartDiv3" class="box-body" style="height: 250px">
                 </div>
             </div>
         </div>
@@ -60,7 +64,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
-    var table, sumChart, dayChart, sumData, requestParams;
+    var table, sumChart, dayChart, sumData, requestParams,selectUnit,dataVal;
     $(function() {
         var day=new Date();
         day.setTime(day.getTime());
@@ -123,6 +127,12 @@
                         formatter: function(value, row, index) {
                             if(value)
                             return value + "%";
+                        }},
+
+                    { title: "档案使用率", field: "createArchivesRate",
+                        formatter: function(value, row, index) {
+                            if(value)
+                                return value + "%";
                         }}
                 ]
             ],
@@ -130,12 +140,17 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function(params) {
                 requestParams = params;
                 return params;
             },
             responseHandler: function(res) {
+                var data = {};
                 sumData = res || [];
                 var totalPeopleNumber=0;
                 var totalActiveArchivesNumber=0;
@@ -157,15 +172,23 @@
                     "publicArchivesRate":getRate(totalActiveArchivesNumber,totalPublicArchivesNumber)
                 }
                 sumData.push(total);
+                dataVal = data|| [];
 
                 initPieChart1();
                 initPieChart2();
-
+                initPieChart3();
                 return sumData;
             }
         });
     }
 
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        initPieChart1();
+        initPieChart2();
+        initPieChart3();
+    }
 
     function initPieChart1() {
         if (!sumChart) {
@@ -183,6 +206,10 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
+
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
+
         for (var i = 0; i < sumData.length; i++) {
             var it = sumData[i];
             sumOpen+=it.peopleNumber;
@@ -342,6 +369,101 @@
         };
         pieChart2.setOption(option,true);
     }
+
+    function initPieChart3() {
+        if (!sumChart) {
+            var dom = document.getElementById("pieChartDiv3");
+            var pieChart3 = echarts.init(dom);
+
+        }
+        if (sumData==0){
+            showChartInfo(pieChart1, '暂无数据显示');
+            return false;
+        }
+
+        var sumOpen=0;
+        var sumUse=0;
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+
+        let unitId = selectUnit || 'total';
+        let total = dataVal[unitId];
+
+        for (var i = 0; i < sumData.length; i++) {
+            var it = sumData[i];
+            sumOpen+=it.peopleNumber;
+            sumUse+=it.activeArchivesNumber;
+        }
+        var x = sumUse * 100 / sumOpen;
+        occupyRate=x.toFixed(2) * 1;
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=occupyRate+"%";
+
+        var option = {
+
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            // title: {
+            //     text: '建档率',
+            //
+            // },
+            color: ['#3398DB','#999999'],
+            graphic: [{ //环形图中间添加文字
+                type: 'text', //通过不同top值可以设置上下显示
+                left: 'center',
+                top: '45%',
+                style: {
+                    text: pieMessage+'\n'+'档案使用率',
+                    textAlign: 'center',
+                    fill: 'black', //文字的颜色
+                    width: 30,
+                    height: 30,
+                    fontSize: 20,
+                    fontFamily: "Microsoft YaHei"
+                }
+            }],
+            series: [
+                {
+                    name:'档案使用率',
+                    type:'pie',
+                    radius: ['50%', '80%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {
+                            value:occupyRate,
+                            name:'档案使用率'
+                        },
+                        {
+                            value:remainRate,
+                            name:'',
+                            hoverAnimation:false,
+                            tooltip:{//禁止鼠标悬停显示提示框
+                                show:false,
+                            },
+                        }
+                    ]
+                }
+            ]
+        };
+        pieChart3.setOption(option,true);
+    };
+
+
 
     var showChartInfo = function (sumChart, infoStr) {
         var msgOption = {

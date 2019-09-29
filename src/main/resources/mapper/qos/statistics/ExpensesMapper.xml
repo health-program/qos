@@ -2,83 +2,95 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.statistics.ExpensesMapper">
 
-<select id="oPDCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
-SELECT ORGAN_CODE AS unitId, sum(FD_NUMB+ED_NUMB) AS oPDCount from op_workload where 1=1  
-<if test="query.unitId !=null and query.unitId !='' ">
- AND ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
-and REP_YEAR = #{query.year} and REP_TYPE= #{query.month}
-</if>
-GROUP BY ORGAN_CODE
-</select>
+	<select id="oPDCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
+		SELECT ORGAN_CODE AS unitId, sum(FD_NUMB+ED_NUMB) AS oPDCount from
+		op_workload where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			and REP_YEAR = #{query.year} and REP_TYPE= #{query.month}
+		</if>
+		GROUP BY ORGAN_CODE
+	</select>
 
-<select id="inPatientCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
-SELECT ORGAN_CODE AS unitId, COUNT(1) AS inPatientCount FROM inhospitalrecord where 1=1  
-<if test="query.unitId !=null and query.unitId !='' ">
- AND ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
- AND HP_DATE LIKE CONCAT(#{query.date},'%') 
-</if>
-GROUP BY ORGAN_CODE
-</select>
+	<select id="inPatientCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
+		SELECT ORGAN_CODE AS unitId, COUNT(1) AS inPatientCount FROM
+		inhospitalrecord where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			AND HP_DATE LIKE CONCAT(#{query.date},'%')
+		</if>
+		GROUP BY ORGAN_CODE
+	</select>
 
-<select id="oPDInPatientMoney" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
-SELECT ed.ORGAN_CODE AS unitId,SUM(ed.cost_02) AS inPatientMoney,SUM(ed.cost_01) AS OPDMoney FROM ed_outpa_inpa_charge_stat AS ed where 1=1  
-<if test="query.unitId !=null and query.unitId !='' ">
- AND ed.ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
- AND ed.STAT_DATE LIKE CONCAT(#{query.date},'%') 
-</if>
-GROUP BY ed.ORGAN_CODE
-</select>
+	<select id="oPDInPatientMoney" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
+		SELECT ed.ORGAN_CODE AS unitId,SUM(ed.cost_02) AS
+		inPatientMoney,SUM(ed.cost_01) AS OPDMoney FROM
+		ed_outpa_inpa_charge_stat AS ed where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND ed.ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			AND ed.STAT_DATE LIKE CONCAT(#{query.date},'%')
+		</if>
+		GROUP BY ed.ORGAN_CODE
+	</select>
 
-<select id="inOutPersonCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
-select unit_id AS unitId, sum(up_out_number) AS inPersonCount,sum(down_out_number) AS OutPersonCount from count_referral where 1=1  
-<if test="query.unitId !=null and query.unitId !='' ">
- AND unit_id = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
- AND create_time LIKE CONCAT(#{query.date},'%') 
-</if>
-GROUP BY unit_id;
-</select>
+	<select id="inOutPersonCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
+		select unit_id AS unitId, COALESCE (SUM(up_out_number) ,0) AS
+		inPersonCount, COALESCE (SUM(down_out_number) ,0) AS OutPersonCount
+		from count_referral where 1=1
+		<if test="startTime !=null and startTime !='' ">
+			AND create_time &gt; DATE_FORMAT(#{startTime},'%Y-%m-%d00:00:00')
+		</if>
+		<if test="endTime !=null and endTime !='' ">
+			AND create_time &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d00:00:00')
+		</if>
+		GROUP BY unit_id;
+	</select>
 
 
-<select id="opFindMonth" resultType="com.paladin.qos.service.statistics.vo.ExpensesPersonVO">
-SELECT concat(REP_YEAR,'-',REP_TYPE) AS typeMonth, sum(FD_NUMB+ED_NUMB) AS oPDCount from op_workload where 1=1  
-<if test="query.unitId !=null and query.unitId !='' ">
- AND ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
-and REP_YEAR = #{query.year} and REP_TYPE= #{query.month}
-</if>
-GROUP BY REP_YEAR,REP_TYPE;
-</select>
+	<select id="opFindMonth"
+		resultType="com.paladin.qos.service.statistics.vo.ExpensesPersonVO">
+		SELECT concat(REP_YEAR,'-',REP_TYPE) AS typeMonth,
+		sum(FD_NUMB+ED_NUMB) AS oPDCount from op_workload where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			and REP_YEAR = #{query.year} and REP_TYPE= #{query.month}
+		</if>
+		GROUP BY REP_YEAR,REP_TYPE;
+	</select>
 
-<select id="inFindMonth" resultType="com.paladin.qos.service.statistics.vo.ExpensesPersonVO">
-SELECT DATE_FORMAT(HP_DATE,'%Y-%m') AS typeMonth, COUNT(1) AS inPatientCount FROM inhospitalrecord where 1=1 
-<if test="query.unitId !=null and query.unitId !='' ">
- AND ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
- AND HP_DATE LIKE CONCAT(#{query.date},'%') 
-</if>
-GROUP BY DATE_FORMAT(HP_DATE,'%Y-%m');
-</select>
+	<select id="inFindMonth"
+		resultType="com.paladin.qos.service.statistics.vo.ExpensesPersonVO">
+		SELECT DATE_FORMAT(HP_DATE,'%Y-%m') AS typeMonth, COUNT(1) AS
+		inPatientCount FROM inhospitalrecord where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			AND HP_DATE LIKE CONCAT(#{query.date},'%')
+		</if>
+		GROUP BY DATE_FORMAT(HP_DATE,'%Y-%m');
+	</select>
 
-<select id="drugCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
-SELECT wm.`ORGAN_CODE` AS unitId,SUM(wm.OP_EM_HP_MARK='1' OR wm.OP_EM_HP_MARK='2') AS oPDDrugCount, SUM(wm.OP_EM_HP_MARK='3') inPatientDrugCount  
-FROM WM_PrescriptionDetails AS wm where 1=1 
-<if test="query.unitId !=null and query.unitId !='' ">
- AND wm.ORGAN_CODE = #{query.unitId}
-</if>
-<if test="query.date !=null and query.date !='' ">
- AND wm.RX_DT LIKE CONCAT(#{query.date},'%') 
-</if>
-GROUP BY wm.`ORGAN_CODE`
+	<select id="drugCount" resultType="com.paladin.qos.service.statistics.vo.ExpensesVO">
+		SELECT wm.`ORGAN_CODE` AS unitId,SUM(wm.OP_EM_HP_MARK='1' OR
+		wm.OP_EM_HP_MARK='2') AS oPDDrugCount, SUM(wm.OP_EM_HP_MARK='3')
+		inPatientDrugCount
+		FROM WM_PrescriptionDetails AS wm where 1=1
+		<if test="query.unitId !=null and query.unitId !='' ">
+			AND wm.ORGAN_CODE = #{query.unitId}
+		</if>
+		<if test="query.date !=null and query.date !='' ">
+			AND wm.RX_DT LIKE CONCAT(#{query.date},'%')
+		</if>
+		GROUP BY wm.`ORGAN_CODE`
 
-</select>
+	</select>
 </mapper>
