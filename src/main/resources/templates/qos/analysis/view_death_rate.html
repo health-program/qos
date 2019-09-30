@@ -79,8 +79,8 @@
 								columns : [ [
 										
 										{
-											title : "医疗机构",
-											field : "unitName"
+											title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", 
+					                    	field: "unitName"
 										},
 										{
 											title : "住院死亡率",
@@ -147,6 +147,7 @@
 										result.push(data[o]);
 									}
 									initUnitChart(response);
+									console.log(777);
 									return result;
 								}
 							});
@@ -228,7 +229,7 @@
 	        if (a && b) {
 	            c = a / b * 100;
 	        }
-	        return c.toFixed(fixed);
+	        return c.toFixed(fixed|| 2);
 	    }
 		
 		function convertUnitChartData(data, eventId, isRate) {
@@ -312,7 +313,7 @@
 	                    }
 	                },
 	                type: 'value',
-	                max: 10
+	                
 	            },
 		        
 		        series: [
@@ -524,10 +525,11 @@
 		                       }
 		                   },
 		                   type: 'value',
-		                   max: 10
 		               },
 		               series: [
 		               	 {  type: 'line',
+		               		barWidth : 4,
+				            smooth:0.3,
 		               		areaStyle: {},
 		                   label:{
 		                   	normal:{
@@ -538,6 +540,8 @@
 		                   name: '住院死亡率',
 		                   data: month10100.valuesMap[unitId]},
 		               	 {  type: 'line',
+		                	   barWidth : 4,
+					            smooth:0.3,
 		                	   areaStyle: {},
 		                        label:{
 		                        	normal:{
@@ -548,6 +552,8 @@
 		                      name: '新生儿住院总死亡率',
 		                      data: month10110.valuesMap[unitId]},
 		               	 {  type: 'line',
+		                    	  barWidth : 4,
+						            smooth:0.3,
 		                    	  areaStyle: {},
 		                        label:{
 		                        	normal:{
@@ -558,6 +564,8 @@
 		                        name: '新生儿手术患者住院死亡率',
 		                        data: month10111.valuesMap[unitId]},
 		               	 {  type: 'line',
+		                        	barWidth : 4,
+						            smooth:0.3,
 		                        	areaStyle: {},
 		                        label:{
 		                        	normal:{
@@ -568,6 +576,8 @@
 		                        name: '新生儿非手术患者住院死亡率',
 		                        data: month10112.valuesMap[unitId]},
 		               	 {  type: 'line',
+		                        	barWidth : 4,
+						            smooth:0.3,
 		                        	areaStyle: {},
 		                        label:{
 		                        	normal:{
@@ -578,6 +588,8 @@
 		                        name: '新生儿患者出生体重<=750克死亡率',
 		                        data: month10113.valuesMap[unitId]},
 	               	 {  type: 'line',
+		                        	barWidth : 4,
+						            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -588,6 +600,8 @@
 	                        	name: '新生儿患者出生体重751-1000克死亡率',
 	                        	data: month10114.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        		barWidth : 4,
+						            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -598,6 +612,8 @@
 	                        	name: '新生儿患者出生体重1001-1800克死亡率',
 	                        	data: month10115.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        		barWidth : 4,
+						            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{

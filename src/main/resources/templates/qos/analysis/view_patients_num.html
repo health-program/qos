@@ -189,7 +189,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed|| 2);
     }
 
     function convertUnitChartData(data, eventId, isRate) {
@@ -444,6 +444,8 @@
                yAxis: {type: 'value'},
                series: [
                	 {  type: 'line',
+               		barWidth : 4,
+		            smooth:0.3,
                		areaStyle: {},
                    label:{
                    	normal:{
@@ -454,6 +456,8 @@
                    name: '门诊人次数',
                    data: month13001.valuesMap[unitId]},
                	 {  type: 'line',
+                	   barWidth : 4,
+			            smooth:0.3,
                 	   areaStyle: {},
                         label:{
                         	normal:{
@@ -464,6 +468,8 @@
                       name: '急诊人次数',
                       data: month13002.valuesMap[unitId]},
                	 {  type: 'line',
+                    	  barWidth : 4,
+				            smooth:0.3,
                     	  areaStyle: {},
                         label:{
                         	normal:{
@@ -474,6 +480,8 @@
                         name: '门急诊总人数',
                         data: month13003.valuesMap[unitId]},
                	 {  type: 'line',
+                        	barWidth : 4,
+				            smooth:0.3,
                         	areaStyle: {},
                         label:{
                         	normal:{
@@ -484,6 +492,8 @@
                         name: '出诊医生数',
                         data: month13004.valuesMap[unitId]},
                	 {  type: 'line',
+                        	barWidth : 4,
+				            smooth:0.3,
                         	areaStyle: {},
                         label:{
                         	normal:{

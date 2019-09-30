@@ -31,49 +31,58 @@
                 </form>
             </div>
         </div>
+        
         <div class="row">
-            <div class="col-md-6">
+			<div class="col-md-4">
+				<div class="box box-solid">
+					<div id="recipeChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-solid">
+					<div id="dashChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="box box-solid">
+					<div id="moneyChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+		</div>
+        
+        <div class="row">
+            <div class="col-md-9">
                 <div class="box box-solid">
                     <div class="box-body">
                         <table id="dataGrid"></table>
                     </div>
                 </div>
-                
-                <div class="box box-solid">
-                    
+            </div>
+            
+            <div class="col-md-3">
+				<div class="box box-solid">
                    <div id="ring1ChartDiv" class="box-body" style="height: 350px">
                     </div>
-                </div>
-                
-                <!-- <div class="box box-solid">
                     
+                </div>
+                <div class="box box-solid">
                    <div id="ring2ChartDiv" class="box-body" style="height: 350px">
                     </div>
-                </div> -->
-                
-                <div class="box box-solid">
                     
-                   <div id="ring3ChartDiv" class="box-body" style="height: 350px">
-                    </div>
                 </div>
-            </div>
-            <div class="col-md-6">
                 <div class="box box-solid">
-                    <div id="moneyChartDiv" class="box-body" style="height: 350px">
+                    <div id="ring3ChartDiv" class="box-body" style="height: 350px">
                     </div>
                 </div>
                 
-                <div class="box box-solid">
-                    <div id="dashChartDiv" class="box-body" style="height: 350px">
-                    </div>
-                </div>
-                
-                <div class="box box-solid">
-                    <div id="recipeChartDiv" class="box-body" style="height: 450px">
-                    </div>
-                </div>
-            </div>
+			</div>
+            
         </div>
+        
+        
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
@@ -141,11 +150,10 @@
                     	title: "门诊中医非药物治疗处方占比", 
                     	field: "ev16008"
                     },
-                   /*  { title: "静脉输液率", field: "intravenousRate",
-                    	formatter: function(value, row, index) {
-                            return value + "%";
-                       }
-                    }, */
+                    { 
+                    	title: "静脉输液率", 
+                    	field: "ev16009"
+                    },
                     { 
                     	title: "激素使用率", 
                     	field: "ev16010"
@@ -180,7 +188,7 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16010,160111,16012,16013,16014';
+            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,160111,16012,16013,16014';
                 requestParam = params;
                 return params;
             },
@@ -201,6 +209,7 @@
                 convertRate2TableData(response, '16006', data);
                 convertRate2TableData(response, '16007', data);
                 convertRate2TableData(response, '16008', data);
+                convertRate2TableData(response, '16009', data);
                 convertRate2TableData(response, '16010', data);
                 convertRate2TableData(response, '16011', data);
                 convertRate2TableData(response, '16012', data);
@@ -216,7 +225,7 @@
                 initRecipeChart(response);
                 initMoneyChart(response);
                 ring1ChartDiv(response);
-                //ring2ChartDiv(response);静脉输液率
+                ring2ChartDiv(response);
                 ring3ChartDiv(response);
                 dashChartDiv(response);
                 return result;
@@ -306,7 +315,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed|| 2);
     }
     
     function convertUnitChartData(data, eventId, isRate) {
@@ -585,6 +594,87 @@
         ring1Chart.setOption(option, true);
     }
     
+    function ring2ChartDiv(response){
+    	var data = {};
+
+        //convertCount2TableData(response, '15001', data);
+        convertRate2TableData(response, '16009', data);
+
+        var result = []
+        for (var o in data) {
+            result.push(data[o]);
+        }
+        
+        if (!ring2Chart) {
+        	ring2Chart = echarts.init(document.getElementById('ring2ChartDiv'));
+        }
+        var occupyRate=0;
+        var remainRate=0;
+        var pieMessage;
+        
+        occupyRate=toPoint(result[0].ev16009).toFixed(2);
+        remainRate=(100-occupyRate).toFixed(2);
+        pieMessage=result[0].ev16009 ;
+        
+        var option = {
+
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'静脉输液率',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'静脉输液率',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
+
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'静脉输液率'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
+        ring2Chart.setOption(option, true);
+    }
+    
     function ring3ChartDiv(response){
     	var data = {};
 
@@ -708,7 +798,7 @@
     		            min: 0,
     		            max: 1,
     		            splitNumber: 10,
-    		            radius: '80%',
+    		            radius: '60%',
     		            axisLine: {            // 坐标轴线
     		                lineStyle: {       // 属性lineStyle控制线条样式
     		                    width: 10
@@ -771,7 +861,7 @@
     		            name: '二联抗生素使用率',
     		            type: 'gauge',
     		            center: ['20%', '55%'],    // 默认全局居中
-    		            radius: '65%',
+    		            radius: '40%',
     		            min:0,
     		            max:1,
     		            endAngle:45,
@@ -809,7 +899,7 @@
     		            name: '三联抗生素使用率',
     		            type: 'gauge',
     		            center: ['80%', '55%'],    // 默认全局居中
-    		            radius: '65%',
+    		            radius: '40%',
     		            min:0,
     		            max:1,
     		            startAngle:135,

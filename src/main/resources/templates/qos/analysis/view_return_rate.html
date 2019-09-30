@@ -31,21 +31,28 @@
                 </form>
             </div>
         </div>
+        
+        
         <div class="row">
-            <div class="col-md-6">
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="unitChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="monthChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+		</div>
+        
+        <div class="row">
+        <div class="col-md-12">
                 <div class="box box-solid">
                     <div class="box-body">
                         <table id="dataGrid"></table>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="box box-solid">
-                    <div id="monthChartDiv" class="box-body" style="height: 350px">
-                    </div>
-                </div>
-                <div class="box box-solid">
-                    <div id="unitChartDiv" class="box-body" style="height: 450px">
                     </div>
                 </div>
             </div>
@@ -282,7 +289,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed|| 2);
     }
     
     
@@ -574,6 +581,8 @@
                },
             series: [
 	               	 {  type: 'line',
+	               		barWidth : 4,
+			            smooth:0.3,
 	               		areaStyle: {},
 	                   label:{
 	                   	normal:{
@@ -584,6 +593,8 @@
 	                   name: '住院患者出院31天内再住院率',
 	                   data: month11100.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                	   barWidth : 4,
+				            smooth:0.3,
 	                	   areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -594,6 +605,8 @@
 	                      name: '急性心肌梗死再住院率',
 	                      data: month11101.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                    	  barWidth : 4,
+					            smooth:0.3,
 	                    	  areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -604,6 +617,8 @@
 	                        name: '充血性心力衰竭再住院率',
 	                        data: month11102.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -614,6 +629,8 @@
 	                        name: '脑出血和脑梗死再住院率',
 	                        data: month11103.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -624,6 +641,8 @@
 	                        name: '创伤性颅脑梗死再住院率',
 	                        data: month11104.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -634,6 +653,8 @@
 	                        	name: '消化道出血（无病发率）再住院率',
 	                        data: month11105.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -644,6 +665,8 @@
 	                        	name: '累积身体多个部位的损伤再住院率',
 	                        data: month11106.valuesMap[unitId]},
 	               	 {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -655,6 +678,8 @@
 	                        data: month11107.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -666,6 +691,8 @@
 	                        data: month11108.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -677,6 +704,8 @@
 	                        data: month11109.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -688,6 +717,8 @@
 	                        data: month11110.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -699,6 +730,8 @@
 	                        data: month11111.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -710,6 +743,8 @@
 	                        data: month11112.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -721,6 +756,8 @@
 	                        data: month11113.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -732,6 +769,8 @@
 	                        data: month11114.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -743,6 +782,8 @@
 	                        data: month11115.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -754,6 +795,8 @@
 	                        data: month11116.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
@@ -765,6 +808,8 @@
 	                        data: month11117.valuesMap[unitId]},
 	                        
 	                        {  type: 'line',
+	                        	barWidth : 4,
+					            smooth:0.3,
 	                        	areaStyle: {},
 	                        label:{
 	                        	normal:{
