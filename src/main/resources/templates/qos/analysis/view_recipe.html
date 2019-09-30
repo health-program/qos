@@ -116,15 +116,24 @@
                     },
                     { 
                     	title: "处方总额", 
-                    	field: "ev16002"
+                    	field: "ev16002",
+						formatter: function(value, row, index) {
+                            return value/100;                            
+                       }
                     },
                     { 
                     	title: "最大处方金额", 
-                    	field: "ev16003"
+                    	field: "ev16003",
+						formatter: function(value, row, index) {
+                            return value/100;                            
+                       }
                     },
                     { 
                     	title: "最小处方金额", 
-                    	field: "ev16004"
+                    	field: "ev16004",
+						formatter: function(value, row, index) {
+                            return value/100;                            
+                       }
                     },
                     { 
                     	title: "平均处方金额", 
@@ -336,6 +345,25 @@
         }
     }
     
+    
+    function convertUnit2ChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count/100;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
     function initRecipeChart(data){
     	var ev16001 = convertUnitChartData(data, '16001', false);
     	
@@ -408,10 +436,10 @@
     
     
     function initMoneyChart(data){
-    	var ev16001 = convertUnitChartData(data, '16001', false);
-    	var ev16002 = convertUnitChartData(data, '16002', false);
-    	var ev16003 = convertUnitChartData(data, '16003', false);
-    	var ev16004 = convertUnitChartData(data, '16004', false);
+    	var ev16001 = convertUnit2ChartData(data, '16001', false);
+    	var ev16002 = convertUnit2ChartData(data, '16002', false);
+    	var ev16003 = convertUnit2ChartData(data, '16003', false);
+    	var ev16004 = convertUnit2ChartData(data, '16004', false);
     	var ev16005 = {};
     	var unit = [];
     	var values16005 = [];
