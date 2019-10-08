@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.service.data.DataUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,8 +34,14 @@ public class ArchivesController {
 	@Autowired
 	private FamilyDoctorUnitService familyDoctorUnitService;
 
+	@Autowired
+	private DataUnitService dataUnitService;
+
 	@GetMapping("/index")
 	public Object dataIndex(Model model) {
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_COMMUNITY);
+		model.addAttribute("unit", dataUnitService.selectData(types));
 		return "/qos/exhibition/archives_index";
 	}
 

@@ -25,6 +25,16 @@
             #{item}
         </foreach>
     </if>
+
+    <if test="typeList !=null and typeList.size()>0">
+            and d.type in
+            <foreach collection="typeList" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+    </if>
+
+
     </select>
 
 </mapper>

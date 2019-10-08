@@ -8,6 +8,7 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.InfectionExportCondition;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.infectioncomplication.Infection;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.InfectionService;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**   
  * @author luckywcw
@@ -40,7 +43,9 @@ public class InfectionController extends ControllerSupport {
 	@GetMapping("/index")
 	@QueryInputMethod(queryClass = InfectionQuery.class)
 	public String index(Model model) {
-		model.addAttribute("unit", dataUnitService.selectData());
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		model.addAttribute("unit", dataUnitService.selectData(types));
 		return "/qos/infectioncomplication/infection_index";
 	}
 

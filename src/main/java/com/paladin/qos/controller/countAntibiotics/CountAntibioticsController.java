@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.Valid;
 
+import com.paladin.qos.model.data.DataUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +50,9 @@ public class CountAntibioticsController extends ControllerSupport {
 
 	@GetMapping("/index")
 	public Object index( Model model) {
-	    	model.addAttribute("unit", dataUnitService.selectData());
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+	    	model.addAttribute("unit", dataUnitService.selectData(types));
 		return "/qos/count_antibiotics/count_antibiotics_index";
 	}
 

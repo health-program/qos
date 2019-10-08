@@ -50,7 +50,7 @@ public class DataUnitController extends ControllerSupport {
 	@RequestMapping(value = "/find/select", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object find() {
-		return CommonResponse.getSuccessResponse(dataUnitService.selectData());
+		return CommonResponse.getSuccessResponse(dataUnitService.selectData(null));
 	}
 
 	@GetMapping("/get")
@@ -137,7 +137,9 @@ public class DataUnitController extends ControllerSupport {
 	//报表页面
 	@GetMapping("/bed/index")
 	public Object dataIndex(Model model) {
-		model.addAttribute("unit", dataUnitService.findAll());
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		model.addAttribute("unit", dataUnitService.selectData(types));
 		return "/qos/data/bed_data_index";
 	}
 

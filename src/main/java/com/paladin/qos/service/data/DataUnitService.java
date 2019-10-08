@@ -33,13 +33,13 @@ public class DataUnitService extends ServiceSupport<DataUnit> {
 		return dateInt % 100 ;
 	}
 
-	public List<DataUnitVO> selectData() {
+	public List<DataUnitVO> selectData(List<Integer> type) {
 		QosUserSession session = QosUserSession.getCurrentUserSession();
 		String[] ids = null;
 		if (!session.isAdminRoleLevel()) {
 			String[] agencyIds = session.getAgencyIds();
 			ids = agencyIds;
 		}
-		return dataUnitMapper.selectData(ids);
+		return dataUnitMapper.selectData(ids,type);
 	}
 }

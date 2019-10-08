@@ -2,6 +2,7 @@ package com.paladin.qos.controller.report;
 
 import javax.validation.Valid;
 
+import com.paladin.qos.model.data.DataUnit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,9 +23,12 @@ import com.paladin.qos.service.report.dto.ReportDataDTO;
 import com.paladin.qos.service.report.dto.ReportDataQueryDTO;
 import com.paladin.qos.service.report.vo.ReportDataVO;
 
-/**   
+import java.util.ArrayList;
+import java.util.List;
+
+/**
  * @author MyKite
- * @version 2019年8月23日 下午3:58:24 
+ * @version 2019年8月23日 下午3:58:24
  */
 @Controller
 @RequestMapping("/qos/perinatal/cardiopathy")
@@ -32,23 +36,25 @@ public class PerinatalCardiopathyController extends ControllerSupport{
 
     @Autowired
     private ReportDataService reportDataService;
-    
+
     @Autowired
     private DataUnitService dataUnitService;
-    
+
     @GetMapping("/index")
     public String index(Model model){
-	model.addAttribute("unit", dataUnitService.selectData());
-	return "/qos/report/perinatal_cardiopathy_index";
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_COMMUNITY);
+		model.addAttribute("unit", dataUnitService.selectData(types));
+		return "/qos/report/perinatal_cardiopathy_index";
     }
-    
+
     @RequestMapping("/find/all")
     @ResponseBody
     public Object findAll(ReportDataQueryDTO query) {
 	query.setType(ReportData.REPORT_DATA_PERINATAL);
 	return CommonResponse.getSuccessResponse(reportDataService.findAll(query));
     }
-    
+
     @PostMapping("/save")
     @ResponseBody
     public Object save(@Valid ReportDataDTO dto,BindingResult bindingResult) {
@@ -67,24 +73,24 @@ public class PerinatalCardiopathyController extends ControllerSupport{
 	}
 	return CommonResponse.getFailResponse();
     }
-    
+
     @GetMapping("/detail")
     public Object detail(@RequestParam String id, Model model) {
 	model.addAttribute("id", id);
 	return "/qos/report/perinatal_cardiopathy_detail";
     }
-    
+
     @GetMapping("/add")
     public String add() {
 	return "/qos/report/perinatal_cardiopathy_add";
     }
-    
+
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {
 	return CommonResponse.getSuccessResponse(beanCopy(reportDataService.get(id), new ReportDataVO()));
     }
-    
+
     @PostMapping("/update")
     @ResponseBody
     public Object update(@Valid ReportDataDTO dto, BindingResult bindingResult) {
@@ -100,8 +106,8 @@ public class PerinatalCardiopathyController extends ControllerSupport{
 	}
 	return CommonResponse.getFailResponse();
     }
-    
-    
+
+
     @RequestMapping("/delete")
     @ResponseBody
     public Object delete(@RequestParam String id) {

@@ -8,7 +8,8 @@ public class DataUnit {
 	public final static int TYPE_HOSPITAL = 1;
 	/** 社区 */
 	public final static int TYPE_COMMUNITY = 2;
-	
+	/** 妇幼 */
+	public final static int TYPE_FUYOU = 3;
 	
 	
 	// 

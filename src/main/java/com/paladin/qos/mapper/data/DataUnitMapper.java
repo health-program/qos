@@ -16,5 +16,5 @@ public interface DataUnitMapper extends CustomMapper<DataUnit>{
     DataPointMonth getBedReportByQuery(@Param("eventId") String eventId, @Param("unitId") String unitId, @Param("startYear") int startYear,
                                        @Param("startMonth") int startMonth,@Param("endYear") int endYear,@Param("endMonth") int endMonth);
 
-    List<DataUnitVO> selectData(String[] array);
+    List<DataUnitVO> selectData(@Param("array")String[] array,@Param("typeList")List<Integer> typeList);
 }

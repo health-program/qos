@@ -6,6 +6,7 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.OperationComplicationService;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/qos/operationComplication")
@@ -33,7 +36,9 @@ public class OperationComplication1Controller extends ControllerSupport {
 
 	@GetMapping("/index")
 	public String index(Model model){
-		model.addAttribute("unit", dataUnitService.selectData());
+		List<Integer> types=new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		model.addAttribute("unit", dataUnitService.selectData(types));
 		return "/qos/infectioncomplication/operationComplication_index";
 	}
 

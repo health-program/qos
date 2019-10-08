@@ -9,6 +9,7 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.count.dto.CountReferralExportCondition;
 import com.paladin.qos.model.count.CountReferral;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.count.CountReferralService;
 import com.paladin.qos.service.count.dto.CountReferralDTO;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/qos/count/referral")
@@ -35,7 +38,9 @@ public class CountReferralController extends ControllerSupport {
     @GetMapping("/index")
     @QueryInputMethod(queryClass = CountReferral.class)
     public String index(Model model){
-        model.addAttribute("unit", dataUnitService.selectData());
+        List<Integer> types=new ArrayList<>();
+        types.add(DataUnit.TYPE_HOSPITAL);
+        model.addAttribute("unit", dataUnitService.selectData(types));
         return "/qos/count/count_referral_index";
     }
 
