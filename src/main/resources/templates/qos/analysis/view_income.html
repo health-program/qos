@@ -31,6 +31,22 @@
                 </form>
             </div>
         </div>
+        
+        <div class="row">
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="unitChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="monthChartDiv" class="box-body" style="height: 400px">
+					</div>
+				</div>
+			</div>
+		</div>
+        
         <div class="row">
             <div class="col-md-6">
                 <div class="box box-solid">
@@ -38,26 +54,24 @@
                         <table id="dataGrid"></table>
                     </div>
                 </div>
-                <div class="box box-solid">
-                    
+                
+            </div>
+           <div class="col-md-3">
+				<div class="box box-solid">
                    <div id="ringChartDiv" class="box-body" style="height: 350px">
                     </div>
+                    
                 </div>
+                
+			</div>
+			 <div class="col-md-3">
+				
                 <div class="box box-solid">
                     <div id="pieChartDiv" class="box-body" style="height: 350px">
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="box box-solid">
-                    <div id="monthChartDiv" class="box-body" style="height: 350px">
-                    </div>
-                </div>
-                <div class="box box-solid">
-                    <div id="unitChartDiv" class="box-body" style="height: 450px">
-                    </div>
-                </div>
-            </div>
+			</div>
+			
         </div>
     </section>
     <div th:include="/qos/footer" />
@@ -231,7 +245,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed|| 2);
     }
 
     function convertUnitChartData(data, eventId, isRate) {
@@ -392,7 +406,7 @@
          var totalVals = [];
          for (var j = 0; j < totalValues.length; j++) {
              var tv = totalValues[j];
-             totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+             totalVals.push(isRate ? getRateNum(tv) : tv.totalNum/100);
          }
 
          valuesMap.total = totalVals;
