@@ -26,7 +26,7 @@ $(function(){
         url : "/qos/analysis/data/get/unit",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-        var  unit31007Data=convertUnitChartData(rawData.result, '31007', false); //
+       var  unit31007Data=convertUnitChartData(rawData.result, '31007', false); //
        var  unit31008Data=convertUnitChartData(rawData.result, '31008', false); //
        var  unit31001Data=convertUnitChartData(rawData.result, '31001', false); //
 

@@ -142,6 +142,7 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
+<script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
 <script>
 $(function() {
 
@@ -173,108 +174,6 @@ $(function() {
 
 
 
-
-
-  //抗菌药物使用开始
-    var antibacterial = echarts.init(document.getElementById('antibacterial'));
-
-        var dataStyle = {
-        normal: {
-            label: {
-                show: false
-            },
-            labelLine: {
-                show: false
-            }
-        }
-    };
-    var placeHolderStyle = {
-        normal: {
-            color: 'rgba(0,0,0,0)',
-            label: {
-                show: false
-            },
-            labelLine: {
-                show: false
-            }
-        },
-        emphasis: {
-            color: 'rgba(0,0,0,0)'
-        }
-    };
-
-    var antibacterialOption ={
-            color: ['#4DFFE3','#4DE0FF','#4DFF8F','#ADFF4D'],
-            tooltip : {
-                show: true,
-                formatter: "{b} : {c}"
-            },
-
-            legend: {
-                top: "13.5%",
-                x: 'right',
-                left: "42%",
-                itemWidth:0,itemHeight:0,
-                data: ['已婚已育','已婚未育','未婚' ,'学生'],
-                itemGap: 38,
-                textStyle: {
-                    color: '#fff',
-                    align:'right',
-                    x: 'right',
-                    textAlign:'right'
-                },
-
-                selectedMode: true,
-                orient: "vertical",
-
-            },
-            series: [
-                {
-                name: 'Line 4',
-                type: 'pie',
-                clockWise: true,
-                hoverAnimation: false,
-                radius: ['65%', '75%'],
-                itemStyle: dataStyle,
-
-            data: [{
-                value: 7645434,
-                name: '已婚已育'
-            }, {
-                value: 3612343,
-                name: '总数',
-                tooltip: {
-                    show: false
-                },
-                itemStyle: placeHolderStyle
-            }
-
-            ]
-        }, {
-            name: 'Line 3',
-            type: 'pie',
-            clockWise: true,
-            radius: ['50%', '60%'],
-            itemStyle: dataStyle,
-            hoverAnimation: false,
-
-            data: [{
-                value: 2632321,
-                name: '已婚未育'
-            }, {
-                value: 2212343,
-                name: '总数',
-                tooltip: {
-                    show: false
-                },
-                itemStyle: placeHolderStyle
-            }]
-        }
-            ]
-        };
-
-           antibacterial.setOption(antibacterialOption);
-  //抗菌药物使用结束
 
 })
 </script>
