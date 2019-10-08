@@ -128,7 +128,6 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	console.log(params);
             	params.eventIds = '14001,14002,14003,14005,14006';
                 requestParam = params;
                 return params;
@@ -173,7 +172,6 @@
                  'eventId': eventId
              },
              success: function (r) {
-            	 console.log(r);
                   if (r.status == 1) {
                 	  a =  r.result;
                  }
@@ -216,6 +214,7 @@
 	}
     
     function convertCount2TableData(originData, eventId, data) {
+    	console.log(777);
         var eventData = originData[eventId],
             fieldName = 'ev' + eventId,
             total = 0;
@@ -261,7 +260,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed);
+        return c.toFixed(fixed|| 2);
     }
 
     function convertUnitChartData(data, eventId, isRate) {
