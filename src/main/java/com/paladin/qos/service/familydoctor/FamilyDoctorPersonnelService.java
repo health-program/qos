@@ -9,6 +9,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.paladin.qos.mapper.familydoctor.FamilyDoctorPersonnelMapper;
@@ -16,6 +17,7 @@ import com.paladin.qos.mapper.familydoctor.FamilyDoctorTeamMapper;
 import com.paladin.qos.model.familydoctor.FamilyDoctorPersonnel;
 import com.paladin.qos.service.familydoctor.dto.ExcelFamilyDoctorPersonnel;
 import com.paladin.qos.service.familydoctor.dto.FamilyDoctorPersonnelQuery;
+import com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorPersonnelVO;
 import com.paladin.qos.service.familydoctor.vo.FamilyDoctorPersonnelVO;
 import com.paladin.qos.service.familydoctor.vo.FamilyDoctorTeamVO;
 import com.paladin.common.core.container.ConstantsContainer;
@@ -54,6 +56,10 @@ public class FamilyDoctorPersonnelService extends ServiceSupport<FamilyDoctorPer
 	Page<FamilyDoctorPersonnelVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
 	searchPage(query);
 	return new PageResult<>(page);
+    }
+    
+    public List<DataFamilyDoctorPersonnelVO> selectFindAll(){
+	return familyDoctorPersonnelMapper.selectFindAll();
     }
     
     public int countPersonnel(String name){

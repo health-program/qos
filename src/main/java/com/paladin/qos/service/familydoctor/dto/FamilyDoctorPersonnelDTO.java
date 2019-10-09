@@ -16,6 +16,9 @@ public class FamilyDoctorPersonnelDTO {
 
 	// 学历
 	private Integer oeducation;
+	
+	// 是否团队长
+	private Integer isTeamCaptain;
 
 	// 职称
 	private Integer jobRank;
@@ -99,6 +102,14 @@ public class FamilyDoctorPersonnelDTO {
 
 	public void setPersonnelCategory(Integer personnelCategory) {
 	    this.personnelCategory = personnelCategory;
+	}
+
+	public Integer getIsTeamCaptain() {
+	    return isTeamCaptain;
+	}
+
+	public void setIsTeamCaptain(Integer isTeamCaptain) {
+	    this.isTeamCaptain = isTeamCaptain;
 	}
 
 }

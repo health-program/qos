@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="sex-type,job-rank-type,oeducation-type,personnel-category-type"/>
+    <tt:constant enumcode="boolean-type,sex-type,job-rank-type,oeducation-type,personnel-category-type"/>
     <section class="content-header">
         <h1>家庭医生人员管理</h1>
         <ol class="breadcrumb">
@@ -66,6 +66,7 @@
 					{ title: "学历", field: "oeducation",enumcode:"oeducation-type" },
 					{ title: "职称", field: "jobRank",enumcode:"job-rank-type" },
 					{ title: "人员类别", field: "personnelCategory",enumcode:"personnel-category-type" },
+					{ title: "是否团队长", field: "isTeamCaptain",enumcode:"boolean-type" },
                     {
                         title: "操作",
                         align: "center",

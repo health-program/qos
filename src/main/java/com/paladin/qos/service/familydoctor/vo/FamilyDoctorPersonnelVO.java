@@ -2,6 +2,8 @@ package com.paladin.qos.service.familydoctor.vo;
 
 import java.util.Date;
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class FamilyDoctorPersonnelVO {
 
 	// 
@@ -18,6 +20,9 @@ public class FamilyDoctorPersonnelVO {
 
 	// 学历
 	private Integer oeducation;
+	
+	// 是否团队长
+	private Integer isTeamCaptain;
 
 	// 职称
 	private Integer jobRank;
@@ -48,6 +53,10 @@ public class FamilyDoctorPersonnelVO {
 
 	// 
 	private String updateUserId;
+	
+	public String getUnitName() {
+	   return DataConstantContainer.getUnitName(unitId);
+	}
 
 	public String getId() {
 		return id;
@@ -167,6 +176,14 @@ public class FamilyDoctorPersonnelVO {
 
 	public void setPersonnelCategory(Integer personnelCategory) {
 	    this.personnelCategory = personnelCategory;
+	}
+
+	public Integer getIsTeamCaptain() {
+	    return isTeamCaptain;
+	}
+
+	public void setIsTeamCaptain(Integer isTeamCaptain) {
+	    this.isTeamCaptain = isTeamCaptain;
 	}
 
 }

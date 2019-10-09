@@ -15,4 +15,23 @@
 	SUM(p.personnel_category ='7')consultantNum 
 	from family_doctor_personnel as p GROUP BY p.unit_id;
 	</select>
+	
+	<select id="selectFindAll" resultType="com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorPersonnelVO">
+		SELECT
+			p.id,
+			p.unit_id AS unitId,
+			t.team_name AS teamName,
+			p.`name`,
+			p.sex,
+			p.age,
+			j.`name` AS jobRank,
+			c.`name` AS personnelCategory,
+			p.is_team_captain AS isTeamCaptain
+		FROM
+			family_doctor_personnel AS p
+		LEFT JOIN family_doctor_team AS t ON p.team_id = t.id
+		LEFT JOIN (select `code`,`name` from sys_constant where type='job-rank-type') AS j on j.`code`=p.job_rank
+		LEFT JOIN (select `code`,`name` from sys_constant where type='personnel-category-type') AS c on c.`code`=p.personnel_category
+		ORDER BY p.create_time DESC
+	</select>
 </mapper>
