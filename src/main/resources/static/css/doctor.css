@@ -71,3 +71,49 @@
 .doctor-mid-bg:nth-child(4n){
   margin-right:0px!important;
 }
+
+.doctor_unitName,.doctor_teamName,.doctor_names,.doctor_ages,.doctor_jobRank,.doctor_isTeamCaptain,.doctor_personnelCategory{
+        width:5.7vw!important;
+        display:inline-block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        height:5.5vh;
+        line-height:5.5vh;
+        text-align:left;
+}
+
+.doctor_teamName{
+
+}
+
+.doctor_names{
+
+}
+
+.doctor_ages{
+
+}
+
+.doctor_jobRank{
+
+}
+
+.doctor_isTeamCaptain{
+
+}
+
+.doctorheader{
+  width:50vh!important;
+}
+
+.roll .header span:first-child{
+  width:9.9vw!important;
+  text-align:center;
+}
+
+
+.roll{
+  background:url('../../static/image/index/doctor/kuang.png') no-repeat !important
+
+}
