@@ -11,7 +11,7 @@
        height: 20.8vh;
 }
 .quailty_bottom_right{
-       background: url(../../static/image/index/doctor/roll.png);
+   background: url(../../static/image/index/opacitybg.png) no-repeat bottom center;
        background-size: 100% 100%;
        width:49.2vw;
        height: 31.8vh;

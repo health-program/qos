@@ -6,6 +6,7 @@
         var arr31007MonthY=[]
         var arr31008MonthY=[]
         var arr31004MonthY=[]
+        var arr13001Month=[]
     // 赋值
         var newarr13001MonthY;
         var newarr14001MonthY;
@@ -19,8 +20,6 @@ $(function(){
            startTime:'2019-09-10',
            byUnit: 0
          }
-
-
          var arr1 = {
                     eventIds:'31007,31004,31008', //  31007急诊人次    31008门诊人次       31004入院人次
                     startTime:'2019-09-10',
@@ -49,22 +48,17 @@ $(function(){
                        arr13001Month.push(rawData.result['13001'][i].day)
                        arr13001MonthY.push(rawData.result['13001'][i].totalNum)
                 }
-                  // 13002急诊人次数  14001住院人次数   13001门诊人次数
-                //  31007急诊人次    31008门诊人次       31004入院人次
-               for(var i=0;i<rawData.result['13002'].length;i++){
+                for(var i=0;i<rawData.result['13002'].length;i++){
                      arr13002MonthY.push(rawData.result['13002'][i].totalNum)
                }
-                // 13002急诊人次数  14001住院人次数   13001门诊人次数
-                //  31007急诊人次    31008门诊人次       31004入院人次
-                for(var i=0;i<rawData.result['14001'].length;i++){
+               for(var i=0;i<rawData.result['14001'].length;i++){
                      arr14001MonthY.push(rawData.result['14001'][i].totalNum)
                }
 
                isNum1=1;
-
-                if(isNum1==1){
-                         $.ajax({
-                              type : "post",    //请求类型
+               if(isNum1==1){
+                     $.ajax({
+                        type : "post",    //请求类型
                         url : "/qos/analysis/data/get/day/instalments",//请求的 URL地址
                         data:arr1,
                         success: function (rawData) {
@@ -74,107 +68,74 @@ $(function(){
                            for(var i=0;i<rawData.result['31004'].length;i++){
                                 arr31004MonthY.push(rawData.result['31004'][i].totalNum)
                               }
-                                                  // 13002急诊人次数  14001住院人次数   13001门诊人次数
-                                                  //  31007急诊人次    31008门诊人次       31004入院人次
                             for(var i=0;i<rawData.result['31007'].length;i++){
-                                      arr31007MonthY.push(rawData.result['31007'][i].totalNum)
-                         }
-                         // 13002急诊人次数  14001住院人次数   13001门诊人次数
-                                                  //  31007急诊人次    31008门诊人次       31004入院人次
-                             for(var i=0;i<rawData.result['31008'].length;i++){
-                                      arr31008MonthY.push(rawData.result['31008'][i].totalNum)
-                           }
-
-
-
+                                arr31007MonthY.push(rawData.result['31007'][i].totalNum)
+                             }
+                            for(var i=0;i<rawData.result['31008'].length;i++){
+                                arr31008MonthY.push(rawData.result['31008'][i].totalNum)
+                            }
                             let a=arr13002MonthY, b=arr31007MonthY;
                             let newarr13002MonthY = a.map(function(v, i) {
                                 return v + b[i];
                             });
+                            let aa=arr14001MonthY, bb=arr31008MonthY;
+                            let newarr14001MonthY = aa.map(function(v, i) {
+                                 return v + bb[i];
+                            });
+                            let aaa=arr13001MonthY, bbb=arr31004MonthY;
+                            let newarr13001MonthY = aaa.map(function(v, i) {
+                                 return v + bbb[i];
+                            });
+                            //echarts开始
+                            medicaladviceoption ={
+                                      tooltip : {
+                                          trigger: 'axis'
+                                              },
+                                      legend: {
+                                           data:['急诊人次','入院人次','普通门诊人次'],
+                                               textStyle:{//图例文字的样式
+                                               color:'#ffffff',
+                                               fontSize:16
+                                        }
+                                      },
 
-
-
-                            /*
-                                          var newarr13001MonthY;
-                                            var newarr14001MonthY;
-                                            var newarr13002MonthY;
-
-                            */
-                            
-                            
-                              let aa=arr14001MonthY, bb=arr31008MonthY;
-                              let newarr14001MonthY = aa.map(function(v, i) {
-                                     return v + bb[i];
-                              });
-                              
-                              
-                              
-                                let aaa=arr13001MonthY, bbb=arr31004MonthY;
-                                let newarr13001MonthY = aaa.map(function(v, i) {
-                                    return v + bbb[i];
-                                 });
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 //echarts开始
-                                 medicaladviceoption ={
-                                                                        tooltip : {
-                                                                            trigger: 'axis'
-                                                                        },
-                                                                        legend: {
-                                                                            data:['急诊人次','入院人次','普通门诊人次'],
-                                                                             textStyle:{//图例文字的样式
-                                                              color:'#ffffff',
-                                                              fontSize:16
-                                                          }
-                                                                        },
-
-                                                                        grid: {
-                                                                            left: '3%',
-                                                                            right: '4%',
-                                                                            bottom: '3%',
-                                                                            containLabel: true
-                                                                        },
-                                                                        xAxis : [
-                                                                            {
-                                                                                type : 'category',
-                                                                                boundaryGap : false,
-                                                                                 axisLine:{
-                                                            lineStyle:{
+                                      grid: {
+                                            left: '3%',
+                                            right: '4%',
+                                            bottom: '3%',
+                                            containLabel: true
+                                             },
+                                       xAxis : [
+                                              {
+                                             type : 'category',
+                                             boundaryGap : false,
+                                             axisLine:{
+                                                         lineStyle:{
                                                          color:'#ffffff',
                                                           width:1,//这里是为了突出显示加上的
                                                                      }
                                                           },
-                                                          data :newarr13001MonthY
-                                                                            }
-                                                                        ],
-                                                                        yAxis : [
-                                                                            {
-                                                                                type : 'value',
-                                                                                axisLine:{
-                                                           lineStyle:{
+                                             data :arr13001Month
+                                              }
+                                             ],
+                                           yAxis : [
+                                              {
+                                               type : 'value',
+                                               axisLine:{
+                                                 lineStyle:{
                                                          color:'#ffffff',
                                                          width:1,//这里是为了突出显示加上的
                                                             }
-                                                                               }
+                                                }
 
-                                                                            }
-                                                                        ],
-                                                                        series : [
-                                                                            {
-                                                                                name:'急诊人次',
-                                                                                type:'line',
-                                                                                stack: '总量',
-                                                                                areaStyle: {normal: {
+                                                }
+                                             ],
+                                            series : [
+                                              {
+                                                  name:'急诊人次',
+                                                  type:'line',
+                                                  stack: '总量',
+                                                  areaStyle: {normal: {
                                                           color: new echarts.graphic.LinearGradient(0, 0, 0, 1,[{
                                                            offset: 0, color: '#74a5d4' // 0% 处的颜色
                                                            }, {
@@ -226,55 +187,14 @@ $(function(){
                                                   window.addEventListener("resize", function () {
                                                               myChartMedicaladvice.resize();
                                                          });
-                                 //echarts结束
-                            
-                            
-                 /*           
-                           // 13002急诊人次数  14001住院人次数   13001门诊人次数
-                           //  31007急诊人次    31008门诊人次       31004入院人次
-                        console.log('开心111')
 
-                        console.log(arr13002MonthY)
-                        console.log(arr14001MonthY)
-                        console.log(arr13001MonthY)
-
-
-
-                        console.log('开心啦啦')
-                         console.log(arr31007MonthY)
-                        console.log(arr31008MonthY)
-                        console.log(arr31004MonthY)*/
-
-
-
-                      
-
-
-                                 
 
                              }
                             });
-
-
-                }
-
-
-
-
-
-
-
-
- 
-
-               }
+                     }
+              }
            });
-
-
-
-
-               //判断结束
-    }
+  }
 
 
     getData()
@@ -282,11 +202,3 @@ $(function(){
 
 })
 
-
-
-
-
-
-
-                //社区就诊开始
-           
