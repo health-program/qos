@@ -13,7 +13,6 @@ $(function(){
                 nameArray.push(rawData.result[i]['unitName'])
            }
 
-             debugger
 
         var dataStyle = {
             normal: {
