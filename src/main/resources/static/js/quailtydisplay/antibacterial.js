@@ -69,8 +69,18 @@ $(function(){
            var seriesValue=[];
            for(var i=0;i<rawData.result.length;i++){
                   seriesValue.push({
-                                 value:rawData.result[i]['userRate'],
-                                 name:rawData.result[i]['unitName']
+                                  name: 'Line 3',
+                                                                       type: 'pie',
+                                                                       clockWise: true,
+                                                                       radius: ['50%', '60%'],
+                                                                       itemStyle: dataStyle,
+                                                                       hoverAnimation: false,
+                             data:[
+                                  {
+                                     value:rawData.result[i]['userRate'],
+                                     name:rawData.result[i]['unitName']
+                                  }
+                                ]
                      });
 
             }
@@ -115,21 +125,10 @@ $(function(){
                     orient: "vertical",
 
                 },
-              series: [
-                           {
-                                    name: 'Line 4',
-                                    type: 'pie',
-                                    clockWise: true,
-                                    hoverAnimation: false,
-                                    radius: ['65%', '75%'],
-                                    itemStyle: dataStyle,
-                                    data:seriesValue
-                            }
-                                ]
+              series: seriesValue
         };
 
-        debugger
-    var antibacterial = echarts.init(document.getElementById('antibacterial'));
+     var antibacterial = echarts.init(document.getElementById('antibacterial'));
         antibacterial.setOption(antibacterialOptions);
                 //初始化echarts实例
           window.addEventListener("resize", function () {
