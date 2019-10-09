@@ -4,12 +4,12 @@
 <head th:include="/qos/header" />
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-    <!--   <section class="content-header">
-        <h1>数据展示</h1>
-    </section> -->
+     <section class="content-header">
+        <h1>医疗运营统计</h1>
+    </section> 
     <section class="content">
-        <div class="box box-solid">
-            <div class="box-body">
+            <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
@@ -81,12 +81,12 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "门急诊总人次", field: "ev31001" },
-                    { title: "门急诊总费用(元)", field: "ev31002" },
-                    { title: "门急诊人均费用(元)", field: "opdAvg" },
+                    { title: "门急诊<br/>总人次", field: "ev31001" },
+                    { title: "门急诊总<br/>费用(元)", field: "ev31002" },
+                    { title: "门急诊人<br/>均费用(元)", field: "opdAvg" },
                     { title: "住院人次", field: "ev31004" },
                     { title: "住院费用(元)", field: "ev31005" },
-                    { title: "住院人均费用(元)", field: "inPatietAvg" },
+                    { title: "住院人均<br/>费用(元)", field: "inPatietAvg" },
                     { title: "转入人次", field: "inPersonCount" },
                     { title: "转出人次", field: "outPersonCount" }
                 ]

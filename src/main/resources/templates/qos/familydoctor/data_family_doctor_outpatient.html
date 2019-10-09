@@ -5,10 +5,12 @@
 
 <body>
     <tt:constant enumcode="data-unit-type" />
+    <section class="content-header">
+        <h1>签约服务就诊统计</h1>
     </section>
     <section class="content">
-        <div class="box box-solid">
-            <div class="box-body">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
@@ -120,13 +122,13 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "年度服务有效履约率", field: "a" },
-                    { title: "签约居民中心就诊人次数", field: "event21003"},
-                    { title: "签约居民就诊总次数", field: "total21003"},
-                    { title: "签约机构门诊就诊率", field: "reat21003"},
-                    { title: "签约居民家庭医生就诊率", field: "event21004"},
-                    { title: "签约居民中心就诊总次数", field: "total21004"},
-                    { title: "签约医生门诊就诊率", field: "reat21004"}
+                    { title: "年度服务有<br/>效履约率", field: "a" },
+                    { title: "签约居民中心<br/>就诊人次数", field: "event21003"},
+                    { title: "签约居民就<br/>诊总次数", field: "total21003"},
+                    { title: "签约机构门<br/>诊就诊率", field: "reat21003"},
+                    { title: "签约居民家庭<br/>医生就诊率", field: "event21004"},
+                    { title: "签约居民中心<br/>就诊总次数", field: "total21004"},
+                    { title: "签约医生门<br/>诊就诊率", field: "reat21004"}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
