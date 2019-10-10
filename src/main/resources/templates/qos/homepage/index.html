@@ -69,7 +69,7 @@
     <div id="middle">
         <div class="left position-relative">
             <div class="bg_opacity">
-                <div class="header line">健康档案建档率</div>
+                <div class="headers line">健康档案建档率</div>
                 <div class="fr width100 text-align-right pr-20 position-absolute absolute1">
                     <div><span class='orangeline middle-line'></span><span class="text-ffffff">在岗人员</span></div>
                     <div><span class='greenline middle-line'></span><span class="text-ffffff">卫技人员</span></div>
@@ -77,11 +77,11 @@
                 <div id="chartmain"></div>
             </div>
             <div class="bg_opacity">
-                <div class="header line">昆山门急诊人次数</div>
+                <div class="headers line">昆山门急诊人次数</div>
                 <div id="emergency"></div>
             </div>
             <div class="bg_opacity">
-                <div class="header line">家庭医生团队情况</div>
+                <div class="headers line">家庭医生团队情况</div>
                 <div id="doctor"></div>
             </div>
         </div>
@@ -93,25 +93,25 @@
         </div>
         <div class="right" id="mide_right">
             <div class="bg_opacity  position-relative">
-                <div class="header line">政策扶持人员签约率</div>
+                <div class="headers line">政策扶持人员签约率</div>
                 <div class="fr width100 text-align-right pr-20">
                     <div>
-                        <select>
+                       <!-- <select>
                             <option value="volvo">请选择</option>
                             <option value="saab">Saab</option>
                             <option value="opel">Opel</option>
                             <option value="audi">Audi</option>
-                        </select>
+                        </select>-->
                     </div>
                 </div>
                 <div id="emergency1"></div>
             </div>
             <div class="bg_opacity">
-                <div class="header line">常驻人口建档率</div>
+                <div class="headers line">常驻人口建档率</div>
                 <div id="permanentPopulation"></div>
             </div>
             <div class="bg_opacity position-relative">
-                <div class="header line">住院/出院人次数</div>
+                <div class="headers line">住院/出院人次数</div>
                 <div class="fr width100 text-align-right pr-20 position-absolute">
                     <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
                     <div><span class='blueline middle-line'></span><span class="text-ffffff">出院人数</span></div>
@@ -245,6 +245,18 @@ $(function() {
 })
 </script>
 <script>
+
+
+  $.ajax({
+        type : "post",    //请求类型
+        url : "/qos/address/search/community",//请求的 URL地址
+        success: function (rawData) {
+          }
+       });
+
+
+
+
 
 
   var markerArr = [{
