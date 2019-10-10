@@ -11,4 +11,8 @@
 	GROUP BY t.unit_id;
 	</select>
 	
+	<select id="DataTeamCount" resultType="int">
+		SELECT count(1) FROM family_doctor_team
+	</select>
+	
 </mapper>
