@@ -14,4 +14,6 @@ public interface FamilyDoctorTeamMapper extends CustomMapper<FamilyDoctorTeam>{
     public FamilyDoctorTeamVO getTeam(@Param("teamName")String teamName);
     
     public List<DataFamilyDoctorTeamVo> teamNum();
+    
+    public int DataTeamCount();
 }
