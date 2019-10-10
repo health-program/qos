@@ -20,4 +20,8 @@ public class AddressService extends ServiceSupport<Address> {
     public List<Address> getAddress(Integer type){
        return addressMapper.getAddressInfo(type);
     }
+
+    public Address get(String id){
+        return addressMapper.get(id);
+    }
 }

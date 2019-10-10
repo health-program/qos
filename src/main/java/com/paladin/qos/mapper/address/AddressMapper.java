@@ -10,5 +10,5 @@ import java.util.List;
 public interface AddressMapper {
 
         List<Address> getAddressInfo(@Param("type") Integer type);
-
+        Address get(@Param("id") String  id);
 }

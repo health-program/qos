@@ -53,6 +53,7 @@ public class AddressController extends ControllerSupport {
         addressList=addressService.getAddress(2);
         for (Address address:addressList){
             AddressVo addressVo=new AddressVo();
+            Address address1=addressService.get(address.getUnitId());
             addressVo=beanCopy(addressService.get(address.getUnitId()), addressVo);
             addressVoList.add(addressVo);
         }
