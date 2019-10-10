@@ -29,6 +29,14 @@
             AND org_type=#{type}
         </if>
 	</select>
-	
+
+    <select id="get" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />
+        from org_address where
+        1=1
+        <if test="id != null">
+            AND id=#{id}
+        </if>
+    </select>
 
 </mapper>
