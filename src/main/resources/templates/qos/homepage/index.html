@@ -93,7 +93,7 @@
         </div>
         <div class="right" id="mide_right">
             <div class="bg_opacity  position-relative">
-                <div class="headers line">政策扶持人员签约率</div>
+                <div class="headers line">社区医疗收入情况</div>
                 <div class="fr width100 text-align-right pr-20">
                     <div>
                        <!-- <select>
@@ -252,12 +252,9 @@ $(function() {
         type : "post",    //请求类型
         url : "/qos/address/search/community",//请求的 URL地址
         success: function (rawData) {
-
-             markerArr=rawData.result;
+                 markerArr=rawData.result;
               //开始
-
-
-              var strs = "";
+                   var strs = "";
               // 百度地图API功能
               var map = new BMap.Map("allmap");    // 创建Map实例
               var cityName = '昆山';
@@ -356,12 +353,7 @@ $(function() {
                             }
                       })(i));
 
-
-
-
-
-
-    }
+   }
     //结束
 
    }
@@ -369,11 +361,6 @@ $(function() {
             //结束
           }
        });
-
-
-
-
-
 
 
 

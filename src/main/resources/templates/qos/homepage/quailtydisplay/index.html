@@ -3,6 +3,12 @@
 <head th:include="/qos/header" />
 <link rel="stylesheet" href="/static/css/index.css">
 <link rel="stylesheet" href="/static/css/quality.css">
+<script type="text/javascript" src="/static/assets/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="/static/assets/map/eventwrapper.min.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
+<script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
+
 
 <body id="body">
     <nav id="nav">
@@ -39,7 +45,7 @@
                     </div>
                 </div>
             </div>
-            <div id="quailty_middle_map"></div>
+            <div id="quailty_middle_map" class="comprehensiveMap"></div>
             <div id="quailty_middle_right">
                 <div class="quailty_right_pay">
                     <div class="quailty_bottom_header2">
@@ -170,5 +176,125 @@ $(function() {
 })
 </script>
 
+
+<script>
+
+
+  $.ajax({
+        type : "post",    //请求类型
+        url : "/qos/address/search/community",//请求的 URL地址
+        success: function (rawData) {
+                 markerArr=rawData.result;
+              //开始
+                   var strs = "";
+              // 百度地图API功能
+              var map = new BMap.Map("quailty_middle_map");    // 创建Map实例
+              var cityName = '昆山';
+              map.centerAndZoom(cityName, 12);
+              map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+              map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
+              map.enableScrollWheelZoom(true);
+          //  map.enableContinuousZoom(false);    //启用地图惯性拖拽，默认禁用
+              map.addControl(new BMap.NavigationControl());
+              map.addControl(new BMap.ScaleControl());
+              map.addControl(new BMap.OverviewMapControl());
+
+
+              function getBoundary1()
+              {
+                  var bdary = new BMap.Boundary();
+                  var name = '昆山';//在这里直接输入城市名字即可
+                  bdary.get(name, function(rs){ //获取行政区域
+                      map.clearOverlays(); //清除地图覆盖物
+                      var count = rs.boundaries.length; //行政区域的点有多少个
+                      for(var i = 0; i < count; i++){
+                          var EN_JW = "180, 90;";         //东北角
+                          var NW_JW = "-180,  90;";       //西北角
+                          var WS_JW = "-180, -90;";       //西南角
+                          var SE_JW = "180, -90;";        //东南角
+                          // 之前的 var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#37dfee", fillColor: "#f0f0f0", fillOpacity:0.5, strokeOpacity: 0.7 }); //建立多边形覆盖物
+                          //4.添加环形遮罩层
+                          var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#081327", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
+                          map.addOverlay(ply1);
+                          //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+                          var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#37dfee",fillColor: "" });
+                          map.addOverlay(ply);
+                          map.addOverlay(ply); //添加覆盖物
+                          map.setViewport(ply.getPath()); //调整视野
+                      }
+                      addlabel();
+                      });
+              }
+              getBoundary1();
+              var mapStyle = {style: "midnight"}
+              map.setMapStyle(mapStyle);
+              function addlabel() {
+                  var point = new Array(); //存放标注点经纬信息的数组
+                  var marker = new Array(); //存放标注点对象的数组
+                  var info = new Array(); //存放提示信息窗口对象的数组
+                  var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
+                  var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
+
+                  for (var i = 0; i < markerArr.length; i++) {
+                      var p0 = markerArr[i].orgLon; //orgLon
+                      var p1 = markerArr[i].orgLat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
+                      point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
+                      marker[i] = new window.BMap.Marker(point[i], {icon: myIcon});
+                      map.addOverlay(marker[i]);
+                       marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                            function trues(data){
+                            if(data==true){
+                                return '是'
+                            }else{
+                                return '否'
+                            }
+                      }
+
+                      // 创建信息窗口对象
+                          info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
+                              + "</br><b class='text-0efcff'>名称：</b>"
+                              + markerArr[i].orgName
+                              + "</br><b class='text-0efcff'>机构编码：</b>"
+                              + markerArr[i].orgType
+                              + "</br><b class='text-0efcff'>当月门诊次数：</b>"
+                              + markerArr[i].orgType
+                              + "</br><b class='text-0efcff'>当月住院人次：</b>"
+                              + markerArr[i].orgType
+                              + "</br><b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].orgAddress
+                              + "</br></p>";
+
+
+                    //创建百度样式检索信息窗口对象
+                      searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,info[i], {
+                          title: markerArr[i].unitName, //标题
+                          width: 290, //宽度
+                          height: 100, //高度
+                          marginLeft: 100,
+                          panel: "panel",
+                          enableSendToPhone: false,
+                          searchTypes: []
+
+                      });
+
+
+                      //添加点击事件
+                   marker[i].addEventListener("click", (function (k) {
+                            return function () {
+                              searchInfoWindow[k].open(marker[k]);
+                            }
+                      })(i));
+        }
+    //结束
+
+   }
+
+            //结束
+          }
+       });
+
+
+
+</script>
 
 </html>
