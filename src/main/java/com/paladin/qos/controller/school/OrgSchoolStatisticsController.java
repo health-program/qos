@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.github.pagehelper.PageHelper;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
+import com.paladin.framework.common.OffsetPage;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
@@ -34,6 +37,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 
 	@Autowired
 	OrgSchoolService orgSchoolService;
+	@Autowired
+	private EpidemicSituationService epidemicSituationService;
 
 	@RequestMapping(value = "/index")
 	@QueryInputMethod(queryClass = OrgSchoolQuery.class)
@@ -57,7 +62,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 	 * @return
 	 */
 	@RequestMapping(value = "/view/{name}")
-	@QueryInputMethod(queryClass = OrgSchoolQuery.class)
+	@QueryInputMethod(queryClass = OrgSchoolCountsQuery.class)
 	public String school_counts(@PathVariable("name") String name) {
 		return "/qos/school/org_school_statistics_"+name;
 	}
@@ -163,5 +168,103 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
+	/**
+	 * 按隶属关系，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/people/countsbyAffiliation")
+	@ResponseBody
+	public Object peopleCountsbyAffiliation(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("subordination-type");
+		Map<String,List<String>> affiliationGroup=new HashMap<>();
+		for (KeyValue keyValue : type) {
+			String affilication = keyValue.getValue();
+			if(affilication.endsWith("镇公办")){
+				affilication="区/镇公办";
+			}
+			List<String> list = affiliationGroup.get(affilication);
+			if(CollectionUtils.isEmpty(list)){
+				list=new ArrayList<String>();
+			}
+			list.add(keyValue.getKey());
+			affiliationGroup.put(affilication, list);
+		}
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<String> affiGroup=new ArrayList<String>();
+		List<List<OrgSchoolCountsGroupByNatureVO>>  data=new ArrayList<List<OrgSchoolCountsGroupByNatureVO>>();
+		for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
+			query.setAffiliations(entry.getValue());
+			affiGroup.add(entry.getKey());
+			data.add(orgSchoolService.schoolPeopleCountsGroupByNature(query));
+		}
+		List<String> natureGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("nature-type");
+		for (KeyValue keyValue : type2) {
+			natureGroup.add(keyValue.getValue());
+		}
+		result.put("natureGroup", natureGroup);
+		result.put("affiGroup", affiGroup);
+		result.put("data", data);
+		System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
+
+	/**
+	 * 按学校性质，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/people/countsbyNature")
+	@ResponseBody
+	public Object peopleCountsbyNature(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("nature-type");
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<List<OrgSchoolCountsGroupByNatureVO>>  data=new ArrayList<List<OrgSchoolCountsGroupByNatureVO>>();
+		List<String> group=new ArrayList<String>();
+		for (KeyValue keyValue : type) {
+			query.setNature(keyValue.getKey());
+			group.add(keyValue.getValue());
+			data.add(orgSchoolService.schoolPeopleCountsGroupByAffiliation(query));
+		}
+		List<String> affiGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("subordination-type");
+		for (KeyValue keyValue : type2) {
+			String affilication = keyValue.getValue();
+			if(affilication.endsWith("镇公办")){
+				affilication="区/镇公办";
+			}
+			affiGroup.add(affilication);
+		}
+		result.put("affiGroup", affiGroup);
+		result.put("natureGroup", group);
+		result.put("data", data);
+		System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
+	/**
+     * 按学校统计疫情次数
+     * @param query
+     * @return
+     */
+	@RequestMapping("/epidemic/counts")
+	@ResponseBody
+	public Object epidemicCounts(OrgSchoolCountsQuery query) {
+		PageHelper.startPage(0, OffsetPage.DEFAULT_LIMIT);
+		List<OrgSchoolCountsGroupByNatureVO> list=epidemicSituationService.epidemicCountsGroupByUnit(query);
+		return CommonResponse.getSuccessResponse(list);
+	}
 	
+	/**
+     * 按学校统计疫情人数
+     * @param query
+     * @return
+     */
+	@RequestMapping("/epidemic/people/counts")
+	@ResponseBody
+	public Object epidemicPeopleCounts(OrgSchoolCountsQuery query) {
+		PageHelper.startPage(0, OffsetPage.DEFAULT_LIMIT);
+		List<OrgSchoolCountsGroupByNatureVO> list=epidemicSituationService.epidemicPeopleCountsGroupByUnit(query);
+		return CommonResponse.getSuccessResponse(list);
+	}
 }

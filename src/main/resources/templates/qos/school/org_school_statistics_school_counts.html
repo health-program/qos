@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type"/>
+<section class="content-header">
+    <h1>学校数统计</h1>
+</section>
+<section class="content">
+    <div class="box box-solid">
+        <div class="box-body">
+            <form id="searchbar" class="form-horizontal form-search">
+            	<div class="form-group">
+						<div class="col-md-2">
+                        	<input name="schoolYear" id="schoolYear" placeholder="学年" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+	                    </div>
+						<div class="col-md-2">
+							<select id="district" name="district" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
+								<option value="">请选择区域</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+   </div>
+	<div class="box box-solid" style="margin-top: 20px">
+		<h4 class="center">隶属关系_学校性质</h4>
+		<div id="result" class="box-body">
+			<div class="col-sm-12">
+				<div id="main" style="height: 260px"></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="box box-solid" style="margin-top: 20px">
+		<h4 class="center">学校性质_隶属关系</h4>
+		<div id="result" class="box-body">
+			<div class="col-sm-12">
+				<div id="main_2" style="height: 600px"></div>
+			</div>
+		</div>
+	</div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+
+	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		myChart.resize();
+		myChart_2.resize();
+	});
+	
+	function query() {
+		chart(myChart);
+		chart_2(myChart_2);
+	}
+
+	//获取当年日期所属学年
+	function getCurrentSchoolYear (date) {
+		var schoolYear=date.getFullYear();
+	    if(date.getMonth()<9){//9月之前，属于上一个学年
+	    	schoolYear=schoolYear-1;
+	    }
+	    return schoolYear;
+	}
+	
+	$(function() {
+		$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
+		chart(myChart);
+		chart_2(myChart_2);
+	});
+
+	var myChart = echarts.init(document.getElementById('main'),'light');
+	var myChart_2 = echarts.init(document.getElementById('main_2'));
+	
+	function chart(){
+		 myChart.showLoading({
+             text: '数据正在努力加载...',
+             textStyle: { fontSize : 30 , color: '#444' },
+             effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+         }); 
+		 var schoolYear = $("#schoolYear").val();
+		 var district = $("#district").find('option:selected').val();
+		 $.post("/qos/org/school/statistic/school/countsbyAffiliation",{"schoolYear":schoolYear,"district":district},function(res){
+				var result = res.result;
+				var titleArr= [], seriesArr=[];
+				if (result.length == 0) {
+	                showChartInfo(chart,'暂无数据显示...');
+	                return false;
+	            }
+				var n=1;
+				for (var i = 0; i < result['data'].length; i++) {
+					if(result['data'][i].length==0){
+						continue;
+					}
+					var left=(n++)*20;
+					var top=45;
+					titleArr.push({
+		                text:result['affiGroup'][i],
+		                left: left +'%',
+		                top: top+'%',
+		                textAlign: 'center',
+		                textStyle: {
+		                    fontWeight: 'normal',
+		                    fontSize: '16',
+		                    textAlign: 'center',
+		                }
+				    });
+					seriesArr.push({
+			                name: result['affiGroup'][i],
+			                type: 'pie',
+			                radius: [60, 110],
+			                label: {
+			                    normal: {
+			                    	 position: 'inner',
+			                    	 formatter: '{b}:{c} ({d}%)',
+			                    }
+			                },
+			                labelLine: {
+			                    normal: {
+			                        show: false
+			                    }
+			                },
+			                center: [left+'%', top+'%'],
+			                data: result['data'][i]
+			            }    
+			        )
+					
+				 }
+			myChart.hideLoading();
+			var option = {
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{b} : {c} ({d}%)"
+			    },
+			    /* color:['#e062ae',
+			           '#37a2da', 
+			           '#67e0e3', 
+			           '#ffdb5c', 
+			           '#ff9f7f'], */
+			    legend: {
+			        x : 'center',
+			        y : 'bottom',
+			        data:result['natureGroup']
+			    },
+			    calculable : true,
+				title:titleArr,
+				series: seriesArr	
+			};
+			myChart.setOption(option,true);
+		})
+	}
+	
+	
+	function chart_2(){
+		 myChart_2.showLoading({
+             text: '数据正在努力加载...',
+             textStyle: { fontSize : 30 , color: '#444' },
+             effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+         }); 
+		 var schoolYear = $("#schoolYear").val();
+		 var district = $("#district").find('option:selected').val();
+		 $.post("/qos/org/school/statistic/school/countsbyNature",{"schoolYear":schoolYear,"district":district},function(res){
+				var result = res.result;
+				var titleArr= [], seriesArr=[];
+				if (result.length == 0) {
+	                showChartInfo(chart_2,'暂无数据显示...');
+	                return false;
+	            }
+				var n=1;var top=20;
+				for (var i = 0; i < result['data'].length; i++) {
+					if(result['data'][i].length==0){
+						continue;
+					}
+					if(n*15>90){
+						n=1;
+						top=top+40;
+					}
+					var left=(n++)*15;
+					titleArr.push({
+		                text:result['natureGroup'][i],
+		                left: left +'%',
+		                top: top+'%',
+		                textAlign: 'center',
+		                textStyle: {
+		                    fontWeight: 'normal',
+		                    fontSize: '16',
+		                    textAlign: 'center',
+		                }
+				    });
+					seriesArr.push({
+			                name: result['natureGroup'][i],
+			                type: 'pie',
+			                radius: [60, 110],
+			                label: {
+			                    normal: {
+			                    	 position: 'inner',
+			                    	 formatter: '{b}:{c} ({d}%)',
+			                    }
+			                },
+			                labelLine: {
+			                    normal: {
+			                        show: false
+			                    }
+			                },
+			                center: [left+'%', top+'%'],
+			                data: result['data'][i]
+			            }    
+			        )
+					
+				 }
+			myChart_2.hideLoading();
+			var option = {
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{b} : {c} ({d}%)"
+			    },
+			    legend: {
+			        x : 'center',
+			        y : 'bottom',
+			        data:result['affiGroup']
+			    },
+			    calculable : true,
+				title:titleArr,
+				series: seriesArr	
+			};
+			myChart_2.setOption(option,true);
+		})
+	}
+
+	//无数据展示
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        myChart.clear() ;
+        myChart.hideLoading();
+        myChart.setOption(msgOption)
+    };
+	
+	
+	//]]>
+</script>
+</body>
+
+</html>

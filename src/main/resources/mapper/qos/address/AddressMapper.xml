@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.address.AddressMapper">
+
+    <resultMap id="BaseResultMap" type="com.paladin.qos.model.address.Address">
+        <id column="id" jdbcType="VARCHAR" property="unitId" />
+        <result column="org_name" jdbcType="VARCHAR" property="orgName" />
+        <result column="org_address" jdbcType="VARCHAR" property="orgAddress" />
+        <result column="org_type" jdbcType="INTEGER" property="orgType" />
+        <result column="org_lon" jdbcType="VARCHAR" property="orgLon" />
+        <result column="org_lat" jdbcType="VARCHAR" property="orgLat" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+        org_name,
+        org_address,
+        org_type,
+        org_lon,
+        org_lat
+    </sql>
+
+
+	<select id="getAddressInfo" resultMap="BaseResultMap">
+          select <include refid="Base_Column_List" />
+        from org_address where
+          1=1
+        <if test="type != null">
+            AND org_type=#{type}
+        </if>
+	</select>
+	
+
+</mapper>

@@ -80,6 +80,23 @@ public class EpidemicController extends ControllerSupport {
 	return "/qos/epidemic/epidemic_situation_add";
     }
     
+    @RequestMapping("/traceability/index")
+    public String traceabilityIndex() {
+	return "/qos/epidemic/epidemic_situation_statistics_count";
+    }
+    
+    /**
+     *  溯源指标
+     * @param query
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    @RequestMapping("/traceability/count")
+    @ResponseBody
+    public Object traceabilityStatistics(EpidemicSituationQueryDTO query) {
+	return CommonResponse.getSuccessResponse(epidemicSituationService.dataTraceabilityRate(query));
+    }
+    
     @RequestMapping("/save")
     @ResponseBody
     public Object save(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){

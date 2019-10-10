@@ -108,4 +108,45 @@
 		) tmp group by name
 	</select>
 
+	<select id="schoolPeopleCountsGroupByNature" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"
+		parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+		SELECT c.name name ,sum(p.total) value 
+		from org_school t
+		inner join sys_constant c on c.type='nature-type' and t.nature=c.code
+		left join org_school_people p on t.id=p.school_id
+		WHERE 1=1
+		and t.affiliation in 
+		<foreach collection ="affiliations" item="affiliation" index= "index" separator ="," open="(" close=")">
+             #{affiliation}
+        </foreach >
+		<if test="schoolYear != null and schoolYear !='' ">
+			AND t.school_year=#{schoolYear}
+		</if>
+		<if test="district != null and district !='' ">
+			AND  t.district =#{district}
+		</if>
+		group by t.nature
+	</select>
+
+	<select id="schoolPeopleCountsGroupByAffiliation" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"
+		parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+		select name,sum(num) value from (
+			SELECT IF(INSTR(c.name,'镇公办'),'区/镇公办',c.name) name ,sum(p.total) num 
+			from org_school t
+			inner join sys_constant c on c.type='subordination-type' and t.affiliation=c.code
+			left join org_school_people p on t.id=p.school_id
+			WHERE 1=1
+			<if test="schoolYear != null and schoolYear !='' ">
+				AND t.school_year=#{schoolYear}
+			</if>
+			<if test="district != null and district !='' ">
+				AND  t.district =#{district}
+			</if>
+			<if test="nature != null and nature !='' ">
+				AND  t.nature =#{nature}
+			</if>
+			group by t.affiliation
+		) tmp group by name
+	</select>
+
 </mapper>

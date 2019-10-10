@@ -87,8 +87,12 @@ public class OrgSchoolController extends ControllerSupport {
 	}
 	String id = UUIDUtil.createUUID();
 	orgSchoolDTO.setId(id);
-	if (orgSchoolService.schoolSave(orgSchoolDTO) > 0) {
-	    return CommonResponse.getSuccessResponse(beanCopy( orgSchoolService.get(id), new OrgSchoolVO()));
+	try {
+		if (orgSchoolService.schoolSave(orgSchoolDTO) > 0) {
+			return CommonResponse.getSuccessResponse(beanCopy( orgSchoolService.get(id), new OrgSchoolVO()));
+		}
+	} catch (Exception e) {
+		return CommonResponse.getFailResponse(e.getMessage());
 	}
 	return CommonResponse.getFailResponse();
     }
