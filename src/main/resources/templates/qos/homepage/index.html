@@ -247,51 +247,14 @@ $(function() {
 <script>
 
 
+
   $.ajax({
         type : "post",    //请求类型
         url : "/qos/address/search/community",//请求的 URL地址
         success: function (rawData) {
-          }
-       });
 
-
-
-
-
-
-  var markerArr = [{
-    title: "昆山康莱药房",
-    insurance:'是',
-    delivery:'是',
-    address: "玉山镇莫介路156福泰欧楼上",
-    shopowner:'王药师',
-    tel: "(0512)50171888",
-   lng:'120.9615601899',
-   lat:'31.3804306996',
-    logo: "image/logodrug.png",
-    evaluate:'20',
-    praise:'7',
-    commentary:'7',
-    comment:'6',
-    order:'454',
-    hiostoryorder:'4454',
-  }, {
-    title: "昆山测试康莱药房",
-    insurance:'是',
-    delivery:'是',
-    address: "玉山镇莫介路156福泰欧楼上",
-    shopowner:'王药师',
-    tel: "联系电话：(0512)50171888",
-    lng:'121.085697',
-    lat:'31.385474',
-    logo: "image/logodrug.png",
-    evaluate:'20',
-    praise:'7',
-    commentary:'7',
-    comment:'6',
-    order:'454',
-    order:'9454',
-  }];
+             markerArr=rawData.result;
+              //开始
 
 
               var strs = "";
@@ -306,6 +269,8 @@ $(function() {
               map.addControl(new BMap.NavigationControl());
               map.addControl(new BMap.ScaleControl());
               map.addControl(new BMap.OverviewMapControl());
+
+
               function getBoundary1()
               {
                   var bdary = new BMap.Boundary();
@@ -340,17 +305,15 @@ $(function() {
                   var info = new Array(); //存放提示信息窗口对象的数组
                   var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
                   var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
+
                   for (var i = 0; i < markerArr.length; i++) {
-                      var p0 = markerArr[i].lng; //
-                      var p1 = markerArr[i].lat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
+                      var p0 = markerArr[i].orgLon; //orgLon
+                      var p1 = markerArr[i].orgLat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
                       point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
                       marker[i] = new window.BMap.Marker(point[i], {icon: myIcon});
                       map.addOverlay(marker[i]);
-
-                      marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-
-
-                      function trues(data){
+                       marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                            function trues(data){
                             if(data==true){
                                 return '是'
                             }else{
@@ -360,14 +323,22 @@ $(function() {
 
                       // 创建信息窗口对象
                           info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
-                              + "</br><b class='text-0efcff'>是否医保：</b>"
-                              + "</br><b class='text-0efcff'>是否支持配送：</b>"
+                              + "</br><b class='text-0efcff'>名称：</b>"
+                              + markerArr[i].orgName
+                              + "</br><b class='text-0efcff'>机构编码：</b>"
+                              + markerArr[i].orgType
+                              + "</br><b class='text-0efcff'>当月门诊次数：</b>"
+                              + markerArr[i].orgType
+                              + "</br><b class='text-0efcff'>当月住院人次：</b>"
+                              + markerArr[i].orgType
                               + "</br><b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].orgAddress
                               + "</br></p>";
+
 
                     //创建百度样式检索信息窗口对象
                       searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,info[i], {
-                          title: markerArr[i].name, //标题
+                          title: markerArr[i].unitName, //标题
                           width: 290, //宽度
                           height: 100, //高度
                           marginLeft: 100,
@@ -387,21 +358,24 @@ $(function() {
 
 
 
-/*
-
-                     searchInfoWindow[i] .addEventListener("close",function(){
-                          marker.getLabel().show();
-                      });
-                      searchInfoWindow[i].open(marker[i]);
-*/
-
 
 
 
     }
     //结束
- 
+
    }
+
+            //结束
+          }
+       });
+
+
+
+
+
+
+
 
 </script>
 
