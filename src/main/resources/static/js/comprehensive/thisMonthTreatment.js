@@ -29,16 +29,18 @@ $(function(){
 
     var unitNameArray=[];
     var teamNumArray=[];
+       var arr = {
+               eventIds:'13003'
+           }
       $.ajax({
        type : "post",    //请求类型
-        url : "/qos/data/familydoctor/data/count",//请求的 URL地址
+        url : "/qos/analysis/data/get/unit",//请求的 URL地址
+        data:arr,
          success: function (rawData) {
+         debugger
             rawData = rawData.result;  //  unitName
-           for(var i=0;i<rawData.length;i++){
-             unitNameArray.push(rawData[i].unitName)
-             teamNumArray.push(rawData[i].teamNum)
-            }
-            var emergencyoption = {
+               var dataMap=convertUnitChartData(rawData, '13003', true); //
+            var emergencyOption = {
                    tooltip: {
                                  trigger: 'axis',
                                  axisPointer: {
@@ -67,7 +69,7 @@ $(function(){
                              bottom:'35%'
 
                              },
-                         data: unitNameArray,
+                         data:dataMap['unit'],
 
                          axisLine: {
                              lineStyle: {
@@ -122,20 +124,19 @@ $(function(){
                              },
                          },
                          grid:{
-
-                         left:'10%',
+                             left:'10%',
 
                          bottom:'85%'
 
                          },
                          barWidth: 15,
-                         data: teamNumArray,
+                         data:dataMap['values'],
                          type: 'bar'
                      }]
                  };
                  //初始化echarts实例
-              var myChartEdoctor = echarts.init(document.getElementById('doctor'));
-               myChartEdoctor.setOption(emergencyoption);
+              var emergencyID = echarts.init(document.getElementById('emergency'));
+               emergencyID.setOption(emergencyOption);
                    //急诊人数结束
          }
     });
