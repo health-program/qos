@@ -68,6 +68,10 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
 	return vo;
     };
     
+    public List<DataFamilyDoctorTeamVo> dataTeamCount(){
+	return familyDoctorTeamMapper.teamNum();
+    };
+    
     
     private static final List<ReadColumn> teamImportColumns = DefaultReadColumn.createReadColumn(ExcelFamilyDoctorTeam.class, null);
     
