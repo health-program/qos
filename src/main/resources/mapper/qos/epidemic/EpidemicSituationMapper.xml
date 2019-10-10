@@ -35,4 +35,71 @@
 	ORDER BY e.create_time DESC
 	</select>
     
+    <select id="epidemicCountsGroupByUnit" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"
+		parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+    	SELECT n.school_full_name name,count(1) value
+    	FROM epidemic_situation t
+    	inner join org_school s on t.incident_unit=s.parent_school_id
+		LEFT JOIN org_school_name n ON t.incident_unit=n.id
+		where 1=1
+		<if test="schoolYear != null and schoolYear !='' ">
+			AND t.school_year=#{schoolYear}
+		</if>
+		<if test="district != null and district !='' ">
+			AND s.district=#{district}
+		</if>
+		<if test="sicknessClassify != null and sicknessClassify !='' ">
+			AND t.sickness_classify =#{sicknessClassify}
+		</if>
+		GROUP BY t.incident_unit
+    	ORDER BY value DESC
+    </select>
+
+    <select id="epidemicPeopleCountsGroupByUnit" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"
+		parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+    	SELECT n.school_full_name name,sum(t.total) value
+    	FROM epidemic_situation t
+    	inner join org_school s on t.incident_unit=s.parent_school_id
+		LEFT JOIN org_school_name n ON t.incident_unit=n.id
+		where 1=1
+		<if test="schoolYear != null and schoolYear !='' ">
+			AND t.school_year=#{schoolYear}
+		</if>
+		<if test="district != null and district !='' ">
+			AND s.district=#{district}
+		</if>
+		<if test="sicknessClassify != null and sicknessClassify !='' ">
+			AND t.sickness_classify =#{sicknessClassify}
+		</if>
+		GROUP BY t.incident_unit
+    	ORDER BY value DESC
+    </select>
+
+     <select id="dataTraceabilityRate" resultType="com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO">
+	SELECT
+		s.school_full_name as schoolName,
+		TRUNCATE (
+		(
+		sum(
+		is_early_warning_value = '1'
+		AND is_reason_traceability = '1'
+		) / count(1)
+		) * 100,
+		2
+		) as rate
+	FROM
+		epidemic_situation AS e
+	LEFT JOIN org_school_name AS s ON e.incident_unit = s.id
+	where 1=1
+
+	<if test="region !=null and region !='' ">
+		and e.region =#{region}
+	</if>
+
+	<if test="schoolYear !=null and schoolYear !='' ">
+		and e.school_year =#{schoolYear}
+	</if>
+
+	GROUP BY incident_unit;
+    </select>
 </mapper>

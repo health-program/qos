@@ -33,7 +33,10 @@ import com.paladin.qos.model.epidemic.EpidemicSituation;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.dto.ExcelEpidemicSituation;
+import com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO;
 import com.paladin.qos.service.school.vo.SchoolNameVO;
 
 /**   
@@ -54,6 +57,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
        Page<EpidemicSituationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
        epidemicSituationMapper.searchFindPage(query);
        return new PageResult<>(page);
+   }
+   
+   public List<DataEpidemicSituationVO> dataTraceabilityRate(EpidemicSituationQueryDTO query){
+       return epidemicSituationMapper.dataTraceabilityRate(query);
    }
    
     public int updateEpidemic(EpidemicSituationDTO dto) {
@@ -152,5 +159,25 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	}
 	return new ExcelImportResult(i, errors);
     }
+
+    /**
+     * 按学校统计疫情次数
+     * @param query
+     * @return
+     */
+	public List<OrgSchoolCountsGroupByNatureVO> epidemicCountsGroupByUnit(
+			OrgSchoolCountsQuery query) {
+		return epidemicSituationMapper.epidemicCountsGroupByUnit(query);
+	}
+
+	/**
+     * 按学校统计疫情人数
+     * @param query
+     * @return
+     */
+	public List<OrgSchoolCountsGroupByNatureVO> epidemicPeopleCountsGroupByUnit(
+			OrgSchoolCountsQuery query) {
+		return epidemicSituationMapper.epidemicPeopleCountsGroupByUnit(query);
+	}
 
 }

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type,sickness-type"/>
+<section class="content-header">
+    <h1>全市疫情分析</h1>
+</section>
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 5px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+						<div class="col-md-2">
+                        	<input name="schoolYear" id="schoolYear" placeholder="学年" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+	                    </div>
+						<div class="col-md-2">
+							<select id="district" name="district" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
+								<option value="">请选择区域</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+							<select id="sicknessClassify" name="sicknessClassify" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.sicknessType}" enumcode="sickness-type">
+								<option value="">请选择疾病名称</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="margin-left: 1px;margin-right: 5px">
+    	<div class="col-md-6 no-padding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid" style="margin-bottom: 7px">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" style="letter-spacing: 3px">疫情发生次数Top10</h3>
+                        </div>
+                        <div class="box-body" style="height: 375px;overflow: auto">
+                            <table class="table-condensed" id="epidemicCountsDataGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                       	<div id="epidemicCountsChartDiv" class="box-body no-padding" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding-right: 5px;padding-left: 5px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid" style="margin-bottom: 7px">
+                        <div class="box-header with-border">
+                            <h3 class="box-title" style="letter-spacing: 3px">疫情发生人数Top10</h3>
+                        </div>
+                        <div class="box-body" style="height: 375px;overflow: auto">
+                            <table class="table-condensed" id="epidemicPeopleCountsDataGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                       	<div id="epidemicPeopleCountsChartDiv" class="box-body no-padding" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    //获取当年日期所属学年
+	function getCurrentSchoolYear (date) {
+		var schoolYear=date.getFullYear();
+	    if(date.getMonth()<9){//9月之前，属于上一个学年
+	    	schoolYear=schoolYear-1;
+	    }
+	    return schoolYear;
+	}
+    
+	function query() {
+		epidemicCountsTable.refresh();
+		epidemicPeopleCountsTable.refresh();
+	}
+    
+	//图表自适应大小
+    window.addEventListener("resize", function () {
+    	epidemicCountsChart.resize();
+    	epidemicPeopleCountsChart.resize();
+    });
+    
+    var epidemicCountsChart = echarts.init(document.getElementById('epidemicCountsChartDiv'));
+
+    var epidemicPeopleCountsChart = echarts.init(document.getElementById('epidemicPeopleCountsChartDiv'));
+	
+	var epidemicCountsTable,epidemicPeopleCountsTable;
+	var epidemicCountsData,epidemicPeopleCountsData;
+    $(function () {
+    	$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
+        initDataGrid();
+    });
+    
+    function initDataGrid(){
+    	epidemicCountsTable = $.createTable("#epidemicCountsDataGrid", {
+    		idField: "id",
+            columns: [
+                { title: "学校", field: "name" },
+				{ title: "疫情发生次数", field: "value" }
+            ],
+            url: '/qos/org/school/statistic/epidemic/counts',
+            responseHandler: function (res) {
+            	res = res || [];
+            	epidemicCountsData=res;
+            	generatorChart(epidemicCountsChart,epidemicCountsData,'次数');
+            	return res;
+            },
+            searchbar: '#searchbar',
+            pagination: false,
+        });
+    	epidemicPeopleCountsTable = $.createTable("#epidemicPeopleCountsDataGrid", {
+    		idField: "id",
+            columns: [
+                [
+                    { title: "学校", field: "name" },
+					{ title: "疫情发生次数", field: "value" }
+                ]
+            ],
+            url: '/qos/org/school/statistic/epidemic/people/counts',
+            responseHandler: function (res) {
+            	res = res || [];
+            	epidemicPeopleCountsData=res;
+            	generatorChart(epidemicPeopleCountsChart,epidemicPeopleCountsData,'人数');
+            	return res;
+            },
+            searchbar: '#searchbar',
+            pagination: false,
+        });
+    }
+    
+    function generatorChart(chart,data,yAxisName) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        if (!data||data.length==0) {
+              showChartInfo(chart,'暂无数据');
+              return false;
+        }
+        let xAxisData=[];
+        let seriesData=[];
+        data.forEach(d => {
+        	xAxisData.push(d.name);
+        	seriesData.push(d.value);
+         });
+        chart.hideLoading();
+        option = {
+              color: ['#3398DB'],
+              xAxis: {
+                  type: 'category',
+                  axisLabel: {
+                      interval:0,
+                      rotate:20//角度顺时针计算的
+                  } ,
+                  axisTick : {
+                      alignWithLabel : true
+                  },
+                  data: xAxisData
+              },
+              yAxis: {
+                  type: 'value',
+                  name: yAxisName
+              },
+              series: [{
+                  data: seriesData,
+                  label: {
+                      normal: {
+                          show: true,
+                          position: 'top'
+                      }
+                  },
+                  type: 'bar'
+              }]
+          };
+          chart.setOption(option,true);
+    }
+    
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+    /*]]>*/
+</script>
+</body>
+
+</html>

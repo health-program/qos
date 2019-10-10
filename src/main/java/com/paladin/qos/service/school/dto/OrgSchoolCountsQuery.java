@@ -14,6 +14,8 @@ public class OrgSchoolCountsQuery extends OffsetPage {
     
     private String nature;
     
+    private String sicknessClassify;
+    
     public String getSchoolYear() {
 		return schoolYear;
 	}
@@ -44,6 +46,14 @@ public class OrgSchoolCountsQuery extends OffsetPage {
 
 	public void setNature(String nature) {
 		this.nature = nature;
+	}
+
+	public String getSicknessClassify() {
+		return sicknessClassify;
+	}
+
+	public void setSicknessClassify(String sicknessClassify) {
+		this.sicknessClassify = sicknessClassify;
 	}
     
 }
