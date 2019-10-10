@@ -5,6 +5,8 @@
 
 <body>
     <tt:constant enumcode="data-unit-type" />
+    <section class="content-header">
+        <h1>签约管理</h1>
     </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -44,24 +46,24 @@
 			</div>
 		</div>
 		<div class="row">
-        <div class="col-md-9">
+        <div class="col-md-8">
             <div class="box box-solid">
                 <div class="box-body">
                     <table id="dataGrid"></table>
                 </div>
             </div>
         </div>
-			<div class="col-md-3">
+			<div class="col-md-4">
 			<div class="row">
 				<div class="col-md-12">
 					<div class="box box-solid">
-					<div id="jkglqylChart" class="box-body" style="height: 235px">
+					<div id="jkglqylChart" class="box-body" style="height: 237px">
 					</div>
 					</div>
 				</div>
 				<div class="col-md-12">
 					<div class="box box-solid">
-					<div id="gxhfwqylChart" class="box-body" style="height: 235px">
+					<div id="gxhfwqylChart" class="box-body" style="height: 237px">
 					</div>
 					</div>
 				</div>
@@ -107,12 +109,12 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "签约健康管理服务包签约数", field: "event21001" },
+                    { title: "签约健康管理<br/>服务包签约数", field: "event21001" },
                     { title: "就签居民数", field: "total21001"},
-                    { title: "综合健康管理服务包签约率", field: "reat21001"},
-                    { title: "签约个性化服务数", field: "event21002"},
+                    { title: "综合健康管理<br/>服务包签约率", field: "reat21001"},
+                    { title: "签约个性<br/>化服务数", field: "event21002"},
                     { title: "签约总数", field: "total21002"},
-                    { title: "个性化服务签约率", field: "reat21002"}
+                    { title: "个性化服<br/>务签约率", field: "reat21002"}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',

@@ -48,8 +48,14 @@ public class DataFamilyDoctorController extends ControllerSupport {
 
 	@RequestMapping("/unit/find")
 	@ResponseBody
-	public Object teamNum() {
+	public Object teamNumInfo() {
 		return CommonResponse.getSuccessResponse(familyDoctorTeamService.teamNum());
+	}
+	
+	@RequestMapping("/data/count")
+	@ResponseBody
+	public Object teamCount() {
+		return CommonResponse.getSuccessResponse(familyDoctorTeamService.dataTeamCount());
 	}
 
 }

@@ -39,13 +39,14 @@
 					{ title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
 	 				     ]
 	 					}
-	 					var model;
+	 					var model, itemId;
 
 	 					$(function() {
 	 						debugger;
 	 						var html = generateHtml(options);
 	 						$(".content").html(html);
 	 						$.initComponment($(".content"));
+	 						itemId = $("#id").val();
 	 						$.getAjax("/qos/countantibiotics/get?id=" + $("#id").val(),
 	 								function(data) {
 	 									model = new tonto.Model("model",

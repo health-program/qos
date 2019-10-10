@@ -52,6 +52,12 @@ public class FamilyDoctorTeamController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(familyDoctorTeamService.searchPage(query));
     }
     
+    @RequestMapping(value = "/data/count", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public Object DataTeamCount(){
+	return CommonResponse.getSuccessResponse(familyDoctorTeamService.DataTeamCount());
+    }
+    
     @GetMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {   	

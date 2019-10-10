@@ -46,6 +46,10 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
 	return familyDoctorTeamMapper.getTeam(teamName);
     }
     
+    public int DataTeamCount(){
+	return familyDoctorTeamMapper.DataTeamCount();
+    }
+    
     public int removeTeam(String id) {
 	if (StringUtil.isEmpty(id)) {
 	    throw new BusinessException("该团队不存在");
@@ -62,6 +66,10 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
 	vo.addAll(familyDoctorTeamMapper.teamNum());
 	vo.addAll(familyDoctorPersonnelMapper.personnelNum());
 	return vo;
+    };
+    
+    public List<DataFamilyDoctorTeamVo> dataTeamCount(){
+	return familyDoctorTeamMapper.teamNum();
     };
     
     
