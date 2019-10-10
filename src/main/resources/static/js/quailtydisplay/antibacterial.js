@@ -37,96 +37,87 @@ $(function(){
            for(var i=0;i<rawData.result.length;i++){
                 nameArray.push(rawData.result[i]['unitName'])
                 dataArray.push(rawData.result[i]['userRate'])
-
            }
 
 
 
-/*
-         {
-                                        name: 'Line 3',
-                                        type: 'pie',
-                                        clockWise: true,
-                                        radius: ['50%', '60%'],
-                                        itemStyle: dataStyle,
-                                        hoverAnimation: false,
 
-                                        data: [{
-                                            value: 2632321,
-                                            name: '已婚未育'
-                                        }, {
-                                            value: 2212343,
-                                            name: '总数',
-                                            tooltip: {
-                                                show: false
-                                            },
-                                            itemStyle: placeHolderStyle
-                                        }]
-                                    }
-
-*/
-
-           var seriesValue=[];
-           for(var i=0;i<rawData.result.length;i++){
-                  seriesValue.push({
-                                  name: 'Line 3',
-                                                                       type: 'pie',
-                                                                       clockWise: true,
-                                                                       radius: ['50%', '60%'],
-                                                                       itemStyle: dataStyle,
-                                                                       hoverAnimation: false,
-                             data:[
-                                  {
-                                     value:rawData.result[i]['userRate'],
-                                     name:rawData.result[i]['unitName']
-                                  }
-                                ]
-                     });
-
-            }
-
-
-
-
-    /*    series.push({
-        　　　　name:nameArray[i],
-        　　　　type:'line',
-        　　　　data:dataArry[d].split(','),
-        　　　　symbol:'circle',
-        　　　　symbolSize:'7',
-        　　　　smooth:true
-        　　})*/
 
 
 
 
     var antibacterialOptions ={
-                color: ['#4DFFE3','#4DE0FF','#4DFF8F','#ADFF4D'],
-                tooltip : {
-                    show: true,
-                    formatter: "{b} : {c}"
-                },
+          tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+           },
+                                              xAxis: {
+                                                  type: 'category',
 
-                legend: {
-                    top: "13.5%",
-                    x: 'right',
-                    left: "42%",
-                    itemWidth:0,itemHeight:0,
-                    data: nameArray,
-                    itemGap: 38,
-                    textStyle: {
-                        color: '#fff',
-                        align:'right',
-                        x: 'right',
-                        textAlign:'right'
-                    },
 
-                    selectedMode: true,
-                    orient: "vertical",
 
-                },
-              series: seriesValue
-        };
+                                                  data: nameArray,
+
+                                                  axisLine: {
+                                                      lineStyle: {
+                                                          color: '#19d1ff',
+                                                          width: 1,
+                                                          //这里是为了突出显示加上的
+                                                      }
+                                                  },
+
+                                                  grid: {
+                                                      left: 15,
+                                                      right: 5,
+                                                      bottom: 30,
+                                                      containLabel: true
+                                                  },
+                                                  axisLabel: {
+                                                      show: true,
+                                                      textStyle: {
+                                                          color: '#19d1ff',
+                                                      },
+                                                      interval: 0,
+                                                      rotate: 30,
+                                                      formatter: function(value) {
+                                                          var reg = new RegExp('昆山市', "g");
+                                                          return value.replace(reg, '');
+                                                      }
+                                                  },
+                                              },
+
+                                              yAxis: {
+                                                  splitNumber:4,
+                                                  type: 'value',
+                                                  splitLine: {
+                                                      show: false
+                                                  },
+                                                  axisLine: {
+                                                      lineStyle: {
+                                                          color: '#19d1ff',
+                                                          width: 2,
+                                                          //这里是为了突出显示加上的
+                                                      }
+                                                  }
+                                              },
+                                              series: [{
+                                                  itemStyle: {
+                                                      normal: {
+                                                          // 随机显示
+                                                          color: function(d) {
+                                                              return "#" + '439AFF';
+                                                          }
+
+                                                      },
+                                                  },
+
+                                                  barWidth: 15,
+                                                  data: dataArray,
+                                                  type: 'bar'
+                                              }]
+                                          };
 
      var antibacterial = echarts.init(document.getElementById('antibacterial'));
         antibacterial.setOption(antibacterialOptions);

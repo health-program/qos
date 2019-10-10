@@ -3,9 +3,7 @@ $(function(){
         type : "post",    //请求类型
         url : "/qos/family/doctor/personnel/find/all",//请求的 URL地址
         success: function (res) {
-        debugger
-
-                var html = "";
+       /*  var html = "";
                            $.each(data, function(i, item) { //这里的函数参数是键值对的形式，k代表键名，v代表值
                                html += '<div class="header quailty_bottom_right_header_title">';
                                html += '<span class="quailty_serial">'+i+'</span>';
@@ -17,7 +15,7 @@ $(function(){
                                html += '<span class="quailty_sick">诊断疾病</span>';
 
                            });
-                           $("#list1").append(html);
+                           $("#list1").append(html);*/
 
         }
       })
