@@ -517,3 +517,13 @@ select {
     height: 100% !important;
     background: url('../../static/image/index/indexbg_top.jpg') no-repeat scroll !important;
 }
+
+
+.comprehensiveMap{
+ width:36.5vw!important;
+ margin-left:4vw;
+}
+
+#mide_right{
+  margin-left:1vh!important;
+}

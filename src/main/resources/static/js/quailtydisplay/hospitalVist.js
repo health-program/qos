@@ -31,18 +31,11 @@ $(function(){
        var  unit31001Data=convertUnitChartData(rawData.result, '31001', false); //
 
 
-
-
-
-
         var  unit31001Data31001=rawData.result['31001'].sort(compareBigToSmall('count'));
         var unit31001DataArray= unit31001Data31001.slice(0,5)
 
          // 排名最高的已经有了
-
-
-
-       var unit31007DatanewArray=[]
+        var unit31007DatanewArray=[]
        for(var i=0;i<unit31001DataArray.length;i++){
             for(var j=0;j<rawData.result['31007'].length;j++){
                 if(unit31001Data31001[i].unitId ==rawData.result['31007'][j].unitId){
@@ -51,9 +44,7 @@ $(function(){
             }
        }
 
-
-
-        var unit31008DatanewArray=[]
+       var unit31008DatanewArray=[]
               for(var i=0;i<unit31001DataArray.length;i++){
                    for(var j=0;j<rawData.result['31008'].length;j++){
                         if(unit31001DataArray[i].unitId ==rawData.result['31008'][j].unitId){
@@ -61,8 +52,6 @@ $(function(){
                        }
                    }
               }
-
-
 
  var newast31007 = {}
     newast31007['31007']=unit31007DatanewArray

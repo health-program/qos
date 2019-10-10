@@ -84,12 +84,12 @@
             </div>
         </div>
         <div class="middle">
-            <div id="allmap"></div>
+            <div id="allmap" class="comprehensiveMap"></div>
             <input id="site" type="text" style="display:none">
             <input id="longitude" type="text" value="121.047817" style="display:none">
             <input id="latitude" type="text" value="31.395795" style="display:none">
         </div>
-        <div class="right">
+        <div class="right" id="mide_right">
             <div class="bg_opacity  position-relative">
                 <div class="header line">政策扶持人员签约率</div>
                 <div class="fr width100 text-align-right pr-20">
@@ -255,14 +255,8 @@ $(function() {
 </script>
 <script>
 
-  var IPPATH = 'http://172.16.11.10:8085/supervise';
-  var header = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvdGhlcklkIjoiMCIsImNyZWF0ZVRpbWUiOjE1NjgxMjE4NTc1ODksImF1dGgiOiJBVVRIT1JJVFlfQlVTSU5FU1NfRlVOQ1RJT04sQVVUSE9SSVRZX0JVU0lORVNTX0FEVkVSVCxBVVRIT1JJVFlfT1JERVJfQVBQUkFJU0UsQVVUSE9SSVRZX1NUQVRJU1RJQ19TQUxFLEFVVEhPUklUWV9TWVNURU1fU0VUVElORyxBVVRIT1JJVFlfQlVTSU5FU1NfTUVTU0FHRSxBVVRIT1JJVFlfU1lTVEVNLEFVVEhPUklUWV9TSE9QX01BTlVGQUNUVVJFUixBVVRIT1JJVFlfQlVTSU5FU1NfRkFRLEFVVEhPUklUWV9CVVNJTkVTU19EUlVHX1JFQ09NTUVORCxBVVRIT1JJVFlfU1lTVEVNX0FDQ09VTlQsQVVUSE9SSVRZX09SREVSX09SREVSLEFVVEhPUklUWV9SWCxBVVRIT1JJVFlfQlVTSU5FU1NfUkVQT1NJVE9SWSxBVVRIT1JJVFlfQlVTSU5FU1NfTU9EVUxFLEFVVEhPUklUWV9EUlVHX1NIT1BfRFJVRyxBVVRIT1JJVFlfU0hPUF9BUFBMWSxBVVRIT1JJVFlfUlhfUlgsQVVUSE9SSVRZX0RSVUcsQVVUSE9SSVRZX1NUQVRJU1RJQyxBVVRIT1JJVFlfQlVTSU5FU1NfS0VZX1dPUkQsQVVUSE9SSVRZX1NZU1RFTV9QSEFSTUFDSVNULEFVVEhPUklUWV9TWVNURU1fQURNSU4sQVVUSE9SSVRZX0JVU0lORVNTLEFVVEhPUklUWV9TSE9QX1VTRVIsQVVUSE9SSVRZX0RSVUdfRFJVRyxBVVRIT1JJVFlfRFJVR19BUFBMWSxBVVRIT1JJVFlfU0hPUF9IT1NQSVRBTCxBVVRIT1JJVFlfU1lTVEVNX0ZJTEUsQVVUSE9SSVRZX0RSVUdfRk9STSxBVVRIT1JJVFlfU1RBVElTVElDX01FRElDQUwsQVVUSE9SSVRZX1NZU1RFTV9SRVNULEFVVEhPUklUWV9EUlVHX1NQRUMsQVVUSE9SSVRZX1NZU1RFTV9MT0dJTl9MT0csQVVUSE9SSVRZX0RSVUdfVFlQRSxBVVRIT1JJVFlfQlVTSU5FU1NfRFJVR19ESVNDT1VOVCxBVVRIT1JJVFlfQlVTSU5FU1NfRkVFREJBQ0ssQVVUSE9SSVRZX0JVU0lORVNTX0NIQVQsQVVUSE9SSVRZX1NZU1RFTV9ST0xFLEFVVEhPUklUWV9TSE9QLEFVVEhPUklUWV9PUkRFUixBVVRIT1JJVFlfRFJVR19DT01NT05fTkFNRSIsImlkIjoiRlBEUy01WE5TOEtScHpZS0hhZFpfdyIsInR5cGUiOiJVU0VSIiwidXNlcm5hbWUiOiIxNTk5NTYzNDI1MiJ9.rF57UKPjM4szD94mJGVJtnmGIqsWpJP9NL9f1ZispQY'
 
-   //var IPPATH = 'http://172.16.1.233:8085/supervise';
-   // var header=localStorage.getItem("admin-token")
-    //初始化
-
- /* var markerArr = [{
+  var markerArr = [{
     title: "昆山康莱药房",
     insurance:'是',
     delivery:'是',
@@ -292,29 +286,17 @@ $(function() {
     comment:'6',
     order:'454',
     order:'9454',
-  }];*/
+  }];
 
-  markerArr = [];
-  $(function(){
-      $.ajax({
-          url: IPPATH + '/api/supervise/statistics/shops',
-          type: 'get',
-          dataType: 'text',
-          headers: {'Content-Type': 'application/json;charset=utf8', 'Authorization': header},
-          success: function (data) {
-              markerArr=JSON.parse(data);
 
               var strs = "";
               // 百度地图API功能
-              var map = new BMap.Map("map");    // 创建Map实例
+              var map = new BMap.Map("allmap");    // 创建Map实例
               var cityName = '昆山';
               map.centerAndZoom(cityName, 12);
               map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
               map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
-
               map.enableScrollWheelZoom(true);
-
-
 
 
              //  map.enableContinuousZoom(false);    //启用地图惯性拖拽，默认禁用
@@ -393,27 +375,12 @@ $(function() {
                           info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
                               +"<img  class='markerArrlogo' src="+markerArr[i].logo+">"
                               + "</br><b class='text-0efcff'>是否医保：</b>"
-                              + trues(markerArr[i].medicaid)
+
                               + "</br><b class='text-0efcff'>是否支持配送：</b>"
-                              + trues(markerArr[i].distribution)
+
                               + "</br><b class='text-0efcff'>地址：</b>"
-                              + markerArr[i].address
-                              + "</br><b class='text-0efcff'>店长：</b>"
-                              + markerArr[i].shopManager
-                              + "</br><b class='text-0efcff'>联系电话：</b>"
-                              + markerArr[i].phone
-                              + "</br><b class='text-0efcff'>订单量：</b>"
-                              + markerArr[i].dayOrderCount
-                              + "</br><b class='text-0efcff'>历史订单量：</b>"
-                              + markerArr[i].allOrderCount
-                              + "</br><b class='text-0efcff'>评价数量：</b>"
-                              + markerArr[i].appraise
-                              + "</br><b class='text-0efcff'>好评：</b>"
-                              + markerArr[i].goodAppraise
-                              + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class='text-0efcff'>中评：</b>"
-                              + markerArr[i].centerAppraise
-                              + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class='text-0efcff'>差评：</b>"
-                              + markerArr[i].diffAppraise
+
+
                               + "</br></p>";
                      } else {
                           var myIcon = new BMap.Icon("image/map_indexred.png", new BMap.Size(20, 25));
@@ -451,13 +418,13 @@ $(function() {
                           }
                       })(i));
                   }
-              }
+
               //结束
 
           }
-      })
 
-  })
+
+
 </script>
 
 
