@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.github.pagehelper.PageHelper;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
+import com.paladin.framework.common.OffsetPage;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
@@ -34,6 +37,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 
 	@Autowired
 	OrgSchoolService orgSchoolService;
+	@Autowired
+	private EpidemicSituationService epidemicSituationService;
 
 	@RequestMapping(value = "/index")
 	@QueryInputMethod(queryClass = OrgSchoolQuery.class)
@@ -57,7 +62,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 	 * @return
 	 */
 	@RequestMapping(value = "/view/{name}")
-	@QueryInputMethod(queryClass = OrgSchoolQuery.class)
+	@QueryInputMethod(queryClass = OrgSchoolCountsQuery.class)
 	public String school_counts(@PathVariable("name") String name) {
 		return "/qos/school/org_school_statistics_"+name;
 	}
@@ -237,5 +242,29 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
+	/**
+     * 按学校统计疫情次数
+     * @param query
+     * @return
+     */
+	@RequestMapping("/epidemic/counts")
+	@ResponseBody
+	public Object epidemicCounts(OrgSchoolCountsQuery query) {
+		PageHelper.startPage(0, OffsetPage.DEFAULT_LIMIT);
+		List<OrgSchoolCountsGroupByNatureVO> list=epidemicSituationService.epidemicCountsGroupByUnit(query);
+		return CommonResponse.getSuccessResponse(list);
+	}
 	
+	/**
+     * 按学校统计疫情人数
+     * @param query
+     * @return
+     */
+	@RequestMapping("/epidemic/people/counts")
+	@ResponseBody
+	public Object epidemicPeopleCounts(OrgSchoolCountsQuery query) {
+		PageHelper.startPage(0, OffsetPage.DEFAULT_LIMIT);
+		List<OrgSchoolCountsGroupByNatureVO> list=epidemicSituationService.epidemicPeopleCountsGroupByUnit(query);
+		return CommonResponse.getSuccessResponse(list);
+	}
 }
