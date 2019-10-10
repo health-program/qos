@@ -26,4 +26,10 @@ public interface OrgSchoolMapper extends CustomMapper<OrgSchool>{
 
 	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByAffiliation(
 			OrgSchoolCountsQuery query);
+
+	public List<OrgSchoolCountsGroupByNatureVO> schoolPeopleCountsGroupByNature(
+			OrgSchoolCountsQuery query);
+
+	public List<OrgSchoolCountsGroupByNatureVO> schoolPeopleCountsGroupByAffiliation(
+			OrgSchoolCountsQuery query);
 }

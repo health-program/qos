@@ -35,6 +35,7 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.mapper.school.OrgSchoolMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.school.dto.ExcelOrgSchool;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
@@ -58,6 +59,8 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     
     @Autowired
     private OrgSchoolNameMapper orgSchoolNameMapper;
+    @Autowired
+    private OrgSchoolNameService orgSchoolNameService;
     
     public PageResult<OrgSchoolVO> searchFindPage(OrgSchoolQuery query) {
 	Page<OrgSchoolVO> page = PageHelper.offsetPage(query.getOffset(),query.getLimit());
@@ -99,7 +102,11 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	
 	OrgSchool school = new OrgSchool();
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
-	
+	//该学校不是父节点
+	List<OrgSchoolName> orgSchoolNameList = orgSchoolNameService.searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID, QueryType.EQUAL, school.getParentSchoolId()));
+	if(!CollectionUtils.isEmpty(orgSchoolNameList)){
+		throw new BusinessException("该学校下有子项，只能添加子项的数据！");
+	}
 	List<OrgSchoolPeopleDTO> peoples = dto.getPeople();
 	if (peoples == null || peoples.size() == 0) {
 		throw new BusinessException("人数不能为空");
@@ -127,7 +134,11 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	}
 
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
-	
+	//该学校不是父节点
+	List<OrgSchoolName> orgSchoolNameList = orgSchoolNameService.searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID, QueryType.EQUAL, school.getParentSchoolId()));
+	if(!CollectionUtils.isEmpty(orgSchoolNameList)){
+		throw new BusinessException("该学校下有子项，只能添加子项的数据！");
+	}
 	List<OrgSchoolPeopleDTO> dtos = dto.getPeople();
 	
 	if (dtos == null || dtos.size() == 0) {
@@ -276,20 +287,43 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     }
 
     /**
-     * 按隶属关系，统计学校数量
+     * 按学校性质，统计学校数量
      * @param query
      * @return
      */
 	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByNature(
 			OrgSchoolCountsQuery query) {
-		
 		return orgSchoolMapper.schoolCountsGroupByNature(query);
 	}
 
+	/**
+	 * 按隶属关系，统计学校数量
+	 * @param query
+	 * @return
+	 */
 	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByAffiliation(
 			OrgSchoolCountsQuery query) {
-		
 		return orgSchoolMapper.schoolCountsGroupByAffiliation(query);
+	}
+
+	/**
+	 * 按学校性质，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	public List<OrgSchoolCountsGroupByNatureVO> schoolPeopleCountsGroupByNature(
+			OrgSchoolCountsQuery query) {
+		return orgSchoolMapper.schoolPeopleCountsGroupByNature(query);
+	}
+	/**
+	 * 按隶属关系，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	public List<OrgSchoolCountsGroupByNatureVO> schoolPeopleCountsGroupByAffiliation(
+			OrgSchoolCountsQuery query) {
+		
+		return orgSchoolMapper.schoolPeopleCountsGroupByAffiliation(query);
 	}
 
 }

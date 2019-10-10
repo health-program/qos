@@ -163,5 +163,79 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
+	/**
+	 * 按隶属关系，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/people/countsbyAffiliation")
+	@ResponseBody
+	public Object peopleCountsbyAffiliation(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("subordination-type");
+		Map<String,List<String>> affiliationGroup=new HashMap<>();
+		for (KeyValue keyValue : type) {
+			String affilication = keyValue.getValue();
+			if(affilication.endsWith("镇公办")){
+				affilication="区/镇公办";
+			}
+			List<String> list = affiliationGroup.get(affilication);
+			if(CollectionUtils.isEmpty(list)){
+				list=new ArrayList<String>();
+			}
+			list.add(keyValue.getKey());
+			affiliationGroup.put(affilication, list);
+		}
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<String> affiGroup=new ArrayList<String>();
+		List<List<OrgSchoolCountsGroupByNatureVO>>  data=new ArrayList<List<OrgSchoolCountsGroupByNatureVO>>();
+		for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
+			query.setAffiliations(entry.getValue());
+			affiGroup.add(entry.getKey());
+			data.add(orgSchoolService.schoolPeopleCountsGroupByNature(query));
+		}
+		List<String> natureGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("nature-type");
+		for (KeyValue keyValue : type2) {
+			natureGroup.add(keyValue.getValue());
+		}
+		result.put("natureGroup", natureGroup);
+		result.put("affiGroup", affiGroup);
+		result.put("data", data);
+		System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
+
+	/**
+	 * 按学校性质，统计学生人数
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/people/countsbyNature")
+	@ResponseBody
+	public Object peopleCountsbyNature(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("nature-type");
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<List<OrgSchoolCountsGroupByNatureVO>>  data=new ArrayList<List<OrgSchoolCountsGroupByNatureVO>>();
+		List<String> group=new ArrayList<String>();
+		for (KeyValue keyValue : type) {
+			query.setNature(keyValue.getKey());
+			group.add(keyValue.getValue());
+			data.add(orgSchoolService.schoolPeopleCountsGroupByAffiliation(query));
+		}
+		List<String> affiGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("subordination-type");
+		for (KeyValue keyValue : type2) {
+			String affilication = keyValue.getValue();
+			if(affilication.endsWith("镇公办")){
+				affilication="区/镇公办";
+			}
+			affiGroup.add(affilication);
+		}
+		result.put("affiGroup", affiGroup);
+		result.put("natureGroup", group);
+		result.put("data", data);
+		System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
 	
 }
