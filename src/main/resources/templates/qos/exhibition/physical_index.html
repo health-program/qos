@@ -47,22 +47,23 @@
             </div>
         </div>
         <div class="col-md-6 ">
-                <div class="col-md-6" style="background: #ffffff;box-shadow: 0 1px 1px rgba(0,0,0,0.1);">
+                <div class="col-md-6" >
                     <div class="box box-solid">
                         <div id="pieChartDiv1" class="box-body" style="height: 300px;"></div>
                     </div>
                 </div>
 
 
-                <div class="col-md-6" style="background: #ffffff;box-shadow: 0 1px 1px rgba(0,0,0,0.1);">
+                <div class="col-md-6" >
                     <div class="box box-solid">
                         <div id="pieChartDiv2" class="box-body" style="height: 300px;"></div>
                     </div>
                 </div>
-
-            <div class="box box-solid" style="margin-top: 350px;">
-                <div id="columnarDiv" class="box-body" style="height: 450px">
+            <div class="col-md-12" >
+            <div class="box box-solid" >
+                <div id="columnarDiv" class="box-body" style="height: 400px">
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -72,6 +73,14 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
+
+    //图表自适应大小
+    window.addEventListener("resize", function() {
+        pieChart1.resize();
+        pieChart2.resize();
+        sumChart.resize();
+    });
+
     var table, sumChart, dayChart, sumData, requestParams,result,selectUnit,dataVal;
     $(function() {
         var day=new Date();
@@ -95,7 +104,7 @@
                     { title: "老年人数", field: "ev22003total" },
                     { title: "老年人体检数", field: "ev22003event" },
                     { title: "老年人体检率", field: "ev22003" },
-                    { title: "有完整年度体检的老年人数", field: "ev22012event" },
+                    { title: "有完整年度体检的<br>老年人数", field: "ev22012event" },
                     { title: "老年人健康管理率", field: "ev22012"}
                 ]
             ],
@@ -201,11 +210,12 @@
     }
 
 
+    var pieChart1 = echarts.init(document.getElementById('pieChartDiv1'));
+    var pieChart2 = echarts.init(document.getElementById('pieChartDiv2'));
+    var sumChart = echarts.init(document.getElementById('columnarDiv'));
+
 
     function initPieChart1() {
-
-        var dom = document.getElementById("pieChartDiv1");
-        var pieChart1 = echarts.init(dom);
 
         let unitId = selectUnit || 'total';
         let total = dataVal[unitId];
@@ -281,8 +291,7 @@
 
 
     function initPieChart2() {
-        var dom = document.getElementById("pieChartDiv2");
-        var pieChart2 = echarts.init(dom);
+
         if (sumData==0){
             showChartInfo(pieChart2, '暂无数据显示');
             return false;
@@ -356,8 +365,7 @@
     }
 
     function initColumnarDiv() {
-        var dom = document.getElementById("columnarDiv");
-        var sumChart = echarts.init(dom);
+
         if (sumData==0){
             showChartInfo(sumChart, '暂无数据显示');
             return false;
@@ -379,6 +387,15 @@
             completePhysicalNumberValue.push({name:item.unitName,value:item.ev22012event});
         })
 
+        var isShowScroll = false;// 是否显示滚动条，默认false不显示
+        var dataZoom_end;// 显示百分之多少的数据量，默认全部
+        if(result.length >10 ){
+            dataZoom_end = 100/(result.length/10);
+            isShowScroll = true;
+        }else{
+            dataZoom_end = 100;
+        }
+
         var	option = {
             // title: {
             //     text: '抗菌药物统计分析排名柱状图',
@@ -396,11 +413,56 @@
                 bottom: '5%',
                 containLabel: true
             },
+
+            calculable: true,
+            dataZoom: [   {
+                start:0,//默认为0
+                end: dataZoom_end,
+                type: 'slider',
+                show: isShowScroll,
+                xAxisIndex: [0],
+                handleSize: 8,//滑动条的 左右2个滑动条的大小
+                height: 10,//组件高度
+                left: "center", //左边的距离
+                bottom:15,
+                handleColor: '#ddd',//h滑动图标的颜色
+                handleStyle: {
+                    borderColor: "#cacaca",
+                    borderWidth: "1",
+                    shadowBlur: 2,
+                    background: "#ddd",
+                    shadowColor: "#ddd",
+                },
+                fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                    //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                    //给第一个设置0，第四个设置1，就是垂直渐变
+                    offset: 0,
+                    color: '#1eb5e5'
+                }, {
+                    offset: 1,
+                    color: '#5ccbb1'
+                }]),
+                zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                showDataShadow: false,//是否显示数据阴影 默认auto
+                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                filterMode: 'filter'
+            },
+                //下面这个属性是里面拖到
+                {
+                    type: 'inside',
+                    show: true,
+                    xAxisIndex: [0],
+                    start: 0,//默认为1
+                    end: 50
+                }],
+
             xAxis: {
                 type: 'category',
                 axisLabel: {
                     interval:0,
-                    rotate:20//角度顺时针计算的
+                    rotate:15//角度顺时针计算的
                 } ,
                 axisTick : {
                     alignWithLabel : true
@@ -456,7 +518,7 @@
             ],
             legend: {
                 data: ['老年人数', '老年人体检数','有完整年度体检的老年人数'],
-                bottom:0
+                bottom:-6
             }
         };
         sumChart.setOption(option,true);

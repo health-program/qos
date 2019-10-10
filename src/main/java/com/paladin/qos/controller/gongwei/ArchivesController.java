@@ -56,18 +56,18 @@ public class ArchivesController {
 		List<FamilyDoctorUnit> familyDoctorUnits = familyDoctorUnitService.findAll();
 
 		Map<String, Long> eventArchivesMap = eventArchives.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
+		Map<String, Long> totalArchivesMap = totalArchives.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
+//		Map<String, Long> familyDoctorUnitsMap = familyDoctorUnits.stream()
+//				.collect(Collectors.toMap(w -> w.getId(), w -> (long) (Double.parseDouble(w.getPopulation()) * 10000)));
 
-		Map<String, Long> familyDoctorUnitsMap = familyDoctorUnits.stream()
-				.collect(Collectors.toMap(w -> w.getId(), w -> (long) (Double.parseDouble(w.getPopulation()) * 10000)));
-
-		for (DataCountUnit totalArchivesData : totalArchives) {
+		for (FamilyDoctorUnit familyDoctorUnit : familyDoctorUnits) {
 			ArchivesManagementVO archivesManagementVO = new ArchivesManagementVO();
-			String unitId = totalArchivesData.getUnitId();
+			String unitId = familyDoctorUnit.getId();
 			if (!StringUtils.isEmpty(unitId)) {
 				archivesManagementVO.setUnitId(unitId);
-				archivesManagementVO.setActiveArchivesNumber(totalArchivesData.getCount());
+				archivesManagementVO.setActiveArchivesNumber(totalArchivesMap.get(unitId));
 				archivesManagementVO.setPublicArchivesNumber(eventArchivesMap.get(unitId));
-				archivesManagementVO.setPeopleNumber(familyDoctorUnitsMap.get(unitId));
+				archivesManagementVO.setPeopleNumber((long) (Double.parseDouble(familyDoctorUnit.getPopulation()) * 10000));
 				archivesManagementVOList.add(archivesManagementVO);
 			}
 		}

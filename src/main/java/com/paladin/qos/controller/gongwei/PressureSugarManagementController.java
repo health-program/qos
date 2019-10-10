@@ -4,6 +4,7 @@ package com.paladin.qos.controller.gongwei;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.data.DataUnitService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.controller.gongwei.dto.PressureSugarRequest;
 import com.paladin.qos.service.gongwei.vo.PressureSugarManagementVO;
 
 @Controller
@@ -35,8 +35,11 @@ public class PressureSugarManagementController {
 
     @RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object searchAll(PressureSugarRequest request) {
+    public Object searchAll(AnalysisRequest request) {
         List<PressureSugarManagementVO> pressureSugarManagementVOList = new ArrayList<>();
+
+
+
         return CommonResponse.getSuccessResponse(pressureSugarManagementVOList);
     }
 
