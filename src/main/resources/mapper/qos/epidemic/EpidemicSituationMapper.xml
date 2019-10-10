@@ -35,4 +35,31 @@
 	ORDER BY e.create_time DESC
 	</select>
     
+     <select id="dataTraceabilityRate" resultType="com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO">
+	SELECT
+		s.school_full_name as schoolName,
+		TRUNCATE (
+		(
+		sum(
+		is_early_warning_value = '1'
+		AND is_reason_traceability = '1'
+		) / count(1)
+		) * 100,
+		2
+		) as rate
+	FROM
+		epidemic_situation AS e
+	LEFT JOIN org_school_name AS s ON e.incident_unit = s.id
+	where 1=1 
+	
+	<if test="region !=null and region !='' ">
+		and e.region =#{region}
+	</if>
+	
+	<if test="schoolYear !=null and schoolYear !='' ">
+		and e.school_year =#{schoolYear}
+	</if>
+	
+	GROUP BY incident_unit;
+    </select> 
 </mapper>

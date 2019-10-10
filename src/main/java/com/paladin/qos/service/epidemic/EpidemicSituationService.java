@@ -33,6 +33,7 @@ import com.paladin.qos.model.epidemic.EpidemicSituation;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.dto.ExcelEpidemicSituation;
+import com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
 import com.paladin.qos.service.school.vo.SchoolNameVO;
 
@@ -54,6 +55,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
        Page<EpidemicSituationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
        epidemicSituationMapper.searchFindPage(query);
        return new PageResult<>(page);
+   }
+   
+   public List<DataEpidemicSituationVO> dataTraceabilityRate(EpidemicSituationQueryDTO query){
+       return epidemicSituationMapper.dataTraceabilityRate(query);
    }
    
     public int updateEpidemic(EpidemicSituationDTO dto) {
