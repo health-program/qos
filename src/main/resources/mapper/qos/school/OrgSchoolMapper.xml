@@ -47,12 +47,14 @@
 
 <select id="schoolDoctorCount" resultType="com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO">
 	SELECT 
-	  s.`parent_school_id` AS parentSchoolId,
-	  n.`school_full_name` AS schoolFullName,
-	  SUM(s.`school_doctor_part`) AS schoolDoctorPart,
-	  SUM(s.`school_doctor_full`) AS schoolDoctorFull,
-	  SUM(s.`health_teacher_part`) AS healthTeacherPart,
-	  SUM(s.`health_teacher_full`) AS healthTeacherFull 
+	  	s.`parent_school_id` AS parentSchoolId,
+		s.nature,
+	  	n.`school_full_name` AS schoolFullName,
+		COALESCE (SUM(s.`school_doctor_part`) ,0)AS schoolDoctorPart,
+		COALESCE (SUM(s.`school_doctor_full`) ,0)AS schoolDoctorFull,
+		COALESCE (SUM(s.`health_teacher_part`) ,0)AS healthTeacherPart,
+		COALESCE (SUM(s.`health_teacher_full`) ,0)AS healthTeacherFull,
+		COALESCE (SUM(s.total) ,0)as total
 	FROM
 	  `org_school` AS s 
 	  LEFT JOIN org_school_name AS n 
@@ -67,7 +69,10 @@
 	<if test="nature != null and nature != '' ">
 		AND s.`nature` = #{nature}
 	</if>	
-	GROUP BY s.`parent_school_id` 
+	<if test="schoolYear != null and schoolYear != '' ">
+		AND s.`school_year` = #{schoolYear}
+	</if>
+	GROUP BY s.`parent_school_id`,s.nature
 </select>
 
 	<select id="schoolCountsGroupByNature" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"

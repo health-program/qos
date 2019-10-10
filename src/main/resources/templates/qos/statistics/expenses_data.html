@@ -87,18 +87,17 @@
                     { title: "住院人次", field: "ev31004" },
                     { title: "住院费用(元)", field: "ev31005" },
                     { title: "住院人均<br/>费用(元)", field: "inPatietAvg" },
-                    { title: "转入人次", field: "inPersonCount" },
-                    { title: "转出人次", field: "outPersonCount" }
+                    { title: "转入<br/>人次", field: "inPersonCount" },
+                    { title: "转出<br/>人次", field: "outPersonCount" }
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
-            clickToSelect: true,
+            clickToSelect: false,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
-                unitSelected(row);
             },
             queryParams: function(params) {
             	params.eventIds = '31001,31002,31004,31005';
@@ -366,6 +365,23 @@
         	         oPDCountSeries.push({name:data[i].unitName,value:data[i].ev31001});
     			 }
     		 }
+    		 var labelOption = {
+    		            normal: {
+    		                show: true,
+    		                position: 'top',
+    		                distance: 11,
+    		                align: 'center',
+    		                verticalAlign: 'top',
+    		                rotate: 0,
+    		                formatter: '{c}',
+    		                fontSize: 11,
+    		                rich: {
+    		                    name: {
+    		                        textBorderColor: '#fff'
+    		                    }
+    		                }
+    		            }
+    		        };
     		var option = {
         			title: {
     			        text: '门急诊总人次排名',
@@ -409,7 +425,8 @@
         			series : [ {
         				name : '门急诊总人次',
         				type : 'bar',
-        					barWidth:20,
+        				barWidth:35,
+        				label: labelOption,
         				data : oPDCountSeries
         			} ]
         		};

@@ -5,7 +5,7 @@
 
 <body>
 <tt:constant enumcode="nature-type,subordination-type,region-type"/>
-<section class="content-header">
+ <section class="content-header">
     <h1>学校校医配备核查情况</h1>
 </section>
 <section class="content">
@@ -13,6 +13,9 @@
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
             	<div class="form-group">
+            			<div class="col-md-2">
+                        	<input name="schoolYear" id="schoolYear" placeholder="学年" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+	                    </div>
 						<div class="col-md-2">
 							<select id="district" name="district"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
 								<option value="">请选择区域</option>
@@ -28,7 +31,7 @@
 								<option value="">请选择性质</option>
 							</select>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
                   <div class="pull-right">
                       <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
                       <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -42,26 +45,22 @@
             <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
         </div>
    </div>
-	<div class="box box-solid" style="margin-top: 20px">
-		<div id="result" class="box-body">
-			<div class="row">
-				<div class="col-sm-6">
-					<div id="main" style="height: 500px"></div>
-				</div>
-				<div class="col-sm-6">
-					<div id="main2" style="height: 500px"></div>
-				</div>
-			</div>
-
-		</div>
-	</div>
-		<!-- <div class="box box-solid" style="margin-top: 20px">
-		<div id="result" class="box-body">
-			<div class="col-sm-12">
-				<div id="main2" style="height: 300px"></div>
-			</div>
-		</div>
-	</div> -->
+   <div class="row">
+   	<div class="col-sm-6">
+   	<div class="box box-solid" style="margin-top: 20px">
+   		<div id="result" class="box-body">
+   			<div id="main" style="height: 500px"></div>
+   		</div>
+   		</div>
+   	</div>
+   	<div class="col-sm-6">
+   	<div class="box box-solid" style="margin-top: 20px">
+   		<div id="result" class="box-body">
+   			<div id="main2" style="height: 500px"></div>
+   		</div>
+   		</div>
+   	</div>
+   </div>
 </section>
 <div th:include="/qos/footer" />
 <script type="text/javascript">
@@ -73,17 +72,28 @@
 		healthTeacher.resize();
 	});
 	
+	//获取当年日期所属学年
+	function getCurrentSchoolYear (date) {
+		var schoolYear=date.getFullYear();
+	    if(date.getMonth()<9){//9月之前，属于上一个学年
+	    	schoolYear=schoolYear-1;
+	    }
+	    return schoolYear;
+	}
+	
 	function query() {
 		myChart();
 	}
 
 	$(function() {
 		myChart();
+		$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
 	});
 
 	var schoolDoctor = echarts.init(document.getElementById('main'));
 	var healthTeacher = echarts.init(document.getElementById('main2'));
 	
+	var reslut;
 	function myChart(){
 		schoolDoctor.showLoading({
            text: '数据正在努力加载...',
@@ -100,10 +110,11 @@
 		var district = $("#district").val();
 		var affiliation = $("#affiliation").val();
 		var nature = $("#nature").val();
-		$.post("/qos/org/school/statistic/doctor/count",{"district":district,"affiliation":affiliation,"nature":nature},function(res){
-			debugger;
-			var reslut = res.result;
-			if(reslut == 0){
+		var schoolYear =$("#schoolYear").val();
+		$.post("/qos/org/school/statistic/doctor/count",{"district":district,"affiliation":affiliation,"nature":nature,"schoolYear":schoolYear},function(res){
+			 reslut = res.result;
+			 reslut.sort(compare('schoolDoctorFull','desc'));
+			if(reslut.length == 0){
 				showChartInfo(schoolDoctor,'暂无数据显示');
 				showChartInfo2(healthTeacher,'暂无数据显示');
 	             return false;
@@ -129,174 +140,396 @@
 			
 			schoolDoctor.hideLoading();
 			healthTeacher.hideLoading();
-			var	option1 = {
-					 title: {
-					        text: '校医配备情况图',
-					    },
-				    tooltip: {
-				        trigger: 'axis',
-				        axisPointer: {
-				            type: 'shadow'
-				        }
-				    },
-				    legend: {
-				        data: ['校医(专职)', '校医(兼职)']
-				    },
-				    grid: {
-				        left: '3%',
-				        right: '4%',
-				        bottom: '3%',
-				        containLabel: true
-				    },
-				    xAxis: {
-				        type: 'category',
-				        axisLabel: {
-  		                  interval:0,
-  		                 rotate:-25//角度顺时针计算的
-  		                } ,
-				    	axisTick : {
-							alignWithLabel : true
-						},
-				         data: schoolDoctorName
-				    },
-				    yAxis: {
-				        type: 'value'
-				    },
-				    dataZoom: [
-		   	    	            {
-		   	    	                show: true,
-		   	    	                start:0,
-		   	    	                end: 35
-		   	    	            },
-		   	    	            {
-		   	    	                type: 'inside',
-		   	    	                start: 0,
-		   	    	                end: 20
-		   	    	            },
-		   	    	            {
-		   	    	                show: false,
-		   	    	                yAxisIndex: 0,
-		   	    	                filterMode: 'empty',
-		   	    	                width: 0,
-		   	    	                height: '80%',
-		   	    	                showDataShadow: false,
-		   	    	                left: '93%',
-		   	    	                top:100
-		   	    	            },
-		   	    	            
-		   	    	        ],
-		   	    	     grid: {
-		   	              bottom: '110px',
-		   	          },
-				    series: [
-				        {
-				            name: '校医(专职)',
-				            type: 'bar',
-				            barWidth : 25,
-				            itemStyle:{
-				                normal:{
-				                    barBorderRadius:2,
-				                }
-				            },
-				            data: schoolDoctorFullValue
-				        },
-				        {
-				            name: '校医(兼职)',
-				            type: 'bar',
-				            barWidth : 25,
-				            itemStyle:{
-				                normal:{
-				                    barBorderRadius:3,
-				                }
-				            },
-				            data: schoolDoctorPartValue
-				        }
-				    ]
-				};
-		var	option2 = {
-				title: {
-			        text: '保健老师配备情况',
+			
+			var isShowScroll = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end;// 显示百分之多少的数据量，默认全部
+            if(schoolDoctorName.length >10 ){
+                dataZoom_end = 100/(schoolDoctorName.length/10);
+                isShowScroll = true;
+            }else{
+                dataZoom_end = 100;
+            }
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            let  option1 = {
+                color: ['#3398DB','#6087BF','#6071C6'],
+                title: {
+			        text: '校医配备情况图',
 			    },
-			    tooltip: {
-			        trigger: 'axis',
-			        axisPointer: {
-			            type: 'shadow'
-			        }
-			    },
-			    legend: {
-			        data: ['保健老师(专职)', '保健老师(兼职)']
-			    },
-			    grid: {
-			        left: '3%',
-			        right: '4%',
-			        bottom: '3%',
-			        containLabel: true
-			    },
-			    xAxis: {
-			        type: 'category',
-			        axisLabel: {
-  		                  interval:0,
-  		                 rotate:-25//角度顺时针计算的
-  		                } ,
-			    axisTick : {
-							alignWithLabel : true
-						},
-			         data: schoolDoctorName
-			    },
-			    yAxis: {
-			        type: 'value'
-			    },
-			    dataZoom: [
-	   	    	            {
-	   	    	                show: true,
-	   	    	                start: 0,
-	   	    	                end: 35
-	   	    	            },
-	   	    	            {
-	   	    	                type: 'inside',
-	   	    	                start: 0,
-	   	    	                end: 20
-	   	    	            },
-	   	    	            {
-	   	    	                show: false,
-	   	    	                yAxisIndex: 0,
-	   	    	                filterMode: 'empty',
-	   	    	                width: 0,
-	   	    	                height: '80%',
-	   	    	                showDataShadow: false,
-	   	    	                left: '93%',
-	   	    	                top:100
-	   	    	            },
-	   	    	            
-	   	    	        ],
-	   	    	     grid: {
-	   	              bottom: '110px',
-	   	          },
-			    series: [
-			        {
-			            name: '保健老师(专职)',
-			            type: 'bar',
-			            barWidth : 25,
-			            itemStyle:{
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '<br/>'
+                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
+                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
+                    } 
+                },
+                grid: {
+                    left: '0%',
+                    right: '0%',
+                    top: '10%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'top',
+                    data:[ '校医(专职)', '校医(兼职)']
+                },
+                calculable: true,
+                dataZoom: [   {
+                    start:0,//默认为0
+                    end: dataZoom_end,
+                    type: 'slider',
+                    show: isShowScroll,
+                    xAxisIndex: [0],
+                    handleSize: 8,//滑动条的 左右2个滑动条的大小
+                    height: 10,//组件高度
+                    left: "center", //左边的距离
+                    bottom:40,
+                    handleColor: '#ddd',//h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                        //给第一个设置0，第四个设置1，就是垂直渐变
+                        offset: 0,
+                        color: '#1eb5e5'
+                    }, {
+                        offset: 1,
+                        color: '#5ccbb1'
+                    }]),
+                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                    showDataShadow: false,//是否显示数据阴影 默认auto
+                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
+                },
+                    //下面这个属性是里面拖到
+                    {
+                        type: 'inside',
+                        show: true,
+                        xAxisIndex: [0],
+                        start: 0,//默认为1
+                        end: 50
+                    }],
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: schoolDoctorName,
+                        axisLabel: {
+                            interval:0,
+                            rotate:60,//角度顺时针计算的
+                            textStyle: {
+                            	color:function(params){
+			                    	var a = reslut;
+			                    	for(var i=0;i<a.length;i++){
+			                    		if(a[i].schoolFullName == params){
+			                    			var total=0;
+			                    			if(a[i].nature == '1'){
+			                    				total=(a[i].total/300).toFixed(0);
+			                    			}else{
+			                    				total=(a[i].total/600).toFixed(0);
+			                    			}
+			                    			 var b = a[i].schoolDoctorFull+a[i].schoolDoctorPart;
+			                    			if(b>total){
+			                    				 return "#4f4f4f";
+			                    			}
+			                    			return "#da1313";
+			                    		}
+			                    	}
+          	                    }
+                            }
+                        } ,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                    	name: '校医(专职)',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        itemStyle:{
 			                normal:{
 			                    barBorderRadius:2,
+			                    color:function(params){
+			                    	var a = reslut;
+			                    	for(var i=0;i<a.length;i++){
+			                    		if(a[i].schoolFullName == params.name){
+			                    			var total=0;
+			                    			if(a[i].nature == '1'){
+			                    				total=(a[i].total/300).toFixed(0);
+			                    			}else{
+			                    				total=(a[i].total/600).toFixed(0);
+			                    			}
+			                    			 var b = a[i].schoolDoctorFull+a[i].schoolDoctorPart;
+			                    			if(b>total){
+			                    				 return "#3398db";
+			                    			}
+			                    			return "#da1313";
+			                    		}
+			                    	}
+          	                    }
 			                }
 			            },
-			            data: healthTeacherFullValue
-			        },
-			        {
-			            name: '保健老师(兼职)',
-			            type: 'bar',
-			            barWidth : 25,
-			            itemStyle:{
+                        data: schoolDoctorFullValue
+                    },{
+                    	name: '校医(兼职)',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        itemStyle:{
 			                normal:{
 			                    barBorderRadius:2,
+			                    color:function(params){
+			                    	var a = reslut;
+			                    	for(var i=0;i<a.length;i++){
+			                    		if(a[i].schoolFullName == params.name){
+			                    			var total=0;
+			                    			if(a[i].nature == '1'){
+			                    				total=(a[i].total/300).toFixed(0);
+			                    			}else{
+			                    				total=(a[i].total/600).toFixed(0);
+			                    			}
+			                    			 var b = a[i].schoolDoctorFull+a[i].schoolDoctorPart;
+			                    			if(b>total){
+			                    				 return "#63b6ec";
+			                    			}
+			                    			return "#f37e7e";
+			                    		}
+			                    	}
+          	                    }
 			                }
 			            },
-			            data: healthTeacherPartValue
-			        }
-			    ]
-			};
+                        data: schoolDoctorPartValue
+                    }
+                ]
+            };
+			
+			
+            var isShowScroll2 = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end2;// 显示百分之多少的数据量，默认全部
+            if(schoolDoctorName.length >10 ){
+                dataZoom_end2 = 100/(schoolDoctorName.length/10);
+                isShowScroll2 = true;
+            }else{
+                dataZoom_end2 = 100;
+            }
+            var labelOption2 = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            let  option2 = {
+                color: ['#3398DB','#6087BF','#6071C6'],
+                title: {
+			        text: '校医配备情况图',
+			    },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '<br/>'
+                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
+                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
+                    } 
+                },
+                grid: {
+                    left: '0%',
+                    right: '0%',
+                    top: '10%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'top',
+                    data:['保健老师(专职)', '保健老师(兼职)']
+                },
+                calculable: true,
+                dataZoom: [   {
+                    start:0,//默认为0
+                    end: dataZoom_end,
+                    type: 'slider',
+                    show: isShowScroll,
+                    xAxisIndex: [0],
+                    handleSize: 8,//滑动条的 左右2个滑动条的大小
+                    height: 10,//组件高度
+                    left: "center", //左边的距离
+                    bottom:40,
+                    handleColor: '#ddd',//h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                        //给第一个设置0，第四个设置1，就是垂直渐变
+                        offset: 0,
+                        color: '#1eb5e5'
+                    }, {
+                        offset: 1,
+                        color: '#5ccbb1'
+                    }]),
+                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                    showDataShadow: false,//是否显示数据阴影 默认auto
+                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
+                },
+                    //下面这个属性是里面拖到
+                    {
+                        type: 'inside',
+                        show: true,
+                        xAxisIndex: [0],
+                        start: 0,//默认为1
+                        end: 50
+                    }],
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: schoolDoctorName,
+                        axisLabel: {
+                            interval:0,
+                            rotate:60,//角度顺时针计算的
+                            color:function(params){
+		                    	var a = reslut;
+		                    	for(var i=0;i<a.length;i++){
+		                    		if(a[i].schoolFullName == params){
+		                    			var total=0;
+		                    			if(a[i].nature == '1'){
+		                    				total=(a[i].total/300).toFixed(0);
+		                    			}else{
+		                    				total=(a[i].total/600).toFixed(0);
+		                    			}
+		                    			 var b = a[i].healthTeacherFull+a[i].healthTeacherPart;
+		                    			if(b>total){
+		                    				 return "#4f4f4f";
+		                    			}
+		                    			return "#da1313";
+		                    		}
+		                    	}
+      	                    }
+                        } ,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                    	name: '保健老师(专职)',
+                        type: 'bar',
+                        label: labelOption2,
+                        barGap: 0,
+                        itemStyle:{
+			                normal:{
+			                    barBorderRadius:2,
+			                    color:function(params){
+			                    	var a = reslut;
+			                    	for(var i=0;i<a.length;i++){
+			                    		if(a[i].schoolFullName == params.name){
+			                    			var total=0;
+			                    			if(a[i].nature == '1'){
+			                    				total=(a[i].total/300).toFixed(0);
+			                    			}else{
+			                    				total=(a[i].total/600).toFixed(0);
+			                    			}
+			                    			var b = a[i].healthTeacherFull+a[i].healthTeacherPart;
+			                    			if(b>total){
+			                    				 return "#3398db";
+			                    			}
+			                    			return "#da1313";
+			                    		}
+			                    	}
+          	                    }
+			                }
+			            },
+                        data: healthTeacherFullValue
+                    },{
+                    	name: '保健老师(兼职)',
+                        type: 'bar',
+                        label: labelOption2,
+                        barGap: 0,
+                        itemStyle:{
+			                normal:{
+			                    barBorderRadius:2,
+			                    color:function(params){
+			                    	var a = reslut;
+			                    	for(var i=0;i<a.length;i++){
+			                    		if(a[i].schoolFullName == params.name){
+			                    			var total=0;
+			                    			if(a[i].nature == '1'){
+			                    				total=(a[i].total/300).toFixed(0);
+			                    			}else{
+			                    				total=(a[i].total/600).toFixed(0);
+			                    			}
+			                    			var b = a[i].healthTeacherFull+a[i].healthTeacherPart;
+			                    			if(b>total){
+			                    				 return "#63b6ec";
+			                    			}
+			                    			return "#f37e7e";
+			                    		}
+			                    	}
+          	                    }
+			                }
+			            },
+                        data: healthTeacherPartValue
+                    }
+                ]
+            };
+		
 		schoolDoctor.setOption(option1,true);
 		healthTeacher.setOption(option2,true);
 		})
@@ -353,6 +586,20 @@
         healthTeacher.setOption(msgOption)
     };
 	
+    function compare(property,sort){
+        return function(a,b){
+        	var data;
+            var value1 = a[property];
+            var value2 = b[property];
+            if(sort =='asc'){
+            	data = value1 - value2;
+            }
+			if(sort =='desc'){
+				data = value2 - value1;
+            }
+            return data;
+        }
+    }
 	
 	//]]>
 </script>
