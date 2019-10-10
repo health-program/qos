@@ -6,7 +6,7 @@
 <body>
 <tt:constant enumcode="data-event-type,data-unit-type"/>
 <section class="content-header">
-    <h1>数据展示</h1>
+    <h1>抗菌药物使用报表</h1>
 </section>
 <section class="content">
     <div class="box box-solid">
@@ -87,6 +87,13 @@
 </section>
 <div th:include="/qos/footer"/>
 <script type="text/javascript">
+    //图表自适应大小
+    window.addEventListener("resize", function() {
+        rateTotal.resize();
+        rate.resize();
+        sumChart.resize();
+    });
+
     var table, rate, sumData, requestParams, sumChart;
     var sum = 0;
     var totalSum = 0;
@@ -121,10 +128,10 @@
             columns: [
                 [
                     {title: "医疗机构", field: "unitName"},
-                    {title: "住院患者人均使用抗菌药物品种数", field: "varieties",width:"10px"},
-                    {title: "住院患者人均使用抗菌药物费用", field: "averageCost"},
-                    {title: "住院患者使用抗菌药物的百分率", field: "userRate", formatter: getRate},
-                    {title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal", formatter: getRate},
+                    {title: "住院患者人均使用<br>抗菌药物品种数", field: "varieties",width:"10px"},
+                    {title: "住院患者人均使用<br>抗菌药物费用", field: "averageCost"},
+                    {title: "住院患者使用<br>抗菌药物的百分率", field: "userRate", formatter: getRate},
+                    {title: "住院患者抗菌药物<br>占总费用百分率", field: "rateOfTotal", formatter: getRate},
 
                 ]
             ],
