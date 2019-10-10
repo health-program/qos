@@ -135,13 +135,14 @@ $(function(){
                            color: '#fff',
                             fontSize: 14,
                             formatter: function(value) {
-                           if (value.length > 2) {
-                             return value.substring(0, 2) + "...";
-                           } else {
-                             return value;
-                           }
+                            var reg = new RegExp('昆山市', "g");
+                               if (value.length > 3) {
+                                 return value.replace(reg, '').substring(0, 3) + ".";
+                               } else {
+                                 return value;
+                               }
+                              },
                          }
-                       }
                    }, ],
                    series: [
                           {
