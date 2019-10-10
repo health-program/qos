@@ -39,7 +39,7 @@ $(function(){
          success: function (rawData) {
          debugger
             rawData = rawData.result;  //  unitName
-               var dataMap=convertUnitChartData(rawData, '13003', true); //
+               var dataMap=convertUnitChartData(rawData, '13003', false); //
             var emergencyOption = {
                    tooltip: {
                                  trigger: 'axis',

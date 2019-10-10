@@ -105,14 +105,14 @@
                 <div id="emergency1"></div>
             </div>
             <div class="bg_opacity">
-                <div class="header line">常驻人口建档率率</div>
+                <div class="header line">常驻人口建档率</div>
                 <div id="emergency2"></div>
             </div>
             <div class="bg_opacity position-relative">
                 <div class="header line">住院/出院人次数</div>
                 <div class="fr width100 text-align-right pr-20 position-absolute">
                     <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
-                    <div><span class='greenline middle-line'></span><span class="text-ffffff">出院人数</span></div>
+                    <div><span class='blueline middle-line'></span><span class="text-ffffff">出院人数</span></div>
                 </div>
                 <div id="emergency3"></div>
             </div>
@@ -253,135 +253,211 @@ $(function() {
 })
 </script>
 <script>
-// 地图
 
-var markerArr = [{
-    title: "安师大分部",
-    point: "120.897198,31.40491",
-    address: "芜湖市弋江区安徽师范大学",
-    description: "安师大分部位于芜湖市弋江区安师大附近，为Ejob公司分部",
-    tel: "10086"
-}, {
-    title: "EasyJob总部",
-    point: "123.897197,31.40499",
-    address: "芜湖市弋江区 安徽信息工程学院",
-    description: "Ejob大厦位于芜湖市弋江区鲁港附近，为Ejob公司综合研发及办公总部",
-    tel: "10086"
-}, {
-    title: "皖医分部",
-    point: "120.2,32.40491",
-    address: "芜湖市弋江区皖南医学院",
-    description: "皖医分部位于芜湖市弋江区皖医附近，为Ejob公司分部",
-    tel: "10086"
-}, {
-    title: "商贸分部",
-    point: "120.9,33.40491",
-    address: "芜湖市弋江区安徽商贸职业技术学院",
-    description: "商贸分部位于芜湖市弋江区商贸附近，为Ejob公司分部",
-    tel: "10086"
-}, {
-    title: "安机电分部",
-    point: "120.697142,32.46466",
-    address: "芜湖市弋江区安徽机电职业技术学院",
-    description: "安机电分部位于芜湖市弋江区安机电附近，为Ejob公司安分部",
-    tel: "10086"
-}];
+  var IPPATH = 'http://172.16.11.10:8085/supervise';
+  var header = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvdGhlcklkIjoiMCIsImNyZWF0ZVRpbWUiOjE1NjgxMjE4NTc1ODksImF1dGgiOiJBVVRIT1JJVFlfQlVTSU5FU1NfRlVOQ1RJT04sQVVUSE9SSVRZX0JVU0lORVNTX0FEVkVSVCxBVVRIT1JJVFlfT1JERVJfQVBQUkFJU0UsQVVUSE9SSVRZX1NUQVRJU1RJQ19TQUxFLEFVVEhPUklUWV9TWVNURU1fU0VUVElORyxBVVRIT1JJVFlfQlVTSU5FU1NfTUVTU0FHRSxBVVRIT1JJVFlfU1lTVEVNLEFVVEhPUklUWV9TSE9QX01BTlVGQUNUVVJFUixBVVRIT1JJVFlfQlVTSU5FU1NfRkFRLEFVVEhPUklUWV9CVVNJTkVTU19EUlVHX1JFQ09NTUVORCxBVVRIT1JJVFlfU1lTVEVNX0FDQ09VTlQsQVVUSE9SSVRZX09SREVSX09SREVSLEFVVEhPUklUWV9SWCxBVVRIT1JJVFlfQlVTSU5FU1NfUkVQT1NJVE9SWSxBVVRIT1JJVFlfQlVTSU5FU1NfTU9EVUxFLEFVVEhPUklUWV9EUlVHX1NIT1BfRFJVRyxBVVRIT1JJVFlfU0hPUF9BUFBMWSxBVVRIT1JJVFlfUlhfUlgsQVVUSE9SSVRZX0RSVUcsQVVUSE9SSVRZX1NUQVRJU1RJQyxBVVRIT1JJVFlfQlVTSU5FU1NfS0VZX1dPUkQsQVVUSE9SSVRZX1NZU1RFTV9QSEFSTUFDSVNULEFVVEhPUklUWV9TWVNURU1fQURNSU4sQVVUSE9SSVRZX0JVU0lORVNTLEFVVEhPUklUWV9TSE9QX1VTRVIsQVVUSE9SSVRZX0RSVUdfRFJVRyxBVVRIT1JJVFlfRFJVR19BUFBMWSxBVVRIT1JJVFlfU0hPUF9IT1NQSVRBTCxBVVRIT1JJVFlfU1lTVEVNX0ZJTEUsQVVUSE9SSVRZX0RSVUdfRk9STSxBVVRIT1JJVFlfU1RBVElTVElDX01FRElDQUwsQVVUSE9SSVRZX1NZU1RFTV9SRVNULEFVVEhPUklUWV9EUlVHX1NQRUMsQVVUSE9SSVRZX1NZU1RFTV9MT0dJTl9MT0csQVVUSE9SSVRZX0RSVUdfVFlQRSxBVVRIT1JJVFlfQlVTSU5FU1NfRFJVR19ESVNDT1VOVCxBVVRIT1JJVFlfQlVTSU5FU1NfRkVFREJBQ0ssQVVUSE9SSVRZX0JVU0lORVNTX0NIQVQsQVVUSE9SSVRZX1NZU1RFTV9ST0xFLEFVVEhPUklUWV9TSE9QLEFVVEhPUklUWV9PUkRFUixBVVRIT1JJVFlfRFJVR19DT01NT05fTkFNRSIsImlkIjoiRlBEUy01WE5TOEtScHpZS0hhZFpfdyIsInR5cGUiOiJVU0VSIiwidXNlcm5hbWUiOiIxNTk5NTYzNDI1MiJ9.rF57UKPjM4szD94mJGVJtnmGIqsWpJP9NL9f1ZispQY'
 
-var marker2;
-var map = new BMap.Map("allmap");
-var cityName = '昆山';
-map.centerAndZoom(cityName, 12); // 初始化地图,设置中心点坐标和地图级别。    map.addControl(new BMap.ScaleControl());                    // 添加比例尺控件
-map.addControl(new BMap.OverviewMapControl()); //添加缩略地图控件
-map.enableScrollWheelZoom(true);
-map.setMapStyle({ style: 'midnight' });
-var geoc = new BMap.Geocoder();
-map.addControl(new BMap.NavigationControl({ type: BMAP_NAVIGATION_CONTROL_LARGE, anchor: BMAP_ANCHOR_TOP_LEFT, offset: new BMap.Size(40, 250) }));
-var bdary = new BMap.Boundary();
-bdary.get(cityName, function(rs) { //获取行政区域
-    // map.clearOverlays();        //清除地图覆盖物
-    //for循环都删除掉了，只剩下这个
-    //网上查了下，东西经南北纬的范围
-    var EN_JW = "180, 90;"; //东北角
-    var NW_JW = "-180,  90;"; //西北角
-    var WS_JW = "-180, -90;"; //西南角
-    var SE_JW = "180, -90;"; //东南角
-    //4.添加环形遮罩层
-    var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#00214c", fillOpacity: 0, strokeOpacity: 0.5 }); //建立多边形覆盖物
-    map.addOverlay(ply1);
-    //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
-    var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 5, strokeColor: "#00a6bc", fillColor: "" });
-    map.addOverlay(ply);
-    //map.setViewport(ply.getPath());    //调整视野
-    map.addEventListener("click", function(e) {
-        map.removeOverlay(marker2)
-    })
-});
+   //var IPPATH = 'http://172.16.1.233:8085/supervise';
+   // var header=localStorage.getItem("admin-token")
+    //初始化
 
-function init() {
-    /*   var point = new BMap.Point('120.985726', '31.381985');
-      marker2 = new BMap.Marker(point);  // 创建标注 */
-    /*   map.setMapStyle({style:'midnight'});  */
-    map.addOverlay(marker2);
+alert('地图')
+ /* var markerArr = [{
+    title: "昆山康莱药房",
+    insurance:'是',
+    delivery:'是',
+    address: "玉山镇莫介路156福泰欧楼上",
+    shopowner:'王药师',
+    tel: "(0512)50171888",
+    point: "120.9615601899,31.3804306996",
+    logo: "image/logodrug.png",
+    evaluate:'20',
+    praise:'7',
+    commentary:'7',
+    comment:'6',
+    order:'454',
+    hiostoryorder:'4454',
+  }, {
+    title: "昆山测试康莱药房",
+    insurance:'是',
+    delivery:'是',
+    address: "玉山镇莫介路156福泰欧楼上",
+    shopowner:'王药师',
+    tel: "联系电话：(0512)50171888",
+      point: "121.032294,31.359292",
+    logo: "image/logodrug.png",
+    evaluate:'20',
+    praise:'7',
+    commentary:'7',
+    comment:'6',
+    order:'454',
+    order:'9454',
+  }];*/
 
-    var point = new Array(); //存放标注点经纬信息的数组
-    var marker = new Array(); //存放标注点对象的数组
-    var info = new Array(); //存放提示信息窗口对象的数组
-    var searchInfoWindow = new Array(); //存放检索信息窗口对象的数组
-    for (var i = 0; i < markerArr.length; i++) {
-        var p0 = markerArr[i].point.split(",")[0]; //
-        var p1 = markerArr[i].point.split(",")[1]; //按照原数组的point格式将地图点坐标的经纬度分别提出来
-        point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
-        var myIcon = new BMap.Icon("logo2.png", new BMap.Size(90, 53));
-        marker2[i] = new window.BMap.Marker(point[i], { icon: myIcon });
-        map.addOverlay(marker[i]);
-        marker2[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-        //显示marker的title，marker多的话可以注释掉
-        var label = new window.BMap.Label(markerArr[i].title, {
-            offset: new window.BMap.Size(20, -10)
-        });
-        marker[i].setLabel(label);
-        // 创建信息窗口对象
-        info[i] = "<p style=’font-size:12px;lineheight:1.8em;’>" +
-            "</br>简介：" +
-            markerArr[i].description +
-            "</br>地址：" +
-            markerArr[i].address +
-            "</br> 电话：" + markerArr[i].tel + "</br></p>";
-        //创建百度样式检索信息窗口对象
-        searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,
-            info[i], {
-                title: markerArr[i].title, //标题
-                width: 290, //宽度
-                height: 100, //高度
-                panel: "panel", //检索结果面板
-                enableAutoPan: true, //自动平移
-                searchTypes: [BMAPLIB_TAB_SEARCH, //周边检索
-                    BMAPLIB_TAB_TO_HERE, //到这里去
-                    BMAPLIB_TAB_FROM_HERE //从这里出发
-                ]
-            });
+  markerArr = [];
+  $(function(){
+      $.ajax({
+          url: IPPATH + '/api/supervise/statistics/shops',
+          type: 'get',
+          dataType: 'text',
+          headers: {'Content-Type': 'application/json;charset=utf8', 'Authorization': header},
+          success: function (data) {
+              markerArr=JSON.parse(data);
 
-        //添加点击事件
-        marker2[i].addEventListener("click", (function(k) {
-            // js 闭包
-            return function() {
-                //将被点击marker置为中心
-                map.centerAndZoom(point[k], 18);
-                //在marker上打开检索信息窗口
-                searchInfoWindow[k].open(marker[k]);
-            }
-        })(i));
-    }
+              var strs = "";
+              // 百度地图API功能
+              var map = new BMap.Map("map");    // 创建Map实例
+              var cityName = '昆山';
+              map.centerAndZoom(cityName, 12);
+              map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
+              map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
 
-    marker2.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-    geoc.getLocation(point, function(rs) {
-        var xiangxi = rs.addressComponents;
-        var adress = xiangxi.province + ", " + xiangxi.city + ", " + xiangxi.district + ", " + xiangxi.street + ", " + xiangxi.streetNumber; //创建信息窗口
-        document.getElementById("site").value = adress;
-    });
+              map.enableScrollWheelZoom(true);
 
-}
-init()
+
+
+
+             //  map.enableContinuousZoom(false);    //启用地图惯性拖拽，默认禁用
+
+              map.addControl(new BMap.NavigationControl());
+              map.addControl(new BMap.ScaleControl());
+              map.addControl(new BMap.OverviewMapControl());
+
+              function getBoundary1()
+              {
+                  var bdary = new BMap.Boundary();
+                  var name = '昆山';//在这里直接输入城市名字即可
+                  bdary.get(name, function(rs){ //获取行政区域
+                      map.clearOverlays(); //清除地图覆盖物
+                      var count = rs.boundaries.length; //行政区域的点有多少个
+                      for(var i = 0; i < count; i++){
+
+
+                          var EN_JW = "180, 90;";         //东北角
+                          var NW_JW = "-180,  90;";       //西北角
+                          var WS_JW = "-180, -90;";       //西南角
+                          var SE_JW = "180, -90;";        //东南角
+                          // 之前的 var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#37dfee", fillColor: "#f0f0f0", fillOpacity:0.5, strokeOpacity: 0.7 }); //建立多边形覆盖物
+
+
+
+                          //4.添加环形遮罩层
+                          var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#081327", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
+                          map.addOverlay(ply1);
+                          //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
+                          var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#37dfee",fillColor: "" });
+                          map.addOverlay(ply);
+
+
+
+                          map.addOverlay(ply); //添加覆盖物
+                          map.setViewport(ply.getPath()); //调整视野
+                      }
+                      addlabel();
+                  });
+
+              }
+              getBoundary1();
+              var mapStyle = {style: "midnight"}
+              map.setMapStyle(mapStyle);
+              function addlabel() {
+                  var point = new Array(); //存放标注点经纬信息的数组
+                  var marker = new Array(); //存放标注点对象的数组
+                  var info = new Array(); //存放提示信息窗口对象的数组
+                  var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
+
+                  for (var i = 0; i < markerArr.length; i++) {
+                      var p0 = markerArr[i].lng; //
+                      var p1 = markerArr[i].lat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
+                      point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
+                      marker[i] = new window.BMap.Marker(point[i], {icon: myIcon});
+                      map.addOverlay(marker[i]);
+                     // marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+
+                      function trues(data){
+                            if(data==true){
+                                return '是'
+                            }else{
+                                return '否'
+                            }
+                      }
+
+
+
+
+
+                      // 创建信息窗口对象
+                     if(markerArr[i].isShop==true){
+                          var myIcon = new BMap.Icon("image/map_index.png", new BMap.Size(20, 25));
+                          info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
+                              +"<img  class='markerArrlogo' src="+markerArr[i].logo+">"
+                              + "</br><b class='text-0efcff'>是否医保：</b>"
+                              + trues(markerArr[i].medicaid)
+                              + "</br><b class='text-0efcff'>是否支持配送：</b>"
+                              + trues(markerArr[i].distribution)
+                              + "</br><b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].address
+                              + "</br><b class='text-0efcff'>店长：</b>"
+                              + markerArr[i].shopManager
+                              + "</br><b class='text-0efcff'>联系电话：</b>"
+                              + markerArr[i].phone
+                              + "</br><b class='text-0efcff'>订单量：</b>"
+                              + markerArr[i].dayOrderCount
+                              + "</br><b class='text-0efcff'>历史订单量：</b>"
+                              + markerArr[i].allOrderCount
+                              + "</br><b class='text-0efcff'>评价数量：</b>"
+                              + markerArr[i].appraise
+                              + "</br><b class='text-0efcff'>好评：</b>"
+                              + markerArr[i].goodAppraise
+                              + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class='text-0efcff'>中评：</b>"
+                              + markerArr[i].centerAppraise
+                              + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b class='text-0efcff'>差评：</b>"
+                              + markerArr[i].diffAppraise
+                              + "</br></p>";
+                     } else {
+                          var myIcon = new BMap.Icon("image/map_indexred.png", new BMap.Size(20, 25));
+                          info[i] = "<p style=’font-size:12px;line-height:1.6em; height: 10vw!important;’class='markerArrlogop'>"
+                              +"<img  class='markerArrlogo' src="+markerArr[i].logo+">"
+                              + "</br><b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].address
+                              + "</br><b class='text-0efcff'>联系电话：</b>"
+                              + markerArr[i].phone
+                              + "</br><b class='text-0efcff'>订单量：</b>"
+                              + markerArr[i].dayOrderCount
+                              + "</br><b class='text-0efcff'>历史订单量：</b>"
+                              + markerArr[i].allOrderCount
+                              + "</br></p>";
+
+                      }
+                    //创建百度样式检索信息窗口对象
+                      searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,info[i], {
+                          title: markerArr[i].name, //标题
+                          width: 290, //宽度
+                          height: 100, //高度
+                          marginLeft: 100,
+                          panel: "panel",
+                          enableSendToPhone: false,
+                          searchTypes: []
+
+                      });
+                      //添加点击事件
+                      marker[i].addEventListener("click", (function (k) {
+                          // js 闭包
+                          return function () {
+                              //在marker上打开检索信息窗口
+                              searchInfoWindow[k].open(marker[k]);
+
+                          }
+                      })(i));
+                  }
+              }
+              //结束
+
+          }
+      })
+
+  })
 </script>
 
 
