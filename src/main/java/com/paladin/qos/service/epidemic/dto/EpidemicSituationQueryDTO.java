@@ -12,6 +12,8 @@ public class EpidemicSituationQueryDTO extends OffsetPage{
     
     private String reportUnit;//报告单位
     
+    private String schoolYear;//学年
+    
     private String region;//区域
     
     private String sicknessClassify;//病种分类
@@ -47,5 +49,13 @@ public class EpidemicSituationQueryDTO extends OffsetPage{
     public void setSicknessClassify(String sicknessClassify) {
         this.sicknessClassify = sicknessClassify;
     }
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
     
 }

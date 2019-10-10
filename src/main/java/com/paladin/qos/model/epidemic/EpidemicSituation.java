@@ -10,6 +10,8 @@ public class EpidemicSituation extends BaseModel{
     private String id;
 
     private String incidentUnit;//事发单位名称
+    
+    private String schoolYear;//学年
 
     private String reportUnit;//报告单位（医疗机构为1，事发学校为2，家长为3，其他为4）
 
@@ -196,4 +198,13 @@ public class EpidemicSituation extends BaseModel{
     public void setRemarks(String remarks) {
         this.remarks = remarks == null ? null : remarks.trim();
     }
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+    
 }
