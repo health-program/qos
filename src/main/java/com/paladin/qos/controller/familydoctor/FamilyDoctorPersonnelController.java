@@ -61,7 +61,7 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
     
     @RequestMapping(value = "/find/all", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    public Object findAll() {
+    public Object DataFindAll() {
         return CommonResponse.getSuccessResponse(familyDoctorPersonnelService.selectFindAll());
     }
     
