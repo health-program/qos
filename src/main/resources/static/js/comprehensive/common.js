@@ -75,3 +75,22 @@ function getRateNum(item, fixed) {
             valuesMap: valuesMap
         }
     }
+
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }

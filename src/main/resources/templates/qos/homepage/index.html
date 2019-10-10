@@ -119,10 +119,13 @@
         </div>
     </div>
     <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/comprehensive/common.js"></script>
     <script type="text/javascript" src="/static/js/comprehensive/outpatient.js"></script>
     <script type="text/javascript" src="/static/js/comprehensive/familydoctor.js"></script>
     <script type="text/javascript" src="/static/js/comprehensive/permanent.js"></script><!--常驻-->
     <script type="text/javascript" src="/static/js/comprehensive/community.js"></script><!--本月总门急诊人等-->
+    <script type="text/javascript" src="/static/js/comprehensive/intohospital.js"></script><!--住院/出院人次数-->
+    <script type="text/javascript" src="/static/js/comprehensive/familyDoctorTeam.js"></script><!--家庭医生团队情况-->
 </body>
 
 <script>
@@ -236,71 +239,6 @@ $(function() {
 
 
 
-    // 住院/出院人次数开始
-
-    var people = {
-        xAxis: [{
-            type: 'category',
-            data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
-            axisLine: {
-                lineStyle: {
-                    color: '#19d1ff',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            },
-            splitLine: {
-                show: false
-            }
-        }],
-        yAxis: [{
-                type: 'value',
-                axisLine: {
-                    lineStyle: {
-                        color: '#19d1ff',
-                        width: 1, //这里是为了突出显示加上的
-                    }
-                },
-                splitLine: {
-                    show: false
-                }
-            }
-
-
-        ],
-        series: [{
-                name: '蒸发量',
-                type: 'bar',
-                data: [2.6, 4.9, 7.0, 23.2, 25.6],
-                itemStyle: {
-                    normal: {
-                        // 定制显示（按顺序）
-                        color: function(params) {
-                            var colorList = ['#cf572a'];
-                            return colorList[params.dataIndex]
-                        }
-                    },
-                }
-
-            },
-            {
-                name: '降水量',
-                type: 'bar',
-                data: [2.6, 5.9, 9.0, 26.4, 28.7],
-                itemStyle: {
-                    normal: {
-                        // 定制显示（按顺序）
-                        color: function(params) {
-                            var colorList = ['#28b1ff'];
-                            return colorList[params.dataIndex]
-                        }
-                    },
-                }
-            }
-        ]
-    };
-
-    var myChartEmergency3 = echarts.init(document.getElementById('emergency3'));
-    myChartEmergency3.setOption(people);
 
     window.onresize = function(){
         myChart.resize();

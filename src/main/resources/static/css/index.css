@@ -110,7 +110,7 @@
     width: 100%;
     overflow-x: hidden;
     height: 100% !important;
-    background: url('../../static/image/index/allareaindex.jpg') no-repeat scroll !important;
+    background: url('../../static/image/index/indexbg_top.jpg') no-repeat scroll !important;
 }
 
 #header {

@@ -46,7 +46,7 @@ $(function(){
         url : "/qos/analysis/data/get/unit",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-           rawData = rawData.result;
+            rawData = rawData.result;
            dataMap['21021']=convertUnitChartData(rawData, '21021', true)
            dataMap['21022']=convertUnitChartData(rawData, '21022', true)
            dataMap['21023']=convertUnitChartData(rawData, '21023', true)
