@@ -106,6 +106,13 @@
     background: url('../../static/image/index/indexbg.jpg') no-repeat scroll !important;
 }
 
+#bodyarea{
+    width: 100%;
+    overflow-x: hidden;
+    height: 100% !important;
+    background: url('../../static/image/index/allareaindex.jpg') no-repeat scroll !important;
+}
+
 #header {
     width: 100%;
 }
@@ -151,8 +158,11 @@
 .fourclass .right .bottom {
     margin-top: 4px;
     font-size: 35px;
+    text-align:center;
 }
-
+i{
+  font-style:normal!important;
+}
 #middle {
     min-width: 100% !important;
     margin-left:2vh;
