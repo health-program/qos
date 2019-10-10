@@ -16,24 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
-import com.paladin.qos.mapper.school.OrgSchoolMapper;
-import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
-import com.paladin.qos.model.school.OrgSchool;
-import com.paladin.qos.model.school.OrgSchoolPeople;
-import com.paladin.qos.service.school.dto.ExcelOrgSchool;
-import com.paladin.qos.service.school.dto.OrgSchoolDTO;
-import com.paladin.qos.service.school.dto.OrgSchoolPeopleDTO;
-import com.paladin.qos.service.school.dto.OrgSchoolQuery;
-import com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO;
-import com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO;
-import com.paladin.qos.service.school.vo.OrgSchoolVO;
-import com.paladin.qos.service.school.vo.SchoolNameVO;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.ExcelImportResult;
+import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.QueryType;
-import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
@@ -44,6 +32,20 @@ import com.paladin.framework.excel.read.ExcelReadException;
 import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.qos.mapper.school.OrgSchoolMapper;
+import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
+import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.model.school.OrgSchoolPeople;
+import com.paladin.qos.service.school.dto.ExcelOrgSchool;
+import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
+import com.paladin.qos.service.school.dto.OrgSchoolDTO;
+import com.paladin.qos.service.school.dto.OrgSchoolPeopleDTO;
+import com.paladin.qos.service.school.dto.OrgSchoolQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO;
+import com.paladin.qos.service.school.vo.OrgSchoolDoctorCountVO;
+import com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO;
+import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import com.paladin.qos.service.school.vo.SchoolNameVO;
 
 @Service
 public class OrgSchoolService extends ServiceSupport<OrgSchool> {
@@ -272,5 +274,22 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	}
     return new ExcelImportResult(i, errors);
     }
+
+    /**
+     * 按隶属关系，统计学校数量
+     * @param query
+     * @return
+     */
+	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByNature(
+			OrgSchoolCountsQuery query) {
+		
+		return orgSchoolMapper.schoolCountsGroupByNature(query);
+	}
+
+	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByAffiliation(
+			OrgSchoolCountsQuery query) {
+		
+		return orgSchoolMapper.schoolCountsGroupByAffiliation(query);
+	}
 
 }
