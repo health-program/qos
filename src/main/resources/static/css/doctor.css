@@ -121,3 +121,11 @@
 .rollheader{
   background:none!important;
 }
+
+#middle .bg_opacity{
+  width:50vh!important;
+}
+
+#emergency,#individualization,#chartmain,#effective,#visiting,#signingDoctor{
+  width:50vh;
+}

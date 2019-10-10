@@ -90,6 +90,7 @@ $(function(){
 
                                               yAxis: {
                                                   splitNumber:4,
+                                                  minInterval: 6,
                                                   type: 'value',
                                                   splitLine: {
                                                       show: false
