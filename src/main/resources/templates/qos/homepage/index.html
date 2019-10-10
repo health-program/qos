@@ -215,15 +215,8 @@ $(function() {
         series: [{
             itemStyle: {
                 normal: {
-                    // 随机显示
                     color: function(d) { return "#" + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16); }
-
-                    // 定制显示（按顺序）
-                    /*   color: function(params) {
-                          var colorList = ['#00b4b1','#00b4b1','#00b4b1','#00b4b1','#ff0000'];
-                          return colorList[params.dataIndex]
-                      } */
-                },
+                 },
             },
             barWidth: 30,
             data: [120, 200, 150, 80, 70],
@@ -236,10 +229,6 @@ $(function() {
 
     var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
     myChartEmergency1.setOption(emergencyoption);
-
-
-
-
 
 
     window.onresize = function(){
@@ -263,7 +252,8 @@ $(function() {
     address: "玉山镇莫介路156福泰欧楼上",
     shopowner:'王药师',
     tel: "(0512)50171888",
-    point: "120.9615601899,31.3804306996",
+   lng:'120.9615601899',
+   lat:'31.3804306996',
     logo: "image/logodrug.png",
     evaluate:'20',
     praise:'7',
@@ -278,7 +268,8 @@ $(function() {
     address: "玉山镇莫介路156福泰欧楼上",
     shopowner:'王药师',
     tel: "联系电话：(0512)50171888",
-      point: "121.032294,31.359292",
+    lng:'121.085697',
+    lat:'31.385474',
     logo: "image/logodrug.png",
     evaluate:'20',
     praise:'7',
@@ -297,14 +288,10 @@ $(function() {
               map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
               map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
               map.enableScrollWheelZoom(true);
-
-
-             //  map.enableContinuousZoom(false);    //启用地图惯性拖拽，默认禁用
-
+          //  map.enableContinuousZoom(false);    //启用地图惯性拖拽，默认禁用
               map.addControl(new BMap.NavigationControl());
               map.addControl(new BMap.ScaleControl());
               map.addControl(new BMap.OverviewMapControl());
-
               function getBoundary1()
               {
                   var bdary = new BMap.Boundary();
@@ -313,25 +300,17 @@ $(function() {
                       map.clearOverlays(); //清除地图覆盖物
                       var count = rs.boundaries.length; //行政区域的点有多少个
                       for(var i = 0; i < count; i++){
-
-
                           var EN_JW = "180, 90;";         //东北角
                           var NW_JW = "-180,  90;";       //西北角
                           var WS_JW = "-180, -90;";       //西南角
                           var SE_JW = "180, -90;";        //东南角
                           // 之前的 var ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#37dfee", fillColor: "#f0f0f0", fillOpacity:0.5, strokeOpacity: 0.7 }); //建立多边形覆盖物
-
-
-
                           //4.添加环形遮罩层
                           var ply1 = new BMap.Polygon(rs.boundaries[0] + SE_JW + SE_JW + WS_JW + NW_JW + EN_JW + SE_JW, { strokeColor: "none", fillColor: "#081327", fillOpacity:1, strokeOpacity: 0.5 }); //建立多边形覆盖物
                           map.addOverlay(ply1);
                           //5. 给目标行政区划添加边框，其实就是给目标行政区划添加一个没有填充物的遮罩层
                           var ply = new BMap.Polygon(rs.boundaries[0], { strokeWeight: 2, strokeColor: "#37dfee",fillColor: "" });
                           map.addOverlay(ply);
-
-
-
                           map.addOverlay(ply); //添加覆盖物
                           map.setViewport(ply.getPath()); //调整视野
                       }
@@ -347,14 +326,15 @@ $(function() {
                   var marker = new Array(); //存放标注点对象的数组
                   var info = new Array(); //存放提示信息窗口对象的数组
                   var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
-
+                  var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
                   for (var i = 0; i < markerArr.length; i++) {
                       var p0 = markerArr[i].lng; //
                       var p1 = markerArr[i].lat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
                       point[i] = new window.BMap.Point(p0, p1); //循环生成新的地图点
                       marker[i] = new window.BMap.Marker(point[i], {icon: myIcon});
                       map.addOverlay(marker[i]);
-                     // marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+                      marker[i].setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
 
 
                       function trues(data){
@@ -365,38 +345,13 @@ $(function() {
                             }
                       }
 
-
-
-
-
                       // 创建信息窗口对象
-                     if(markerArr[i].isShop==true){
-                          var myIcon = new BMap.Icon("image/map_index.png", new BMap.Size(20, 25));
                           info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
-                              +"<img  class='markerArrlogo' src="+markerArr[i].logo+">"
                               + "</br><b class='text-0efcff'>是否医保：</b>"
-
                               + "</br><b class='text-0efcff'>是否支持配送：</b>"
-
                               + "</br><b class='text-0efcff'>地址：</b>"
-
-
-                              + "</br></p>";
-                     } else {
-                          var myIcon = new BMap.Icon("image/map_indexred.png", new BMap.Size(20, 25));
-                          info[i] = "<p style=’font-size:12px;line-height:1.6em; height: 10vw!important;’class='markerArrlogop'>"
-                              +"<img  class='markerArrlogo' src="+markerArr[i].logo+">"
-                              + "</br><b class='text-0efcff'>地址：</b>"
-                              + markerArr[i].address
-                              + "</br><b class='text-0efcff'>联系电话：</b>"
-                              + markerArr[i].phone
-                              + "</br><b class='text-0efcff'>订单量：</b>"
-                              + markerArr[i].dayOrderCount
-                              + "</br><b class='text-0efcff'>历史订单量：</b>"
-                              + markerArr[i].allOrderCount
                               + "</br></p>";
 
-                      }
                     //创建百度样式检索信息窗口对象
                       searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map,info[i], {
                           title: markerArr[i].name, //标题
@@ -408,22 +363,23 @@ $(function() {
                           searchTypes: []
 
                       });
+
+
                       //添加点击事件
                       marker[i].addEventListener("click", (function (k) {
                           // js 闭包
                           return function () {
                               //在marker上打开检索信息窗口
                               searchInfoWindow[k].open(marker[k]);
-
-                          }
+                            }
                       })(i));
-                  }
-
-              //结束
-
-          }
+                   }
 
 
+
+
+           //结束
+   }
 
 </script>
 
