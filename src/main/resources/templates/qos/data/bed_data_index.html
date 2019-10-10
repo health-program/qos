@@ -5,9 +5,9 @@
 
 <body>
 <tt:constant enumcode="data-event-type,data-unit-type" />
-<!--   <section class="content-header">
-    <h1>数据展示</h1>
-</section> -->
+   <section class="content-header">
+    <h1>床位统计报表</h1>
+</section>
 <section class="content">
     <div class="box box-solid">
         <div class="box-body">
@@ -57,6 +57,13 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
 <script type="text/javascript">
+
+    //图表自适应大小
+    window.addEventListener("resize", function() {
+        infection1Chart.resize();
+        pieChartDiv.resize();
+    });
+
     var table, sumChart, dayChart, sumData, requestParams;
     $(function() {
         // var day=new Date();
@@ -154,28 +161,13 @@
             }
         });
     }
-
+    var infection1Chart = echarts.init(document.getElementById('sumChartDiv'));
+    var pieChartDiv = echarts.init(document.getElementById('pieChartDiv'));
 
     function initSumChart() {
 
-
-        if (!sumChart) {
-            var dom = document.getElementById("sumChartDiv");
-            var sumChart = echarts.init(dom);
-
-            // Enable data zoom when user click bar.
-            // var zoomSize = 6;
-            // sumChart.on('click', function(params) {
-            //     console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
-            //     sumChart.dispatchAction({
-            //         type: 'dataZoom',
-            //         startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
-            //         endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
-            //     });
-            // });
-        }
         if (sumData==0){
-            showChartInfo(sumChart, '暂无数据显示');
+            showChartInfo(infection1Chart, '暂无数据显示');
             return false;
         }
 
@@ -189,18 +181,7 @@
             var it = sumData[i];
             dataAxis.push(it.unitName);
             data.push(it.userBedRate);
-           //data.push(formatRate(it.userBedRate));
-
-            // if (yMax < it.userBedRate) {
-            //     yMax = it.userBedRate;
-            // }
         }
-
-        //yMax = Math.ceil(yMax / 10) * 10;
-
-        // for (var i = 0; i < sumData.length; i++) {
-        //     dataShadow.push(yMax);
-        // }
 
         var	option = {
             title: {
@@ -263,16 +244,14 @@
                 bottom:0
             }
         };
-        sumChart.setOption(option,true);
+        infection1Chart.setOption(option,true);
     };
 
 
 
     function initPieChart() {
-        var dom = document.getElementById("pieChartDiv");
-        var pieChart = echarts.init(dom);
         if (sumData==0){
-            showChartInfo(pieChart, '暂无数据显示');
+            showChartInfo(pieChartDiv, '暂无数据显示');
             return false;
         }
         var sumOpen=0;
@@ -349,7 +328,7 @@
                 }
             ]
         };
-        pieChart.setOption(option,true);
+        pieChartDiv.setOption(option,true);
     }
 
     var showChartInfo = function (sumChart, infoStr) {
