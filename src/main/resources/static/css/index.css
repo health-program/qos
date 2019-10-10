@@ -106,13 +106,6 @@
     background: url('../../static/image/index/indexbg.jpg') no-repeat scroll !important;
 }
 
-#bodyarea{
-    width: 100%;
-    overflow-x: hidden;
-    height: 100% !important;
-    background: url('../../static/image/index/indexbg_top.jpg') no-repeat scroll !important;
-}
-
 #header {
     width: 100%;
 }
@@ -233,7 +226,7 @@ i{
 #effective,
 #visiting,
 #signingDoctor {
-    width: 50vh;
+    width: 60vh;
     height: 20vh;
 }
 
@@ -465,13 +458,13 @@ select {
         #middle .bg_opacity {
             background: url('../../static/image/index/opacitybg.png');
             background-size: 100% 100%;
-            width: 52vh;
+            width: 60vw;
             height: 24.5vh;
             margin: 10px 0px 10px 0px;
         }
 
         #middle .left {
-            width: 52vh;
+            width: 60vw;
             display: inline-block;
             float: left;
         }
@@ -501,7 +494,7 @@ select {
     #middle .bg_opacity {
         background: url('../../static/image/index/opacitybg.png');
         background-size: 100% 100%;
-        width: 50vh;
+        width: 60vh;
         height: 24.5vh;
         margin: 10px 0px 10px 0px;
     }
@@ -511,4 +504,16 @@ select {
         display: inline-block;
         float: left;
     }
+}
+
+#permanentPopulation{
+  height: 20vh;
+}
+
+
+#bodyarea{
+    width: 100%;
+    overflow-x: hidden;
+    height: 100% !important;
+    background: url('../../static/image/index/indexbg_top.jpg') no-repeat scroll !important;
 }
