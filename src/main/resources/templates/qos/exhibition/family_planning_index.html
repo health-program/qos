@@ -3,16 +3,16 @@
 <head th:include="/qos/header" />
 
 <body>
-<section class="content-header" style="padding-bottom: 10px">
+<section class="content-header" style="padding-bottom: 3px">
     <h1>计划生育管理</h1>
 </section>
-<section class="content no-padding">
-    <div class="box box-solid" style="height: 45px;margin-bottom: 3px">
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
         <div class="box-body no-pad-top" >
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" value="2015-01-01" type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -29,7 +29,7 @@
             </form>
         </div>
     </div>
-    <div class="row" style="padding: 5px">
+    <div class="row">
         <div class="col-md-6">
             <div class="box box-solid" style="margin-bottom: 10px">
                 <div class="box-header with-border">

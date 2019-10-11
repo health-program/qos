@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -96,12 +96,12 @@
 	function buildTable1(){
     	debugger;
 		 columns= [
-              { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName",align:'center'},
-              { title: "就医总人次", field: "count" ,align:'center'},
-              { title: "就医患者使<br/>用药瓶数", field: "drugNum",align:'center'},
-              { title: "就医人均使<br/>用药瓶数", field: "drugAvgCount" ,align:'center'},
-              { title: "就医患者药<br/>品总费用(元)", field: "totalMoney" ,align:'center'},
-              { title: "每次就诊人<br/>均药费(元)", field: "averageMoney",align:'center' }
+              { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName",align:'center',valign:'middle'},
+              { title: "就医总人次", field: "count" ,align:'center',valign:'middle'},
+              { title: "就医患者使<br/>用药瓶数", field: "drugNum",align:'center',valign:'middle'},
+              { title: "就医人均使<br/>用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle'},
+              { title: "就医患者药<br/>品总费用(元)", field: "totalMoney" ,align:'center',valign:'middle'},
+              { title: "每次就诊人<br/>均药费(元)", field: "averageMoney",align:'center',valign:'middle' }
            ];
 
 		 let datas = [];
@@ -364,7 +364,7 @@
     				data : xAxis,
     				 axisLabel: {
     		                 interval:0,
-    		                 rotate:datas.length ===1 ? 0 : 50//角度顺时针计算的
+    		                 rotate:datas.length ===1 ? 0 : 60//角度顺时针计算的
     		                } ,
     				axisTick : {
     					alignWithLabel : true
