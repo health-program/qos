@@ -1,5 +1,6 @@
 package com.paladin.qos.controller.gongwei;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +68,9 @@ public class ArchivesController {
 				archivesManagementVO.setUnitId(unitId);
 				archivesManagementVO.setActiveArchivesNumber(totalArchivesMap.get(unitId));
 				archivesManagementVO.setPublicArchivesNumber(eventArchivesMap.get(unitId));
-				archivesManagementVO.setPeopleNumber((long) (Double.parseDouble(familyDoctorUnit.getPopulation()) * 10000));
+				BigDecimal value1 = new BigDecimal(familyDoctorUnit.getPopulation());
+				BigDecimal value2 = new BigDecimal("10000");
+				archivesManagementVO.setPeopleNumber((long) value1.multiply(value2).doubleValue());
 				archivesManagementVOList.add(archivesManagementVO);
 			}
 		}
