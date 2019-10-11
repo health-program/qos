@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -114,14 +114,14 @@
 					    field: "unitName"
 					},
                     { 
-						title: "合计总收入", 
+						title: "医疗收入", 
 						field: "ev15001",
 						formatter: function(value, row, index) {
                             return value/100;                            
                        }
                     },
                     { 
-                    	title: "医疗收入", 
+                    	title: "非药品收入", 
                     	field: "ev15002",
                     	formatter: function(value, row, index) {
                     		return value/100;
@@ -194,6 +194,8 @@
                 initUnitChart(response);
                 ringChartDiv(response);
                 pieChartDiv(response);
+                
+                //result.shift();
                 return result;
             }
         });
@@ -299,14 +301,18 @@
             },
             legend: {
             	type:"scroll",
-            	data: ['合计总收入', '医疗收入','药品收入','其他收入'],
+            	data: ['医疗收入', '非药品收入','药品收入','其他收入'],
                 bottom:0
             },
             xAxis: {
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40 //角度顺时针计算的
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                 }
                 },
                 axisTick: {
                     alignWithLabel: true
@@ -325,7 +331,7 @@
                              barBorderRadius:2,
                          }
                      },
-                name: '合计总收入',
+                name: '医疗收入',
                 data: ev15001.values},
             	 {  type: 'bar',
                 	 barWidth : 5,
@@ -334,7 +340,7 @@
                              barBorderRadius:3,
                          }
                      },
-                   name: '医疗收入',
+                   name: '非药品收入',
                    data: ev15002.values},
             	 {  type: 'bar',
               	   barWidth : 5,
@@ -459,7 +465,7 @@
 	               },
 	               legend: {
 	            	type:"scroll",
-	               	data: ['合计收入', '医疗收入','药品收入','其他收入'],
+	               	data: ['医疗收入', '非药品收入','药品收入','其他收入'],
 	                   bottom:0
 	               },
 	               xAxis: {
@@ -481,7 +487,7 @@
 	                   	position: 'top'        //这里可以自己选择位置
 	                   	}
 	                   	},
-	                   name: '合计收入',
+	                   name: '医疗收入',
 	                   data: month15001.valuesMap[unitId]},
 	               	 {  type: 'line',
 	                	   areaStyle: {},
@@ -491,7 +497,7 @@
 	                        	position: 'top'        //这里可以自己选择位置
 	                        	}
 	                        	},
-	                      name: '医疗收入',
+	                      name: '非药品收入',
 	                      data: month15002.valuesMap[unitId]},
 	               	 {  type: 'line',
 	                    	  areaStyle: {},
@@ -651,7 +657,7 @@
         }
         
         
-        charData.push({value:x,name:"医疗收入"},{value:y,name:"药品收入"},{value:z,name:"其他收入"})
+        charData.push({value:x,name:"非药品收入"},{value:y,name:"药品收入"},{value:z,name:"其他收入"})
         var option = {
                 color: [ '#67E0E3', '#37A2DA','#B9B9B9'], //环形图每块的颜色
                 tooltip: {

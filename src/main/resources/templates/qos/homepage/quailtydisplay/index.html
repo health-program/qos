@@ -121,12 +121,23 @@
                         <span class="quailty_name">患者姓名</span>
                         <span class="quailty_sex">患者性别</span>
                         <span class="quailty_date">就诊日期</span>
-                        <span class="quailty_sick">诊断疾病</span>
+                        <span class="quailty_sick">结算类别</span>
                      </div>
                     <div id="box" class="quailty_bottom_right_box">
-                        <ul id="list1">
+                        <ul id="list1" >
+	                          <li>
+	                            <span class="quailty_serial">序号</span>
+		                        <span class="quailty_seek">就诊机构</span>
+		                        <span class="quailty_department">就诊科室</span>
+		                        <span class="quailty_name">患者姓名</span>
+		                        <span class="quailty_sex">患者性别</span>
+		                        <span class="quailty_date">就诊日期</span>
+		                        <span class="quailty_sick">结算类别</span>
+	                         </li>
                         </ul>
-                        <ul id="list2"></ul>
+                        <ul id="list2">
+                          
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -144,6 +155,20 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
 <script>
 $(function() {
+	$.ajax({
+		type : "post",    //请求类型
+        url : "/home/page/qos/quailtydisplay/getRegisterList",
+        anysc:false,
+        success: function (rawData){
+        	debugger
+        	console.log(rawData);
+        	rawData.result.forEach(function(val,index){
+        		
+        	});
+        	 
+        }
+	})
+	
 
 	//无缝滚动开始
 	var box = document.getElementById("box");

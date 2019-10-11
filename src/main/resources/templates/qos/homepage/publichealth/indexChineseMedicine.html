@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+<link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
+<link rel="stylesheet" href="/static/css/index.css">
+<link rel="stylesheet" href="/static/css/health.css">
+
+<body id="body">
+     <nav id="nav">
+	     <span class='index_left text-00e4ff left'>
+	                    <!-- <img src="../../../static/image/index/home.png" /> -->基本公共卫生 
+	     </span>
+	    <div class="middle">
+		     <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+		     <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>
+	     </div>
+	     <div class='right'>
+	     	 <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		     <span  class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
+		     <span  class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+	     </div>
+     </nav>
+     
+     <div class="public-health">
+     <nav class="nav">
+     		<ul>
+     			<li>
+     				<img src="/static/image/index/health/hralth.png"/>
+     				健康档案
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/edc.png"/>
+     				健康教育
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/vaccination.png"/>
+     				预防接种
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/child.png"/>
+     				0-6岁儿童
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/prejnant.png"/>
+     				孕产妇
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/older.png"/>
+     				老年人
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/chronic.png"/>
+     				慢性病
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/mental.png"/>
+     				严重精神障碍
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/tuberculosis.png"/>
+     				结核病
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/medicine.png"/>
+     				中医药
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/infectious.png"/>
+     				传染病
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/supervise.png"/>
+     				卫生计生监督
+     			</li>
+     			<li>
+     				<img src="/static/image/index/health/contraception.png"/>
+     				避孕用具
+     			</li>
+     		</ul>
+     		</nav>
+     </div>
+     
+   <div>
+     <div class="healthfile">中医药</div>
+	   <div id="middle" >
+		    <div class="position-relative">
+		    	<div class="bg_opacity fl d-inlne-block mr90">
+		    	   <div class="header line">老年人中医药健康服务覆盖率</div>
+		    	    <div class="fr text-align-right pr-100 position-absolute absolute1 absolute2">
+		    	    	<div class="mb5">
+		    	    	 
+		    	    </div>
+		    	   <div id="emergency"></div>
+		    	     
+		    	</div>
+		      </div>
+		      
+		      
+		      <!-- <div class="bg_opacity fl d-inlne-block mr90">
+		    	   <div class="header line">老年人健康管理率</div>
+		    	    <div class="fr text-align-right pr-100 position-absolute absolute1 absolute2">
+		    	    	<div class="mb5">
+		    	    	 
+		    	    </div>
+		    	   <div id="emergency1"></div>
+		    	     
+		    	</div>
+		      </div> -->
+		      
+		      
+		      
+		      
+		    </div>
+		     
+	        
+	   </div>
+   </div>
+	
+</body>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/publichealth-main.js"></script>
+<script type="text/javascript" src="/static/js/quailtydisplay/common.js"></script><!-- 旭武封装的方法的month等  -->
+ <script type="text/javascript" src="/static/js/publichealth/chineseMedicine/oldcover.js"></script><!-- 老年人中医药健康服务覆盖率 -->
+
+ </script>
+ 
+</html>

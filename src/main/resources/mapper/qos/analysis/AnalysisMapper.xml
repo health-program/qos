@@ -326,4 +326,13 @@
 		  AND unit_type=#{unitType}
         </if>
 	</select>
+	
+	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register">
+	 
+	 select regid,orgname,deptname,patientname,sexcode,seedate,paykindname from jcyl_opr_register
+	 where regstatus = '0'
+     ORDER BY seedate desc 
+     limit 100
+	
+	</select>
 </mapper>

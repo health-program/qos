@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
 import com.paladin.qos.service.analysis.data.DataCountDay;
 import com.paladin.qos.service.analysis.data.DataCountMonth;
@@ -83,5 +84,7 @@ public interface AnalysisMapper {
 	long getTotalNumOfEvent(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end);
 
 	List<DataCountUnit> getLastCountByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType);
+
+	List<Register> findRegisterList();
 
 }

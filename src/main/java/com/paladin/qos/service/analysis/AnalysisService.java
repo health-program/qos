@@ -15,6 +15,7 @@ import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
 import com.paladin.qos.service.analysis.data.DataCountDay;
 import com.paladin.qos.service.analysis.data.DataCountMonth;
@@ -606,6 +607,11 @@ public class AnalysisService {
 		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType);
 		orderByUnit(result);
 		return result;
+	}
+
+	public List<Register> findRegisterList() {
+
+		return analysisMapper.findRegisterList();
 	}
 
 }

@@ -18,7 +18,7 @@ $(function(){
 		if(i===6){//慢病
 			window.location.href = "/home/page/qos/publichealth/indexSlowDisease";
 		}
-		if(i===9){//慢病
+		if(i===9){//中医药
 			window.location.href = "/home/page/qos/publichealth/indexChineseMedicine";
 		}
 		if(i===12){
