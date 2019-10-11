@@ -7,22 +7,23 @@
 <body>
     <tt:constant enumcode="data-unit-type" />
     </section>
+    <section class="content-header">
+        <h1>重点人群签约信息</h1>
+    </section>
     <section class="content">
-        <div class="box box-solid" style="margin-bottom: 5px">
-            <div class="box-body">
-                <form id="searchbar" class="form-horizontal form-search">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <select id="unitId" name="unitId" class="form-control tonto-select-constant" enumcode="data-unit-type">
-                            <option value="">请选择医疗机构</option>
-                            </select>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
-                            <input id="createTime" name="date" placeholder="请输入时间" autocomplete="off" type="text" class="form-control" value="">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
                         </div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                             </div>
                         </div>
@@ -128,14 +129,13 @@
     
     var table, selectUnit, requestParams,dataVal;
     $(function() {
-         laydate.render({
-             elem: '#createTime',
-             type: 'year',
-             max:'nowTime',
-             value:''
-         });
         initTable(); 
     });
+    
+    function refresh() {
+        table ? table.refresh() : buildTable1();
+    }
+    
     var currentElement;
 
     function initTable() {
@@ -143,23 +143,23 @@
             idField: "id",
             columns: [
                 [
-                    { title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", field: "unitName"},
-                    { title: "残疾人群签约率", field: "ev21021" },
-                    { title: "高血压患者签约率", field: "ev21022" },
-                    { title: "糖尿病患者签约率", field: "ev21023"},
-                    { title: "孕产妇签约率", field: "ev21024" },
-                    { title: "0-6周岁儿童签约率", field: "ev21025" },
-                    { title: "65周岁及以上老年人签约率", field: "ev21026" },
-                    { title: "严重精神障碍患者签约率", field: "ev21027" },
-                    { title: "肺结核患者签约率", field: "ev21028" },
-                    { title: "疾病筛查高危人员签约率", field: "ev21029" }
+                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName"},
+                    { title: "残疾人群<br/>签约率", field: "ev21021" },
+                    { title: "高血压患<br/>者签约率", field: "ev21022" },
+                    { title: "糖尿病患<br/>者签约率", field: "ev21023"},
+                    { title: "孕产妇<br/>签约率", field: "ev21024" },
+                    { title: "0-6周岁儿<br/>童签约率", field: "ev21025" },
+                    { title: "65周岁及<br/>以上老年<br/>人签约率", field: "ev21026" },
+                    { title: "严重精神障碍<br/>患者签约率", field: "ev21027" },
+                    { title: "肺结核患<br/>者签约率", field: "ev21028" },
+                    { title: "疾病筛查高<br/>危人员签约率", field: "ev21029" }
                 ]
             ],
 			url: '/qos/analysis/data/get/unit',
             pagination: false,
-			height : 430,
-			fixedColumns: true,
-			fixedNumber: 1, //固定列数,
+			height : 415,
+			//fixedColumns: true,
+			//fixedNumber: 1, //固定列数,
             searchbar: '#searchbar',
 			clickToSelect: true,
 			onClickRow: function(row, tr) {

@@ -197,7 +197,7 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,160111,16012,16013,16014';
+            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,16011,16012,16013,16014';
                 requestParam = params;
                 return params;
             },
@@ -559,9 +559,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16011).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16011 ;
+        occupyRate=result[16].ev16011;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[16].ev16011 ;
         
         var option = {
 
@@ -604,7 +605,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'抗菌药物使用率'
         	                        },
         	                        {
@@ -640,9 +641,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16009).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16009 ;
+        occupyRate=result[16].ev16009;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[16].ev16009 ;
         
         var option = {
 
@@ -685,7 +687,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'静脉输液率'
         	                        },
         	                        {
@@ -721,9 +723,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16010).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16010 ;
+        occupyRate=result[16].ev16010;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[16].ev16010 ;
         
         var option = {
 
@@ -766,7 +769,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'激素使用率'
         	                        },
         	                        {
@@ -800,10 +803,14 @@
          var twoRate=0;
          var threeRate;
          console.log(result);
-         oneRate=toPoint(result[0].ev16012).toFixed(2);
-         twoRate=toPoint(result[0].ev16013).toFixed(2);
-         threeRate=toPoint(result[0].ev16014).toFixed(2);
-         pieMessage=result[0].ev16012 ;
+         
+      
+         
+         
+         oneRate=result[16].ev16012
+         twoRate=result[16].ev16013
+         threeRate=result[16].ev16014
+         pieMessage=result[16].ev16012 ;
     	if (!dashChart) {
         	dashChart = echarts.init(document.getElementById('dashChartDiv'));
         }
@@ -862,7 +869,7 @@
     		            },
     		            detail : {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		                formatter: result[0].ev16012,
+    		                formatter: result[16].ev16012,
     		                fontWeight: 'bolder',
     		                borderRadius: 3,
     		                backgroundColor: '#444',
@@ -919,7 +926,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[0].ev16012
+    		            	formatter:result[16].ev16013
     		            },
     		            data:[{value: twoRate, name: '二联抗生素使用率'}]
     		        },
@@ -958,7 +965,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[0].ev16012
+    		            	formatter:result[16].ev16014
     		            },
     		            data:[{value: threeRate, name: '三联抗生素使用率'}]
     		        }
