@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2019-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -109,10 +109,11 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "签约健康管理<br/>服务包签约数", field: "event21001" },
-                    { title: "就签居民数", field: "total21001"},
-                    { title: "综合健康管理<br/>服务包签约率", field: "reat21001"},
-                    { title: "签约个性<br/>化服务数", field: "event21002"},
+                    { title: "应签居民数", field: "total21001"},
+                    { title: "健康管理服<br/>务包签约数", field: "event21001" },
+                    { title: "综合健康管理服务包<br/>签约率(免费)", field: "reat21001"},
+                    { title: "综合健康管理服务包<br/>签约率(收费)", field: "reat21001"},
+                    { title: "个性化服<br/>务签约数", field: "event21002"},
                     { title: "签约总数", field: "total21002"},
                     { title: "个性化服<br/>务签约率", field: "reat21002"}
                 ]
@@ -150,7 +151,7 @@
                 	 total21001+=data[o].total21001;
                 	 event21002+=data[o].event21002;
                 	 total21002+=data[o].total21002;  
-                     result.push(data[o]);
+                	 result.push(data[o]);
                      if(o=='total'){
                 		 var a = 0;
                 		 data[o].event21001 = event21001;
@@ -171,6 +172,7 @@
                  jkglfwbqysChart1(response);
                  qygxhfwsChart1(response);
                  responseData =response;
+                 debugger;
                  jkglqylChart1(responseData);
                  gxhfwqylChart1(responseData);
                  return result;
@@ -233,7 +235,7 @@
              var r = isRate ? item.eventNum : 0;
              max = Math.max(r, max);
              values.push(r);
-             unit.push(item.unitName);
+             unit.push(intercept(item.unitName));
          });
          return {
              max: max,
@@ -268,7 +270,7 @@
     		            type : 'category',
     		            axisLabel: {
     		                interval:0,
-    		                rotate:50//角度顺时针计算的
+    		                rotate:40//角度顺时针计算的
     		                } ,
     		            data: ev21001.unit,
     		            axisTick: {
@@ -297,6 +299,7 @@
     var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
     function qygxhfwsChart1(response){
     	var ev21002= convertUnitChartData(response, '21002', true);
+    	debugger;
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -319,7 +322,7 @@
     		            type : 'category',
     		            axisLabel: {
     		                interval:0,
-    		                rotate:50//角度顺时针计算的
+    		                rotate:40//角度顺时针计算的
     		                } ,
     		            data: ev21002.unit,
     		            axisTick: {
@@ -346,7 +349,6 @@
     
     
     function convertChartData(data, eventId, isRate) {
-    	debugger;
         var eventData = data[eventId],
             unitPoints = eventData.unitPoints,
             valuesMap = {};
@@ -524,6 +526,12 @@
     	gxhfwqylChart.setOption(option,true);
     }
 
+    function intercept(unitName){
+    	var w=unitName.indexOf("社");
+    	var name =unitName.substring(0, w);
+    	return name;
+    }
+    
     function compare(property){
         return function(a,b){
             var value1 = a[property];
