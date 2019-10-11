@@ -637,17 +637,16 @@
                     }
                 }
             };
-       // chartData.push({value:getTotalFromAr(maleData),name:"男性"},{value:getTotalFromAr(femaleData),name:"女性"})
         var charData = [];
-        var x = result[result.length-1].ev15002/result[result.length-1].ev15001*100;
+        var x = result[result.length-1].ev15002/100;
         var x1 = (result[result.length-1].ev15002/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
-        var y = result[result.length-1].ev15003/result[result.length-1].ev15001*100;
+        var y = result[result.length-1].ev15003/100;
         var y1 = (result[result.length-1].ev15003/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
         if(result[result.length-1].ev15004==null){
         	var z = 0;
         	var z1 =  "0%";
         }else{
-        	var z = result[result.length-1].ev15004/result[result.length-1].ev15001*100;
+        	var z = result[result.length-1].ev15004/100;
         	var z1 = (result[result.length-1].ev15004/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
         }
         
@@ -657,17 +656,28 @@
                 color: [ '#67E0E3', '#37A2DA','#B9B9B9'], //环形图每块的颜色
                 tooltip: {
                     trigger: 'item',
-                    formatter: "{b} : {c}个 ({d}%)"
+                    formatter: "{b} ({d}%)"
                 },
                 series: [
                     {
                         name: '占比',
                         type: 'pie',
-                        radius : '95%',
+                        radius : '75%',
                         center: ['50%', '50%'],
                         barGap: 0,
                         label:labelOption,
                         data: charData,
+                        label: {
+                            normal: {
+                              position: 'inner',  // 设置标签位置，默认在饼状图外 可选值：'outer' ¦ 'inner（饼状图上）'
+                              // formatter: '{a} {b} : {c}个 ({d}%)'   设置标签显示内容 ，默认显示{b}
+                              // {a}指series.name  {b}指series.data的name
+                              // {c}指series.data的value  {d}%指这一部分占总数的百分比
+                              formatter: '{b} {c}'
+                              
+                            }
+                          },
+
                         itemStyle: {
                             emphasis: {
                                 shadowBlur: 10,
