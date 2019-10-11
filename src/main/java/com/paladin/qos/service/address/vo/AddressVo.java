@@ -10,14 +10,35 @@ public class AddressVo {
 
     private String orgAddress;
 
+    private Long hospital;
+
+    private Long patients;
+
+
     private String orgLon;
 
     private String orgLat;
 
     private Integer orgType;
 
-    public String getUnitName() {
-        return DataConstantContainer.getUnitName(unitId);
+    public Long getHospital() {
+        return hospital;
+    }
+
+    public void setHospital(Long hospital) {
+        this.hospital = hospital;
+    }
+
+    public Long getPatients() {
+        return patients;
+    }
+
+    public void setPatients(Long patients) {
+        this.patients = patients;
+    }
+
+    public String getUnitId() {
+        return unitId;
     }
 
     public void setUnitId(String unitId) {
