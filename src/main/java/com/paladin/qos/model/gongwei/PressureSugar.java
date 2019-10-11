@@ -2,22 +2,42 @@ package com.paladin.qos.model.gongwei;
 
 public class PressureSugar {
 
-    private String managedCenter;
+    private String unitId;
 
     private Long pressureNumber;
 
     private Long pressureManageNumber;
 
+    private Long pressureFollowNumber;
+
     private Long sugarNumber;
 
     private Long sugarManageNumber;
 
-    public String getManagedCenter() {
-        return managedCenter;
+    private Long sugarFollowNumber;
+
+    public Long getPressureFollowNumber() {
+        return pressureFollowNumber;
     }
 
-    public void setManagedCenter(String managedCenter) {
-        this.managedCenter = managedCenter;
+    public void setPressureFollowNumber(Long pressureFollowNumber) {
+        this.pressureFollowNumber = pressureFollowNumber;
+    }
+
+    public Long getSugarFollowNumber() {
+        return sugarFollowNumber;
+    }
+
+    public void setSugarFollowNumber(Long sugarFollowNumber) {
+        this.sugarFollowNumber = sugarFollowNumber;
+    }
+
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
     public Long getPressureNumber() {

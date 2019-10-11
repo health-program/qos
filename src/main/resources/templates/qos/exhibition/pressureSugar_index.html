@@ -74,10 +74,10 @@
 
         <div class="col-md-4">
             <div class="box box-solid">
-                <div id="barChart1" class="box-body" style="height: 400px"></div>
+                <div id="barChart1" class="box-body" style="height: 350px"></div>
             </div>
             <div class="box box-solid">
-                <div id="barChart2" class="box-body" style="height: 400px"></div>
+                <div id="barChart2" class="box-body" style="height: 350px"></div>
             </div>
 
         </div>
@@ -98,48 +98,42 @@
     });
     var table, sumChart, dayChart, sumData, requestParams,result;
     $(function() {
-        var day=new Date();
-        day.setTime(day.getTime());
-        var month = day.getFullYear()+"-" + (day.getMonth()+1);
-        laydate.render({
-            elem: '#dateInput',
-            type: 'month',
-            value:month
-        });
+        // var day=new Date();
+        // day.setTime(day.getTime());
+        // var month = day.getFullYear()+"-" + (day.getMonth()+1);
+        // laydate.render({
+        //     elem: '#dateInput',
+        //     type: 'month',
+        //     value:month
+        // });
         initTable();
     });
 
-    function getRate(e,t) {
-        if (t == 0) return 0;
-        var x = e * 100 / t;
-        if (x < 0.005) {
-            return 0;
+
+    function getRate(a,b) {
+        var c = 0;
+        if (a && b) {
+            c = a / b * 100;
         }
-        return x.toFixed(2) * 1;
+        return c.toFixed(2) + '%';
     }
-
-    function getPercent(value){
-        if(value)
-            return value+"%";
-    }
-
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
                     { title: "辖区", field: "unitName" },
-                    { title: "高血压患病数", field: "ev22004total" },
-                    { title: "高血压管理数", field: "ev22005event" },
-                    { title: "管理人群血压<br>控制率", field: "ev22004"},
-                    { title: "高血压患者规范<br>管理率", field: "ev22005" },
-                    { title: "糖尿病患病数", field: "ev22006total"},
-                    { title: "糖尿病管理数", field: "ev22007event"},
-                    { title: "管理人群血糖<br>控制率", field: "ev22006"},
-                    { title: "糖尿病患者规范<br>管理率", field: "ev22007"}
+                    { title: "高血压患病数", field: "pressureNumber" },
+                    { title: "高血压管理数", field: "pressureManageNumber" },
+                    { title: "管理人群血压<br>控制率", field: "pressureControlRate"},
+                    { title: "高血压患者规范<br>管理率", field: "pressureManageRate" },
+                    { title: "糖尿病患病数", field: "sugarNumber"},
+                    { title: "糖尿病管理数", field: "sugarManageNumber"},
+                    { title: "管理人群血糖<br>控制率", field: "sugarControlRate"},
+                    { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate"}
                 ]
             ],
-            url: '/qos/analysis/data/get/unit',
+            url: '/qos/gongwei/pressureSugar/search/all',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
@@ -150,25 +144,51 @@
                 console.log("on uncheck");
             },
             queryParams: function(params) {
-                params.eventIds = '22004,22005,22006,22007';
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(response) {
-                var data = {};
-                convertTableData('22004',response, data);
-                convertTableData('22005',response, data);
-                convertTableData('22006',response, data);
-                convertTableData('22007',response, data);
-                sumData = []
-                for (var o in data) {
-                    sumData.push(data[o]);
-                }
-
+            responseHandler: function(res) {
+                sumData = res || [];
                 result = []
-                for (var o in data) {
-                    result.push(data[o]);
+                for (var o in sumData) {
+                    result.push(sumData[o]);
                 }
+                debugger;
+                var totalPressureNumber=0;
+                var totalPressureRecentReach=0;
+                var totalPressureManageNumber=0;
+                var totalPressureFollowNumber=0;
+                var totalSugarNumber=0;
+                var totalSugarRecentReach=0;
+                var totalSugarManageNumber=0;
+                var totalSugarFollowNumber=0;
+                for (var i = 0; i < sumData.length; i++) {
+                    var row = sumData[i];
+                    totalPressureNumber+=row.pressureNumber;
+                    totalPressureManageNumber+=row.pressureManageNumber;
+                    totalPressureRecentReach+=row.pressureRecentReach;
+                    totalPressureFollowNumber+=row.pressureFollowNumber;
+                    totalSugarNumber+=row.sugarNumber;
+                    totalSugarManageNumber+=row.sugarManageNumber;
+                    totalSugarRecentReach+=row.sugarRecentReach;
+                    totalSugarFollowNumber+=row.sugarFollowNumber;
+                    row.pressureControlRate = getRate(row.pressureRecentReach,row.pressureNumber);
+                    row.pressureManageRate=getRate(row.pressureManageNumber,row.pressureFollowNumber);
+                    row.sugarControlRate=getRate(row.sugarRecentReach,row.sugarNumber);
+                    row.sugarManageRate = getRate(row.sugarManageNumber,row.sugarFollowNumber);
+                }
+                var total={
+                    "unitName" : "合计",
+                    "pressureNumber" :totalPressureNumber,
+                    "pressureManageNumber":totalPressureManageNumber,
+                    "pressureControlRate" : getRate(totalPressureRecentReach,totalPressureNumber),
+                    "pressureManageRate":getRate(totalPressureManageNumber,totalPressureFollowNumber),
+                    "sugarNumber":totalSugarNumber,
+                    "sugarManageNumber":totalSugarManageNumber,
+                    "sugarControlRate":getRate(totalSugarRecentReach,totalSugarNumber),
+                    "sugarManageRate":getRate(totalSugarManageNumber,totalSugarFollowNumber),
+                }
+                sumData.push(total);
                  initPieChart1();
                  initPieChart2();
                  initPieChart3();
@@ -180,54 +200,46 @@
         });
     }
 
-    function convertTableData(eventId,originData, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0,
-            event = 0;
+    // function convertTableData(eventId,originData, data) {
+    //     var eventData = originData[eventId],
+    //         fieldName = 'ev' + eventId,
+    //         total = 0,
+    //         event = 0;
+    //
+    //     eventData && eventData.forEach(function(item) {
+    //         var id = item.unitId;
+    //         unitData = data[id];
+    //         if (!unitData) {
+    //             unitData = {
+    //                 unitId: id,
+    //                 unitName: item.unitName
+    //             };
+    //             data[id] = unitData;
+    //         }
+    //         unitData[fieldName] = getRate(item);
+    //         unitData[fieldName+'total'] = item.totalNum;
+    //         unitData[fieldName+'event'] = item.eventNum;
+    //         total += item.totalNum;
+    //         event += item.eventNum;
+    //     });
+    //
+    //     var totalData = data['total'];
+    //     if (!totalData) {
+    //         totalData = {
+    //             unitId: 'total',
+    //             unitName: '合计',
+    //         }
+    //         data['total'] = totalData;
+    //     }
+    //     totalData[fieldName] = getRate({
+    //         totalNum: total,
+    //         eventNum: event
+    //     });
+    //     totalData[fieldName+'total']=total;
+    //     totalData[fieldName+'event']=event;
+    // }
 
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = getRate(item);
-            unitData[fieldName+'total'] = item.totalNum;
-            unitData[fieldName+'event'] = item.eventNum;
-            total += item.totalNum;
-            event += item.eventNum;
-        });
 
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = getRate({
-            totalNum: total,
-            eventNum: event
-        });
-        totalData[fieldName+'total']=total;
-        totalData[fieldName+'event']=event;
-    }
-
-    function getRate(item, fixed) {
-        var a = item.eventNum,
-            b = item.totalNum,
-            c = 0;
-        if (a && b) {
-            c = a / b * 100;
-        }
-        return c.toFixed(fixed || 2) + '%';
-    }
 
 
     var pieChart1 = echarts.init(document.getElementById('pieChartDiv1'));
@@ -311,7 +323,7 @@
         var pieName="高血压规范管理率";
         var remainRate=0;
         var it=sumData[sumData.length - 1];
-        var rate=it.ev22005;
+        var rate=it.pressureManageRate;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart1,pieName,rate,remainRate);
@@ -323,7 +335,7 @@
         var pieName="血压控制率";
         var remainRate=0;
         var it=sumData[sumData.length - 1];
-        var rate=it.ev22004;
+        var rate=it.pressureControlRate;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart2,pieName,rate,remainRate);
@@ -334,7 +346,7 @@
         var pieName="糖尿病规范管理率";
         var remainRate=0;
         var it=sumData[sumData.length - 1];
-        var rate=it.ev22007;
+        var rate=it.sugarManageRate;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart3,pieName,rate,remainRate);
@@ -345,7 +357,7 @@
         var pieName="血糖控制率";
         var remainRate=0;
         var it=sumData[sumData.length - 1];
-        var rate=it.ev22006;
+        var rate=it.sugarControlRate;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart4,pieName,rate,remainRate);
@@ -434,7 +446,7 @@
                 type: 'category',
                 axisLabel: {
                     interval:0,
-                    rotate:20//角度顺时针计算的
+                    rotate:30//角度顺时针计算的
                 } ,
                 axisTick : {
                     alignWithLabel : true
@@ -446,7 +458,7 @@
             },
 
             grid: {
-                bottom: '55px',
+                bottom: '95px',
             },
             series: [
                 {
@@ -491,8 +503,8 @@
         result.pop();
         result.forEach(function(item){
             managedName.push(item.unitName);
-            pressureNumberValue.push({name:item.unitName,value:item.ev22004total});
-            pressureManageNumberValue.push({name:item.unitName,value:item.ev22005event});
+            pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
+            pressureManageNumberValue.push({name:item.unitName,value:item.pressureManageNumber});
         })
         var divName="辖区高血压管理柱状图";
         var columnName1="高血压患病数";
@@ -507,8 +519,8 @@
         result.pop();
         result.forEach(function(item){
             managedName.push(item.unitName);
-            sugarNumberValue.push({name:item.unitName,value:item.ev22006total});
-            sugarManageNumberValue.push({name:item.unitName,value:item.ev22007event});
+            sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
+            sugarManageNumberValue.push({name:item.unitName,value:item.sugarManageNumber});
         })
         var divName="辖区糖尿病管理排名柱状图";
         var columnName1="糖尿病患病数";
