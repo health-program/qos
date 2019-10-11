@@ -3,6 +3,8 @@ package com.paladin.qos.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**   
@@ -26,11 +28,13 @@ public class HomePageController {
 
 
 
-
-	@RequestMapping(value = "/publichealth")
-	public String publichealthIndex(HttpServletRequest request){
-		return "/qos/homepage/publichealth/index";
+	@RequestMapping(value = "/publichealth/{name}")
+	public String publichealthIndex(@PathVariable("name") String name){
+		return "/qos/homepage/publichealth/"+name;
 	}
+	
+	
+	
 
 
 	@RequestMapping(value = "/quailtydisplay")

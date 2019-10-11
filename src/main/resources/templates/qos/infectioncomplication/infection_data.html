@@ -102,7 +102,11 @@
             url: '/qos/infectioncomplication/infection/charts/count',
             pagination: false,
             searchbar: '#searchbar',
-            clickToSelect:false,
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+            },
             queryParams: function(params) {
                 requestParams = params;
                 return params;

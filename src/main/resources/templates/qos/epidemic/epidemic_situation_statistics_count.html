@@ -23,7 +23,7 @@
 						</div>
 						<div class="col-md-8">
                   <div class="pull-right">
-                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                       <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
                   </div>
               </div>
@@ -36,11 +36,18 @@
         </div>
    </div>
    <div class="row">
-   	<div class="col-sm-12">
+   	<div class="col-sm-6">
    	<div class="box box-solid" style="margin-top: 20px">
    		<div id="result" class="box-body">
    			<div id="traceability" style="height: 500px"></div>
    		</div>
+   		</div>
+   	</div>
+   	<div class="col-sm-6">
+   	<div class="box box-solid" style="margin-top: 20px">
+   		<div class="box-body">
+			<table id="dataGrid" style="height: 500px"></table>
+		</div>
    		</div>
    	</div>
    </div>
@@ -48,6 +55,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript">
 
+	var table;
 	//<![CDATA[
 	//图表自适应大小      
 	window.addEventListener("resize", function() {
@@ -62,33 +70,70 @@
 	    }
 	    return schoolYear;
 	}
-	
-	function query() {
-		traceabilityChart();
-	}
 
 	$(function() {
-		traceabilityChart();
 		$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
+		initTable();
 	});
+	
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "&emsp;&emsp;&emsp;学校名称&emsp;&emsp;&emsp;", field: "schoolName" },
+                    { title: "疫情总量", field: "total" },
+                    { title: "达预警值的且溯源的疫情量", field: "count" },
+                    { title: "达预警值溯源率", field: "rate"	,formatter : getRate}
+                ]
+            ],
+            url: '/qos/epidemic/traceability/count',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: false,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+            },
+            queryParams: function(params) {
+            	debugger;
+            	params.schoolYear = $("#schoolYear").val();
+            	params.region = $("#district").val();
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+            	response.forEach(function(item){
+    				item.rate=((item.count/item.total)*100).toFixed(2);
+    			})
+    			response.sort(compare('rate','desc'));
+            	
+            	traceabilityChart(response);
+            	
+                return response;
+            }
+        });
+    }
+	
+    function getRate(value, row, index) {
+		return value + "%";
+	}
+	
 
 	var traceability = echarts.init(document.getElementById('traceability'));
 	
-	
-	function traceabilityChart(){
+	function traceabilityChart(response){
 		traceability.showLoading({
            text: '数据正在努力加载...',
            textStyle: { fontSize : 30 , color: '#444' },
            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
        	}); 
-	
-		var schoolYear = $("#schoolYear").val();
-		var nature = $("#nature").val();
-		$.post("/qos/epidemic/traceability/count",{"schoolYear":schoolYear,"nature":nature},function(res){
-			 reslut = res.result;
-			 reslut.sort(compare('rate','desc'));
+			reslut = response;
 			if(reslut.length == 0){
-				showChartInfo(schoolDoctor,'暂无数据显示');
+				showChartInfo(traceability,'暂无数据显示');
 	             return false;
 			}
 			var traceabilityName = [];
@@ -98,7 +143,6 @@
 				traceabilityName.push(item.schoolName);
 				traceabilityValue.push({name:item.schoolName,value:item.rate});
 			}) 
-			
 			
 			traceability.hideLoading();
 			
@@ -229,7 +273,7 @@
                 ]
             };
         traceability.setOption(option1,true);
-		})
+		
 	}
 	
 	//无数据展示
