@@ -70,10 +70,6 @@
         <div class="left position-relative">
             <div class="bg_opacity">
                 <div class="headers line">健康档案建档率</div>
-                <div class="fr width100 text-align-right pr-20 position-absolute absolute1">
-                    <div><span class='orangeline middle-line'></span><span class="text-ffffff">在岗人员</span></div>
-                    <div><span class='greenline middle-line'></span><span class="text-ffffff">卫技人员</span></div>
-                </div>
                 <div id="chartmain"></div>
             </div>
             <div class="bg_opacity">
@@ -94,9 +90,6 @@
         <div class="right" id="mide_right">
             <div class="bg_opacity  position-relative">
                 <div class="headers line">社区医疗收入情况</div>
-                <div class="fr width100 text-align-right pr-20">
-
-                </div>
                 <div id="emergency1"></div>
             </div>
             <div class="bg_opacity">
@@ -124,119 +117,25 @@
     <script type="text/javascript" src="/static/js/comprehensive/thisMonthTreatment.js"></script><!--昆山门急诊人次数-->
     <script type="text/javascript" src="/static/js/comprehensive/permanentPopulation.js"></script><!--常驻人口建档率-->
     <script type="text/javascript" src="/static/js/comprehensive/incomesolity.js"></script><!--社区医疗收入情况-->
+     <script type="text/javascript" src="/static/js/comprehensive/healthFileBookBuilding.js"></script><!--健康档案建档率-->
 </body>
 
 <script>
-$(function() {
-    //指定图标的配置和数据
-    var option = {
-        xAxis: {
-            type: 'category',
-            data: ['2015', '2016', '2017', '2018', '2019'],
-            axisLine: {
-                lineStyle: {
-                    color: '#657ca8',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            },
-            axisLabel: {
-                show: true,
-                textStyle: {
-                    color: '#19d1ff'
-                }
-            }
-        },
-        yAxis: {
-            type: 'value',
-            data: ['2015', '2016', '2017', '2018', '2019'],
-            axisLine: {
-                lineStyle: {
-                    color: '#657ca8',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            },
-            axisLabel: {
-                show: true,
-                textStyle: {
-                    color: '#19d1ff'
-                }
-            }
-        },
-        series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: 'line',
-            lineStyle: {
-                color: '#f45e23',
-                width: 2, //这里是为了突出显示加上的
-            }
-
-        }, {
-            data: [620, 532, 601, 834, 890, 730, 920],
-            type: 'line',
-            lineStyle: {
-                color: '#00b4b1',
-                width: 2, //这里是为了突出显示加上的
-            }
-        }]
-    };
-    //初始化echarts实例
-    var myChart = echarts.init(document.getElementById('chartmain'));
-    myChart.setOption(option);
-
-    //急诊人数开始
-    //指定图标的配置和数据
-    var emergencyoption = {
-        xAxis: {
-            type: 'category',
-            data: ['亭林', '震川', '周市镇', '千灯镇', '巴城镇'],
-            axisLine: {
-                lineStyle: {
-                    color: '#19d1ff',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            }
-        },
-        yAxis: {
-            type: 'value',
-            splitLine: {
-                show: false
-            },
-            axisLine: {
-                lineStyle: {
-                    color: '#19d1ff',
-                    width: 1, //这里是为了突出显示加上的
-                }
-            }
-        },
-        series: [{
-            itemStyle: {
-                normal: {
-                    color: function(d) { return "#" + Math.floor(Math.random() * (256 * 256 * 256 - 1)).toString(16); }
-                 },
-            },
-            barWidth: 30,
-            data: [120, 200, 150, 80, 70],
-            type: 'bar'
-        }]
-    };
-    //初始化echarts实例
 
 
-
-    var myChartEmergency1 = echarts.init(document.getElementById('emergency1'));
-    myChartEmergency1.setOption(emergencyoption);
+  $(function(){
 
 
-    window.onresize = function(){
-        myChart.resize();
-        myChartEmergency.resize();
-        myChartEmergency1.resize();
-        myChartEmergency2.resize();
-        myChartEdoctor.resize();
-        myChartEmergency3.resize();
-     }
+	    window.onresize = function(){
+	        myChart.resize();
+	        myChartEmergency.resize();
+	        myChartEmergency1.resize();
+	        myChartEmergency2.resize();
+	        myChartEdoctor.resize();
+	        myChartEmergency3.resize();
+	     }
+  })
 
-})
 </script>
 <script>
 
