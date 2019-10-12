@@ -74,7 +74,7 @@ public class AddressController extends ControllerSupport {
             Event event = DataConstantContainer.getEvent(eventId);
             if (event != null) {
                 int unitType = getUnitType(event);
-                dataCountUnitList = analysisService.countTotalNumByUnit(eventId, unitType,startDate(),endDate());
+                dataCountUnitList = analysisService.countTotalNumByUnit(eventId, unitType,startDate(),endDate(),null);
                 for(DataCountUnit dataCountUnit:dataCountUnitList){
                     if (StringUtils.equalsIgnoreCase(addressVo.getUnitId(),dataCountUnit.getUnitId())){
                         if(isHospital){

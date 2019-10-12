@@ -2,12 +2,15 @@ package com.paladin.qos.controller.gongwei;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.service.analysis.AnalysisConstant;
 import com.paladin.qos.service.data.DataUnitService;
+import com.paladin.qos.service.data.vo.DataUnitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -42,7 +45,15 @@ public class ArchivesController {
 	public Object dataIndex(Model model) {
 		List<Integer> types=new ArrayList<>();
 		types.add(DataUnit.TYPE_COMMUNITY);
-		model.addAttribute("unit", dataUnitService.selectData(types));
+		List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
+		Iterator<DataUnitVO> it=dataUnitVOList.iterator();
+		while(it.hasNext()){
+			DataUnitVO dataUnitVO=it.next();
+			if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
+				it.remove();
+			}
+		}
+		model.addAttribute("unit", dataUnitVOList);
 		return "/qos/exhibition/archives_index";
 	}
 
@@ -51,11 +62,18 @@ public class ArchivesController {
 	public Object searchAll(AnalysisRequest request) {
 
 		List<ArchivesManagementVO> archivesManagementVOList = new ArrayList<>();
-
-		List<DataCountUnit> totalArchives = analysisService.countTotalNumByUnit("22001", 2, request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> eventArchives = analysisService.countEventNumByUnit("22002", 2, request.getStartTime(), request.getEndTime());
+		List<DataCountUnit> totalArchives = analysisService.countTotalNumByUnit("22001", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);
+		List<DataCountUnit> eventArchives = analysisService.countEventNumByUnit("22002", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);
 		List<FamilyDoctorUnit> familyDoctorUnits = familyDoctorUnitService.findAll();
-
+		if (!StringUtils.isEmpty(request.getUnitId())){
+			Iterator<FamilyDoctorUnit> it = familyDoctorUnits.iterator();
+			while(it.hasNext()){
+				FamilyDoctorUnit d = it.next();
+				if(!StringUtils.equalsIgnoreCase(d.getId(),request.getUnitId())){
+					it.remove();
+				}
+			}
+		}
 		Map<String, Long> eventArchivesMap = eventArchives.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
 		Map<String, Long> totalArchivesMap = totalArchives.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
 //		Map<String, Long> familyDoctorUnitsMap = familyDoctorUnits.stream()
