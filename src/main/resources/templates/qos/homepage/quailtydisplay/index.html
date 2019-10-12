@@ -132,24 +132,21 @@
                             </option>
                         </select>
 
+                    </div>
 
-
-                        <div id="newincomeshequ">
-
-                        </div>
-
-                        <div id="newincomehosiptal">
-
-                        </div>
-
-
-
-
+                    <div id="newincomeshequ">
 
                     </div>
+
+                    <div id="newincomehosiptal">
+
+                    </div>
+
+
+                   <!--
                     <div id="incomeKind">
 
-                    </div>
+                    </div>-->
                 </div>
                 <div class="quailty_right_antibacterial">
                     <div class="quailty_bottom_header2">
@@ -181,18 +178,16 @@
                         <span class="quailty_date">就诊日期</span>
                         <span class="quailty_sick">结算类别</span>
                      </div>
-                   <!-- <div id="box" class="quailty_bottom_right_box">
+                    <div id="box" class="quailty_bottom_right_box">
                         <ul id="list1" >
 
                         </ul>
                         <ul id="list2">
 
                         </ul>
-                    </div>-->
+                    </div>
 
-                            <div class="activity quailty_bottom_right_box">
-                                <ul id="list1activity"></ul>
-                            </div>
+
                 </div>
             </div>
         </div>
@@ -215,28 +210,6 @@ newincomeshequ newincomehosiptal
 
 <script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
-
-<script>
-$(function() {
-	$.ajax({
-		type : "post",    //请求类型
-        url : "/home/page/qos/quailtydisplay/getRegisterList",
-        anysc:false,
-        success: function (rawData){
-        	console.log(rawData);
-        	rawData.result.forEach(function(val,index){
-        		
-        	});
-        	 
-        }
-	})
-	
-
-
-
-})
-</script>
-
 
 <script>
 
@@ -356,21 +329,32 @@ $(function() {
 
 
 
-
-         var listPanel = $('.activity ul');
-        var nubcers = 0; //向上滚动top值
-        function up() { //向上滚动
-            listPanel.animate({ //中奖结果
-                'top': (nubcers - 35) + 'px'
-            }, 1500, 'linear', function() {
-                listPanel.css({
-                    'top': '0px'
-                })
-                    .find("li:first").appendTo(listPanel);
-                up();
-            });
+ 	//无缝滚动开始
+	var box = document.getElementById("box");
+    var l1 = document.getElementById("list1");
+    var l2 = document.getElementById("list2");
+    l2.innerHTML = l1.innerHTML; //克隆list1的数据，使得list2和list1的数据一样
+    function scrollup() {
+        if (box.scrollTop >= 2900) { //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
+            box.scrollTop = 0;
+        	//box.scrollTop++;
+        } else {
+            box.scrollTop++;
         }
-        up();
+    }
+
+    var scrollMove = setInterval(scrollup, 30); //数值越大，滚动速度越慢
+
+    //鼠标经过时，滚动停止
+    box.onmouseover = function() {
+        clearInterval(scrollMove)
+    }
+
+    //鼠标离开时，滚动继续
+    box.onmouseout = function() {
+        scrollMove = setInterval(scrollup, 30);
+    }
+	//无缝滚动结束
 
 
 

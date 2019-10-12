@@ -55,9 +55,9 @@ $("#incomeSelect").trigger("change")
                                                                            radius : '70%',
                                                                            center: ['50%', '50%'],
                                                                            data:[
-                                                                               {value:data31011, name:'药品收入'},
-                                                                               {value:data31012, name:'其他收入'},
-                                                                               {value:data31013, name:'医疗收入'},
+                                                                               {value:data31011, name:'药品'},
+                                                                               {value:data31012, name:'其他'},
+                                                                               {value:data31013, name:'医疗'},
                                                                            ].sort(function (a, b) { return a.value - b.value; }),
                                                                            roseType: 'radius',
                                                                            label: {
