@@ -19,7 +19,7 @@
         </span>
         <div class="middle">
             <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
            <!-- <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
         </div>
         <div class='right'>
@@ -135,13 +135,9 @@
 	        myChartEmergency3.resize();
 	     }
   })
-
 </script>
 <script>
-
-
-
-  $.ajax({
+ $.ajax({
         type : "post",    //请求类型
         url : "/qos/address/search/community",//请求的 URL地址
         success: function (rawData) {
@@ -151,7 +147,7 @@
               // 百度地图API功能
               var map = new BMap.Map("allmap");    // 创建Map实例
               var cityName = '昆山';
-              map.centerAndZoom(cityName, 12);
+              map.centerAndZoom(cityName, 14);
               map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
               map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
               map.enableScrollWheelZoom(true);
@@ -245,19 +241,12 @@
                               searchInfoWindow[k].open(marker[k]);
                             }
                       })(i));
-
-   }
+        }
     //结束
-
-   }
+  }
 
             //结束
           }
        });
-
-
-
 </script>
-
-
 </html>

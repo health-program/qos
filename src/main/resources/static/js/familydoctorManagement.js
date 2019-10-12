@@ -1,7 +1,5 @@
 $(function(){
-
-
-    //指定图标的配置和数据
+     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
          var arr = {
            eventIds:'21001'
@@ -11,14 +9,14 @@ $(function(){
         url : "/qos/analysis/data/get/month/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-       var  month21001Data=convertMonthChartData(rawData.result, '21001', true); //
+       var  month21001Data=convertMonthChartData(rawData.result, '21001', true);
        var option = {
         tooltip: {
-                             trigger: 'axis',
-                             axisPointer: {
-                                 type: 'shadow'
-                             }
-                         },
+           trigger: 'axis',
+           axisPointer: {
+              type: 'shadow'
+           }
+        },
         xAxis: {
             type: 'category',
             data: month21001Data.month,

@@ -131,11 +131,13 @@
 
 .fourclass .left {
     display: inline-block;
-    float: left
+    float: left;
+
 }
 
 .fourclass .left img {
     margin: 1.5vh 1vh 1.5vh 1.5vh;
+      margin-left:7vw;
 }
 
 .fourclass .right {
