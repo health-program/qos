@@ -155,12 +155,12 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
 <script>
 $(function() {
+        alert(534)
 	$.ajax({
 		type : "post",    //请求类型
         url : "/home/page/qos/quailtydisplay/getRegisterList",
         anysc:false,
         success: function (rawData){
-        	debugger
         	console.log(rawData);
         	rawData.result.forEach(function(val,index){
         		
@@ -283,9 +283,9 @@ $(function() {
                               + "</br><b class='text-0efcff'>机构编码：</b>"
                               + markerArr[i].orgType
                               + "</br><b class='text-0efcff'>当月门诊次数：</b>"
-                              + markerArr[i].orgType
+                              + markerArr[i].patients
                               + "</br><b class='text-0efcff'>当月住院人次：</b>"
-                              + markerArr[i].orgType
+                              + markerArr[i].hospital
                               + "</br><b class='text-0efcff'>地址：</b>"
                               + markerArr[i].orgAddress
                               + "</br></p>";

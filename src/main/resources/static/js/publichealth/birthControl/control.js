@@ -46,21 +46,14 @@ function generatorBycsChart(chart) {
                             + params[1].marker + params[1].seriesName + ':'+ Math.abs(params[1].data)+'个<br/>'
                     }
                 },
-            toolbox: {
-                show: true,
-                right: 5,
-                feature: {
-                    mark: { show: true },
-                    dataView: { show: true, readOnly: false },
-                    magicType: { show: true, type: ['line'] },
-                    restore: { show: true },
-                    saveAsImage: { show: true }
-                }
-            },
+
                 legend: {
                     top: 'bottom',
-                    data:[ '避孕套','避孕药']
-                },
+                    data:[ '避孕套','避孕药'],
+                    textStyle: {
+                             color: '#ffffff'
+                    }
+                 },
                 grid: {
                     left: '2%',
                     right: '2%',
@@ -74,7 +67,10 @@ function generatorBycsChart(chart) {
                         axisLabel:{
                             formatter: function (data) {
                                 return (Math.abs(data));
-                            }
+                            },
+                           textStyle: {
+                                   color: '#ffffff'
+                             }
                         }
                     }
                 ],
@@ -82,7 +78,15 @@ function generatorBycsChart(chart) {
                     {
                         type : 'category',
                         axisTick : {show: false},
-                        data : time
+                        data : time,
+                          axisLabel:{
+                                                    formatter: function (data) {
+                                                        return (Math.abs(data));
+                                                    },
+                                                   textStyle: {
+                                                           color: '#ffffff'
+                                                     }
+                                                }
                     }
                 ],
                 series : [

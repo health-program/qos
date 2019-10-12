@@ -1,6 +1,6 @@
 $(function() {
         var day=new Date();
-        day.setTime(day.getTime());
+            day.setTime(day.getTime());
         var month = day.getFullYear()+"-" + (day.getMonth()+1);
         laydate.render({
             elem: '#dateInput',
