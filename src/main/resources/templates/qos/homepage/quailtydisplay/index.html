@@ -33,7 +33,7 @@
             border-bottom:1px dotted #d2d2d2;
         }
 
-    #newspotital{
+    #newspotital,#newincomehosiptal{
       width:10vw;
       height:7vw;
       display:inline-block;
@@ -42,7 +42,8 @@
       margin-left:1vw;
     }
 
-    #newshequ{
+
+    #newshequ,#newincomeshequ{
       width:10vw;
       height:7vw;
       display:inline-block;
@@ -122,7 +123,7 @@
                             </option>
                         </select>-->
 
-                        <select id="incomeSelect">
+                        <select id="incomeSelect" style="display:none;">
                             <option value="31009">
                                 医院
                             </option>
@@ -130,6 +131,19 @@
                                 社区
                             </option>
                         </select>
+
+
+
+                        <div id="newincomeshequ">
+
+                        </div>
+
+                        <div id="newincomehosiptal">
+
+                        </div>
+
+
+
 
 
                     </div>
@@ -192,7 +206,13 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/payyibao.js"></script><!--支付方式医保-->
 <script type="text/javascript" src="/static/js/quailtydisplay/payshequ.js"></script><!--支付方式社区-->
+
+newincomeshequ newincomehosiptal
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
+<script type="text/javascript" src="/static/js/quailtydisplay/newincomeshequ.js"></script><!--收入分类对比-->
+
+<script type="text/javascript" src="/static/js/quailtydisplay/newincomehospital.js"></script><!--收入分类对比-->
+
 <script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
 
