@@ -38,7 +38,7 @@
 				{ title: "学历", name: "oeducation",required: "required", inputType: "SELECT",enum: "oeducation-type" },
 				{ title: "是否团队长", name: "isTeamCaptain",required: "required",inputType:"SELECT",enum:"boolean-type" },
 				{ title: "职称", name: "jobRank",required: "required", inputType: "SELECT",enum: "job-rank-type" },
-				{ title: "人员类别", name: "personnelCategory",required: "required", inputType: "SELECT",enum: "personnel-category-type" },
+				{ title: "人员类别(可多选)", name: "personnelCategory",required: "required", inputType: "SELECT", multiple: true,enum:"personnel-category-type" },
 				{ title: "其他人员（请注明）", name: "otherPersonnel", inputType: "TEXT" },
 				{ title: "医院专科团队医生(医院+医生)", name: "specialtyTeamDoctor", inputType: "TEXT" }
 				]
