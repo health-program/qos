@@ -51,4 +51,14 @@ ul li{
    margin:auto!important;
 }
 .box-body{
+
+}
+.childhealth{
+   width:43vw!important;
+}
+#middle .header{
+  width:43vw!important;
+}
+#emergency,#emergency1{
+  width:43vw!important;
 }
