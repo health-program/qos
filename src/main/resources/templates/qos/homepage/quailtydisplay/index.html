@@ -141,9 +141,7 @@
                     <div id="newincomehosiptal">
 
                     </div>
-
-
-                   <!--
+                  <!--
                     <div id="incomeKind">
 
                     </div>-->
@@ -161,9 +159,7 @@
                 <div class="quailty_bottom_header">
                     就诊人次时间走势
                 </div>
-                <div id="medicaladvice">
-
-                </div>
+                <div id="medicaladvice"></div>
             </div>
             <div class="quailty_bottom_right">
                 <div class="quailty_bottom_header">
@@ -179,16 +175,10 @@
                         <span class="quailty_sick">结算类别</span>
                      </div>
                     <div id="box" class="quailty_bottom_right_box">
-                        <ul id="list1" >
-
-                        </ul>
-                        <ul id="list2">
-
-                        </ul>
+                        <ul id="list1" ></ul>
+                        <ul id="list2"></ul>
                     </div>
-
-
-                </div>
+                 </div>
             </div>
         </div>
     </div>
@@ -201,16 +191,11 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/payyibao.js"></script><!--支付方式医保-->
 <script type="text/javascript" src="/static/js/quailtydisplay/payshequ.js"></script><!--支付方式社区-->
-
-newincomeshequ newincomehosiptal
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomeshequ.js"></script><!--收入分类对比-->
-
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomehospital.js"></script><!--收入分类对比-->
-
 <script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
-
 <script>
 
 
@@ -232,8 +217,6 @@ newincomeshequ newincomehosiptal
               map.addControl(new BMap.NavigationControl());
               map.addControl(new BMap.ScaleControl());
               map.addControl(new BMap.OverviewMapControl());
-
-
               function getBoundary1()
               {
                   var bdary = new BMap.Boundary();
@@ -311,19 +294,35 @@ newincomeshequ newincomehosiptal
 
                       });
 
-
-                      //添加点击事件
+                     //添加点击事件
                    marker[i].addEventListener("click", (function (k) {
                             return function () {
                               searchInfoWindow[k].open(marker[k]);
                             }
                       })(i));
+
+
+
+
+            var skipIndex = 0;
+
+            window.setInterval(function() {
+                if (skipIndex >= marker.length) skipIndex = 0;
+                var m = marker[skipIndex],
+                    win = searchInfoWindow[skipIndex++];
+                win.open(m);
+                map.panTo(point[i]);
+            }, 10000);
+
+
+
+
+
+
         }
     //结束
-
-   }
-
-            //结束
+  }
+    //结束
           }
        });
 

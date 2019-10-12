@@ -540,6 +540,10 @@ select {
 }
 .BMapLib_SearchInfoWindow .BMapLib_bubble_close{
   background:url('../../static/image/index/close.png');
+  background-size:cover;
+  width:14px!important;
+  height:14px!important;
+  margin-top:5px;
 }
 #jizhenrencishu,#jiatingyisheng,#jiankangdanganjiandanglv{
    width: 60vh;

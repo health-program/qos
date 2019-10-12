@@ -83,10 +83,10 @@ $(function(){
                                          containLabel: true
                                      },
                           axisLabel: {
-                                                                                 show: true,
-                                                                                 textStyle: {
-                                                                                     color: '#19d1ff',
-                                                                                },
+                                  show: true,
+                                  textStyle: {
+                                       color: '#19d1ff',
+                                   },
                                                                                   interval:0,
                                                                                   rotate:30,
                                                                                   formatter: function(value) {

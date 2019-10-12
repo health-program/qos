@@ -45,6 +45,8 @@ $(function(){
 
            var dataMap=convertUnitChartData(rawData, '22001', true); //
 
+           debugger
+
 
               //急诊人数开始
                  var jiankangdanganjiandanglvOption = {
@@ -56,12 +58,12 @@ $(function(){
                              },
                      xAxis: {
                          type: 'category',
-                           interval: 0,
-                                                  rotate: 30,
-                                                  formatter: function(value) {
-                                                      var reg = new RegExp('社区卫生服务中心' , "g");
-                                                      return value.replace(reg, '');
-                                                  }
+                         interval: 0,
+                         rotate: 30,
+                         formatter: function(value) {
+                             var reg = new RegExp('社区卫生服务中心' , "g");
+                                return value.replace(reg, '');
+                          },
                            grid:{
 
                              left:'10%',
@@ -133,15 +135,4 @@ $(function(){
                    //急诊人数结束
          }
     });
-
-
-
-
-
-
-
-
-
-
-
 })
