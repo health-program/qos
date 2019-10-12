@@ -3,11 +3,6 @@ $(function () {
     });
 var bycsChart = echarts.init(document.getElementById('emergency'));
 function generatorBycsChart(chart) {
-        chart.showLoading({
-            text: '数据正在努力加载...',
-            textStyle: { fontSize : 30 , color: '#444' },
-            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
-        });
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
@@ -48,7 +43,7 @@ function generatorBycsChart(chart) {
                 },
 
                 legend: {
-                    top: 'bottom',
+                    top: 'top',
                     data:[ '避孕套','避孕药'],
                     textStyle: {
                              color: '#ffffff'
@@ -63,7 +58,7 @@ function generatorBycsChart(chart) {
                 xAxis : [
                     {
                         type : 'value',
-                        position : 'top',
+                        position : 'bottom',
                         axisLabel:{
                             formatter: function (data) {
                                 return (Math.abs(data));

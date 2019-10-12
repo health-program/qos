@@ -28,10 +28,7 @@ $(function(){
          url : "/qos/analysis/data/get/unit",//请求的 URL地址
          data:arr,
          success: function (rawData) {
-         console.log(111);
-         
-        
-         for(var i=0;i<rawData.result['13320'].length;i++){
+          for(var i=0;i<rawData.result['13320'].length;i++){
         	 
         	 if(rawData.result['13320'][i].unitName.endWith('服务中心')){
         		 
@@ -82,10 +79,14 @@ $(function(){
       		  xAxis: {
       		        type: 'category',
       		        data: arr13320Month,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+      		                  		        axisLabel: {
+                                               interval: 0,
+                                               rotate: 0, //角度顺时针计算的
+                                               formatter: function(value) {
+                                                    var reg = new RegExp('社区卫生服务中心', "g");
+                                                      return value.replace(reg, '');
+                                               }
+                                             },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',

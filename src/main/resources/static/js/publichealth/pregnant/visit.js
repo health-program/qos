@@ -28,28 +28,17 @@ $(function(){
          url : "/qos/analysis/data/get/unit",//请求的 URL地址
          data:arr,
          success: function (rawData) {
-         console.log(111);
-         
-        
-         for(var i=0;i<rawData.result['13314'].length;i++){
-        	 
-        	 if(rawData.result['13314'][i].unitName.endWith('服务中心')){
-        		 
+          for(var i=0;i<rawData.result['13314'].length;i++){
+        	  if(rawData.result['13314'][i].unitName.endWith('服务中心')){
         		 arr13314Month.push(rawData.result['13314'][i].unitName)
                  arr13314MonthY.push(rawData.result['13314'][i].count)
         	 }
           }
-         
-         for(var i=0;i<rawData.result['13319'].length;i++){
-        	 
-                if(rawData.result['13319'][i].unitName.endWith('服务中心')){
+          for(var i=0;i<rawData.result['13319'].length;i++){
+        	   if(rawData.result['13319'][i].unitName.endWith('服务中心')){
                 	ev13319DataArray.push(rawData.result['13319'][i].count)
         	 }
           }
-         
-         
-         
-         
          let a=arr13314MonthY, b=ev13319DataArray;
          let newarr13002MonthY = a.map(function(v, i) {
         	 if(b[i]==0){
@@ -57,15 +46,9 @@ $(function(){
         	 }else{
         		 return (v*100/b[i]).toFixed(2);
         	 }
-             
-         });
-         
-
-
-
-        var medicaladviceoption2oldPeople = {
-        	
-        		tooltip: {
+       });
+       var medicaladviceoption2oldPeople = {
+        	    tooltip: {
 	                trigger: 'axis',
 	                formatter: function(params, ticket, callback) {
 	                    var html = params[0].axisValueLabel + '：';
@@ -82,10 +65,14 @@ $(function(){
       		  xAxis: {
       		        type: 'category',
       		        data: arr13314Month,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+      		         axisLabel: {
+                              interval: 0,
+                              rotate: 0, //角度顺时针计算的
+                              formatter: function(value) {
+                                   var reg = new RegExp('社区卫生服务中心', "g");
+                                     return value.replace(reg, '');
+                              }
+                            },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',
@@ -114,11 +101,11 @@ $(function(){
       		    	  itemStyle: {
       		              normal: {
       		                  // 随机显示
-      		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
+      		                   color:function(d){return "#439aff";}
       		                
       		              },
       		          },
-      		          barWidth : 30,
+      		        barWidth : 30,
       		        name: '孕产妇产后访视率',
       		        data: newarr13002MonthY,
       		        type: 'bar'
