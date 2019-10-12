@@ -29,6 +29,12 @@
         </if>
 		AND serial_number>=#{start}
 		AND serial_number&lt;=#{end}
+		<if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>		
 		GROUP BY year,month,day
 	</select>
 	
@@ -57,6 +63,12 @@
         </if>
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		<if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>		
 		GROUP BY `year`, `month`
 	</select>
 	
@@ -83,6 +95,12 @@
         </if>
 		  AND year>=#{start}
 		  AND year&lt;=#{end}
+		<if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY `year`
 	</select>
 	
@@ -108,6 +126,12 @@
 		WHERE event_id=#{eventId}
 		  AND year>=#{start}
 		  AND year&lt;=#{end}
+		  <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>	
 		GROUP BY `year`, `week_year`
 	</select>
 	
@@ -135,6 +159,12 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		  <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>	
 		GROUP BY `year`, `month`, `week_month`
 	</select>
 	
@@ -150,23 +180,15 @@
 		<if test="unitType != 0">
 		  AND unit_type=#{unitType}
         </if>
+        <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>   
 		GROUP BY `unit_id`
 	</select>
 	
-	<select id="getAnalysisResultGroupByMonth" resultType="com.paladin.qos.service.analysis.data.DataPointMonth">
-		SELECT year, 
-		   month,
-	       SUM(event_num) AS eventNum,
-	       SUM(total_num) AS totalNum
-		FROM data_processed_day
-		WHERE event_id=#{eventId}
-		  AND serial_number>=#{start}
-		  AND serial_number&lt;=#{end}
-		<if test="unitType != 0">
-		  AND unit_type=#{unitType}
-        </if>
-		GROUP BY `year`, `month`
-	</select>
 	
 	<select id="countTotalNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id AS unitId,
@@ -178,6 +200,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>        
 		GROUP BY unit_id
 	</select>
 	
@@ -191,6 +219,12 @@
 		<if test="unitType != 0">
 		  AND unit_type=#{unitType}
         </if>
+        <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY unit_id
 	</select>
 	
@@ -207,6 +241,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>  
 		GROUP BY year,month,day
 	</select>
 	
@@ -223,6 +263,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY year,month,day
 	</select>
 	
@@ -238,6 +284,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY year,month
 	</select>
 	
@@ -253,6 +305,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY year,month
 	</select>
 	
@@ -267,6 +325,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY year
 	</select>
 	
@@ -281,6 +345,12 @@
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 		GROUP BY year
 	</select>
 	
@@ -290,6 +360,12 @@
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
 		  AND serial_number&lt;=#{end}
+		<if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 	</select>
 			
 	<select id="getSerialNumbers" resultType="Integer">
@@ -327,12 +403,11 @@
         </if>
 	</select>
 	
-	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register">
-	 
-	 select regid,orgname,deptname,patientname,sexcode,seedate,paykindname from jcyl_opr_register
-	 where regstatus = '0'
-     ORDER BY seedate desc 
-     limit 100
-	
+	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register"> 
+		 SELECT regid,orgname,deptname,patientname,sexcode,seedate,paykindname 
+		 FROM jcyl_opr_register
+		 WHERE regstatus = '0'
+	     ORDER BY seedate desc 
+	     LIMIT 100
 	</select>
 </mapper>
