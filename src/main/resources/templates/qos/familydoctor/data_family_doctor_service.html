@@ -115,7 +115,7 @@
                     { title: "综合健康管理服务包<br/>签约率(收费)", field: "reat21001"},
                     { title: "个性化服<br/>务签约数", field: "event21002"},
                     { title: "签约总数", field: "total21002"},
-                    { title: "个性化服<br/>务签约率", field: "reat21002"}
+                    { title: "个性化服务<br/>签约率(收费)", field: "reat21002"}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
@@ -257,7 +257,7 @@
     		        }
     		    },
     		    legend: {
-    		        data:['签约健康管理服务包签约数']
+    		        data:['健康管理服务包签约数']
     		    },
     		    grid: {
     		        left: '3%',
@@ -285,7 +285,7 @@
     		    ],
     		    series : [
     		        {
-    		            name:'签约健康管理服务包签约数',
+    		            name:'健康管理服务包签约数',
     		            type:'bar',
     		            barWidth: '60%',
     		            data:ev21001.values
@@ -309,7 +309,7 @@
     		        }
     		    },
     		    legend: {
-    		        data:['签约个性化服务数']
+    		        data:['个性化服 务签约数']
     		    },
     		    grid: {
     		        left: '3%',
@@ -337,7 +337,7 @@
     		    ],
     		    series : [
     		        {
-    		            name:'签约个性化服务数',
+    		            name:'个性化服 务签约数',
     		            type:'bar',
     		            barWidth: '60%',
     		            data:ev21002.values
@@ -406,7 +406,7 @@
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
                 title: {
-                    text: '综合健康管理服务包签约率',
+                    text: '健康管理服务包签约率',
                 },
                 color: ['#3398DB','#999999'],
                 graphic: [{ //环形图中间添加文字
@@ -425,7 +425,7 @@
                 }],
                 series: [
                     {
-                        name:'综合健康管理服务包签约率',
+                        name:'健康管理服务包签约率',
                         type:'pie',
                         radius: ['50%', '70%'],
                         avoidLabelOverlap: false,
@@ -444,7 +444,7 @@
                         data:[
                             {
                                 value:res[unitId].eventNum,
-                                name:'综合健康管理服务包签约率'
+                                name:'健康管理服务包签约率'
                             },
                             {
                                 value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
@@ -471,7 +471,7 @@
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
                 title: {
-                    text: '个性化服务签约率',
+                    text: '个性化服 务签约数',
                 },
                 color: ['#3398DB','#999999'],
                 graphic: [{ //环形图中间添加文字
