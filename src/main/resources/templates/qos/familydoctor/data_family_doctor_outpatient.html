@@ -109,8 +109,8 @@
     function unitSelected(row) {
         selectUnit = row.unitId;
         qyysmzjzlChartMethod(responseData);
-    	qyjmzxjzrcsChartMethod(responseData);
-    	qyjmjtysjzzsChartMethod(responseData);
+    	qyjgmzjzlChartMethod(responseData);
+    	ndfwyxlylChartMethod(responseData);
     }
     
    
@@ -126,9 +126,9 @@
                     { title: "签约居民中心<br/>就诊人次数", field: "event21003"},
                     { title: "签约居民就<br/>诊总次数", field: "total21003"},
                     { title: "签约机构门<br/>诊就诊率", field: "reat21003"},
-                    { title: "签约居民家庭<br/>医生就诊率", field: "event21004"},
+                    { title: "签约居民家庭<br/>医生就诊总数", field: "event21004"},
                     { title: "签约居民中心<br/>就诊总次数", field: "total21004"},
-                    { title: "签约医生门<br/>诊就诊率", field: "reat21004"}
+                    { title: "签约医生<br/>就诊率", field: "reat21004"}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
@@ -143,6 +143,7 @@
             },
             queryParams: function(params) {
             	params.eventIds = '21003,21004';
+            	params.ignoreUnitIds = '320583810343'
                 requestParams = params;
                 return params;
             },
@@ -261,6 +262,23 @@
     var qyjmzxjzrcsChart = echarts.init(document.getElementById('qyjmzxjzrcsChart'));
     function qyjmzxjzrcsChartMethod(response){
     	var ev21003= convertUnitChartData(response, '21003', true);
+    	 var labelOption = {
+		            normal: {
+		                show: true,
+		                position: 'top',
+		                distance: 11,
+		                align: 'center',
+		                verticalAlign: 'top',
+		                rotate: 0,
+		                formatter: '{c}',
+		                fontSize: 11,
+		                rich: {
+		                    name: {
+		                        textBorderColor: '#fff'
+		                    }
+		                }
+		            }
+		        };
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -306,6 +324,7 @@
     		            name:'签约居民中心就诊人次数',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:ev21003.values
     		        }
     		    ]
@@ -317,6 +336,23 @@
     var qyjmjtysjzzsChart = echarts.init(document.getElementById('qyjmjtysjzzsChart'));
     function qyjmjtysjzzsChartMethod(response){
     	var ev21004= convertUnitChartData(response, '21004', true);
+    	 var labelOption = {
+		            normal: {
+		                show: true,
+		                position: 'top',
+		                distance: 11,
+		                align: 'center',
+		                verticalAlign: 'top',
+		                rotate: 0,
+		                formatter: '{c}',
+		                fontSize: 11,
+		                rich: {
+		                    name: {
+		                        textBorderColor: '#fff'
+		                    }
+		                }
+		            }
+		        };
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -361,6 +397,7 @@
     		            name:'签约居民家庭医生就诊总数',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:ev21004.values
     		        }
     		    ]
@@ -480,6 +517,11 @@
     function qyjgmzjzlChartMethod(responseData){
     	var unitId = selectUnit || 'total';
     	var res=convertChartData(responseData, '21003', true);
+    	var value1 = 0;
+    	if(res[unitId].eventNum !=0 && res[unitId].totalNum !=0){
+    		value1 = res[unitId].eventNum;
+    	}
+    	
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -520,7 +562,7 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
+                                value:  value1,
                                 name:'签约机构门诊就诊率'
                             },
                             {
@@ -542,6 +584,10 @@
     function qyysmzjzlChartMethod(responseData){
     	var unitId = selectUnit || 'total';
     	var res=convertChartData(responseData, '21004', true);
+    	var value1 = 0;
+    	if(res[unitId].eventNum !=0 && res[unitId].totalNum !=0){
+    		value1 = res[unitId].eventNum;
+    	}
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -553,7 +599,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'签约医生门诊就诊率',
+                        text: res[unitId].rate+'%'+'\n'+'签约医生就诊率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -564,7 +610,7 @@
                 }],
                 series: [
                     {
-                        name:'签约医生门诊就诊率',
+                        name:'签约医生就诊率',
                         type:'pie',
                         radius: ['50%', '70%'],
                         avoidLabelOverlap: false,
@@ -582,8 +628,8 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
-                                name:'签约医生门诊就诊率'
+                                value:value1,
+                                name:'签约医生就诊率'
                             },
                             {
                                 value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
