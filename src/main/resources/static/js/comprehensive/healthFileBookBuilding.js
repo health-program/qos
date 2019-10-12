@@ -60,7 +60,7 @@ $(function() {
                         interval: 0,
                         rotate: 30,
                         formatter: function(value) {
-                            var reg = new RegExp('社区卫生服务中心'                                    , "g");
+                            var reg = new RegExp('社区卫生服务中心' , "g");
                             return value.replace(reg, '');
                         }
                     },

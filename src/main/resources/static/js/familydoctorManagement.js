@@ -62,6 +62,10 @@ $(function(){
           }]
     };
 
+    debugger;
+
+
+
     //初始化echarts实例
     var myChart = echarts.init(document.getElementById('chartmain'));
     myChart.setOption(option);

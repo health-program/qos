@@ -541,7 +541,7 @@ select {
 .BMapLib_SearchInfoWindow .BMapLib_bubble_close{
   background:url('../../static/image/index/close.png');
 }
-#jizhenrencishu,#jiatingyisheng{
+#jizhenrencishu,#jiatingyisheng,#jiankangdanganjiandanglv{
    width: 60vh;
    height: 20vh;
 }

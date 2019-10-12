@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <meta name="viewport" content="width=device-width">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<head th:include="/qos/header" />
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<head th:include="/qos/header"/>
 <link rel="stylesheet" href="/static/css/SearchInfoWindow_min.css">
 <link rel="stylesheet" href="/static/css/index.css">
 <script type="text/javascript" src="/static/assets/echarts/echarts.min.js"></script>
@@ -13,111 +14,113 @@
 
 
 <body id="body">
-    <nav id="nav">
+<nav id="nav">
         <span class='index_left text-00e4ff left'>
-            <img src="../../../static/image/index/home.png" />综合质量展示
+            <img src="../../../static/image/index/home.png"/>综合质量展示
         </span>
-        <div class="middle">
-            <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
-           <!-- <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
+    <div class="middle">
+        <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+        <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <!-- <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
+    </div>
+    <div class='right'>
+        <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
+    </div>
+</nav>
+<header id="header">
+    <div class="fourclass">
+        <div class="left">
+            <img src="../../../static/image/index/index_people.png"/>
         </div>
-        <div class='right'>
-            <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
-        </div>
-    </nav>
-    <header id="header">
-        <div class="fourclass">
-            <div class="left">
-                <img src="../../../static/image/index/index_people.png" />
-            </div>
-            <div class="right">
-                <div class="text-ffffff top">本月总门急诊人</div>
-                <div class="text-3df37e bottom"><i id="thismonth"></i><span class="fz18">人</span></div>
-            </div>
-        </div>
-        <div class="fourclass">
-            <div class="left">
-                <img src="../../../static/image/index/index_file.png" />
-            </div>
-            <div class="right">
-                <div class="text-ffffff top">健康档案总数 </div>
-                <div class="text-3df37e bottom"><i id="healthAll"></i><span class="fz18">人</span></div>
-            </div>
-        </div>
-        <div class="fourclass">
-            <div class="left">
-                <img src="../../../static/image/index/index_spec.png" />
-            </div>
-            <div class="right">
-                <div class="text-ffffff top">特殊人群管理数</div>
-                <div class="text-3df37e bottom"><i id="specialPeople"></i><span class="fz18">人</span></div>
-            </div>
-        </div>
-        <div class="fourclass">
-            <div class="left">
-                <img src="../../../static/image/index/index_doctor.png" />
-            </div>
-            <div class="right">
-                <div class="text-ffffff top">家庭医生团队数</div>
-                <div class="text-3df37e bottom"><i id="home_family_doctor"></i><span class="fz18">人</span></div>
-            </div>
-        </div>
-    </header>
-    <div id="middle">
-        <div class="left position-relative">
-            <div class="bg_opacity">
-                <div class="headers line">健康档案建档率</div>
-                <div id="chartmain"></div>
-            </div>
-            <div class="bg_opacity">
-                <div class="headers line">昆山门急诊人次数</div>
-                <div id="jizhenrencishu"></div>
-            </div>
-            <div class="bg_opacity">
-                <div class="headers line">家庭医生团队情况</div>
-                <div id="jiatingyisheng"></div>
-            </div>
-        </div>
-        <div class="middle">
-            <div id="allmap" class="comprehensiveMap"></div>
-            <input id="site" type="text" style="display:none">
-            <input id="longitude" type="text" value="121.047817" style="display:none">
-            <input id="latitude" type="text" value="31.395795" style="display:none">
-        </div>
-        <div class="right" id="mide_right">
-            <div class="bg_opacity  position-relative">
-                <div class="headers line">社区医疗收入情况</div>
-                <div id="emergency1"></div>
-            </div>
-            <div class="bg_opacity">
-                <div class="headers line">常驻人口建档率</div>
-                <div id="permanentPopulation"></div>
-            </div>
-            <div class="bg_opacity position-relative">
-                <div class="headers line">住院/出院人次数</div>
-                <div class="fr width100 text-align-right pr-20 position-absolute">
-                    <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
-                    <div><span class='blueline middle-line'></span><span class="text-ffffff">出院人数</span></div>
-                </div>
-                <div id="emergency3"></div>
-            </div>
+        <div class="right">
+            <div class="text-ffffff top">本月总门急诊人</div>
+            <div class="text-3df37e bottom"><i id="thismonth"></i><span class="fz18">人</span></div>
         </div>
     </div>
-    <div th:include="/qos/footer" />
-    <script type="text/javascript" src="/static/js/comprehensive/common.js"></script>
-    <script type="text/javascript" src="/static/js/comprehensive/outpatient.js"></script>
-    <script type="text/javascript" src="/static/js/comprehensive/familydoctor.js"></script>
-    <script type="text/javascript" src="/static/js/comprehensive/permanent.js"></script><!--常驻-->
-    <script type="text/javascript" src="/static/js/comprehensive/community.js"></script><!--本月总门急诊人等-->
-    <script type="text/javascript" src="/static/js/comprehensive/intohospital.js"></script><!--住院/出院人次数-->
-    <script type="text/javascript" src="/static/js/comprehensive/familyDoctorTeam.js"></script><!--家庭医生团队情况-->
-    <script type="text/javascript" src="/static/js/comprehensive/thisMonthTreatment.js"></script><!--昆山门急诊人次数-->
-    <script type="text/javascript" src="/static/js/comprehensive/permanentPopulation.js"></script><!--常驻人口建档率-->
-    <script type="text/javascript" src="/static/js/comprehensive/incomesolity.js"></script><!--社区医疗收入情况-->
-     <script type="text/javascript" src="/static/js/comprehensive/healthFileBookBuilding.js"></script><!--健康档案建档率-->
+    <div class="fourclass">
+        <div class="left">
+            <img src="../../../static/image/index/index_file.png"/>
+        </div>
+        <div class="right">
+            <div class="text-ffffff top">健康档案总数</div>
+            <div class="text-3df37e bottom"><i id="healthAll"></i><span class="fz18">人</span></div>
+        </div>
+    </div>
+    <div class="fourclass">
+        <div class="left">
+            <img src="../../../static/image/index/index_spec.png"/>
+        </div>
+        <div class="right">
+            <div class="text-ffffff top">特殊人群管理数</div>
+            <div class="text-3df37e bottom"><i id="specialPeople"></i><span class="fz18">人</span></div>
+        </div>
+    </div>
+    <div class="fourclass">
+        <div class="left">
+            <img src="../../../static/image/index/index_doctor.png"/>
+        </div>
+        <div class="right">
+            <div class="text-ffffff top">家庭医生团队数</div>
+            <div class="text-3df37e bottom"><i id="home_family_doctor"></i><span class="fz18">人</span></div>
+        </div>
+    </div>
+</header>
+<div id="middle">
+    <div class="left position-relative">
+        <div class="bg_opacity">
+            <div class="headers line">健康档案建档率</div>
+            <!--<div id="chartmain"></div>-->
+            <div id="jiankangdanganjiandanglv"></div>
+        </div>
+        <div class="bg_opacity">
+            <div class="headers line">昆山门急诊人次数</div>
+            <div id="jizhenrencishu"></div>
+        </div>
+        <div class="bg_opacity">
+            <div class="headers line">家庭医生团队情况</div>
+            <div id="jiatingyisheng"></div>
+        </div>
+    </div>
+    <div class="middle">
+        <div id="allmap" class="comprehensiveMap"></div>
+        <input id="site" type="text" style="display:none">
+        <input id="longitude" type="text" value="121.047817" style="display:none">
+        <input id="latitude" type="text" value="31.395795" style="display:none">
+    </div>
+    <div class="right" id="mide_right">
+        <div class="bg_opacity  position-relative">
+            <div class="headers line">社区医疗收入情况</div>
+            <div id="emergency1"></div>
+        </div>
+        <div class="bg_opacity">
+            <div class="headers line">常驻人口建档率</div>
+            <div id="permanentPopulation"></div>
+        </div>
+        <div class="bg_opacity position-relative">
+            <div class="headers line">住院/出院人次数</div>
+            <div class="fr width100 text-align-right pr-20 position-absolute">
+                <div><span class='orangeline middle-line'></span><span class="text-ffffff">住院人数</span></div>
+                <div><span class='blueline middle-line'></span><span class="text-ffffff">出院人数</span></div>
+            </div>
+            <div id="emergency3"></div>
+        </div>
+    </div>
+</div>
+<div th:include="/qos/footer"/>
+<script type="text/javascript" src="/static/js/comprehensive/common.js"></script>
+<script type="text/javascript" src="/static/js/comprehensive/outpatient.js"></script>
+<script type="text/javascript" src="/static/js/comprehensive/familydoctor.js"></script>
+<script type="text/javascript" src="/static/js/comprehensive/permanent.js"></script><!--常驻-->
+<script type="text/javascript" src="/static/js/comprehensive/community.js"></script><!--本月总门急诊人等-->
+<script type="text/javascript" src="/static/js/comprehensive/intohospital.js"></script><!--住院/出院人次数-->
+<script type="text/javascript" src="/static/js/comprehensive/familyDoctorTeam.js"></script><!--家庭医生团队情况-->
+<script type="text/javascript" src="/static/js/comprehensive/thisMonthTreatment.js"></script><!--昆山门急诊人次数-->
+<script type="text/javascript" src="/static/js/comprehensive/permanentPopulation.js"></script><!--常驻人口建档率-->
+<script type="text/javascript" src="/static/js/comprehensive/incomesolity.js"></script><!--社区医疗收入情况-->
+<script type="text/javascript" src="/static/js/comprehensive/healthFileBookBuilding.js"></script><!--健康档案建档率-->
+<script type="text/javascript" src="/static/js/comprehensive/jiankangdanganjiandanglv.js"></script><!--健康档案建档率-->
 </body>
 
 <script>
@@ -155,8 +158,6 @@
               map.addControl(new BMap.NavigationControl());
               map.addControl(new BMap.ScaleControl());
               map.addControl(new BMap.OverviewMapControl());
-
-
               function getBoundary1()
               {
                   var bdary = new BMap.Boundary();
@@ -191,7 +192,6 @@
                   var info = new Array(); //存放提示信息窗口对象的数组
                   var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
                   var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
-
                   for (var i = 0; i < markerArr.length; i++) {
                       var p0 = markerArr[i].orgLon; //orgLon
                       var p1 = markerArr[i].orgLat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
@@ -241,6 +241,11 @@
                               searchInfoWindow[k].open(marker[k]);
                             }
                       })(i));
+
+                        alert(marker.length)
+                    for(var i=0;i<marker.length;i++){
+
+                    }
         }
     //结束
   }
@@ -248,5 +253,19 @@
             //结束
           }
        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 </html>
