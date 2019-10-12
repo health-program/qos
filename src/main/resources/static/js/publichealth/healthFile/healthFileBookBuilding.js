@@ -52,8 +52,7 @@ $(function(){
 
 
         	var medicaladviceoption1 = {
-
-        			tooltip: {
+                        tooltip: {
     	                trigger: 'axis',
     	                formatter: function(params, ticket, callback) {
     	                    var html = params[0].axisValueLabel + '：';
