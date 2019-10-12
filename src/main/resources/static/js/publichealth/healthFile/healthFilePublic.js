@@ -75,10 +75,14 @@ $(function(){
             		  xAxis: {
             		        type: 'category',
             		        data: unit22002DatanewArrayunit22002DatanewArray.unit,
-            		        axisLabel: {
-      	                    interval: 0,
-      	                    rotate: 25 //角度顺时针计算的
-      	                },
+            		                 		        axisLabel: {
+                                                      interval: 0,
+                                                      rotate: 0, //角度顺时针计算的
+                                                      formatter: function(value) {
+                                                           var reg = new RegExp('社区卫生服务中心', "g");
+                                                             return value.replace(reg, '');
+                                                      }
+                                                    },
             		        axisLine:{
                                 lineStyle:{
                                     color:'#19d1ff',

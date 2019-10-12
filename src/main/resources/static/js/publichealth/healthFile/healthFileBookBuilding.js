@@ -76,9 +76,13 @@ $(function(){
             		        type: 'category',
             		        data: unit22001DatanewArrayunit22001DatanewArray.unit,
             		        axisLabel: {
-      	                    interval: 0,
-      	                    rotate: 25 //角度顺时针计算的
-      	                },
+                             interval: 0,
+                             rotate: 0, //角度顺时针计算的
+                             formatter: function(value) {
+                                  var reg = new RegExp('社区卫生服务中心', "g");
+                                    return value.replace(reg, '');
+                             }
+                           },
             		        axisLine:{
                                 lineStyle:{
                                     color:'#19d1ff',
@@ -124,95 +128,3 @@ $(function(){
         }
 	})
 })
-
-/*$(function(){
-    //支付方式对比
-         var arr = {
-         //  建档率，公开率（使用率==建档率），
-              eventIds:'22001,22002'
-
-         }
-         //从大到小排序
-         function compareBigToSmall(property){
-             return function(a,b){
-                 var value1 = a[property];
-                 var value2 = b[property];
-                 return  value2 - value1;
-             }
-         };
-
-       $.ajax({
-         type : "post",    //请求类型
-         url : "/qos/analysis/data/get/unit",//请求的 URL地址
-         async: false,
-         data:arr,
-         success: function (rawData) {
-         console.log(111);
-         var  unit22001Data=convertUnitChartData(rawData.result, '22001', true); //
-         var ev22001 = convertUnitChartData(rawData.result, '22001', true);
-         var ev22001Sort = rawData.result['22001'].sort(compareBigToSmall('count'));
-         var ev22001DataArray = ev22001Sort.slice(0,5);
-
-        var newast22001 = {}
-        newast22001['22001']=ev22001DataArray
-        var unit22001DatanewArrayunit22001DatanewArray=convertUnitChartData(newast22001, '22001', true);
-
-
-
-
-         //社区建档率
-        var medicaladviceoption1 = {
-      		  xAxis: {
-      		        type: 'category',
-      		        data: unit22001DatanewArrayunit22001DatanewArray.unit,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 20 //角度顺时针计算的
-	                },
-      		        axisLine:{
-                          lineStyle:{
-                              color:'#19d1ff',
-                              width:1,//这里是为了突出显示加上的
-                          }
-                      }
-      		    },
-      		    yAxis: {
-      		        type: 'value',
-      		        splitLine:{
-                          show:false
-                      },
-                      axisLine:{
-                          lineStyle:{
-                              color:'#19d1ff',
-                              width:1,//这里是为了突出显示加上的
-                          }
-                      }
-      		    },
-      		    series: [{
-      		    	  itemStyle: {
-      		              normal: {
-      		                  // 随机显示
-      		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
-
-      		              },
-      		          },
-      		          barWidth : 30,
-      		        data: [0.1,0.2,0.3,0.4,0.5],
-      		        type: 'bar'
-      		    }]
-      		};
-
-
-
-
-
-                //初始化echarts实例
-                    var medicalAdvice_id = echarts.init(document.getElementById('emergency'));
-                    medicalAdvice_id.setOption(medicaladviceoption1);
-
-
-         }
-
-    });
-
-})*/

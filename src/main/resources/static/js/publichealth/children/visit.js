@@ -1,8 +1,7 @@
          var arr13321Month=[];
          var arr13321MonthY=[];
          var ev13203DataArray=[];
-         
-         String.prototype.endWith = function(str) {  
+         String.prototype.endWith = function(str) {
         	    var reg = new RegExp(str + "$");  
         	    return reg.test(this);  
          }
@@ -28,21 +27,15 @@ $(function(){
          url : "/qos/analysis/data/get/unit",//请求的 URL地址
          data:arr,
          success: function (rawData) {
-         console.log(111);
-         
-        
-         for(var i=0;i<rawData.result['13321'].length;i++){
-        	 
+          for(var i=0;i<rawData.result['13321'].length;i++){
         	 if(rawData.result['13321'][i].unitName.endWith('服务中心')){
-        		 
         		 arr13321Month.push(rawData.result['13321'][i].unitName)
                  arr13321MonthY.push(rawData.result['13321'][i].count)
         	 }
           }
          
          for(var i=0;i<rawData.result['13203'].length;i++){
-        	 
-                if(rawData.result['13203'][i].unitName.endWith('服务中心')){
+        	 if(rawData.result['13203'][i].unitName.endWith('服务中心')){
                 	ev13203DataArray.push(rawData.result['13203'][i].count)
         	 }
           }
@@ -82,10 +75,14 @@ $(function(){
       		  xAxis: {
       		        type: 'category',
       		        data: arr13321Month,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+      		                    		        axisLabel: {
+                                                 interval: 0,
+                                                 rotate: 0, //角度顺时针计算的
+                                                 formatter: function(value) {
+                                                      var reg = new RegExp('社区卫生服务中心', "g");
+                                                        return value.replace(reg, '');
+                                                 }
+                                               },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',
