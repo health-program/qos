@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type,sickness-type"/>
+<section class="content-header">
+    <h1>罹患率统计</h1>
+</section>
+<section class="content no-padding">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 5px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+						<div class="col-md-2">
+                        	<input name="schoolYear" id="schoolYear" placeholder="学年" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+	                    </div>
+						<div class="col-md-6">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row" style="margin-left: 1px;margin-right: 5px">
+    	<div class="col-md-4 no-padding">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                       	<div id="epidemicRateAffiChartDiv" class="box-body no-padding" style="height: 600px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" style="padding-right: 5px;padding-left: 5px">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                       	<div id="epidemicRateNatureChartDiv" class="box-body no-padding" style="height: 600px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    //获取当年日期所属学年
+	function getCurrentSchoolYear (date) {
+		var schoolYear=date.getFullYear();
+	    if(date.getMonth()<9){//9月之前，属于上一个学年
+	    	schoolYear=schoolYear-1;
+	    }
+	    return schoolYear;
+	}
+    
+	function query() {
+		
+	}
+    
+	//图表自适应大小
+    window.addEventListener("resize", function () {
+    	epidemicRateAffiChart.resize();
+    	epidemicRateNatureChart.resize();
+    });
+    
+    var epidemicRateAffiChart = echarts.init(document.getElementById('epidemicRateAffiChartDiv'));
+
+    var epidemicRateNatureChart = echarts.init(document.getElementById('epidemicRateNatureChartDiv'));
+	
+	var epidemicCountsData,epidemicPeopleCountsData;
+    $(function () {
+    	$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
+    	generatorEpidemicRateAffiChart(epidemicRateAffiChart);
+    	//generatorEpidemicRateAffiChart(epidemicRateAffiChart);
+    });
+    
+    
+    function generatorEpidemicRateAffiChart(chart,data,yAxisName) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        var schoolYear = $("#schoolYear").val();
+		 var district = $("#district").find('option:selected').val();
+		 $.post("/qos/org/school/statistic/epidemic/ratesbyAffiliation",{"schoolYear":schoolYear,"district":district},function(res){
+			 var result = res.result;
+			 var titleArr= [], seriesArr=[];
+			 if (result.length == 0) {
+	                showChartInfo(chart,'暂无数据显示...');
+	                return false;
+	         }
+	       /* let xAxisData=[];
+	       let seriesData=[];
+	       data.forEach(d => {
+	       	xAxisData.push(d.name);
+	       	seriesData.push(d.value);
+	        }); */
+	       chart.hideLoading();
+	       option = {
+	       		title: {
+	       	        text: '隶属\n关系'
+	       	    },
+	       	    tooltip: {
+	       	        trigger: 'axis'
+	       	    },
+	       	    legend: {
+	       	    	x : 'center',
+				        y : 'bottom',
+				        type: 'scroll',
+				        orient: 'horizontal',
+	       	        data:['流行性感冒','手足口病','急性出血性结膜炎','百日咳','麻疹']
+	       	    },
+	       	    grid: {
+	       	        left: '3%',
+	       	        right: '3%',
+	       	        bottom: '3%',
+	       	        containLabel: true
+	       	    },
+	       	    toolbox: {
+	       	        feature: {
+	       	            saveAsImage: {}
+	       	        }
+	       	    },
+	       	    xAxis: {
+	       	        type: 'category',
+	       	        boundaryGap: true,
+	       	        axisLabel:{
+	       	                interval:0,
+	       	                rotate:50
+	       	            },
+	       	        data: result['affiGroup']
+	       	    },
+	       	    yAxis: {
+	       	        type: 'value',
+	       	        min: 0,
+	       	        max: 100,
+	       	        interval: 20
+	       	    },
+	       	    series: [
+	       	        {
+	       	            name:'流行性感冒',
+	       	            type:'line',
+	       	            label: {
+	       	                normal: {
+	       	                    show: true
+	       	                }
+	       	            },
+	       	            data:[0.00,1.72]
+	       	        },
+	       	        {
+	       	            name:'手足口病',
+	       	            type:'line',
+	       	            label: {
+	       	                normal: {
+	       	                    show: true
+	       	                }
+	       	            },
+	       	            
+	       	            data:[0.00,2.10]
+	       	        },
+	       	        {
+	       	            name:'急性出血性结膜炎',
+	       	            type:'line',
+	       	            label: {
+	       	                normal: {
+	       	                    show: true
+	       	                }
+	       	            },
+	       	            data:[0,1.86]
+	       	        },
+	       	        {
+	       	            name:'麻疹',
+	       	            type:'line',
+	       	            label: {
+	       	                normal: {
+	       	                    show: true
+	       	                }
+	       	            },
+	       	            data:[0,1.21]
+	       	        },
+	       	        {
+	       	            name:'百日咳',
+	       	            type:'line',
+	       	            label: {
+	       	                normal: {
+	       	                    show: true
+	       	                }
+	       	            },
+	       	            data:[0,0.67]
+	       	        }
+	       	    ]
+	       }
+	       chart.setOption(option,true);
+		})
+	}
+    
+    
+    
+    
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+    /*]]>*/
+</script>
+</body>
+
+</html>

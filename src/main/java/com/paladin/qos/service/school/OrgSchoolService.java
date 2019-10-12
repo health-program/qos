@@ -68,8 +68,11 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	return new PageResult<>(page);
     }
     
-    public OrgSchool orgSchoolDetail(String id){
-	return searchOne(new Condition(OrgSchool.PARENT_SCHOOL_ID,QueryType.EQUAL, id));
+    public OrgSchool orgSchoolDetail(String id, String schoolYear){
+    	List<Condition> conditions=new ArrayList<Condition>();
+    	conditions.add(new Condition(OrgSchool.PARENT_SCHOOL_ID,QueryType.EQUAL, id));
+    	conditions.add(new Condition(OrgSchool.SCHOOL_YEAR,QueryType.EQUAL, schoolYear));
+    	return searchOne(conditions);
     }
     
     public OrgSchoolVO getSchool(String id){
@@ -99,9 +102,13 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	    schoolId = UUIDUtil.createUUID();
 		dto.setId(schoolId);
 	}
-	
 	OrgSchool school = new OrgSchool();
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
+	//修改时验证学校信息是否已添加
+	OrgSchool orgSchoolDetail = this.orgSchoolDetail(dto.getParentSchoolId(),dto.getSchoolYear());
+	if(orgSchoolDetail!=null){
+		throw new BusinessException("该年度学校信息已录入");
+	}
 	//该学校不是父节点
 	List<OrgSchoolName> orgSchoolNameList = orgSchoolNameService.searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID, QueryType.EQUAL, school.getParentSchoolId()));
 	if(!CollectionUtils.isEmpty(orgSchoolNameList)){
@@ -111,13 +118,16 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	if (peoples == null || peoples.size() == 0) {
 		throw new BusinessException("人数不能为空");
 	}
-	
+	//计算学生总数
+	Integer total=0;
 	for (OrgSchoolPeopleDTO orgSchoolPeopleDTO : peoples) {
 	    OrgSchoolPeople people = new OrgSchoolPeople();
 	    SimpleBeanCopyUtil.simpleCopy(orgSchoolPeopleDTO, people);
 	    people.setSchoolId(schoolId);
+	    total+=people.getTotal();
 	    orgSchoolPeopleService.save(people);
 	}
+	school.setTotal(total);
 	return save(school);
     }
     
@@ -134,6 +144,11 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	}
 
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
+	//修改时验证学校信息是否已添加
+	OrgSchool orgSchoolDetail = this.orgSchoolDetail(dto.getParentSchoolId(),dto.getSchoolYear());
+	if(orgSchoolDetail!=null){
+		throw new BusinessException("该年度学校信息已录入");
+	}
 	//该学校不是父节点
 	List<OrgSchoolName> orgSchoolNameList = orgSchoolNameService.searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID, QueryType.EQUAL, school.getParentSchoolId()));
 	if(!CollectionUtils.isEmpty(orgSchoolNameList)){
@@ -145,13 +160,15 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		throw new BusinessException("人数不能为空");
 	}
 	orgSchoolPeopleService.deletePeople(schoolId);
-	
+	Integer total=0;
 	for (OrgSchoolPeopleDTO orgSchoolPeopleDTO : dtos) {
 	    OrgSchoolPeople people = new OrgSchoolPeople();
 	    SimpleBeanCopyUtil.simpleCopy(orgSchoolPeopleDTO, people);
 	    people.setSchoolId(schoolId);
+	    total+=people.getTotal();
 	    orgSchoolPeopleService.save(people);
 	}
+	school.setTotal(total);
 	return update(school);
     }
     

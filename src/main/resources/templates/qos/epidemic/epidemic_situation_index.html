@@ -60,8 +60,32 @@
     <div th:include="/common/footer" />
     <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
     <script type="text/javascript">
-    var table;
+    var table,treedata=[];
+    function findParentNode(id, nodes, path) {
+	  	  if(!path){
+	  		  path=[];
+	  	  }
+	  	  var currentNode;
+	  	  for(var i = 0; i < nodes.length; i++) {
+	  	      //先找出当前节点
+	  	      if(nodes[i].id==id){
+	  	    	  currentNode=nodes[i];
+	  	    	  path.push(currentNode);
+	  	    	  findParentNode(currentNode.parentId, nodes, path);
+	  	      }
+	  	  }
+	  }
+    
     $(function() {
+    	$.ajax({
+       	 	url: '/qos/org/school/people/findList',
+            async: false,
+            type:'post',
+    		dataType:'json',
+            success: function (data, status) {
+            	treedata=data.result;
+            }
+        });
         initDataGrid();
     });
 
@@ -74,11 +98,22 @@
             idField: "id",
             columns: [
                 [
-                    { title: "事发单位名称", align: "center", field: "incidentUnit" },
+                    //{ title: "事发单位名称", align: "center", field: "incidentUnit" },
+                    { title: "学年", align: "center", field: "schoolYear"},
+                    { title: "班级", field: "grade",
+    					formatter:function(value, row, index){
+    						debugger;
+    						var path=[],pathStr='';
+    						findParentNode(value,treedata,path);	
+    						path.forEach(function(item){
+    							pathStr=item.name+'-'+pathStr;
+    						})
+    						return pathStr.substr(0,pathStr.length-1);;
+    					}
+                     },
                     { title: "报告单位", align: "center", field: "reportUnit",enumcode: "report-unit-type"},
                     { title: "区域", align: "center", field: "region",enumcode:"region-type" },
                     { title: "病种分类", align: "center", field: "sicknessClassify",enumcode:"sickness-type"},
-                    { title: "班级", align: "center", field: "grade"},
                     { title: "创建时间", align: "center", field: "createTime",formatter: "datetime" },
                     {
                         title: "操作",

@@ -16,7 +16,7 @@ public class EpidemicSituation extends BaseModel{
     private String reportUnit;//报告单位（医疗机构为1，事发学校为2，家长为3，其他为4）
 
     private String sicknessClassify;//病种分类
-
+    
     private String grade;//班级
 
     private String region;//区域

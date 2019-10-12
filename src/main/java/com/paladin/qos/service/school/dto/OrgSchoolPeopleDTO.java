@@ -15,6 +15,8 @@ public class OrgSchoolPeopleDTO {
 
  	// 年级
  	private Integer grade;
+ 	
+ 	private String klass;//班级
 
  	// 总人数
  	private Integer total;
@@ -124,4 +126,13 @@ public class OrgSchoolPeopleDTO {
 	public void setUpdateUserId(String updateUserId) {
 		this.updateUserId = updateUserId;
 	}
+
+	public String getKlass() {
+		return klass;
+	}
+
+	public void setKlass(String klass) {
+		this.klass = klass;
+	}
+	
 }

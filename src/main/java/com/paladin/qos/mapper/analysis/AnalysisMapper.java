@@ -89,7 +89,7 @@ public interface AnalysisMapper {
 
 	long getTotalNumOfEvent(@Param("eventId") String eventId, @Param("start") int start, @Param("end") int end, @Param("ignoreUnitIds") List<String> ignoreUnitIds);
 
-	List<DataCountUnit> getLastCountByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType);
+	List<DataCountUnit> getLastCountByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType,@Param("ignoreUnitIds") List<String> ignoreUnitIds);
 
 	List<Register> findRegisterList();
 

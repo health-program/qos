@@ -6,6 +6,7 @@
 		SELECT e.id,
 		n.school_full_name AS incidentUnit,
 		e.report_unit AS reportUnit,
+		e.school_year as schoolYear,
 		e.sickness_classify AS sicknessClassify,
 		e.grade AS grade,
 		e.region AS region,
@@ -111,4 +112,32 @@
 
 	GROUP BY incident_unit;
     </select>
+    
+    <select id="queryEpidemicRatesByAffiliation" resultType="com.paladin.qos.service.school.vo.OrgSchoolEpidemicRateVO"
+    	parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+    	select t.affiliation AS grouping,
+    		e.sickness_classify AS sicknessClassify,
+    		t.parent_school_id AS schoolId,
+    		p.id AS orgSchoolPeopleId,
+    		p.total AS orgSchoolPeopleTotal,
+    		e.grade AS incidentOrgSchoolPeopleId,
+    		e.total AS incidentTotol,
+    		t.total AS shcoolTotal
+		from epidemic_situation e
+		inner join org_school t on e.incident_unit=t.parent_school_id
+		inner join org_school_people p on t.id=p.school_id
+		where 1=1
+		and t.affiliation in 
+		<foreach collection ="affiliations" item="affiliation" index= "index" separator ="," open="(" close=")">
+             #{affiliation}
+        </foreach >
+		<if test="schoolYear !=null and schoolYear !='' ">
+			and e.school_year =#{schoolYear}
+		</if>
+		<if test="district !=null and district !='' ">
+			and t.district =#{district}
+		</if>
+    </select>
+    
+    
 </mapper>

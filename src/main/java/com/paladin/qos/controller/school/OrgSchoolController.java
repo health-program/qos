@@ -64,8 +64,8 @@ public class OrgSchoolController extends ControllerSupport {
     
     @GetMapping("/info")
     @ResponseBody
-    public Object orgSchoolDetail(@RequestParam String id){
-	return CommonResponse.getSuccessResponse(orgSchoolService.orgSchoolDetail(id));
+    public Object orgSchoolDetail(@RequestParam String id,@RequestParam String schoolYear){
+	return CommonResponse.getSuccessResponse(orgSchoolService.orgSchoolDetail(id,schoolYear));
     }
 
     @GetMapping("/add")

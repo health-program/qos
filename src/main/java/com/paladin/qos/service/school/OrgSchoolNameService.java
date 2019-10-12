@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.school.OrgSchoolName;
+import com.paladin.qos.service.school.vo.OrgSchoolIdNameVO;
 import com.paladin.qos.service.school.vo.SchoolNameVO;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.QueryType;
@@ -46,4 +47,12 @@ public class OrgSchoolNameService extends ServiceSupport<OrgSchoolName> {
     public List<SchoolNameVO> schoolNameFind(){
 	return orgSchoolNameMapper.schoolNameFind();
     }
+
+    /**
+     * 查询schoolId，而不是name的id
+     * @return
+     */
+	public List<OrgSchoolIdNameVO> schoolIdNameFind() {
+		return orgSchoolNameMapper.schoolIdNameFind();
+	}
 }

@@ -641,8 +641,8 @@ public class AnalysisService {
 	 * @param unitType
 	 * @return
 	 */
-	public List<DataCountUnit> getLastCountByUnit(String eventId, int unitType) {
-		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType);
+	public List<DataCountUnit> getLastCountByUnit(String eventId, int unitType,List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType,ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
