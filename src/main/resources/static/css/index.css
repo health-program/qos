@@ -538,3 +538,6 @@ select {
 #mide_right{
   margin-left:1vh!important;
 }
+.BMapLib_SearchInfoWindow .BMapLib_bubble_close{
+  background:url('../../static/image/index/close.png');
+}

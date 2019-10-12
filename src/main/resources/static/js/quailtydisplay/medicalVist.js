@@ -101,13 +101,15 @@ $(function(){
 
                                       grid: {
                                             left: '3%',
-                                            right: '4%',
+                                            right: '8%',
                                             bottom: '3%',
                                             containLabel: true
                                              },
                                        xAxis : [
                                               {
                                              type : 'category',
+                                             name:"日期",//坐标轴名称。
+                                             nameLocation:'end',//坐标轴名称显示位置。
                                              boundaryGap : false,
                                              axisLine:{
                                                          lineStyle:{
@@ -121,6 +123,8 @@ $(function(){
                                            yAxis : [
                                               {
                                                type : 'value',
+                                               name:"人数",//坐标轴名称。
+                                               nameLocation:'end',//坐标轴名称显示位置。
                                                axisLine:{
                                                  lineStyle:{
                                                          color:'#ffffff',

@@ -9,7 +9,47 @@
 <script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
 <script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
+<style>
+     .activity {
+            width:100%;
+            margin:0 auto;
+            position:relative;
+            overflow:hidden;
+            height:165px;
+            text-align:center;
+        }
+        .activity ul {
+            top:-15px;
+            padding:0;
+            color:#666;
+            position:relative;
+        }
+        .activity li {
+            height:34px;
+            padding:0;
+            font-size:14px;
+            line-height:34px;
+            list-style:none;
+            border-bottom:1px dotted #d2d2d2;
+        }
 
+    #newspotital{
+      width:10vw;
+      height:7vw;
+      display:inline-block;
+      float:left;
+      margin-right:1vw;
+      margin-left:1vw;
+    }
+
+    #newshequ{
+      width:10vw;
+      height:7vw;
+      display:inline-block;
+      float:left;
+    }
+
+</style>
 
 <body id="body">
     <nav id="nav">
@@ -51,7 +91,7 @@
                 <div class="quailty_right_pay">
                     <div class="quailty_bottom_header2">
                         支付方式对比
-                        <select id="selectID">
+                        <select id="selectID" style="display:none;">
                             <option value="31009">
                                 医院
                             </option>
@@ -61,9 +101,14 @@
                         </select>
                     </div>
 
-                    <div id="paycomparsion">
+                    <div id="newspotital">
 
                     </div>
+                    <div id="newshequ">
+
+                    </div>
+
+                   <!-- <div id="paycomparsion"></div>-->
                 </div>
                 <div class="quailty_right_income">
                     <div class="quailty_bottom_header2">
@@ -122,14 +167,18 @@
                         <span class="quailty_date">就诊日期</span>
                         <span class="quailty_sick">结算类别</span>
                      </div>
-                    <div id="box" class="quailty_bottom_right_box">
+                   <!-- <div id="box" class="quailty_bottom_right_box">
                         <ul id="list1" >
 
                         </ul>
                         <ul id="list2">
-                          
+
                         </ul>
-                    </div>
+                    </div>-->
+
+                            <div class="activity quailty_bottom_right_box">
+                                <ul id="list1activity"></ul>
+                            </div>
                 </div>
             </div>
         </div>
@@ -141,9 +190,12 @@
 <script type="text/javascript" src="/static/js/quailtydisplay/hospitalVist.js"></script><!--医院就诊top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
+<script type="text/javascript" src="/static/js/quailtydisplay/payyibao.js"></script><!--支付方式医保-->
+<script type="text/javascript" src="/static/js/quailtydisplay/payshequ.js"></script><!--支付方式社区-->
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
+
 <script>
 $(function() {
 	$.ajax({
@@ -159,33 +211,6 @@ $(function() {
         }
 	})
 	
-
-	//无缝滚动开始
-	var box = document.getElementById("box");
-    var l1 = document.getElementById("list1");
-    var l2 = document.getElementById("list2");
-    l2.innerHTML = l1.innerHTML; //克隆list1的数据，使得list2和list1的数据一样
-    function scrollup() {
-        if (box.scrollTop >= l1.offsetHeight) { //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
-            box.scrollTop = 0;
-        } else {
-            box.scrollTop++;
-        }
-    }
-
-    var scrollMove = setInterval(scrollup, 30); //数值越大，滚动速度越慢
-
-    //鼠标经过时，滚动停止
-    box.onmouseover = function() {
-        clearInterval(scrollMove)
-    }
-
-    //鼠标离开时，滚动继续
-    box.onmouseout = function() {
-        scrollMove = setInterval(scrollup, 30);
-    }
-	//无缝滚动结束
-
 
 
 
@@ -308,6 +333,26 @@ $(function() {
             //结束
           }
        });
+
+
+
+
+         var listPanel = $('.activity ul');
+        var nubcers = 0; //向上滚动top值
+        function up() { //向上滚动
+            listPanel.animate({ //中奖结果
+                'top': (nubcers - 35) + 'px'
+            }, 1500, 'linear', function() {
+                listPanel.css({
+                    'top': '0px'
+                })
+                    .find("li:first").appendTo(listPanel);
+                up();
+            });
+        }
+        up();
+
+
 
 
 
