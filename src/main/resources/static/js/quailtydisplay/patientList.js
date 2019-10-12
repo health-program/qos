@@ -3,23 +3,19 @@ $(function(){
         type : "post",    //请求类型
         url : "/home/page/qos/quailtydisplay/getRegisterList",//请求的 URL地址
         success: function (res) {
-        debugger;
-//       var html = "";
-//         $.each(data, function(i, item) { //这里的函数参数是键值对的形式，k代表键名，v代表值
-//                               html += '<div class="header quailty_bottom_right_header_title">';
-//                               html += '<span class="quailty_serial">'+i+'</span>';
-//                               html += '<span class="quailty_seek">'+item.unitName+'</span>';
-//                               html += '<span class="quailty_department">'+item.teamName+'</span>';
-//                               html += '<span class="quailty_name">'+item.name+'</span>';
-//                               html += '<span class="quailty_sex">'+item.sex+'</span>';
-//                               html += '<span class="quailty_date">就诊日期</span>';
-//                               html += '<span class="quailty_sick">诊断疾病</span>';
-//
-//                           });
-//                           $("#list1").append(html);
-
-        }
+        //  序号  就诊机构  就诊科室 患者姓名  患者性别 就诊日期  结算类别
+       var data = res.result;
+       var html = "";
+        for(var i in data){
+              html += '<div class="header quailty_bottom_right_header_title">';
+                                           html += '<span class="quailty_seek">'+data[i].orgname+'</span>';
+                                           html += '<span class="quailty_department">'+data[i].deptname+'</span>';
+                                           html += '<span class="quailty_name">'+data[i].patientname+'</span>';
+                                           html += '<span class="quailty_sex">'+data[i].sexcode+'</span>';
+                                           html += '<span class="quailty_date">'+data[i].seedate+'</span>';
+                                           html += '<span class="quailty_sick">'+data[i].paykindname+'</span>';
+       }
+         $("#list1").append(html);
+             }
       })
-
-
- })
+})
