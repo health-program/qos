@@ -39,7 +39,7 @@ $(function(){
          success: function (rawData) {
             rawData = rawData.result;  //  unitName
                var dataMap=convertUnitChartData(rawData, '13003', false); //
-            var emergencyOption = {
+            var jizhenrencishuOption = {
                    tooltip: {
                                  trigger: 'axis',
                                  axisPointer: {
@@ -125,8 +125,8 @@ $(function(){
                      }]
                  };
                  //初始化echarts实例
-              var emergencyID = echarts.init(document.getElementById('emergency'));
-               emergencyID.setOption(emergencyOption);
+              var jizhenrencishuID = echarts.init(document.getElementById('jizhenrencishu'));
+               jizhenrencishuID.setOption(jizhenrencishuOption);
                    //急诊人数结束
          }
     });

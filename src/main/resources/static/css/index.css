@@ -490,7 +490,7 @@ select {
         #individualization,
         #effective,
         #visiting,
-        #signingDoctor {
+        #signingDoctor{
             width: 52vh;
             height: 20vh;
         }
@@ -540,4 +540,8 @@ select {
 }
 .BMapLib_SearchInfoWindow .BMapLib_bubble_close{
   background:url('../../static/image/index/close.png');
+}
+#jizhenrencishu,#jiatingyisheng{
+   width: 60vh;
+   height: 20vh;
 }

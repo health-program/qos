@@ -128,8 +128,8 @@ $(function(){
                      }]
                  };
                  //初始化echarts实例
-              var myChartEdoctor = echarts.init(document.getElementById('doctor'));
-               myChartEdoctor.setOption(emergencyoption);
+              var myChartEjiatingyisheng = echarts.init(document.getElementById('jiatingyisheng'));
+               myChartEjiatingyisheng.setOption(emergencyoption);
                    //急诊人数结束
          }
     });
