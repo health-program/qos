@@ -45,6 +45,7 @@ public class AnalysisController {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 		boolean byUnit = request.getByUnit() == 1;
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
 		if (eventIds != null && eventIds.size() > 0) {
 			Map<String, Object> map = new HashMap<>();
@@ -52,8 +53,8 @@ public class AnalysisController {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					Object item = byUnit ? analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate)
-							: analysisService.getAnalysisResultByDay(eventId, unitType, startDate, endDate);
+					Object item = byUnit ? analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate, ignoreUnitIds)
+							: analysisService.getAnalysisResultByDay(eventId, unitType, startDate, endDate, ignoreUnitIds);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -62,7 +63,7 @@ public class AnalysisController {
 			return CommonResponse.getSuccessResponse(map);
 		} else {
 			String eventId = request.getEventId();
-			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfDay(eventId, startDate, endDate));
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfDay(eventId, startDate, endDate, ignoreUnitIds));
 		}
 	}
 
@@ -73,6 +74,7 @@ public class AnalysisController {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
 		boolean byUnit = request.getByUnit() == 1;
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
 		if (eventIds != null && eventIds.size() > 0) {
 			Map<String, Object> map = new HashMap<>();
@@ -80,8 +82,8 @@ public class AnalysisController {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					Object item = byUnit ? analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate)
-							: analysisService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate);
+					Object item = byUnit ? analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate, ignoreUnitIds)
+							: analysisService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate, ignoreUnitIds);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -90,7 +92,7 @@ public class AnalysisController {
 			return CommonResponse.getSuccessResponse(map);
 		} else {
 			String eventId = request.getEventId();
-			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth(eventId, startDate, endDate));
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth(eventId, startDate, endDate, ignoreUnitIds));
 		}
 	}
 
@@ -102,6 +104,7 @@ public class AnalysisController {
 		int startYear = TimeUtil.getYear(startDate);
 		int endYear = TimeUtil.getYear(endDate);
 		boolean byUnit = request.getByUnit() == 1;
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
 		List<String> eventIds = request.getEventIds();
 		if (eventIds != null && eventIds.size() > 0) {
@@ -110,8 +113,8 @@ public class AnalysisController {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
 					int unitType = getUnitType(event);
-					Object item = byUnit ? analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear)
-							: analysisService.getAnalysisResultByYear(eventId, unitType, startYear, endYear);
+					Object item = byUnit ? analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear, ignoreUnitIds)
+							: analysisService.getAnalysisResultByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
 					if (item != null) {
 						map.put(eventId, item);
 					}
@@ -120,7 +123,7 @@ public class AnalysisController {
 			return CommonResponse.getSuccessResponse(map);
 		} else {
 			String eventId = request.getEventId();
-			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfYear(eventId, startYear, endYear));
+			return CommonResponse.getSuccessResponse(analysisService.getDataSetOfYear(eventId, startYear, endYear, ignoreUnitIds));
 		}
 	}
 
@@ -129,6 +132,7 @@ public class AnalysisController {
 	public Object getProcessedDataByUnit(AnalysisRequest request) {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
 		List<String> eventIds = request.getEventIds();
 		if (eventIds != null && eventIds.size() > 0) {
@@ -139,12 +143,12 @@ public class AnalysisController {
 					int eventType = event.getEventType();
 					int unitType = getUnitType(event);
 					if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-						Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate);
+						Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
 						if (item != null) {
 							map.put(eventId, item);
 						}
 					} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-						Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate);
+						Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
 						if (item != null) {
 							map.put(eventId, item);
 						}
@@ -159,9 +163,9 @@ public class AnalysisController {
 				int eventType = event.getEventType();
 				int unitType = getUnitType(event);
 				if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-					return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate));
+					return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
 				} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-					return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate));
+					return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
 				}
 			}
 		}
@@ -173,6 +177,7 @@ public class AnalysisController {
 	public Object getProcessedDataTotal(AnalysisRequest request) {
 		Date startDate = request.getStartTime();
 		Date endDate = request.getEndTime();
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
 		List<String> eventIds = request.getEventIds();
 
@@ -181,14 +186,14 @@ public class AnalysisController {
 			for (String eventId : eventIds) {
 				Event event = DataConstantContainer.getEvent(eventId);
 				if (event != null) {
-					long count = analysisService.getTotalNumOfEvent(eventId, startDate, endDate);
+					long count = analysisService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds);
 					map.put(eventId, count);
 				}
 			}
 			return CommonResponse.getSuccessResponse(map);
 		} else {
 			String eventId = request.getEventId();
-			return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId, startDate, endDate));
+			return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds));
 		}
 	}
 
