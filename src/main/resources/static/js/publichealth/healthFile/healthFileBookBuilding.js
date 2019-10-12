@@ -49,14 +49,14 @@ $(function(){
         	var ev22001 = rawData.result;
         	var ev22001Sort = rawData.result.sort(compareBigToSmall('activeArchivesNumber'));
         	var ev22001DataArray = ev22001Sort.slice(0,5);
-        	
+
         	var newast22001 = {}
             newast22001['22001']=ev22001DataArray
             var unit22001DatanewArrayunit22001DatanewArray=convertUnitChartData(newast22001, '22001', true);
-        	
-        	
+
+
         	var medicaladviceoption1 = {
-        			
+
         			tooltip: {
     	                trigger: 'axis',
     	                formatter: function(params, ticket, callback) {
@@ -108,7 +108,7 @@ $(function(){
             		              normal: {
             		                  // 随机显示
             		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
-            		                
+
             		              },
             		          },
             		          barWidth : 20,
@@ -193,7 +193,7 @@ $(function(){
       		              normal: {
       		                  // 随机显示
       		                   color:function(d){return "#"+Math.floor(Math.random()*(256*256*256-1)).toString(16);}
-      		                
+
       		              },
       		          },
       		          barWidth : 30,
@@ -204,15 +204,15 @@ $(function(){
 
 
 
-        
+
 
                 //初始化echarts实例
                     var medicalAdvice_id = echarts.init(document.getElementById('emergency'));
                     medicalAdvice_id.setOption(medicaladviceoption1);
-                   
+
 
          }
-       
+
     });
 
 })*/

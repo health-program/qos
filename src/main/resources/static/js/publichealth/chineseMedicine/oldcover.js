@@ -102,8 +102,7 @@ $(function(){
                 //初始化echarts实例
                     var medicalAdvice_id_oldPeople = echarts.init(document.getElementById('emergency'));
                     medicalAdvice_id_oldPeople.setOption(medicaladviceoption2oldPeople);
-                    debugger
-                   
+
 
          }
        

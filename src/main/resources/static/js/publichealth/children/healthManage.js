@@ -64,7 +64,7 @@ $(function(){
 
 
         var medicaladviceoption2children = {
-        	
+
         		tooltip: {
 	                trigger: 'axis',
 	                formatter: function(params, ticket, callback) {
@@ -132,8 +132,7 @@ $(function(){
                 //初始化echarts实例
                     var medicalAdvice_id_children = echarts.init(document.getElementById('emergency1'));
                     medicalAdvice_id_children.setOption(medicaladviceoption2children);
-                   debugger
-                    
+
          }
        
     });

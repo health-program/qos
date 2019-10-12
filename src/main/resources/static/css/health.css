@@ -41,3 +41,24 @@ ul li{
     margin-right:3vw!important;
 }
 
+
+.ml1mr0{
+    margin-left: 1vw!important;
+    margin-right: 0vw!important;
+}
+
+.content .box-body{
+   margin:auto!important;
+}
+.box-body{
+
+}
+.childhealth{
+   width:43vw!important;
+}
+#middle .header{
+  width:43vw!important;
+}
+#emergency,#emergency1{
+  width:43vw!important;
+}

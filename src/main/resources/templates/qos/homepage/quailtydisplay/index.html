@@ -115,7 +115,6 @@
                 </div>
                 <div>
                     <div class="header_bg quailty_bottom_right_header">
-                        <span class="quailty_serial">序号</span>
                         <span class="quailty_seek">就诊机构</span>
                         <span class="quailty_department">就诊科室</span>
                         <span class="quailty_name">患者姓名</span>
@@ -125,15 +124,7 @@
                      </div>
                     <div id="box" class="quailty_bottom_right_box">
                         <ul id="list1" >
-	                          <li>
-	                            <span class="quailty_serial">序号</span>
-		                        <span class="quailty_seek">就诊机构</span>
-		                        <span class="quailty_department">就诊科室</span>
-		                        <span class="quailty_name">患者姓名</span>
-		                        <span class="quailty_sex">患者性别</span>
-		                        <span class="quailty_date">就诊日期</span>
-		                        <span class="quailty_sick">结算类别</span>
-	                         </li>
+
                         </ul>
                         <ul id="list2">
                           
@@ -160,7 +151,6 @@ $(function() {
         url : "/home/page/qos/quailtydisplay/getRegisterList",
         anysc:false,
         success: function (rawData){
-        	debugger
         	console.log(rawData);
         	rawData.result.forEach(function(val,index){
         		
@@ -283,9 +273,9 @@ $(function() {
                               + "</br><b class='text-0efcff'>机构编码：</b>"
                               + markerArr[i].orgType
                               + "</br><b class='text-0efcff'>当月门诊次数：</b>"
-                              + markerArr[i].orgType
+                              + markerArr[i].patients
                               + "</br><b class='text-0efcff'>当月住院人次：</b>"
-                              + markerArr[i].orgType
+                              + markerArr[i].hospital
                               + "</br><b class='text-0efcff'>地址：</b>"
                               + markerArr[i].orgAddress
                               + "</br></p>";
