@@ -1,6 +1,7 @@
 package com.paladin.qos.controller.analysis;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class HospitalAndBedController {
 	public Object getBed(AnalysisRequest request) {
 
 		String eventId = request.getEventId();
+		List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 		if (eventId != null && eventId != "") {
 			Map<String, Object> map = new HashMap<>();
 
@@ -50,7 +52,7 @@ public class HospitalAndBedController {
 				int eventType = event.getEventType();
 				int unitType = getUnitType(event);
 				if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-					Object item = analysisService.getLastCountByUnit(eventId, unitType);
+					Object item = analysisService.getLastCountByUnit(eventId, unitType,ignoreUnitIds);
 					if (item != null) {
 						map.put(eventId, item);
 					}

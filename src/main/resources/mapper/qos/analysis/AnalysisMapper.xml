@@ -401,6 +401,12 @@
 		<if test="unitType != 0">
 		  AND unit_type=#{unitType}
         </if>
+        <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
 	</select>
 	
 	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register"> 

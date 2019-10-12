@@ -5,9 +5,9 @@
 
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-    <!--   <section class="content-header">
-        <h1>数据展示</h1>
-    </section> -->
+    <section class="content-header">
+    <h1>收入统计</h1>
+    </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
@@ -172,6 +172,7 @@
             onCheck: unitSelected,
             queryParams: function(params) {
             	params.eventIds = '15001,15002,15003,15004';
+            	params.ignoreUnitIds = '320583810343'
                 requestParam = params;
                 return params;
             },
