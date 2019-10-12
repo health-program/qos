@@ -62,7 +62,9 @@
 	                    		+ a
 	                    		+ '<span style="margin-left:2%;">年级</span>:'
 	                    		+ b
-								+ '<span style="margin-left:2%;">年级学生人数</span>:'
+	                    		+ '<span style="margin-left:2%;">班级</span>:'
+								+ data.klass
+								+ '<span style="margin-left:2%;">学生人数</span>:'
 								+ data.total
 								+ '<span style="margin-left:2%;">寄宿生人数</span>:'
 								+ data.boarders
@@ -76,13 +78,14 @@
 									hearderBox : false,
 									server : false,
 									layerOption : {
-										height : 680,
-										width : 930
+										height : 500,
+										width : 700
 									},
 									columns : [ 
 									          {title : "学段",name : "schoolSection",enum : "school-section-type",required : "required",inputType : "SELECT"}, 
-									          {title : "年级",name : "grade",enum : "grade-type",inputType : "SELECT"},
-											  {title : "学生总人数",name : "total",required : "required",inputType : "TEXT"}, 
+									          {title : "年级",name : "grade",required : "required", enum : "grade-type",inputType : "SELECT"},
+									          {title : "班级",name : "klass",required : "required", inputType : "TEXT"},
+											  {title : "学生人数",name : "total",required : "required",inputType : "TEXT"}, 
 											  {title : "寄宿生人数",name : "boarders",required : "required",inputType : "TEXT"}, 
 											  {title : "教职员工人数",name : "teaching",required : "required",inputType : "TEXT"}
 											  ]

@@ -10,4 +10,7 @@
 SELECT id,school_full_name AS name from org_school_name where school_full_name =#{schoolName}
 </select>
 
+<select id="schoolIdNameFind" resultType="com.paladin.qos.service.school.vo.OrgSchoolIdNameVO">
+	SELECT s.id ,o.`school_full_name`AS name FROM org_school AS s LEFT JOIN org_school_name AS o ON s.`parent_school_id`=o.id 
+</select>
 </mapper>

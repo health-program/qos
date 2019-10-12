@@ -2,9 +2,11 @@ package com.paladin.qos.controller.school;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,7 @@ import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
 import com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO;
+import com.paladin.qos.service.school.vo.OrgSchoolEpidemicRateVO;
 
 /**
  * @author MyKite
@@ -267,4 +270,89 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		List<OrgSchoolCountsGroupByNatureVO> list=epidemicSituationService.epidemicPeopleCountsGroupByUnit(query);
 		return CommonResponse.getSuccessResponse(list);
 	}
+	
+	/**
+	 * 按隶属关系，统计学校数量
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/epidemic/ratesbyAffiliation")
+	@ResponseBody
+	public Object epidemicRatesbyAffiliation(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("subordination-type");
+		Map<String,List<String>> affiliationGroup=new HashMap<>();
+		for (KeyValue keyValue : type) {
+			String affilication = keyValue.getValue();
+			if(affilication.endsWith("镇公办")){
+				affilication="区/镇公办";
+			}
+			List<String> list = affiliationGroup.get(affilication);
+			if(CollectionUtils.isEmpty(list)){
+				list=new ArrayList<String>();
+			}
+			list.add(keyValue.getKey());
+			affiliationGroup.put(affilication, list);
+		}
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<String> affiGroup=new ArrayList<String>();
+		List<List<OrgSchoolEpidemicRateVO>>  data=new ArrayList<List<OrgSchoolEpidemicRateVO>>();
+		for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
+			query.setAffiliations(entry.getValue());
+			List<OrgSchoolEpidemicRateVO> list = epidemicSituationService.queryEpidemicRatesByAffiliation(query);
+			if(CollectionUtils.isNotEmpty(list)){
+				affiGroup.add(entry.getKey());
+				data.add(list);
+			}
+		}
+		//疾病数组
+		List<String> sicknessClassifyArr=new ArrayList<String>();
+		Map<String,List<Integer>> serialsData=new HashMap<String, List<Integer>>();
+		
+		if(!CollectionUtils.isEmpty(data)){
+			for (List<OrgSchoolEpidemicRateVO> voList : data) {
+				if(CollectionUtils.isNotEmpty(voList)){
+					Integer schoolSum=0;
+					Integer orgSchoolPeopleSum=0;
+					//Integer incidentOrgSchoolPeopleSum=0;
+					Integer incidentSum=0;
+					Set<String> schoolIdSet=new HashSet<String>(); 
+					Set<String> orgSchoolPeopleIdSet=new HashSet<String>(); 
+					Set<String> incidentOrgSchoolPeopleSet=new HashSet<String>(); 
+					for (OrgSchoolEpidemicRateVO rateVO : voList) {
+						String sicknessValue=ConstantsContainer.getTypeValue("sickness-type",rateVO.getSicknessClassify());
+						if(!sicknessClassifyArr.contains(sicknessValue)){
+							sicknessClassifyArr.add(sicknessValue);
+						}
+						List<Integer> list = serialsData.get(sicknessValue);
+						if(CollectionUtils.isEmpty(list)){
+							list=new ArrayList<Integer>();
+						}
+						if(!schoolIdSet.contains(rateVO.getSchoolId())){
+							schoolIdSet.add(rateVO.getSchoolId());
+							schoolSum+=rateVO.getShcoolTotal();//全校总人数
+						}
+						if(!orgSchoolPeopleIdSet.contains(rateVO.getOrgSchoolPeopleId())){
+							orgSchoolPeopleIdSet.add(rateVO.getOrgSchoolPeopleId());
+							orgSchoolPeopleSum+=rateVO.getOrgSchoolPeopleTotal();//班级人数
+						}
+						if(!incidentOrgSchoolPeopleSet.contains(rateVO.getIncidentOrgSchoolPeopleId())){
+							incidentOrgSchoolPeopleSet.add(rateVO.getIncidentOrgSchoolPeopleId());
+							//incidentOrgSchoolPeopleSum+=rateVO.getOrgSchoolPeopleTotal();
+							incidentSum+=rateVO.getIncidentTotol();//患病人数
+						}
+						System.out.println("schoolSum---->"+schoolSum);
+						System.out.println("orgSchoolPeopleSum---->"+orgSchoolPeopleSum);
+						System.out.println("incidentSum---->"+incidentSum);
+						
+						serialsData.put(sicknessValue,list);
+					}
+				}
+			}
+		}
+		result.put("affiGroup", affiGroup);
+		result.put("data", data);
+		System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
+	
 }

@@ -36,7 +36,9 @@
         </div>
    </div>
 	<div class="box box-solid" style="margin-top: 20px">
-		<h4 class="center">隶属关系_学校性质</h4>
+		<div class="box-header with-border">
+               	<h3 class="box-title" style="letter-spacing: 3px">隶属关系_学校性质</h3>
+         </div>
 		<div id="result" class="box-body">
 			<div class="col-sm-12">
 				<div id="main" style="height: 260px"></div>
@@ -45,7 +47,9 @@
 	</div>
 	
 	<div class="box box-solid" style="margin-top: 20px">
-		<h4 class="center">学校性质_隶属关系</h4>
+		 <div class="box-header with-border">
+               	<h3 class="box-title" style="letter-spacing: 3px">学校性质_隶属关系</h3>
+         </div>
 		<div id="result" class="box-body">
 			<div class="col-sm-12">
 				<div id="main_2" style="height: 600px"></div>
@@ -83,7 +87,7 @@
 		chart_2(myChart_2);
 	});
 
-	var myChart = echarts.init(document.getElementById('main'),'light');
+	var myChart = echarts.init(document.getElementById('main'));
 	var myChart_2 = echarts.init(document.getElementById('main_2'));
 	
 	function chart(){

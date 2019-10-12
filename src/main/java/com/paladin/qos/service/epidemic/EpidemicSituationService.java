@@ -10,13 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.framework.common.ExcelImportResult;
-import com.paladin.framework.common.PageResult;
 import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier.SimpleBeanCopyUtil;
 import com.paladin.framework.core.exception.BusinessException;
@@ -27,16 +28,22 @@ import com.paladin.framework.excel.read.ExcelReadException;
 import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.mapper.epidemic.EpidemicSituationMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
+import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.dto.ExcelEpidemicSituation;
 import com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.OrgSchoolPeopleService;
+import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
 import com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO;
+import com.paladin.qos.service.school.vo.OrgSchoolEpidemicRateVO;
 import com.paladin.qos.service.school.vo.SchoolNameVO;
 
 /**   
@@ -51,7 +58,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
     
     @Autowired
     private OrgSchoolNameMapper orgSchoolNameMapper;
-    
+    @Autowired
+    private OrgSchoolPeopleService orgSchoolPeopleService;
+    @Autowired
+    private OrgSchoolService orgSchoolService;
     
    public PageResult<EpidemicSituationVO> searchFindPage(EpidemicSituationQueryDTO query){
        Page<EpidemicSituationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
@@ -69,7 +79,19 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	if (StringUtil.isEmpty(id)) {
 	    throw new BusinessException("找不到更新的疫情信息");
 	}
-	
+	//验证班级id
+	OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(dto.getGrade());
+	if(orgSchoolPeople==null){
+		throw new BusinessException("只可以选择班级项！");
+	}
+	OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople.getSchoolId());
+	if(orgSchool==null){
+		throw new BusinessException("该学校信息不存在，请确认！");
+	}
+	if(!StringUtils.equals(dto.getSchoolYear(), orgSchool.getSchoolYear())){
+		throw new BusinessException("该学校该学年没有该班级，请确认!");
+	}
+	dto.setIncidentUnit(orgSchool.getParentSchoolId());
 	EpidemicSituation es = get(id);
 	
 	if (es == null) {
@@ -77,6 +99,7 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	}
 	
 	SimpleBeanCopyUtil.simpleCopy(dto, es);
+	
 	return update(es);
     }
     
@@ -178,6 +201,13 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	public List<OrgSchoolCountsGroupByNatureVO> epidemicPeopleCountsGroupByUnit(
 			OrgSchoolCountsQuery query) {
 		return epidemicSituationMapper.epidemicPeopleCountsGroupByUnit(query);
+	}
+
+	
+	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByAffiliation(
+			OrgSchoolCountsQuery query) {
+		
+		return epidemicSituationMapper.queryEpidemicRatesByAffiliation(query);
 	}
 
 }

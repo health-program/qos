@@ -24,6 +24,8 @@ public class OrgSchoolPeople extends BaseModel {
 
 	// 年级
 	private Integer grade;
+	
+	private String klass;//班级
 
 	// 年级学生人数
 	private Integer total;
@@ -89,4 +91,13 @@ public class OrgSchoolPeople extends BaseModel {
 	public void setTeaching(Integer teaching) {
 	    this.teaching = teaching;
 	}
+
+	public String getKlass() {
+		return klass;
+	}
+
+	public void setKlass(String klass) {
+		this.klass = klass;
+	}
+	
 }

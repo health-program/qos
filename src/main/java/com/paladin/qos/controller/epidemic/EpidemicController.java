@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.druid.util.StringUtils;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -24,11 +26,15 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.epidemic.dto.EpidemicExportCondition;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
+import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
 import com.paladin.qos.service.school.OrgSchoolNameService;
+import com.paladin.qos.service.school.OrgSchoolPeopleService;
+import com.paladin.qos.service.school.OrgSchoolService;
 
 /** 疫情管理
  * @author 黄伟华
@@ -43,6 +49,10 @@ public class EpidemicController extends ControllerSupport {
     
     @Autowired
     private OrgSchoolNameService orgSchoolNameService;
+    @Autowired
+    private OrgSchoolPeopleService orgSchoolPeopleService;
+    @Autowired
+    private OrgSchoolService orgSchoolService;
 
     @RequestMapping("/index")
     @QueryInputMethod(queryClass = EpidemicSituationQueryDTO.class)
@@ -107,6 +117,19 @@ public class EpidemicController extends ControllerSupport {
 	dto.setId(id);
 	
 	EpidemicSituation eSituation = beanCopy(dto, new EpidemicSituation());
+	//验证班级id
+	OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(eSituation.getGrade());
+	if(orgSchoolPeople==null){
+		return CommonResponse.getFailResponse("只可以选择班级项！");
+	}
+	OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople.getSchoolId());
+	if(orgSchool==null){
+		return CommonResponse.getFailResponse("该学校信息不存在，请确认！");
+	}
+	if(!StringUtils.equals(dto.getSchoolYear(), orgSchool.getSchoolYear())){
+		throw new BusinessException("该学校该学年没有该班级，请确认!");
+	}
+	eSituation.setIncidentUnit(orgSchool.getParentSchoolId());
 	if (epidemicSituationService.save(eSituation) > 0) {
 		return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
 	}
@@ -116,14 +139,18 @@ public class EpidemicController extends ControllerSupport {
     @RequestMapping("/update")
     @ResponseBody
     public Object update(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){
-	if (bindingResult.hasErrors()) {
-		return validErrorHandler(bindingResult);
-	}
-	String id = dto.getId();
-	if (epidemicSituationService.updateEpidemic(dto) > 0) {
-		return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
-	}
-	return CommonResponse.getFailResponse();
+		if (bindingResult.hasErrors()) {
+			return validErrorHandler(bindingResult);
+		}
+		String id = dto.getId();
+		try {
+			if (epidemicSituationService.updateEpidemic(dto) > 0) {
+				return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
+			}
+		} catch (Exception e) {
+			return CommonResponse.getFailResponse(e.getMessage());
+		}
+		return CommonResponse.getFailResponse();
     }
     
     
