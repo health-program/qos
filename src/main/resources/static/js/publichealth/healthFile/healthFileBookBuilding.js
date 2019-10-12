@@ -16,8 +16,6 @@ function convertUnitChartData(data, eventId, isRate) {
         }
     }
 
-
-
 function getActiveRate(row) {
     var e = row.activeArchivesNumber,
         t = row.peopleNumber;
@@ -45,12 +43,10 @@ $(function(){
         url : "/qos/gongwei/archives/search/all",//请求的 URL地址
         async: false,
         success: function (rawData){
-        	console.log(rawData);
         	var ev22001 = rawData.result;
         	var ev22001Sort = rawData.result.sort(compareBigToSmall('activeArchivesNumber'));
         	var ev22001DataArray = ev22001Sort.slice(0,5);
-
-        	var newast22001 = {}
+            var newast22001 = {}
             newast22001['22001']=ev22001DataArray
             var unit22001DatanewArrayunit22001DatanewArray=convertUnitChartData(newast22001, '22001', true);
 
