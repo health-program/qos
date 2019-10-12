@@ -1,13 +1,17 @@
 package com.paladin.qos.service.gongwei.vo;
 
 
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class PressureSugarManagementVO {
 
-    private String managedCenter;
+    private String unitId;
 
     private Long pressureNumber;
 
     private Long pressureManageNumber;
+
+    private Long pressureFollowNumber;
 
     private Long pressureRecentReach;
 
@@ -19,11 +23,29 @@ public class PressureSugarManagementVO {
 
     private Long sugarManageNumber;
 
+    private Long sugarFollowNumber;
+
     private Long sugarRecentReach;
 
     private Double sugarControlRate;
 
     private Double sugarManageRate;
+
+    public Long getPressureFollowNumber() {
+        return pressureFollowNumber;
+    }
+
+    public void setPressureFollowNumber(Long pressureFollowNumber) {
+        this.pressureFollowNumber = pressureFollowNumber;
+    }
+
+    public Long getSugarFollowNumber() {
+        return sugarFollowNumber;
+    }
+
+    public void setSugarFollowNumber(Long sugarFollowNumber) {
+        this.sugarFollowNumber = sugarFollowNumber;
+    }
 
     public Long getPressureRecentReach() {
         return pressureRecentReach;
@@ -41,12 +63,12 @@ public class PressureSugarManagementVO {
         this.sugarRecentReach = sugarRecentReach;
     }
 
-    public String getManagedCenter() {
-        return managedCenter;
+    public String getUnitName() {
+        return DataConstantContainer.getUnitName(unitId);
     }
 
-    public void setManagedCenter(String managedCenter) {
-        this.managedCenter = managedCenter;
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
     }
 
     public Long getPressureNumber() {

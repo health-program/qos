@@ -15,6 +15,7 @@ import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.mapper.analysis.AnalysisMapper;
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.data.AnalysisUnit;
 import com.paladin.qos.service.analysis.data.DataCountDay;
 import com.paladin.qos.service.analysis.data.DataCountMonth;
@@ -90,11 +91,12 @@ public class AnalysisService {
 	 * @param eventId
 	 * @param startDate
 	 * @param endDate
+	 * @param ignoreUnitIds
 	 * @return
 	 */
-	public DataResult<DataPointDay> getDataSetOfDay(String eventId, Date startDate, Date endDate) {
+	public DataResult<DataPointDay> getDataSetOfDay(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库
-		return getDataSetOfDay(eventId, DataConstantContainer.getUnitList(), startDate, endDate);
+		return getDataSetOfDay(eventId, removeIgnoreUnit(DataConstantContainer.getUnitList(), ignoreUnitIds), startDate, endDate);
 	}
 
 	/**
@@ -106,9 +108,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public DataResult<DataPointDay> getDataSetOfDay(String eventId, int unitType, Date startDate, Date endDate) {
+	public DataResult<DataPointDay> getDataSetOfDay(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库，通过unit_type
-		return getDataSetOfDay(eventId, getUnitByType(unitType), startDate, endDate);
+		return getDataSetOfDay(eventId, removeIgnoreUnit(getUnitByType(unitType), ignoreUnitIds), startDate, endDate);
 	}
 
 	/**
@@ -141,9 +143,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, Date startDate, Date endDate) {
+	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库
-		return getDataSetOfMonth(eventId, DataConstantContainer.getUnitList(), startDate, endDate);
+		return getDataSetOfMonth(eventId, removeIgnoreUnit(DataConstantContainer.getUnitList(), ignoreUnitIds), startDate, endDate);
 	}
 
 	/**
@@ -155,9 +157,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, int unitType, Date startDate, Date endDate) {
+	public DataResult<DataPointMonth> getDataSetOfMonth(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库
-		return getDataSetOfMonth(eventId, getUnitByType(unitType), startDate, endDate);
+		return getDataSetOfMonth(eventId, removeIgnoreUnit(getUnitByType(unitType), ignoreUnitIds), startDate, endDate);
 	}
 
 	/**
@@ -189,9 +191,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int startYear, int endYear) {
+	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int startYear, int endYear, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库
-		return getDataSetOfYear(eventId, DataConstantContainer.getUnitList(), startYear, endYear);
+		return getDataSetOfYear(eventId, removeIgnoreUnit(DataConstantContainer.getUnitList(), ignoreUnitIds), startYear, endYear);
 	}
 
 	/**
@@ -203,9 +205,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int unitType, int startYear, int endYear) {
+	public DataResult<DataPointYear> getDataSetOfYear(String eventId, int unitType, int startYear, int endYear, List<String> ignoreUnitIds) {
 		// TODO 可优化为直接查数据库
-		return getDataSetOfYear(eventId, getUnitByType(unitType), startYear, endYear);
+		return getDataSetOfYear(eventId, removeIgnoreUnit(getUnitByType(unitType), ignoreUnitIds), startYear, endYear);
 	}
 
 	/**
@@ -237,9 +239,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, Date startDate, Date endDate) {
+	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -253,9 +255,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+	public List<AnalysisUnit> getAnalysisResultByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -266,10 +268,11 @@ public class AnalysisService {
 	 * @param eventId
 	 * @param startDate
 	 * @param endDate
+	 * @param ignoreUnitIds
 	 * @return
 	 */
-	public List<DataPointDay> getAnalysisResultByDay(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getDataPointOfDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointDay> getAnalysisResultByDay(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -279,10 +282,12 @@ public class AnalysisService {
 	 * @param unitType
 	 * @param startDate
 	 * @param endDate
+	 * @param ignoreUnitIds
 	 * @return
 	 */
-	public List<DataPointDay> getAnalysisResultByDay(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.getDataPointOfDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointDay> getAnalysisResultByDay(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -293,8 +298,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getDataPointOfMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -306,8 +311,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.getDataPointOfMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataPointMonth> getAnalysisResultByMonth(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -318,8 +324,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataPointYear> getAnalysisResultByYear(String eventId, int startYear, int endYear) {
-		return analysisMapper.getDataPointOfYear(eventId, 0, startYear, endYear);
+	public List<DataPointYear> getAnalysisResultByYear(String eventId, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfYear(eventId, 0, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -331,8 +337,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataPointYear> getAnalysisResultByYear(String eventId, int unitType, int startYear, int endYear) {
-		return analysisMapper.getDataPointOfYear(eventId, unitType, startYear, endYear);
+	public List<DataPointYear> getAnalysisResultByYear(String eventId, int unitType, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.getDataPointOfYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -343,9 +349,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountUnit> countTotalNumByUnit(String eventId, Date startDate, Date endDate) {
+	public List<DataCountUnit> countTotalNumByUnit(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -359,9 +365,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountUnit> countTotalNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+	public List<DataCountUnit> countTotalNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -374,9 +380,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate) {
+	public List<DataCountUnit> countEventNumByUnit(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<DataCountUnit> result = analysisMapper.countEventNumByUnit(eventId, 0, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -390,9 +396,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountUnit> countEventNumByUnit(String eventId, int unitType, Date startDate, Date endDate) {
+	public List<DataCountUnit> countEventNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
 		List<DataCountUnit> result = analysisMapper.countEventNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
-				TimeUtil.getSerialNumberByDay(endDate));
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 		orderByUnit(result);
 		return result;
 	}
@@ -405,8 +411,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountDay> countTotalNumByDay(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountDay> countTotalNumByDay(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -418,8 +424,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountDay> countTotalNumByDay(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountDay> countTotalNumByDay(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -430,8 +437,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountDay> countEventNumByDay(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountDay> countEventNumByDay(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByDay(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -443,8 +450,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountDay> countEventNumByDay(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountDay> countEventNumByDay(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByDay(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -455,8 +463,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountMonth> countTotalNumByMonth(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountMonth> countTotalNumByMonth(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -468,8 +476,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountMonth> countTotalNumByMonth(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countTotalNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountMonth> countTotalNumByMonth(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -480,8 +489,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountMonth> countEventNumByMonth(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountMonth> countEventNumByMonth(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByMonth(eventId, 0, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	/**
@@ -493,8 +502,9 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountMonth> countEventNumByMonth(String eventId, int unitType, Date startDate, Date endDate) {
-		return analysisMapper.countEventNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public List<DataCountMonth> countEventNumByMonth(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByMonth(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate),
+				ignoreUnitIds);
 	}
 
 	/**
@@ -505,8 +515,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountYear> countTotalNumByYear(String eventId, int startYear, int endYear) {
-		return analysisMapper.countTotalNumByYear(eventId, 0, startYear, endYear);
+	public List<DataCountYear> countTotalNumByYear(String eventId, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByYear(eventId, 0, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -518,8 +528,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountYear> countTotalNumByYear(String eventId, int unitType, int startYear, int endYear) {
-		return analysisMapper.countTotalNumByYear(eventId, unitType, startYear, endYear);
+	public List<DataCountYear> countTotalNumByYear(String eventId, int unitType, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.countTotalNumByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -530,8 +540,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountYear> countEventNumByYear(String eventId, int startYear, int endYear) {
-		return analysisMapper.countEventNumByYear(eventId, 0, startYear, endYear);
+	public List<DataCountYear> countEventNumByYear(String eventId, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByYear(eventId, 0, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -543,8 +553,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public List<DataCountYear> countEventNumByYear(String eventId, int unitType, int startYear, int endYear) {
-		return analysisMapper.countEventNumByYear(eventId, unitType, startYear, endYear);
+	public List<DataCountYear> countEventNumByYear(String eventId, int unitType, int startYear, int endYear, List<String> ignoreUnitIds) {
+		return analysisMapper.countEventNumByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
 	}
 
 	/**
@@ -555,8 +565,8 @@ public class AnalysisService {
 	 * @param endDate
 	 * @return
 	 */
-	public long getTotalNumOfEvent(String eventId, Date startDate, Date endDate) {
-		return analysisMapper.getTotalNumOfEvent(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate));
+	public long getTotalNumOfEvent(String eventId, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		return analysisMapper.getTotalNumOfEvent(eventId, TimeUtil.getSerialNumberByDay(startDate), TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
 	}
 
 	// 单位排序
@@ -571,7 +581,36 @@ public class AnalysisService {
 				}
 			});
 		}
+	}
 
+	/**
+	 * 去除忽略的单位
+	 * 
+	 * @param units
+	 * @param ignoreUnitIds
+	 * @return
+	 */
+	private List<Unit> removeIgnoreUnit(List<Unit> units, List<String> ignoreUnitIds) {
+		if (units != null) {
+			if (ignoreUnitIds != null && ignoreUnitIds.size() > 0) {
+				List<Unit> newUnits = new ArrayList<>(units.size());
+				for (Unit unit : units) {
+					boolean ignore = false;
+					for (String uid : ignoreUnitIds) {
+						if (unit.getId().equals(uid)) {
+							ignore = true;
+							break;
+						}
+					}
+					if (!ignore) {
+						newUnits.add(unit);
+					}
+				}
+				return newUnits;
+			}
+		}
+
+		return units;
 	}
 
 	/**
@@ -602,10 +641,14 @@ public class AnalysisService {
 	 * @param unitType
 	 * @return
 	 */
-	public List<DataCountUnit> getLastCountByUnit(String eventId, int unitType) {
-		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType);
+	public List<DataCountUnit> getLastCountByUnit(String eventId, int unitType,List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.getLastCountByUnit(eventId, unitType,ignoreUnitIds);
 		orderByUnit(result);
 		return result;
+	}
+
+	public List<Register> findRegisterList() {
+		return analysisMapper.findRegisterList();
 	}
 
 }

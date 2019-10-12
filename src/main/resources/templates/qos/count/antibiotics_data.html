@@ -17,14 +17,14 @@
                     <!--<select name="" placeholder="医疗机构类别" class="form-control tonto-select-constant">-->
                     <!--</select>-->
                     <!--</div>-->
+                    <!--<div class="col-md-2">-->
+                        <!--<select name="unitId" class="form-control">-->
+                            <!--<option value="">请选择单位</option>-->
+                            <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
+                        <!--</select>-->
+                    <!--</div>-->
                     <div class="col-md-2">
-                        <select name="unitId" class="form-control">
-                            <option value="">请选择单位</option>
-                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input name="month" id="monthInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
+                        <input name="month" id="monthInput" placeholder="请选择月份" autocomplete="off"  type="text" class="form-control">
                     </div>
 
                     <!--<div class="col-md-2">-->
@@ -35,7 +35,7 @@
                     <!--<input name="endTime" placeholder="请输入结束时间" autocomplete="off" type="text"-->
                     <!--class="form-control tonto-datepicker-date">-->
                     <!--</div>-->
-                    <div class="col-md-8">
+                    <div class="col-md-10">
                         <div class="pull-right">
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search"
                                     onclick="table.refresh()"><i class="fa fa-search"></i>查询
@@ -94,9 +94,7 @@
         sumChart.resize();
     });
 
-    var table, rate, sumData, requestParams, sumChart;
-    var sum = 0;
-    var totalSum = 0;
+    var table, rate, sumData, requestParams, sumChart,selectUnit,result;
     var average = 0;
     var totalAverage = 0;
     $(function () {
@@ -130,55 +128,99 @@
                     {title: "医疗机构", field: "unitName"},
                     {title: "住院患者人均使用<br>抗菌药物品种数", field: "varieties",width:"10px"},
                     {title: "住院患者人均使用<br>抗菌药物费用", field: "averageCost"},
-                    {title: "住院患者使用<br>抗菌药物的百分率", field: "userRate", formatter: getRate},
-                    {title: "住院患者抗菌药物<br>占总费用百分率", field: "rateOfTotal", formatter: getRate},
+                    {title: "住院患者使用<br>抗菌药物的百分率", field: "userRate",
+                        formatter: function(value, row, index) {
+                            if(value)
+                                return value + "%";
+                        }
+                    },
+                    {title: "住院患者抗菌药物<br>占总费用百分率", field: "rateOfTotal",
+                        formatter: function(value, row, index) {
+                            if(value)
+                                return value + "%";
+                        }
+                    },
 
                 ]
             ],
             url: '/qos/countantibiotics/data/processing',
             pagination: false,
             searchbar: '#searchbar',
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             queryParams: function (params) {
-                if (params.unitId!=null || params.month!=null){
-                    sum=0;
-                    totalSum=0;
-                }
                 requestParams = params;
                 return params;
             },
             responseHandler: function (res) {
-                data = res;
-
-                for (var i = 0; i < data.length; i++) {
-                    var row = data[i];
-                    sum += parseFloat(row.userRate);
-
-                    totalSum += parseFloat(row.rateOfTotal);
+                var data = {};
+                sumData = res || [];
+                result = []
+                for (var o in sumData) {
+                    result.push(sumData[o]);
                 }
-                average = (sum / data.length).toFixed(2);
-                totalAverage = (totalSum / data.length).toFixed(2);
-                // if (data == 0) {
-                //     showChartInfo(rateTotal, '暂无数据显示');
-                //     showChartInfo2(rate, '暂无数据显示');
-                //     showChartInfo3(sumChart, '暂无数据显示');
-                //      return false;
-                // }
+                var totalUserRate=0;
+                var totalRate=0;
+                if (sumData.length !=0){
+                    var sum = 0;
+                    var totalSum = 0;
+                    var userRateTotal=0;
+                    var rateOfTotal=0;
+                    for (var i = 0; i < sumData.length; i++) {
+                        var row = sumData[i];
+                        sum += row.varieties;
+                        totalSum += row.averageCost;
+                        userRateTotal+=row.userRate;
+                        totalUserRate=(userRateTotal/sumData.length).toFixed(2);
+                        rateOfTotal+=row.rateOfTotal;
+                        totalRate=(rateOfTotal/sumData.length).toFixed(2);
+                    }
+                    var total={
+                        "unitName" : "合计",
+                        "varieties" :sum,
+                        "averageCost":totalSum,
+                        "userRate" :totalUserRate ,
+                        "rateOfTotal":totalRate,
+                    }
+                    sumData.push(total);
+                }
+
                 initRateDashBoard();
                 initColumnarDiv();
-                return data;
+                return sumData;
 
             }
         });
     }
 
-
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        initRateDashBoard();
+    }
 
     function initRateDashBoard() {
-        if(data==0){
+        if(sumData==0){
             showChartInfo(rateTotal, '暂无数据显示');
             showChartInfo2(rate, '暂无数据显示');
             return false;
         }
+
+        let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < sumData.length; i++) {
+            if (unitId=='total'){
+                total.push(sumData[i])
+            }else{
+                if (sumData[i].unitId==unitId){
+                    total.push(sumData[i]);
+                }
+            }
+        }
+        var userRate=total[total.length-1].userRate;
+        var totalRate=total[total.length-1].rateOfTotal;
         option = {
             title: {
                 text: '住院患者使用抗菌药物百分率'
@@ -194,10 +236,10 @@
             },
             series: [
                 {
-                    name: '住院患者抗菌药物占总费用百分率',
+                    name: '住院患者使用抗菌药物百分率',
                     type: 'gauge',
                     detail: {formatter: '{value}%'},
-                    data: [{value: average, name: ''}]
+                    data: [{value: userRate, name: ''}]
                 }
             ]
         };
@@ -216,10 +258,10 @@
             },
             series: [
                 {
-                    name: '住院患者使用抗菌药物百分率',
+                    name: '住院患者抗菌药物占总费用百分率',
                     type: 'gauge',
                     detail: {formatter: '{value}%'},
-                    data: [{value: totalAverage, name: ''}]
+                    data: [{value: totalRate, name: ''}]
                 }
             ]
         };
@@ -232,7 +274,7 @@
 
 
     function initColumnarDiv() {
-        if (data==0){
+        if (sumData==0){
             showChartInfo3(sumChart, '暂无数据显示');
             return false;
         }
@@ -247,7 +289,7 @@
         var userRateValue = [];
         var rateOfTotalValue = [];
 
-        data.forEach(function(item){
+        result.forEach(function(item){
 
             hospitalName.push(item.unitName);
 

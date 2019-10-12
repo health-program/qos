@@ -22,7 +22,6 @@ function getRateNum(item, fixed) {
         return c.toFixed(fixed || 2);
     }
  function convertMonthChartData(data, eventId, isRate) {
- alert(555555)
         var eventData = data[eventId],
             unitPoints = eventData.unitPoints,
             month = [],

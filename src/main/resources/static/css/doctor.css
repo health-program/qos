@@ -22,7 +22,7 @@
     #middle .bg_opacity {
         background: url(../../static/image/index/opacitybg.png);
         background-size: 100% 100%;
-        width: 50vh;
+        width: 60vh;
         height: 26.5vh;
         margin: 10px 0px 10px 0px;
     }
@@ -32,7 +32,7 @@
         #effective,
         #visiting,
         #signingDoctor {
-            width: 52vh;
+            width: 60vh;
             height: 20vh;
         }
 }
@@ -41,7 +41,7 @@
 
 
 .carousel-inner{
-  height:40vh;
+  height:37vh!important;
 }
 
 #middle{
@@ -70,4 +70,62 @@
 
 .doctor-mid-bg:nth-child(4n){
   margin-right:0px!important;
+}
+
+.doctor_unitName,.doctor_teamName,.doctor_names,.doctor_ages,.doctor_jobRank,.doctor_isTeamCaptain,.doctor_personnelCategory{
+        width:5.7vw!important;
+        display:inline-block;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        height:5.5vh;
+        line-height:5.5vh;
+        text-align:left;
+}
+
+.doctor_teamName{
+
+}
+
+.doctor_names{
+
+}
+
+.doctor_ages{
+
+}
+
+.doctor_jobRank{
+
+}
+
+.doctor_isTeamCaptain{
+
+}
+
+.doctorheader{
+  width:50vh!important;
+}
+
+.roll .header span:first-child{
+  width:9.9vw!important;
+  text-align:center;
+}
+
+.roll{
+  background:url('../../static/image/index/kuang.png') no-repeat!important;
+  background-size: 100% 100%!important;
+  height:42vh!important;
+}
+
+.rollheader{
+  background:none!important;
+}
+
+#middle .bg_opacity{
+  width:50vh!important;
+}
+
+#emergency,#individualization,#chartmain,#effective,#visiting,#signingDoctor{
+  width:50vh;
 }

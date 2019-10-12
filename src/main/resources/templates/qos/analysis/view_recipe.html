@@ -5,16 +5,16 @@
 
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-    <!--   <section class="content-header">
-        <h1>数据展示</h1>
-    </section> -->
+    <section class="content-header">
+    <h1>处方信息统计</h1>
+    </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -197,7 +197,8 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,160111,16012,16013,16014';
+            	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,16011,16012,16013,16014';
+            	params.ignoreUnitIds = '320583810343'
                 requestParam = params;
                 return params;
             },
@@ -406,7 +407,11 @@
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40 //角度顺时针计算的
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                 }
                 },
                 axisTick: {
                     alignWithLabel: true
@@ -488,7 +493,11 @@
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40 //角度顺时针计算的
+                    rotate: 40, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                    }
                 },
                 axisTick: {
                     alignWithLabel: true
@@ -559,9 +568,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16011).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16011 ;
+        occupyRate=result[15].ev16011;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[15].ev16011 ;
         
         var option = {
 
@@ -604,7 +614,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'抗菌药物使用率'
         	                        },
         	                        {
@@ -640,9 +650,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16009).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16009 ;
+        occupyRate=result[15].ev16009;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[15].ev16009 ;
         
         var option = {
 
@@ -685,7 +696,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'静脉输液率'
         	                        },
         	                        {
@@ -721,9 +732,10 @@
         var remainRate=0;
         var pieMessage;
         
-        occupyRate=toPoint(result[0].ev16010).toFixed(2);
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=result[0].ev16010 ;
+        occupyRate=result[15].ev16010;
+        var stroccupyRate = occupyRate.replace('%','');
+        remainRate=(100-stroccupyRate).toFixed(2);
+        pieMessage=result[15].ev16010 ;
         
         var option = {
 
@@ -766,7 +778,7 @@
         	                    },
         	                    data:[
         	                        {
-        	                            value:occupyRate,
+        	                            value:stroccupyRate,
         	                            name:'激素使用率'
         	                        },
         	                        {
@@ -800,10 +812,14 @@
          var twoRate=0;
          var threeRate;
          console.log(result);
-         oneRate=toPoint(result[0].ev16012).toFixed(2);
-         twoRate=toPoint(result[0].ev16013).toFixed(2);
-         threeRate=toPoint(result[0].ev16014).toFixed(2);
-         pieMessage=result[0].ev16012 ;
+         
+      
+         
+         
+         oneRate=result[15].ev16012
+         twoRate=result[15].ev16013
+         threeRate=result[15].ev16014
+         pieMessage=result[15].ev16012 ;
     	if (!dashChart) {
         	dashChart = echarts.init(document.getElementById('dashChartDiv'));
         }
@@ -862,7 +878,7 @@
     		            },
     		            detail : {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		                formatter: result[0].ev16012,
+    		                formatter: result[15].ev16012,
     		                fontWeight: 'bolder',
     		                borderRadius: 3,
     		                backgroundColor: '#444',
@@ -919,7 +935,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[0].ev16012
+    		            	formatter:result[15].ev16013
     		            },
     		            data:[{value: twoRate, name: '二联抗生素使用率'}]
     		        },
@@ -958,7 +974,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[0].ev16012
+    		            	formatter:result[15].ev16014
     		            },
     		            data:[{value: threeRate, name: '三联抗生素使用率'}]
     		        }

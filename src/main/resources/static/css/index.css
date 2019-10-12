@@ -151,8 +151,11 @@
 .fourclass .right .bottom {
     margin-top: 4px;
     font-size: 35px;
+    text-align:center;
 }
-
+i{
+  font-style:normal!important;
+}
 #middle {
     min-width: 100% !important;
     margin-left:2vh;
@@ -181,13 +184,22 @@
 
 
 
-#emergency3,#emergency2,#emergency1{
+#emergency3,#emergency2,#emergency1,#emergency{
     height: 20vh;
 }
 
 #middle .header {
     background: url('../../static/image/index/line.png') no-repeat bottom center;
     width: 50vh;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #19D1FF;
+}
+
+#middle .headers {
+    background: url('../../static/image/index/line.png') no-repeat bottom center;
+    width: 60vh;
     height: 40px;
     text-align: center;
     line-height: 40px;
@@ -209,6 +221,9 @@
     background: #00b4b1;
 }
 
+.blueline{
+  background:#28b1ff;
+}
 
 #chartmain,
 #emergency,
@@ -220,7 +235,7 @@
 #effective,
 #visiting,
 #signingDoctor {
-    width: 50vh;
+    width: 60vh;
     height: 20vh;
 }
 
@@ -452,13 +467,13 @@ select {
         #middle .bg_opacity {
             background: url('../../static/image/index/opacitybg.png');
             background-size: 100% 100%;
-            width: 52vh;
+            width: 60vw;
             height: 24.5vh;
             margin: 10px 0px 10px 0px;
         }
 
         #middle .left {
-            width: 52vh;
+            width: 60vw;
             display: inline-block;
             float: left;
         }
@@ -488,7 +503,7 @@ select {
     #middle .bg_opacity {
         background: url('../../static/image/index/opacitybg.png');
         background-size: 100% 100%;
-        width: 50vh;
+        width: 60vh;
         height: 24.5vh;
         margin: 10px 0px 10px 0px;
     }
@@ -498,4 +513,26 @@ select {
         display: inline-block;
         float: left;
     }
+}
+
+#permanentPopulation{
+  height: 20vh;
+}
+
+
+#bodyarea{
+    width: 100%;
+    overflow-x: hidden;
+    height: 100% !important;
+    background: url('../../static/image/index/indexbg_top.jpg') no-repeat scroll !important;
+}
+
+
+.comprehensiveMap{
+ width:36.5vw!important;
+ margin-left:4vw;
+}
+
+#mide_right{
+  margin-left:1vh!important;
 }

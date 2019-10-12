@@ -17,7 +17,10 @@ public class AnalysisRequest {
 
 	private int dataType;
 	private int byUnit = 1;
-
+	
+	
+	private List<String> ignoreUnitIds;
+	
 	public Date getStartTime() {
 		return startTime;
 	}
@@ -80,6 +83,14 @@ public class AnalysisRequest {
 
 	public void setByUnit(int byUnit) {
 		this.byUnit = byUnit;
+	}
+
+	public List<String> getIgnoreUnitIds() {
+		return ignoreUnitIds;
+	}
+
+	public void setIgnoreUnitIds(List<String> ignoreUnitIds) {
+		this.ignoreUnitIds = ignoreUnitIds;
 	}
 
 }

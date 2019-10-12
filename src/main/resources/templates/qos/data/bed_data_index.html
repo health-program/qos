@@ -13,14 +13,20 @@
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
+                    <!--<div class="col-md-2">-->
+                        <!--<select name="unitId" class="form-control">-->
+                            <!--<option value="">请选择单位</option>-->
+                            <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <!--<div class="col-md-2">-->
+                        <!--<input name="date" id="dateInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">-->
+                    <!--</div>-->
                     <div class="col-md-2">
-                        <select name="unitId" class="form-control">
-                            <option value="">请选择单位</option>
-                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                        </select>
+                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
-                        <input name="date" id="dateInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">
+                        <input name="endDate" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-8">
                         <div class="pull-right">
@@ -64,16 +70,16 @@
         pieChartDiv.resize();
     });
 
-    var table, sumChart, dayChart, sumData, requestParams;
+    var table, sumChart, dayChart, sumData, requestParams,selectUnit,result;
     $(function() {
-        // var day=new Date();
-        // day.setTime(day.getTime());
-        // var month = day.getFullYear()+"-" + (day.getMonth()+1);
-        // laydate.render({
-        //     elem: '#dateInput',
-        //     type: 'month',
-        //     value:month
-        // });
+        var day=new Date();
+        day.setTime(day.getTime());
+        var month = day.getFullYear()+"-" + (day.getMonth()+1);
+        laydate.render({
+            elem: '#dateInput',
+            type: 'month',
+            value:''
+        });
         initTable();
     });
 
@@ -131,8 +137,17 @@
                 requestParams = params;
                 return params;
             },
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             responseHandler: function(res) {
                 sumData = res || [];
+                result = []
+                for (var o in sumData) {
+                    result.push(sumData[o]);
+                }
                 var bedNumber=0;
                 var openBedNumber=0;
                 var userBedNumber=0;
@@ -161,6 +176,12 @@
             }
         });
     }
+
+    function unitSelected(row) {
+        selectUnit = row.unitName;
+        initPieChart();
+    }
+
     var infection1Chart = echarts.init(document.getElementById('sumChartDiv'));
     var pieChartDiv = echarts.init(document.getElementById('pieChartDiv'));
 
@@ -177,8 +198,8 @@
             dataShadow = [];
 
 
-        for (var i = 0; i < sumData.length; i++) {
-            var it = sumData[i];
+        for (var i = 0; i < result.length; i++) {
+            var it = result[i];
             dataAxis.push(it.unitName);
             data.push(it.userBedRate);
         }
@@ -259,8 +280,20 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
+
+        let unitId = selectUnit || 'total';
+        var total=[];
         for (var i = 0; i < sumData.length; i++) {
-            var it = sumData[i];
+            if (unitId=='total'){
+                total.push(sumData[i])
+            }else{
+                if (sumData[i].unitName==unitId){
+                    total.push(sumData[i]);
+                }
+            }
+        }
+        for (var i = 0; i < total.length; i++) {
+            var it = total[i];
            sumOpen+=it.openBedNumber;
            sumUse+=it.userBedNumber;
         }

@@ -42,7 +42,7 @@ public class FamilyPlanningManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(2);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -60,7 +60,7 @@ public class FamilyPlanningManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(2);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -73,12 +73,12 @@ public class FamilyPlanningManagementController {
 	@PostMapping("/search/ywlc")
 	@ResponseBody
 	public Object searchYwlc(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13101", request.getStartTime(), request.getEndTime()));
+		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13101", request.getStartTime(), request.getEndTime(),null));
 	}
 
 	@PostMapping("/search/fyxg")
 	@ResponseBody
 	public Object searchFyxg(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13102", request.getStartTime(), request.getEndTime()));
+		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13102", request.getStartTime(), request.getEndTime(),null));
 	}
 }

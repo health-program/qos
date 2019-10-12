@@ -1,12 +1,15 @@
 package com.paladin.qos.controller.gongwei;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.service.analysis.AnalysisConstant;
 import com.paladin.qos.service.data.DataUnitService;
+import com.paladin.qos.service.data.vo.DataUnitVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,7 +39,15 @@ public class PhysicalManagementController {
 	public Object dataIndex(Model model) {
 		List<Integer> types=new ArrayList<>();
 		types.add(DataUnit.TYPE_COMMUNITY);
-		model.addAttribute("unit", dataUnitService.selectData(types));
+		List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
+		Iterator<DataUnitVO> it=dataUnitVOList.iterator();
+		while(it.hasNext()){
+			DataUnitVO dataUnitVO=it.next();
+			if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
+				it.remove();
+			}
+		}
+		model.addAttribute("unit", dataUnitVOList);
 		return "/qos/exhibition/physical_index";
 	}
 
@@ -46,9 +57,9 @@ public class PhysicalManagementController {
 
 		List<PhysicalManagementVO> physicalManagementVOArrayList = new ArrayList<>();
 
-		List<DataCountUnit> oldPeople = analysisService.countTotalNumByUnit("22003", 2, request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> physicalPeople = analysisService.countEventNumByUnit("22003", 2, request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> healthPeople = analysisService.countEventNumByUnit("22012", 2, request.getStartTime(), request.getEndTime());
+		List<DataCountUnit> oldPeople = analysisService.countTotalNumByUnit("22003", 2, request.getStartTime(), request.getEndTime(), AnalysisConstant.SPECIAL_UNITS_FUYOU);
+		List<DataCountUnit> physicalPeople = analysisService.countEventNumByUnit("22003", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);
+		List<DataCountUnit> healthPeople = analysisService.countEventNumByUnit("22012", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);
 
 		Map<String, Long> physicalPeopleMap = physicalPeople.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
 

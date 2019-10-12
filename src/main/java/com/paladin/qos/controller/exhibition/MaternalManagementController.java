@@ -50,7 +50,7 @@ public class MaternalManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(5);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -63,7 +63,7 @@ public class MaternalManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(4);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -76,7 +76,7 @@ public class MaternalManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(4);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -89,7 +89,7 @@ public class MaternalManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(2);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -102,20 +102,20 @@ public class MaternalManagementController {
 	@PostMapping("/search/yfsc")
 	@ResponseBody
 	public Object searchYfsc(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13304", request.getStartTime(), request.getEndTime()));
+		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13304", request.getStartTime(), request.getEndTime(),null));
 	}
 
 	@PostMapping("/search/fnb")
 	@ResponseBody
 	public Object searchFnb(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13313", request.getStartTime(), request.getEndTime()));
+		return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth("13313", request.getStartTime(), request.getEndTime(),null));
 	}
 
 	@RequestMapping(value = "/search/yftj", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object searchYftj(AnalysisRequest request) {
-		List<DataCountUnit> first = analysisService.countTotalNumByUnit("13315", request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> cycle = analysisService.countTotalNumByUnit("13316", request.getStartTime(), request.getEndTime());
+		List<DataCountUnit> first = analysisService.countTotalNumByUnit("13315", request.getStartTime(), request.getEndTime(),null);
+		List<DataCountUnit> cycle = analysisService.countTotalNumByUnit("13316", request.getStartTime(), request.getEndTime(),null);
 		HashMap<String, List<DataCountUnit>> map = new HashMap<>(2);
 		map.put("13315", first);
 		map.put("13316", cycle);
@@ -133,7 +133,7 @@ public class MaternalManagementController {
 		List<DataResult<DataPointMonth>> list = new ArrayList<>(2);
 		DataResult<DataPointMonth> set;
 		for (String id : ids) {
-			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime());
+			set = analysisService.getDataSetOfMonth(id, request.getStartTime(), request.getEndTime(),null);
 			list.add(set);
 		}
 		return CommonResponse.getSuccessResponse(list);
@@ -152,9 +152,9 @@ public class MaternalManagementController {
 	@RequestMapping(value = "/search/org", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object searchOrg(AnalysisRequest request) {
-		List<DataCountUnit> early = analysisService.countTotalNumByUnit("13320", request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> pregnant = analysisService.countTotalNumByUnit("13319", request.getStartTime(), request.getEndTime());
-		List<DataCountUnit> maternal = analysisService.countTotalNumByUnit("13314", request.getStartTime(), request.getEndTime());
+		List<DataCountUnit> early = analysisService.countTotalNumByUnit("13320", request.getStartTime(), request.getEndTime(),null);
+		List<DataCountUnit> pregnant = analysisService.countTotalNumByUnit("13319", request.getStartTime(), request.getEndTime(),null);
+		List<DataCountUnit> maternal = analysisService.countTotalNumByUnit("13314", request.getStartTime(), request.getEndTime(),null);
 		HashMap<String, List<DataCountUnit>> map = new HashMap<>(3);
 		map.put("13320", early);
 		map.put("13319", pregnant);

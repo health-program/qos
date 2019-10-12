@@ -68,7 +68,7 @@
 	});
     
     
-    var table, dataVal, requestParams;
+    var table, dataVal, requestParams,selectUnit;
     $(function() {
         var date=new Date;
         var year=date.getFullYear();
@@ -118,6 +118,11 @@
                 requestParams = params;
                 return params;
             },
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
             responseHandler: function(res) {
             	dataVal = res || [];
                 operationChart1();
@@ -131,6 +136,11 @@
     function getRate(value, row, index) {
         if (value)
         return value.toFixed(2) + "%";
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        operationChart2();
     }
 
     var infection1Chart = echarts.init(document.getElementById('infectionChart1'));
@@ -319,7 +329,7 @@
 			
 			var data1 = [],data2 = [],data3 = [],data4 = [],data5 = [],data6 = [],data7 = [],data8 = [];
 				var createTime = $("#createTime").val();
-				var unitId = $("#unitId").val();
+                var unitId = selectUnit;
 				$.get("/qos/operationComplication/charts/count/year",{'unitId':unitId,'date':createTime},function(res){
 					var dataValue = res.result;
 					var dataName = [];

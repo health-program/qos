@@ -5,16 +5,16 @@
 
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-    <!--   <section class="content-header">
-        <h1>数据展示</h1>
-    </section> -->
+    <section class="content-header">
+    <h1>收入统计</h1>
+    </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -114,14 +114,14 @@
 					    field: "unitName"
 					},
                     { 
-						title: "合计总收入", 
+						title: "医疗收入", 
 						field: "ev15001",
 						formatter: function(value, row, index) {
                             return value/100;                            
                        }
                     },
                     { 
-                    	title: "医疗收入", 
+                    	title: "非药品收入", 
                     	field: "ev15002",
                     	formatter: function(value, row, index) {
                     		return value/100;
@@ -172,6 +172,7 @@
             onCheck: unitSelected,
             queryParams: function(params) {
             	params.eventIds = '15001,15002,15003,15004';
+            	params.ignoreUnitIds = '320583810343'
                 requestParam = params;
                 return params;
             },
@@ -194,6 +195,8 @@
                 initUnitChart(response);
                 ringChartDiv(response);
                 pieChartDiv(response);
+                
+                //result.shift();
                 return result;
             }
         });
@@ -299,14 +302,18 @@
             },
             legend: {
             	type:"scroll",
-            	data: ['合计总收入', '医疗收入','药品收入','其他收入'],
+            	data: ['医疗收入', '非药品收入','药品收入','其他收入'],
                 bottom:0
             },
             xAxis: {
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40 //角度顺时针计算的
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                 }
                 },
                 axisTick: {
                     alignWithLabel: true
@@ -325,7 +332,7 @@
                              barBorderRadius:2,
                          }
                      },
-                name: '合计总收入',
+                name: '医疗收入',
                 data: ev15001.values},
             	 {  type: 'bar',
                 	 barWidth : 5,
@@ -334,7 +341,7 @@
                              barBorderRadius:3,
                          }
                      },
-                   name: '医疗收入',
+                   name: '非药品收入',
                    data: ev15002.values},
             	 {  type: 'bar',
               	   barWidth : 5,
@@ -459,7 +466,7 @@
 	               },
 	               legend: {
 	            	type:"scroll",
-	               	data: ['合计收入', '医疗收入','药品收入','其他收入'],
+	               	data: ['医疗收入', '非药品收入','药品收入','其他收入'],
 	                   bottom:0
 	               },
 	               xAxis: {
@@ -481,7 +488,7 @@
 	                   	position: 'top'        //这里可以自己选择位置
 	                   	}
 	                   	},
-	                   name: '合计收入',
+	                   name: '医疗收入',
 	                   data: month15001.valuesMap[unitId]},
 	               	 {  type: 'line',
 	                	   areaStyle: {},
@@ -491,7 +498,7 @@
 	                        	position: 'top'        //这里可以自己选择位置
 	                        	}
 	                        	},
-	                      name: '医疗收入',
+	                      name: '非药品收入',
 	                      data: month15002.valuesMap[unitId]},
 	               	 {  type: 'line',
 	                    	  areaStyle: {},
@@ -637,37 +644,47 @@
                     }
                 }
             };
-       // chartData.push({value:getTotalFromAr(maleData),name:"男性"},{value:getTotalFromAr(femaleData),name:"女性"})
         var charData = [];
-        var x = result[result.length-1].ev15002/result[result.length-1].ev15001*100;
+        var x = result[result.length-1].ev15002/100;
         var x1 = (result[result.length-1].ev15002/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
-        var y = result[result.length-1].ev15003/result[result.length-1].ev15001*100;
+        var y = result[result.length-1].ev15003/100;
         var y1 = (result[result.length-1].ev15003/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
         if(result[result.length-1].ev15004==null){
         	var z = 0;
         	var z1 =  "0%";
         }else{
-        	var z = result[result.length-1].ev15004/result[result.length-1].ev15001*100;
+        	var z = result[result.length-1].ev15004/100;
         	var z1 = (result[result.length-1].ev15004/result[result.length-1].ev15001*100).toFixed(2) * 1+"%";
         }
         
         
-        charData.push({value:x,name:"医疗收入"},{value:y,name:"药品收入"},{value:z,name:"其他收入"})
+        charData.push({value:x,name:"非药品收入"},{value:y,name:"药品收入"},{value:z,name:"其他收入"})
         var option = {
                 color: [ '#67E0E3', '#37A2DA','#B9B9B9'], //环形图每块的颜色
                 tooltip: {
                     trigger: 'item',
-                    formatter: "{b} : {c}个 ({d}%)"
+                    formatter: "{b} ({d}%)"
                 },
                 series: [
                     {
                         name: '占比',
                         type: 'pie',
-                        radius : '95%',
+                        radius : '75%',
                         center: ['50%', '50%'],
                         barGap: 0,
                         label:labelOption,
                         data: charData,
+                        label: {
+                            normal: {
+                              position: 'inner',  // 设置标签位置，默认在饼状图外 可选值：'outer' ¦ 'inner（饼状图上）'
+                              // formatter: '{a} {b} : {c}个 ({d}%)'   设置标签显示内容 ，默认显示{b}
+                              // {a}指series.name  {b}指series.data的name
+                              // {c}指series.data的value  {d}%指这一部分占总数的百分比
+                              formatter: '{b} {c}'
+                              
+                            }
+                          },
+
                         itemStyle: {
                             emphasis: {
                                 shadowBlur: 10,

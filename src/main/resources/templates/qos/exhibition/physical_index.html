@@ -13,19 +13,19 @@
         <div class="box-body">
             <form id="searchbar" class="form-horizontal form-search">
                 <div class="form-group">
+                    <!--<div class="col-md-2">-->
+                        <!--<select name="unitId" class="form-control">-->
+                            <!--<option value="">请选择辖区</option>-->
+                            <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
+                        <!--</select>-->
+                    <!--</div>-->
                     <div class="col-md-2">
-                        <select name="unitId" class="form-control">
-                            <option value="">请选择辖区</option>
-                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endDate" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="pull-right">
                             <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
                             <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -83,14 +83,14 @@
 
     var table, sumChart, dayChart, sumData, requestParams,result,selectUnit,dataVal;
     $(function() {
-        var day=new Date();
-        day.setTime(day.getTime());
-        var month = day.getFullYear()+"-" + (day.getMonth()+1);
-        laydate.render({
-            elem: '#dateInput',
-            type: 'month',
-            value:month
-        });
+        // var day=new Date();
+        // day.setTime(day.getTime());
+        // var month = day.getFullYear()+"-" + (day.getMonth()+1);
+        // laydate.render({
+        //     elem: '#dateInput',
+        //     type: 'month',
+        //     value:month
+        // });
         initTable();
     });
 
@@ -125,6 +125,7 @@
             },
             queryParams: function(params) {
                 params.eventIds = '22003,22012';
+                params.ignoreUnitIds='320583810343';
                 requestParams = params;
                 return params;
             },
@@ -142,8 +143,8 @@
                 dataVal = data|| [];
 
                 result = []
-                for (var o in data) {
-                    result.push(data[o]);
+                for (var o in sumData) {
+                    result.push(sumData[o]);
                 }
                 initPieChart1();
                 initPieChart2();
@@ -381,7 +382,9 @@
         var completePhysicalNumberValue = [];
         result.pop();
         result.forEach(function(item){
-            managedName.push(item.unitName);
+            var name=item.unitName;
+            var strName=name.substring(0,name.length-8);
+            managedName.push(strName);
             oldPeopleNumberValue.push({name:item.unitName,value:item.ev22003total});
             physicalNumberValue.push({name:item.unitName,value:item.ev22003event});
             completePhysicalNumberValue.push({name:item.unitName,value:item.ev22012event});

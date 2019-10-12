@@ -5,16 +5,16 @@
 
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-    <!--   <section class="content-header">
-        <h1>数据展示</h1>
-    </section> -->
+    <section class="content-header">
+    <h1>住院人次/床位统计</h1>
+    </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -129,6 +129,7 @@
             onCheck: unitSelected,
             queryParams: function(params) {
             	params.eventIds = '14001,14002,14003,14005,14006';
+            	params.ignoreUnitIds = '320583810343';
                 requestParam = params;
                 return params;
             },
@@ -169,7 +170,8 @@
              type: "post",
              async: false,
              data: {
-                 'eventId': eventId
+                 'eventId': eventId,
+                 'ignoreUnitIds':'320583810343'
              },
              success: function (r) {
                   if (r.status == 1) {
@@ -341,7 +343,11 @@
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40 //角度顺时针计算的
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                    }
                 },
                 axisTick: {
                     alignWithLabel: true

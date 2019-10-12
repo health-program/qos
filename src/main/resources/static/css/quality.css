@@ -11,7 +11,7 @@
        height: 20.8vh;
 }
 .quailty_bottom_right{
-       background: url(../../static/image/index/doctor/roll.png);
+   background: url(../../static/image/index/opacitybg.png) no-repeat bottom center;
        background-size: 100% 100%;
        width:49.2vw;
        height: 31.8vh;
@@ -68,16 +68,17 @@
   margin-left:0.5vw;
 }
 .quailty_seek{
-  width:12vw;
+  width:13vw;
   display:inline-block;
   float:left;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  text-indent:1vw;
 }
 
 .quailty_department{
-   width:6vw;
+  width:7vw;
   display:inline-block;
   float:left;
   white-space:nowrap;
@@ -99,7 +100,7 @@
   float:left;
 }
 .quailty_date{
- width:6.6vw;
+ width:9.6vw;
   display:inline-block;
   float:left;
   white-space:nowrap;
@@ -176,4 +177,8 @@ width:29vw;
 
 #selectID,#incomeSelect{
   width:5vw;
+}
+
+.text-aligncenter{
+  text-align:center;
 }

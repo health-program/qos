@@ -3,13 +3,13 @@
    var  data31010;
 
 
-
+     var selectIDValue='31009';
 //封装的方法开始
        // 15005,15006
-var paycomparsionOption=function(id){
+var paycomparsionOptions=function(id){
     var eventId = $("#selectID").val();
     var data = dataMap[eventId];
-    var paycomparsionOption={
+    var paycomparsionOptions={
     tooltip : {
         trigger: 'item',
         formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -62,7 +62,7 @@ var paycomparsionOption=function(id){
     ]
 };
     var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
-      paycomparsion_id.setOption(paycomparsionOption);
+      paycomparsion_id.setOption(paycomparsionOptions);
  }
 //封装的方法结束
 
@@ -81,19 +81,11 @@ $(function(){
         }
         return c.toFixed(fixed || 2);
     }
-
-
-
-    var arr={
+     var arr={
           eventIds:'31009,31010',  // 伟华
           startTime:'2018-12-10'
       };
 
-
-
-
-
-         var selectIDValue='31009';
          if(selectIDValue=='31009'){
                         arr = {
                             eventIds:'31009,31010',  // 伟华
@@ -107,7 +99,7 @@ $(function(){
                             success: function (rawData) {
                             data31009 = rawData.result['31009']
                             data31010 = rawData.result['31010']
-                             paycomparsionOption()
+                             paycomparsionOptions()
                            }
                         });
               }
@@ -125,7 +117,7 @@ $(function(){
                    success: function (rawData) {
                    data31009 = rawData.result['31009']
                    data31010 = rawData.result['31010']
-                   paycomparsionOption()
+                   paycomparsionOptions()
                   }
                });
      }
@@ -142,7 +134,7 @@ $(function(){
               success: function (rawData) {
               data31009 = rawData.result['15005']
               data31010 = rawData.result['15006']
-              paycomparsionOption()
+              paycomparsionOptions()
              }
           });
 
@@ -170,6 +162,10 @@ $(function(){
 
 
 
+
+$("#selectID").val('31009')
+// 触发事件
+$("#selectID").trigger("change")
 
 
 

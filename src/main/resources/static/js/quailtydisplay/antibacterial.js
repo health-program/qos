@@ -1,21 +1,4 @@
-$(function(){
-
-
-    $.ajax({
-        type : "post",    //请求类型
-        url : "/qos/countantibiotics/find/percent",//请求的 URL地址
-        success: function (rawData) {
-
-
-           var  nameArray=[];
-
-           for(var i=0;i<rawData.result.length;i++){
-                nameArray.push(rawData.result[i]['unitName'])
-           }
-
-             debugger
-
-        var dataStyle = {
+      var dataStyle = {
             normal: {
                 label: {
                     show: false
@@ -40,98 +23,109 @@ $(function(){
         }
     };
 
-    var antibacterialOption ={
-            color: ['#4DFFE3','#4DE0FF','#4DFF8F','#ADFF4D'],
-            tooltip : {
-                show: true,
-                formatter: "{b} : {c}"
-            },
-
-            legend: {
-                top: "13.5%",
-                x: 'right',
-                left: "42%",
-                itemWidth:0,itemHeight:0,
-                data: nameArray,
-                itemGap: 38,
-                textStyle: {
-                    color: '#fff',
-                    align:'right',
-                    x: 'right',
-                    textAlign:'right'
-                },
-
-                selectedMode: true,
-                orient: "vertical",
-
-            },
-            series: [
-                {
-                name: 'Line 4',
-                type: 'pie',
-                clockWise: true,
-                hoverAnimation: false,
-                radius: ['65%', '75%'],
-                itemStyle: dataStyle,
-
-            data: [{
-                value: 7645434,
-                name: '已婚已育'
-            }, {
-                value: 3612343,
-                name: '总数',
-                tooltip: {
-                    show: false
-                },
-                itemStyle: placeHolderStyle
-            }
-
-            ]
-        }, {
-            name: 'Line 3',
-            type: 'pie',
-            clockWise: true,
-            radius: ['50%', '60%'],
-            itemStyle: dataStyle,
-            hoverAnimation: false,
-
-            data: [{
-                value: 2632321,
-                name: '已婚未育'
-            }, {
-                value: 2212343,
-                name: '总数',
-                tooltip: {
-                    show: false
-                },
-                itemStyle: placeHolderStyle
-            }]
-        }
-            ]
-        };
+$(function(){
 
 
-         var antibacterial = echarts.init(document.getElementById('antibacterial'));
-             antibacterial.setOption(antibacterialOption);
+    $.ajax({
+        type : "post",    //请求类型
+        url : "/qos/countantibiotics/find/percent",//请求的 URL地址
+        success: function (rawData) {
+
+           var  nameArray=[];
+           var  dataArray=[];
+
+           for(var i=0;i<rawData.result.length;i++){
+                nameArray.push(rawData.result[i]['unitName'])
+                dataArray.push(rawData.result[i]['userRate'])
+           }
+
+
+
+
+
+
+
+
+    var antibacterialOptions ={
+          tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+           },
+                                              xAxis: {
+                                                  type: 'category',
+
+
+
+                                                  data: nameArray,
+
+                                                  axisLine: {
+                                                      lineStyle: {
+                                                          color: '#19d1ff',
+                                                          width: 1,
+                                                          //这里是为了突出显示加上的
+                                                      }
+                                                  },
+
+                                                  grid: {
+                                                      left: 15,
+                                                      right: 5,
+                                                      bottom: 30,
+                                                      containLabel: true
+                                                  },
+                                                  axisLabel: {
+                                                      show: true,
+                                                      textStyle: {
+                                                          color: '#19d1ff',
+                                                      },
+                                                      interval: 0,
+                                                      rotate: 30,
+                                                      formatter: function(value) {
+                                                          var reg = new RegExp('昆山市', "g");
+                                                          return value.replace(reg, '');
+                                                      }
+                                                  },
+                                              },
+
+                                              yAxis: {
+                                                  splitNumber:4,
+                                                  minInterval: 6,
+                                                  type: 'value',
+                                                  splitLine: {
+                                                      show: false
+                                                  },
+                                                  axisLine: {
+                                                      lineStyle: {
+                                                          color: '#19d1ff',
+                                                          width: 2,
+                                                          //这里是为了突出显示加上的
+                                                      }
+                                                  }
+                                              },
+                                              series: [{
+                                                  itemStyle: {
+                                                      normal: {
+                                                          // 随机显示
+                                                          color: function(d) {
+                                                              return "#" + '439AFF';
+                                                          }
+
+                                                      },
+                                                  },
+
+                                                  barWidth: 15,
+                                                  data: dataArray,
+                                                  type: 'bar'
+                                              }]
+                                          };
+
+     var antibacterial = echarts.init(document.getElementById('antibacterial'));
+        antibacterial.setOption(antibacterialOptions);
                 //初始化echarts实例
           window.addEventListener("resize", function () {
-                  medicalAdvice_id.resize();
+                  antibacterial.resize();
           });
-
-
-
-
-
-         }
+       }
      });
-
-
-
-
-
-
-
-
-
-
-})
+ })
