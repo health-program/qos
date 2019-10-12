@@ -24,7 +24,7 @@ public class FamilyDoctorPersonnelDTO {
 	private Integer jobRank;
 	
 	//人员类别
-	private Integer personnelCategory;
+	private String personnelCategory;
 
 	// 二级及以上医院专科团队医生（医院+医生）
 	private String specialtyTeamDoctor;
@@ -96,11 +96,11 @@ public class FamilyDoctorPersonnelDTO {
 		this.otherPersonnel = otherPersonnel;
 	}
 
-	public Integer getPersonnelCategory() {
+	public String getPersonnelCategory() {
 	    return personnelCategory;
 	}
 
-	public void setPersonnelCategory(Integer personnelCategory) {
+	public void setPersonnelCategory(String personnelCategory) {
 	    this.personnelCategory = personnelCategory;
 	}
 
