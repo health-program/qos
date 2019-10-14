@@ -29,41 +29,20 @@ $(function(){
 
 
 
+	$('.nav li').on('click',function(){
+			currentIdx = $(this).index();
 
-
-
-	function loop2(){
-	   var liLen = $(".nav li").length;
-	   console.log(liLen)
-        for(var i=0;i< $(".nav li").length;i++){
-        console.log(i)
-            $(".nav li").eq(i).trigger("click");
-        }
-
-	}
-
-
-//  0  3  4   5  6  9    12
-
- $(".nav li").eq(2).trigger("click");
-
-
-
-/*
-	function loop(){
-        for(var i=0;i< $(".nav li").length;i++){
-            (function(){
-                for(var i=0;i< $(".nav li").length;i++){
-                      $(".nav li").eq(i).trigger("click");
-                      console.log(i)
-                 }
-              })(i)
-        }
-    }
-  setInterval(loop(),8000);
-*/
-
-
+			//手动触发click事件时防止过快刷新到下一个页面，重置定时器
+			clearInterval(timer);
+			timer = setInterval("loop()",3000)
+		});
+		var timer = null;//定时器
+		var currentIdx = 0;
+		function loop(){
+			(currentIdx<$('.nav li').length-1)? currentIdx++ : currentIdx = 0;
+				$('.nav li').eq(currentIdx).trigger('click');
+		}
+		timer = setInterval("loop()",500)
 
 
 

@@ -21,9 +21,19 @@ $(function(){
                     var date = now.getDate();//得到日期
                    var today=year + "-" + month + "-" + date;
 
+
+
+	var date1 = new Date();
+		var date2 = new Date(date1);
+		  date2.setDate(date1.getDate() -25);
+		  var jian25tian = date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate()
+
+
+
+
          var arr = {
            eventIds:'13002,14001,13001', // 13002急诊人次数  14001住院人次数   13001门诊人次数
-           startTime:today,
+           startTime:jian25tian,
            byUnit: 0
          }
          var arr1 = {
