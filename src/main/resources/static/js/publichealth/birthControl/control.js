@@ -1,10 +1,17 @@
 $(function () {
         generatorBycsChart(bycsChart);
     });
+
+        var now = new Date();
+                     var year = now.getFullYear(); //得到年份
+                     var month = now.getMonth()+1;//得到月份
+                     var date = now.getDate();//得到日期
+                    var todayss=year + "-" + month + "-" + date;
+
+
 var bycsChart = echarts.init(document.getElementById('emergency'));
-function generatorBycsChart(chart) {
-	debugger
-        let startTime = "2015-01-01";
+    function generatorBycsChart(chart) {
+        let startTime =todayss;
         let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
         $.postAjax("/qos/analysis/data/get/month/instalments",{ startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
