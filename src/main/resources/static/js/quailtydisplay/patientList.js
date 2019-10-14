@@ -7,16 +7,15 @@ $(function(){
        var data = res.result;
        var html='';
         for(var i in data){
-              html += '<div class="header quailty_bottom_right_header_title">';
-                                           html += '<span class="quailty_seek">'+data[i].orgname+'</span>';
+                                           html += '<li class="header quailty_bottom_right_header_title"><span class="quailty_seek">'+data[i].orgname+'</span>';
                                            html += '<span class="quailty_department">'+data[i].deptname+'</span>';
                                            html += '<span class="quailty_name">'+data[i].patientname+'</span>';
                                            html += '<span class="quailty_sex">'+data[i].sexcode+'</span>';
                                            html += '<span class="quailty_date">'+data[i].seedate+'</span>';
-                                           html += '<span class="quailty_sick">'+data[i].paykindname+'</span>';
+                                           html += '<span class="quailty_sick">'+data[i].paykindname+'</span></li>';
 
        }
-
+       
           $("#list1").append(html);
 
              }
