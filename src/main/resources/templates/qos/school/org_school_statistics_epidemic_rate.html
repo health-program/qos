@@ -103,24 +103,24 @@
 	         }
 	       let seriesData=[];
 	       
-	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	       for (i = 0; i < result['sickGroupNew'].length ; i++) { 
 	    	   seriesData.push({
-	   		            name: result['sickGroup'][i],
+	   		            name: result['sickGroupNew'][i],
 	   		            type:'line',
 	   		            symbolSize: 8,
 	   		            hoverAnimation: false,
-	   		            data: result['serialData1'][i]
+	   		            data: result['serialDataA'][i]
 	   		   })
 	       }
-	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	       for (i = 0; i < result['sickGroupNew'].length ; i++) { 
 	    	   seriesData.push({
-	   		            name: result['sickGroup'][i],
+	   		            name: result['sickGroupNew'][i],
 	   		         	type:'line',
 	 		            xAxisIndex: 1,
 	 		            yAxisIndex: 1,
 	 		            symbolSize: 8,
 	 		            hoverAnimation: false,
-	   		            data: result['serialData2'][i]
+	   		            data: result['serialDataB'][i]
 	   		   })
 	       }
 	       
@@ -138,7 +138,7 @@
 	    		        } 
 	    		    },
 	    		    legend: {
-	    		        data:result['sickGroup'],
+	    		        data:result['sickGroupNew'],
 	    		        type:"scroll",
 	    		        bottom:0
 	    		    },
@@ -210,31 +210,31 @@
 	         }
 	       let seriesData=[];
 	       
-	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	       for (i = 0; i < result['sickGroupNew'].length ; i++) { 
 	    	   seriesData.push({
-	   		            name: result['sickGroup'][i],
+	   		            name: result['sickGroupNew'][i],
 	   		            type:'line',
 	   		            symbolSize: 8,
 	   		            hoverAnimation: false,
-	   		            data: result['serialData1'][i]
+	   		            data: result['serialDataA'][i]
 	   		   })
 	       }
-	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	       for (i = 0; i < result['sickGroupNew'].length ; i++) { 
 	    	   seriesData.push({
-	   		            name: result['sickGroup'][i],
+	   		            name: result['sickGroupNew'][i],
 	   		         	type:'line',
 	 		            xAxisIndex: 1,
 	 		            yAxisIndex: 1,
 	 		            symbolSize: 8,
 	 		            hoverAnimation: false,
-	   		            data: result['serialData2'][i]
+	   		            data: result['serialDataB'][i]
 	   		   })
 	       }
 	       
 	       chart.hideLoading();
 	       option = {
 	    		   title: {
-	    		        text: '隶属关系',
+	    		        text: '学校性质',
 	    		        subtext: '罹患率',
 	    		        x: 'center'
 	    		    },
@@ -245,7 +245,7 @@
 	    		        } 
 	    		    },
 	    		    legend: {
-	    		        data:result['sickGroup'],
+	    		        data:result['sickGroupNew'],
 	    		        type:"scroll",
 	    		        bottom:0
 	    		    },
@@ -270,14 +270,22 @@
 	    		        {
 	    		            type : 'category',
 	    		            boundaryGap : true,
-	    		            data: result['natureGroup']
+	    		            data: result['natureGroup'],
+	    		            axisLabel: {
+	    	                    interval: 0,
+	    	                    rotate: 20 //角度顺时针计算的
+	    	                }
 	    		        },
 	    		        {
 	    		            gridIndex: 1,
 	    		            type : 'category',
 	    		            boundaryGap : true,
 	    		            data: result['natureGroup'],
-	    		            position: 'top'
+	    		            position: 'top',
+	    		            axisLabel: {
+	    	                    interval: 0,
+	    	                    rotate: 20 //角度顺时针计算的
+	    	                }
 	    		        }
 	    		    ],
 	    		    yAxis : [

@@ -304,14 +304,14 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		}
 		Map<String,Object> result=new HashMap<String, Object>();
 		List<String> affiGroup=new ArrayList<String>();
-		List<List<Object>> serialData1=new ArrayList<List<Object>>();
-		List<List<Object>> serialData2=new ArrayList<List<Object>>();
+		List<List<Double>> serialData1=new ArrayList<List<Double>>();
+		List<List<Double>> serialData2=new ArrayList<List<Double>>();
 		
 		for (String sickCode : sickCodeGroup) {
 			query.setSicknessClassify(sickCode);
 			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
-			List<Object> data1=new ArrayList<Object>();
-			List<Object> data2=new ArrayList<Object>();
+			List<Double> data1=new ArrayList<Double>();
+			List<Double> data2=new ArrayList<Double>();
 			for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
 				query.setAffiliations(entry.getValue());
 				if(!affiGroup.contains(entry.getKey())){
@@ -344,8 +344,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 					data1.add(round(list2.get(2).toString(),list2.get(1).toString(),2));
 					data2.add(round(list2.get(2).toString(),list2.get(0).toString(),2));
 				}else{
-					data1.add(0);
-					data2.add(0);
+					data1.add(0d);
+					data2.add(0d);
 				}
 				//System.out.println(entry.getKey()+list2);
 			}
@@ -358,6 +358,27 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("sickGroup", sickGroup);
 		result.put("serialData1", serialData1);
 		result.put("serialData2", serialData2);
+		//所有affi都为0的数
+		List<String> sickGroupNew=new ArrayList<String>();
+		List<List<Double>> serialDataA=new ArrayList<List<Double>>();
+		List<List<Double>> serialDataB=new ArrayList<List<Double>>();
+		for (int n=0;n<serialData1.size();n++) {
+			boolean isNotZero=false;
+			for (int i = 0; i < affiGroup.size(); i++) {
+				if(serialData1.get(n).get(i)>0){
+					isNotZero=true;
+					continue;
+				}
+			}
+			if(isNotZero){
+				sickGroupNew.add(sickGroup.get(n));
+				serialDataA.add(serialData1.get(n));
+				serialDataB.add(serialData2.get(n));
+			}
+		}
+		result.put("sickGroupNew", sickGroupNew);
+		result.put("serialDataA", serialDataA);
+		result.put("serialDataB", serialDataB);
 		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
@@ -385,14 +406,14 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		}
 		Map<String,Object> result=new HashMap<String, Object>();
 		List<String> natureGroup=new ArrayList<String>();
-		List<List<Object>> serialData1=new ArrayList<List<Object>>();
-		List<List<Object>> serialData2=new ArrayList<List<Object>>();
+		List<List<Double>> serialData1=new ArrayList<List<Double>>();
+		List<List<Double>> serialData2=new ArrayList<List<Double>>();
 		
 		for (String sickCode : sickCodeGroup) {
 			query.setSicknessClassify(sickCode);
 			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
-			List<Object> data1=new ArrayList<Object>();
-			List<Object> data2=new ArrayList<Object>();
+			List<Double> data1=new ArrayList<Double>();
+			List<Double> data2=new ArrayList<Double>();
 			for (Entry<String, String>  entry: affiliationMap.entrySet()) {
 				query.setNature(entry.getValue());
 				if(!natureGroup.contains(entry.getKey())){
@@ -425,8 +446,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 					data1.add(round(list2.get(2).toString(),list2.get(1).toString(),2));
 					data2.add(round(list2.get(2).toString(),list2.get(0).toString(),2));
 				}else{
-					data1.add(0);
-					data2.add(0);
+					data1.add(0d);
+					data2.add(0d);
 				}
 				//System.out.println(entry.getKey()+list2);
 			}
@@ -439,7 +460,27 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("sickGroup", sickGroup);
 		result.put("serialData1", serialData1);
 		result.put("serialData2", serialData2);
-		//System.out.println(result);
+		//所有affi都为0的数
+		List<String> sickGroupNew=new ArrayList<String>();
+		List<List<Double>> serialDataA=new ArrayList<List<Double>>();
+		List<List<Double>> serialDataB=new ArrayList<List<Double>>();
+		for (int n=0;n<serialData1.size();n++) {
+			boolean isNotZero=false;
+			for (int i = 0; i < natureGroup.size(); i++) {
+				if(serialData1.get(n).get(i)>0){
+					isNotZero=true;
+					continue;
+				}
+			}
+			if(isNotZero){
+				sickGroupNew.add(sickGroup.get(n));
+				serialDataA.add(serialData1.get(n));
+				serialDataB.add(serialData2.get(n));
+			}
+		}
+		result.put("sickGroupNew", sickGroupNew);
+		result.put("serialDataA", serialDataA);
+		result.put("serialDataB", serialDataB);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
