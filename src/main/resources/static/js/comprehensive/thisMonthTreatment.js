@@ -30,7 +30,8 @@ $(function(){
     var unitNameArray=[];
     var teamNumArray=[];
        var arr = {
-               eventIds:'13003'
+               eventIds:'13003',
+               ignoreUnitIds:'320583810343'
            }
       $.ajax({
        type : "post",    //请求类型
