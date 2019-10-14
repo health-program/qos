@@ -18,3 +18,9 @@
 .BMapLib_SearchInfoWindow .BMapLib_bubble_top{
  display:none!important;
 }
+
+.BMapLib_trans{
+ top:100px!important;
+ width:20px!important;
+ height:20px;
+}

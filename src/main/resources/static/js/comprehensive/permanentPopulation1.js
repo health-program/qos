@@ -43,7 +43,7 @@ $(function() {
                 unitNameName.push(rawData[i].unitName);
                 probabilityArray.push(rawData[i].activeArchivesNumber / rawData[i].peopleNumber);
             }
-             var permanentPopulationOption = {
+             var permanentPopulationOption11 = {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -137,9 +137,10 @@ $(function() {
                 }]
             };
 
-            var permanentPopulationID = echarts.init(document.getElementById('permanentPopulation'));
-            permanentPopulationID.setOption(permanentPopulationOption);
 
+             var chartmain1ID = echarts.init(document.getElementById('chartmain1'));
+                 debugger
+                 chartmain1ID.setOption(permanentPopulationOption11);
 
 
 

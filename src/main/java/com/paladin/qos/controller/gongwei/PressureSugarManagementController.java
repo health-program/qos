@@ -43,18 +43,18 @@ public class PressureSugarManagementController {
 
     @GetMapping("/index")
     public Object dataIndex(Model model) {
-        List<Integer> types=new ArrayList<>();
-        types.add(DataUnit.TYPE_COMMUNITY);
-
-        List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
-        Iterator<DataUnitVO> it=dataUnitVOList.iterator();
-        while(it.hasNext()){
-            DataUnitVO dataUnitVO=it.next();
-            if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
-                it.remove();
-            }
-        }
-        model.addAttribute("unit", dataUnitVOList);
+//        List<Integer> types=new ArrayList<>();
+//        types.add(DataUnit.TYPE_COMMUNITY);
+//
+//        List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
+//        Iterator<DataUnitVO> it=dataUnitVOList.iterator();
+//        while(it.hasNext()){
+//            DataUnitVO dataUnitVO=it.next();
+//            if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
+//                it.remove();
+//            }
+//        }
+//        model.addAttribute("unit", dataUnitVOList);
         return "/qos/exhibition/pressureSugar_index";
     }
 
@@ -63,15 +63,15 @@ public class PressureSugarManagementController {
     public Object searchAll(AnalysisRequest request) {
         List<PressureSugarManagementVO> pressureSugarManagementVOList = new ArrayList<>();
         List<DataCountUnit> bloodTotalList = analysisService.countTotalNumByUnit("22004", 2, request.getStartTime(), request.getEndTime(), AnalysisConstant.SPECIAL_UNITS_FUYOU);
-        if (!StringUtils.isEmpty(request.getUnitId())){
-            Iterator<DataCountUnit> it = bloodTotalList.iterator();
-            while(it.hasNext()){
-                DataCountUnit d = it.next();
-                if(!StringUtils.equalsIgnoreCase(d.getUnitId(),request.getUnitId())){
-                    it.remove();
-                }
-            }
-        }
+//        if (!StringUtils.isEmpty(request.getUnitId())){
+//            Iterator<DataCountUnit> it = bloodTotalList.iterator();
+//            while(it.hasNext()){
+//                DataCountUnit d = it.next();
+//                if(!StringUtils.equalsIgnoreCase(d.getUnitId(),request.getUnitId())){
+//                    it.remove();
+//                }
+//            }
+//        }
         List<DataCountUnit> bloodEventList = analysisService.countEventNumByUnit("22004", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);
         Map<String, Long> bloodEventMap = bloodEventList.stream().collect(Collectors.toMap(w -> w.getUnitId(), w -> w.getCount()));
         List<DataCountUnit> diabetesTotalList = analysisService.countTotalNumByUnit("22006", 2, request.getStartTime(), request.getEndTime(),AnalysisConstant.SPECIAL_UNITS_FUYOU);

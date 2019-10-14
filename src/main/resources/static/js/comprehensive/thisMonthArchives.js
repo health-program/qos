@@ -1,11 +1,9 @@
-var dataMap = {}
-//  住院人次数
-$(function() {
 
+$(function(){
     function getRateNum(item, fixed) {
         var a = item.eventNum,
-        b = item.totalNum,
-        c = 0;
+            b = item.totalNum,
+            c = 0;
         if (a && b) {
             c = a / b * 100;
         }
@@ -14,9 +12,9 @@ $(function() {
 
     function convertUnitChartData(data, eventId, isRate) {
         var edata = data[eventId],
-        max = 0,
-        unit = [],
-        values = [];
+            max = 0,
+            unit = [],
+            values = [];
         edata && edata.forEach(function(item) {
             var r = isRate ? getRateNum(item) : item.count;
             max = Math.max(r, max);
@@ -30,22 +28,36 @@ $(function() {
         }
     }
 
-    var unitNameName = []
+    //指定图标的配置和数据
+    // 21001 综合健康管理服务包签约率（收费）
+       var arr = {
+           eventIds:'22001'
+       }
+
+    var unitName = []
     var probabilityArray = []
-    $.ajax({
-        type: "post",
-        //请求类型
-        url: "/qos/gongwei/archives/search/all",
-        //请求的 URL地址
-        success: function(rawData) {
+      $.ajax({
+       type : "post",    //请求类型
+        url : "/qos/gongwei/archives/search/archives/month",//请求的 URL地址
+        data:arr,
+        success: function (rawData) {
             rawData = rawData.result;
             for (var i = 0; i < rawData.length; i++) {
-                unitNameName.push(rawData[i].unitName);
-                probabilityArray.push(rawData[i].activeArchivesNumber / rawData[i].peopleNumber);
+                unitName.push(rawData[i].unitName);
+                probabilityArray.push(rawData[i].activeArchivesNumber);
             }
-             var permanentPopulationOption = {
+
+            var permanentPopulationOption = {
                 tooltip: {
                     trigger: 'axis',
+                    formatter:function (params) {
+                        var result = '';
+                        params.forEach(function (item) {
+                            result += item.name+"<br>" + item.marker + item.value+"人" ;
+                        });
+                        return result;
+                    },
+                    // formatter: "{b}<br/>  {c}(人) ",
                     axisPointer: {
                         type: 'shadow'
                     }
@@ -60,7 +72,7 @@ $(function() {
                         interval: 0,
                         rotate: 30,
                         formatter: function(value) {
-                            var reg = new RegExp('社区卫生服务中心', "g");
+                            var reg = new RegExp('社区卫生服务中心' , "g");
                             return value.replace(reg, '');
                         }
                     },
@@ -72,7 +84,7 @@ $(function() {
                         bottom: '35%'
 
                     },
-                    data: unitNameName,
+                    data: unitName,
 
                     axisLine: {
                         lineStyle: {
@@ -96,12 +108,13 @@ $(function() {
                         interval: 0,
                         rotate: 30,
                         formatter: function(value) {
-                            var reg = new RegExp('社区卫生服务中心', "g");
+                            var reg = new RegExp('社区卫生服务中心'                                    , "g");
                             return value.replace(reg, '');
                         }
                     },
                 },
-               yAxis: {
+
+                yAxis: {
                     type: 'value',
                     splitLine: {
                         show: false
@@ -137,13 +150,19 @@ $(function() {
                 }]
             };
 
-            var permanentPopulationID = echarts.init(document.getElementById('permanentPopulation'));
+            var permanentPopulationID = echarts.init(document.getElementById('chartmain'));
             permanentPopulationID.setOption(permanentPopulationOption);
-
-
-
-
-        }
+         }
     });
+
+
+
+
+
+
+
+
+
+
 
 })

@@ -64,7 +64,8 @@
             </div>
             <div class="right">
                 <div class="text-ffffff top">特殊人群管理数</div>
-                <div class="text-3df37e bottom"><i id="specialPeople"></i><span class="fz18">人</span></div>
+                <!--<div class="text-3df37e bottom"><i id="specialPeople"></i><span class="fz18">人</span></div>-->
+                <div class="text-3df37e bottom"><i id="specialPeopl7e">9564</i><span class="fz18">人</span></div>
             </div>
         </div>
         <div class="fourclass">
@@ -80,8 +81,8 @@
     <div id="middle">
         <div class="left position-relative">
             <div class="bg_opacity">
-                <div class="headers line">健康档案建档率</div>
-              <<div id="chartmain"></div>
+                <div class="headers line">新建健康档案数</div>
+              <div id="chartmain"></div>
                 <!--<div id="jiankangdanganjiandanglv"></div>-->
             </div>
             <div class="bg_opacity">
@@ -128,9 +129,10 @@
     <script type="text/javascript" src="/static/js/comprehensive/familyDoctorTeam.js"></script><!--家庭医生团队情况-->
     <script type="text/javascript" src="/static/js/comprehensive/thisMonthTreatment.js"></script><!--昆山门急诊人次数-->
     <script type="text/javascript" src="/static/js/comprehensive/permanentPopulation.js"></script><!--常驻人口建档率-->
+    <script type="text/javascript" src="/static/js/comprehensive/permanentPopulation1.js"></script><!--健康档案建档率-->
     <script type="text/javascript" src="/static/js/comprehensive/incomesolity.js"></script><!--社区医疗收入情况-->
    <!-- <script type="text/javascript" src="/static/js/comprehensive/healthFileBookBuilding.js"></script>&lt;!&ndash; 健康档案建档率 &ndash;&gt;-->
-    <script type="text/javascript" src="/static/js/comprehensive/healthFileBookBuilding.js"></script><!-- 健康档案建档率 -->
+    <script type="text/javascript" src="/static/js/comprehensive/thisMonthArchives.js"></script><!-- 健康档案建档率 -->
 </body>
 <script>
 $(function() {
@@ -217,17 +219,21 @@ $.ajax({
 
                 // 创建信息窗口对象
                 info[i] = "<p style=’font-size:12px;line-height:1.6em;’>" +
-                    "</br><b class='text-0efcff'>名称：</b>" +
-                    markerArr[i].orgName +
-                    "</br><b class='text-0efcff'>机构编码：</b>" +
-                    markerArr[i].orgType +
-                    "</br><b class='text-0efcff'>当月门诊次数：</b>" +
-                    markerArr[i].patients +
-                    "</br><b class='text-0efcff'>当月住院人次：</b>" +
-                    markerArr[i].hospital +
-                    "</br><b class='text-0efcff'>地址：</b>" +
-                    markerArr[i].orgAddress +
-                    "</br></p>";
+                     + "<b class='text-0efcff'>名称：</b>"
+                              + markerArr[i].orgName
+                              + "</br>"
+                              + "<b class='text-0efcff'>机构编码：</b>"
+                              + markerArr[i].unitId
+                               + "</br>"
+                              + "<b class='text-0efcff'>当月门诊次数：</b>"
+                              + markerArr[i].patients
+                              + "</br>"
+                              + "<b class='text-0efcff'>当月住院人次：</b>"
+                              + markerArr[i].hospital
+                              + "</br>"
+                              + "<b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].orgAddress
+                              + "</p>";
 
 
                 //创建百度样式检索信息窗口对象
@@ -263,15 +269,20 @@ $.ajax({
 
 
 
-            var skipIndex = 0;
-
-            window.setInterval(function() {
+         var skipIndex = 0;
+         window.setInterval(function() {
                 if (skipIndex >= marker.length) skipIndex = 0;
                 var m = marker[skipIndex],
                     win = searchInfoWindow[skipIndex++];
                 win.open(m);
                 map.panTo(point[i]);
             }, 3000);
+
+
+
+
+
+
 
 
         }

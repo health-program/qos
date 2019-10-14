@@ -304,17 +304,21 @@
 
                       // 创建信息窗口对象
                           info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
-                              + "</br><b class='text-0efcff'>名称：</b>"
+                              + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName
-                              + "</br><b class='text-0efcff'>机构编码：</b>"
-                              + markerArr[i].orgType
-                              + "</br><b class='text-0efcff'>当月门诊次数：</b>"
+                              + "</br>"
+                              + "<b class='text-0efcff'>机构编码：</b>"
+                              + markerArr[i].unitId
+                               + "</br>"
+                              + "<b class='text-0efcff'>当月门诊次数：</b>"
                               + markerArr[i].patients
-                              + "</br><b class='text-0efcff'>当月住院人次：</b>"
+                              + "</br>"
+                              + "<b class='text-0efcff'>当月住院人次：</b>"
                               + markerArr[i].hospital
-                              + "</br><b class='text-0efcff'>地址：</b>"
+                              + "</br>"
+                              + "<b class='text-0efcff'>地址：</b>"
                               + markerArr[i].orgAddress
-                              + "</br></p>";
+                              + "</p>";
 
 
                     //创建百度样式检索信息窗口对象
@@ -354,7 +358,7 @@
 
 
 
-     var skipIndex = 0;
+             var skipIndex = 0;
              window.setInterval(function() {
                 if (skipIndex >= marker.length) skipIndex = 0;
                 var m = marker[skipIndex],
