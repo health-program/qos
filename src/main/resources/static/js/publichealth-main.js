@@ -6,7 +6,6 @@ $(function(){
 			window.location.href = "/home/page/qos/publichealth/index";
 		}
 		if(i===3){//0-6岁儿童
-		    alert(242343)
 			window.location.href = "/home/page/qos/publichealth/indexChildren";
 		}
 		if(i===4){//孕产妇

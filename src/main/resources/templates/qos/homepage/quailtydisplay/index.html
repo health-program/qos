@@ -92,22 +92,27 @@
                 <div class="quailty_right_pay">
                     <div class="quailty_bottom_header2">
                         支付方式对比
-                        <select id="selectID" style="display:none;">
+                        <!--<select id="selectID" style="display:none;">
                             <option value="31009">
                                 医院
                             </option>
                             <option value="31010">
                                 社区
                             </option>
-                        </select>
+                        </select>-->
+
                     </div>
 
                     <div id="newspotital">
+
 
                     </div>
                     <div id="newshequ">
 
                     </div>
+
+                    <div>医院</div>
+                    <div>社区</div>
 
                    <!-- <div id="paycomparsion"></div>-->
                 </div>
@@ -209,7 +214,7 @@
               // 百度地图API功能
               var map = new BMap.Map("quailty_middle_map");    // 创建Map实例
               var cityName = '昆山';
-              map.centerAndZoom(cityName, 12);
+              map.centerAndZoom(cityName, 8);
               map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
               map.setCurrentCity("昆山");          // 设置地图显示的城市 此项是必须设置的
               map.enableScrollWheelZoom(true);
