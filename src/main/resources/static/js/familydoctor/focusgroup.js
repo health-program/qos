@@ -78,7 +78,10 @@ var echartses=function(id){
                       trigger: 'axis',
                       axisPointer: {
                           type: 'shadow'
-                      }
+                      },formatter: function (params) {
+                          return params[0].name + '<br/>'
+                          + params[0].data + '%<br/>'
+                  }
                   },
 
 
