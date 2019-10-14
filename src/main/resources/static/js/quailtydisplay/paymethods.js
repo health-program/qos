@@ -66,7 +66,11 @@ var paycomparsionOptions=function(id){
  }
 //封装的方法结束
 
-
+     var now = new Date();
+                 var year = now.getFullYear(); //得到年份
+                 var month = now.getMonth()+1;//得到月份
+                 var date = now.getDate();//得到日期
+                var today=year + "-" + month + "-" + date;
 
 
 
@@ -83,13 +87,13 @@ $(function(){
     }
      var arr={
           eventIds:'31009,31010',  // 伟华
-          startTime:'2018-12-10'
+          startTime:today
       };
 
          if(selectIDValue=='31009'){
                         arr = {
                             eventIds:'31009,31010',  // 伟华
-                            startTime:'2018-12-10'
+                            startTime:today
                         }
 
                        $.ajax({
@@ -108,7 +112,7 @@ $(function(){
          if(selectIDValue=='31009'){
                arr = {
                    eventIds:'31009,31010',  // 伟华
-                   startTime:'2018-12-10'
+                   startTime:today
                }
                   $.ajax({
                    type : "post",    //请求类型
@@ -124,7 +128,7 @@ $(function(){
          if(selectIDValue=='31010'){
          arr={
                  eventIds:'15005,15006',  // 伟华
-                 startTime:'2018-12-10'
+                 startTime:today
               }
 
          $.ajax({

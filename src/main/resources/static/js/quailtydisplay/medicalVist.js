@@ -15,14 +15,20 @@
 
 $(function(){
     //支付方式对比
+            var now = new Date();
+                    var year = now.getFullYear(); //得到年份
+                    var month = now.getMonth()+1;//得到月份
+                    var date = now.getDate();//得到日期
+                   var today=year + "-" + month + "-" + date;
+
          var arr = {
            eventIds:'13002,14001,13001', // 13002急诊人次数  14001住院人次数   13001门诊人次数
-           startTime:'2019-09-10',
+           startTime:today,
            byUnit: 0
          }
          var arr1 = {
                     eventIds:'31007,31004,31008', //  31007急诊人次    31008门诊人次       31004入院人次
-                    startTime:'2019-09-10',
+                    startTime:today,
                     byUnit: 0
          }
 

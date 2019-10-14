@@ -6,6 +6,13 @@ var dataMap={}
      var incomeSelectValues='31010';
      //封装方法开始
 
+
+     var now = new Date();
+                 var year = now.getFullYear(); //得到年份
+                 var month = now.getMonth()+1;//得到月份
+                 var date = now.getDate();//得到日期
+                var today=year + "-" + month + "-" + date;
+
              //封装方法结束
 
  $(function(){
@@ -18,13 +25,13 @@ $("#incomeSelect").trigger("change")
 
        var arr={
            eventIds:'15003,15004,15002',  // 周亚
-            startTime:'2018-12-10'
+            startTime:today
        };
 
       if(incomeSelectValues=='31010'){
                          arrs = {
                               eventIds:'15003,15004,15002',  // 周亚
-                             startTime:'2018-12-10'
+                             startTime:today
                          }
                         $.ajax({
                              type : "post",    //请求类型

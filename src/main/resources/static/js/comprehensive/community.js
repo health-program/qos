@@ -14,7 +14,7 @@ $(function(){
 
     //统计的全部写在这
      var solicty = {
-             eventIds:'13003,22001'
+             eventIds:'13003,22001,22014'
      }
 
 
@@ -25,7 +25,7 @@ $(function(){
              success: function (rawData) {
                 $("#thismonth").text(rawData.result['13003'])
                 $("#healthAll").text(rawData.result['22001'])
-                $("#specialPeople").text(rawData.result['13003'])
+                $("#specialPeople").text(rawData.result['22014'])
                }
         });
 

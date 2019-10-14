@@ -3,6 +3,17 @@
    var  data31010;
 
 
+     var now = new Date();
+                 var year = now.getFullYear(); //得到年份
+                 var month = now.getMonth()+1;//得到月份
+                 var date = now.getDate();//得到日期
+                var today=year + "-" + month + "-" + date;
+
+
+
+
+
+
      var selectIDValue='31010';
 //封装的方法开始
        // 15005,15006
@@ -81,15 +92,23 @@ $(function(){
         }
         return c.toFixed(fixed || 2);
     }
+
+        var now = new Date();
+              var year = now.getFullYear(); //得到年份
+              var month = now.getMonth()+1;//得到月份
+              var date = now.getDate();//得到日期
+             var today=year + "-" + month + "-" + date;
+
+
      var arr={
           eventIds:'15005,15006',  // 伟华
-          startTime:'2018-12-10'
+          startTime:today
       };
 
          if(selectIDValue=='31010'){
                         arr = {
                               eventIds:'15005,15006',  // 伟华
-                              startTime:'2018-12-10'
+                              startTime:today
                         }
 
                        $.ajax({
@@ -109,7 +128,7 @@ $(function(){
          if(selectIDValue=='31010'){
          arr={
                  eventIds:'15005,15006',  // 伟华
-                 startTime:'2018-12-10'
+                 startTime:today
               }
 
          $.ajax({

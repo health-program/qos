@@ -74,6 +74,17 @@ var dataMap={}
                    }
              //封装方法结束
 
+
+
+                  var now = new Date();
+                              var year = now.getFullYear(); //得到年份
+                              var month = now.getMonth()+1;//得到月份
+                              var date = now.getDate();//得到日期
+                             var today=year + "-" + month + "-" + date;
+
+
+
+
  $(function(){
 
 
@@ -91,14 +102,14 @@ var dataMap={}
      }
      var arr={
            eventIds:'31011,31012,31013',  // 伟华
-           startTime:'2018-12-10'
+           startTime:today
        };
 
 
           if(incomeSelectValue=='31009'){
                          arr = {
                               eventIds:'31011,31012,31013',  // 伟华
-                             startTime:'2018-12-10'
+                             startTime:today
                          }
                         $.ajax({
                              type : "post",    //请求类型
@@ -120,7 +131,7 @@ var dataMap={}
       if(incomeSelectValue=='31009'){
                 arr = {
                    eventIds:'31011,31012,31013',  // 伟华
-                    startTime:'2018-12-10'
+                    startTime:today
                 }
 
                $.ajax({
@@ -139,7 +150,7 @@ var dataMap={}
       if(incomeSelectValue=='31010'){
              arr={
                   eventIds:'15003,15004,15002',  // 周亚
-                  startTime:'2018-12-10'
+                  startTime:today
                }
 
           $.ajax({
