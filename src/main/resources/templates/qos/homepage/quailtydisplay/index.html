@@ -35,7 +35,7 @@
 
     #newspotital,#newincomehosiptal{
       width:10vw;
-      height:7vw;
+      height:6vw;
       display:inline-block;
       float:left;
       margin-right:1vw;
@@ -45,11 +45,23 @@
 
     #newshequ,#newincomeshequ{
       width:10vw;
-      height:7vw;
+      height:6vw;
       display:inline-block;
       float:left;
     }
 
+    .newyiyuanss,.newshequss{
+     color: #ffffff;
+     width:10vw;
+      height:1vw;
+      display:inline-block;
+      float:left;
+      text-align:center;
+}
+
+#newincomehosiptal{
+   margin-top:0.5vh;
+}
 </style>
 
 <body id="body">
@@ -92,14 +104,14 @@
                 <div class="quailty_right_pay">
                     <div class="quailty_bottom_header2">
                         支付方式对比
-                        <!--<select id="selectID" style="display:none;">
+                        <select id="selectID" style="display:none;">
                             <option value="31009">
                                 医院
                             </option>
                             <option value="31010">
                                 社区
                             </option>
-                        </select>-->
+                        </select>
 
                     </div>
 
@@ -111,8 +123,8 @@
 
                     </div>
 
-                    <div>医院</div>
-                    <div>社区</div>
+                    <div class="newyiyuanss">医院</div>
+                    <div class="newshequss">社区</div>
 
                    <!-- <div id="paycomparsion"></div>-->
                 </div>
@@ -146,10 +158,17 @@
                     <div id="newincomehosiptal">
 
                     </div>
-                  <!--
-                    <div id="incomeKind">
 
-                    </div>-->
+
+                    <div class="newyiyuanss">医院</div>
+                    <div class="newshequss">社区</div>
+
+
+
+                    <!--
+                      <div id="incomeKind">
+
+                      </div>-->
                 </div>
                 <div class="quailty_right_antibacterial">
                     <div class="quailty_bottom_header2">
@@ -309,15 +328,18 @@
 
 
 
-            var skipIndex = 0;
 
-            window.setInterval(function() {
+ var skipIndex = 0;
+             window.setInterval(function() {
                 if (skipIndex >= marker.length) skipIndex = 0;
                 var m = marker[skipIndex],
                     win = searchInfoWindow[skipIndex++];
                 win.open(m);
                 map.panTo(point[i]);
             }, 10000);
+
+
+
 
 
 

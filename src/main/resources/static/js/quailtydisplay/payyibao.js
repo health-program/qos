@@ -9,7 +9,7 @@
 var newspotitalOptions=function(id){
     var eventId = $("#selectID").val();
     var data = dataMap[eventId];
-    var newspotitalOptions={
+    var newspotitalOptionsss={
     tooltip : {
         trigger: 'item',
         formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -62,7 +62,7 @@ var newspotitalOptions=function(id){
     ]
 };
     var newspotital_id = echarts.init(document.getElementById('newspotital'));
-      newspotital_id.setOption(newspotitalOptions);
+      newspotital_id.setOption(newspotitalOptionsss);
  }
 //封装的方法结束
 
@@ -121,44 +121,9 @@ $(function(){
                   }
                });
      }
-         if(selectIDValue=='31010'){
-         arr={
-                 eventIds:'15005,15006',  // 伟华
-                 startTime:'2018-12-10'
-              }
 
-         $.ajax({
-              type : "post",    //请求类型
-              url : "/qos/analysis/data/get/total",//请求的 URL地址
-              data:arr,
-              success: function (rawData) {
-              data31009 = rawData.result['15005']
-              data31010 = rawData.result['15006']
-              newspotitalOptions()
-             }
-          });
-
-     }
      })
-         function convertMonthChartData(data, eventId, isRate) {
-        var edata = data[eventId],
-            max = 0,
-            unit = [],
-            values = [];
-        edata && edata.forEach(function(item) {
-            var r = isRate ? getRateNum(item) : item.count;
-            max = Math.max(r, max);
-            values.push(r);
-            unit.push(item.unitName);
-        });
-        return {
-            max: max,
-            unit: unit,
-            values: values
-        }
-    }
-          //指定图标的配置和数据
-          // 21001 综合健康管理服务包签约率（收费）
+
 
 
 
