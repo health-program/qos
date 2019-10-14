@@ -124,7 +124,7 @@
     		e.total AS incidentTotol,
     		t.total AS shcoolTotal
 		from epidemic_situation e
-		inner join org_school t on e.incident_unit=t.parent_school_id
+		inner join org_school t on e.incident_unit=t.parent_school_id and e.school_year=t.school_year
 		inner join org_school_people p on t.id=p.school_id
 		where 1=1
 		and t.affiliation in 
@@ -133,6 +133,37 @@
         </foreach >
 		<if test="schoolYear !=null and schoolYear !='' ">
 			and e.school_year =#{schoolYear}
+		</if>
+		<if test="sicknessClassify !=null and sicknessClassify !='' ">
+			and e.sickness_classify =#{sicknessClassify}
+		</if>
+		<if test="district !=null and district !='' ">
+			and t.district =#{district}
+		</if>
+    </select>
+    
+    <select id="queryEpidemicRatesByNature" resultType="com.paladin.qos.service.school.vo.OrgSchoolEpidemicRateVO"
+    	parameterType="com.paladin.qos.service.school.dto.OrgSchoolCountsQuery">
+    	select t.nature AS grouping,
+    		e.sickness_classify AS sicknessClassify,
+    		t.parent_school_id AS schoolId,
+    		p.id AS orgSchoolPeopleId,
+    		p.total AS orgSchoolPeopleTotal,
+    		e.grade AS incidentOrgSchoolPeopleId,
+    		e.total AS incidentTotol,
+    		t.total AS shcoolTotal
+		from epidemic_situation e
+		inner join org_school t on e.incident_unit=t.parent_school_id and e.school_year=t.school_year
+		inner join org_school_people p on t.id=p.school_id
+		where 1=1
+		<if test="nature !=null and nature !='' ">
+			and t.nature =#{nature}
+		</if>
+		<if test="schoolYear !=null and schoolYear !='' ">
+			and e.school_year =#{schoolYear}
+		</if>
+		<if test="sicknessClassify !=null and sicknessClassify !='' ">
+			and e.sickness_classify =#{sicknessClassify}
 		</if>
 		<if test="district !=null and district !='' ">
 			and t.district =#{district}

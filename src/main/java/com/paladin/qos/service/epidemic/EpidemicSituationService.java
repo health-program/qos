@@ -210,4 +210,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 		return epidemicSituationMapper.queryEpidemicRatesByAffiliation(query);
 	}
 
+	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByNature(
+			OrgSchoolCountsQuery query) {
+		
+		return epidemicSituationMapper.queryEpidemicRatesByNature(query);
+	}
+
 }

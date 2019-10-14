@@ -28,4 +28,7 @@ public interface EpidemicSituationMapper extends CustomMapper<EpidemicSituation>
 
 	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByAffiliation(
 			OrgSchoolCountsQuery query);
+
+	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByNature(
+			OrgSchoolCountsQuery query);
 }
