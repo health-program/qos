@@ -29,20 +29,20 @@
         </div>
     </div>
     <div class="row" style="margin-left: 1px;margin-right: 5px">
-    	<div class="col-md-4 no-padding">
+    	<div class="col-md-5 no-padding">
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid">
-                       	<div id="epidemicRateAffiChartDiv" class="box-body no-padding" style="height: 600px"></div>
+                       	<div id="epidemicRateAffiChartDiv" class="box-body no-padding" style="height: 800px"></div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-8" style="padding-right: 5px;padding-left: 5px">
+        <div class="col-md-7" style="padding-right: 5px;padding-left: 5px">
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid">
-                       	<div id="epidemicRateNatureChartDiv" class="box-body no-padding" style="height: 600px"></div>
+                       	<div id="epidemicRateNatureChartDiv" class="box-body no-padding" style="height: 800px"></div>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,8 @@
 	}
     
 	function query() {
-		
+		generatorEpidemicRateAffiChart(epidemicRateAffiChart);
+    	generatorEpidemicRateNatureChart(epidemicRateNatureChart);
 	}
     
 	//图表自适应大小
@@ -81,11 +82,11 @@
     $(function () {
     	$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
     	generatorEpidemicRateAffiChart(epidemicRateAffiChart);
-    	//generatorEpidemicRateAffiChart(epidemicRateAffiChart);
+    	generatorEpidemicRateNatureChart(epidemicRateNatureChart);
     });
     
     
-    function generatorEpidemicRateAffiChart(chart,data,yAxisName) {
+    function generatorEpidemicRateAffiChart(chart) {
         chart.showLoading({
             text: '数据正在努力加载...',
             textStyle: { fontSize : 30 , color: '#444' },
@@ -100,106 +101,199 @@
 	                showChartInfo(chart,'暂无数据显示...');
 	                return false;
 	         }
-	       /* let xAxisData=[];
 	       let seriesData=[];
-	       data.forEach(d => {
-	       	xAxisData.push(d.name);
-	       	seriesData.push(d.value);
-	        }); */
+	       
+	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	    	   seriesData.push({
+	   		            name: result['sickGroup'][i],
+	   		            type:'line',
+	   		            symbolSize: 8,
+	   		            hoverAnimation: false,
+	   		            data: result['serialData1'][i]
+	   		   })
+	       }
+	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	    	   seriesData.push({
+	   		            name: result['sickGroup'][i],
+	   		         	type:'line',
+	 		            xAxisIndex: 1,
+	 		            yAxisIndex: 1,
+	 		            symbolSize: 8,
+	 		            hoverAnimation: false,
+	   		            data: result['serialData2'][i]
+	   		   })
+	       }
+	       
 	       chart.hideLoading();
 	       option = {
-	       		title: {
-	       	        text: '隶属\n关系'
-	       	    },
-	       	    tooltip: {
-	       	        trigger: 'axis'
-	       	    },
-	       	    legend: {
-	       	    	x : 'center',
-				        y : 'bottom',
-				        type: 'scroll',
-				        orient: 'horizontal',
-	       	        data:['流行性感冒','手足口病','急性出血性结膜炎','百日咳','麻疹']
-	       	    },
-	       	    grid: {
-	       	        left: '3%',
-	       	        right: '3%',
-	       	        bottom: '3%',
-	       	        containLabel: true
-	       	    },
-	       	    toolbox: {
-	       	        feature: {
-	       	            saveAsImage: {}
-	       	        }
-	       	    },
-	       	    xAxis: {
-	       	        type: 'category',
-	       	        boundaryGap: true,
-	       	        axisLabel:{
-	       	                interval:0,
-	       	                rotate:50
-	       	            },
-	       	        data: result['affiGroup']
-	       	    },
-	       	    yAxis: {
-	       	        type: 'value',
-	       	        min: 0,
-	       	        max: 100,
-	       	        interval: 20
-	       	    },
-	       	    series: [
-	       	        {
-	       	            name:'流行性感冒',
-	       	            type:'line',
-	       	            label: {
-	       	                normal: {
-	       	                    show: true
-	       	                }
-	       	            },
-	       	            data:[0.00,1.72]
-	       	        },
-	       	        {
-	       	            name:'手足口病',
-	       	            type:'line',
-	       	            label: {
-	       	                normal: {
-	       	                    show: true
-	       	                }
-	       	            },
-	       	            
-	       	            data:[0.00,2.10]
-	       	        },
-	       	        {
-	       	            name:'急性出血性结膜炎',
-	       	            type:'line',
-	       	            label: {
-	       	                normal: {
-	       	                    show: true
-	       	                }
-	       	            },
-	       	            data:[0,1.86]
-	       	        },
-	       	        {
-	       	            name:'麻疹',
-	       	            type:'line',
-	       	            label: {
-	       	                normal: {
-	       	                    show: true
-	       	                }
-	       	            },
-	       	            data:[0,1.21]
-	       	        },
-	       	        {
-	       	            name:'百日咳',
-	       	            type:'line',
-	       	            label: {
-	       	                normal: {
-	       	                    show: true
-	       	                }
-	       	            },
-	       	            data:[0,0.67]
-	       	        }
-	       	    ]
+	    		   title: {
+	    		        text: '隶属关系',
+	    		        subtext: '罹患率',
+	    		        x: 'center'
+	    		    },
+	    		    tooltip: {
+	    		        trigger: 'axis',
+	    		         axisPointer: {
+	    		            animation: false
+	    		        } 
+	    		    },
+	    		    legend: {
+	    		        data:result['sickGroup'],
+	    		        type:"scroll",
+	    		        bottom:0
+	    		    },
+	    		    toolbox: {
+	    		        feature: {
+	    		            dataZoom: {
+	    		                yAxisIndex: 'none'
+	    		            }
+	    		        }
+	    		    },
+	    		    grid: [{
+	    		        left: 50,
+	    		        right: 50,
+	    		        height: '35%'
+	    		    }, {
+	    		        left: 50,
+	    		        right: 50,
+	    		        top: '55%',
+	    		        height: '35%'
+	    		    }],
+	    		    xAxis : [
+	    		        {
+	    		            type : 'category',
+	    		            boundaryGap : true,
+	    		            data: result['affiGroup']
+	    		        },
+	    		        {
+	    		            gridIndex: 1,
+	    		            type : 'category',
+	    		            boundaryGap : true,
+	    		            data: result['affiGroup'],
+	    		            position: 'top'
+	    		        }
+	    		    ],
+	    		    yAxis : [
+	    		        {
+	    		            name : '事发群体罹患率',
+	    		            type : 'value',
+	    		            //max : 1
+	    		        },
+	    		        {
+	    		            gridIndex: 1,
+	    		            name : '全校罹患率',
+	    		            type : 'value',
+	    		            //max : 1
+	    		        }
+	    		    ],
+	    		    series : seriesData
+	       }
+	       chart.setOption(option,true);
+		})
+	}
+    
+    
+    function generatorEpidemicRateNatureChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        var schoolYear = $("#schoolYear").val();
+		 var district = $("#district").find('option:selected').val();
+		 $.post("/qos/org/school/statistic/epidemic/ratesbyNature",{"schoolYear":schoolYear,"district":district},function(res){
+			 var result = res.result;
+			 var titleArr= [], seriesArr=[];
+			 if (result.length == 0) {
+	                showChartInfo(chart,'暂无数据显示...');
+	                return false;
+	         }
+	       let seriesData=[];
+	       
+	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	    	   seriesData.push({
+	   		            name: result['sickGroup'][i],
+	   		            type:'line',
+	   		            symbolSize: 8,
+	   		            hoverAnimation: false,
+	   		            data: result['serialData1'][i]
+	   		   })
+	       }
+	       for (i = 0; i < result['sickGroup'].length ; i++) { 
+	    	   seriesData.push({
+	   		            name: result['sickGroup'][i],
+	   		         	type:'line',
+	 		            xAxisIndex: 1,
+	 		            yAxisIndex: 1,
+	 		            symbolSize: 8,
+	 		            hoverAnimation: false,
+	   		            data: result['serialData2'][i]
+	   		   })
+	       }
+	       
+	       chart.hideLoading();
+	       option = {
+	    		   title: {
+	    		        text: '隶属关系',
+	    		        subtext: '罹患率',
+	    		        x: 'center'
+	    		    },
+	    		    tooltip: {
+	    		        trigger: 'axis',
+	    		         axisPointer: {
+	    		            animation: false
+	    		        } 
+	    		    },
+	    		    legend: {
+	    		        data:result['sickGroup'],
+	    		        type:"scroll",
+	    		        bottom:0
+	    		    },
+	    		    toolbox: {
+	    		        feature: {
+	    		            dataZoom: {
+	    		                yAxisIndex: 'none'
+	    		            }
+	    		        }
+	    		    },
+	    		    grid: [{
+	    		        left: 50,
+	    		        right: 50,
+	    		        height: '35%'
+	    		    }, {
+	    		        left: 50,
+	    		        right: 50,
+	    		        top: '55%',
+	    		        height: '35%'
+	    		    }],
+	    		    xAxis : [
+	    		        {
+	    		            type : 'category',
+	    		            boundaryGap : true,
+	    		            data: result['natureGroup']
+	    		        },
+	    		        {
+	    		            gridIndex: 1,
+	    		            type : 'category',
+	    		            boundaryGap : true,
+	    		            data: result['natureGroup'],
+	    		            position: 'top'
+	    		        }
+	    		    ],
+	    		    yAxis : [
+	    		        {
+	    		            name : '事发群体罹患率',
+	    		            type : 'value',
+	    		            //max : 1
+	    		        },
+	    		        {
+	    		            gridIndex: 1,
+	    		            name : '全校罹患率',
+	    		            type : 'value',
+	    		            //max : 1
+	    		        }
+	    		    ],
+	    		    series : seriesData
 	       }
 	       chart.setOption(option,true);
 		})

@@ -17,7 +17,7 @@ var dataMap={}
                      var incomedsOptions={
                        tooltip : {
                            trigger: 'item',
-                           formatter: "{a} <br/>{b} : {c} ({d}%)"
+                           formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
                        },
                        visualMap: {
                            show: false,
@@ -29,7 +29,7 @@ var dataMap={}
                        },
                        series : [
                            {
-                               name:'支付方式',
+                               name:'收入分类',
                                type:'pie',
                                radius : '70%',
                                center: ['50%', '50%'],

@@ -1,5 +1,6 @@
 package com.paladin.qos.controller.school;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -293,66 +294,170 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 			list.add(keyValue.getKey());
 			affiliationGroup.put(affilication, list);
 		}
+		
+		List<String> sickGroup=new ArrayList<String>();
+		List<String> sickCodeGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("sickness-type");
+		for (KeyValue keyValue : type2) {
+			sickCodeGroup.add(keyValue.getKey());
+			sickGroup.add(keyValue.getValue());
+		}
 		Map<String,Object> result=new HashMap<String, Object>();
 		List<String> affiGroup=new ArrayList<String>();
-		List<List<OrgSchoolEpidemicRateVO>>  data=new ArrayList<List<OrgSchoolEpidemicRateVO>>();
-		for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
-			query.setAffiliations(entry.getValue());
-			List<OrgSchoolEpidemicRateVO> list = epidemicSituationService.queryEpidemicRatesByAffiliation(query);
-			if(CollectionUtils.isNotEmpty(list)){
-				affiGroup.add(entry.getKey());
-				data.add(list);
-			}
-		}
-		//疾病数组
-		List<String> sicknessClassifyArr=new ArrayList<String>();
-		Map<String,List<Integer>> serialsData=new HashMap<String, List<Integer>>();
+		List<List<Object>> serialData1=new ArrayList<List<Object>>();
+		List<List<Object>> serialData2=new ArrayList<List<Object>>();
 		
-		if(!CollectionUtils.isEmpty(data)){
-			for (List<OrgSchoolEpidemicRateVO> voList : data) {
-				if(CollectionUtils.isNotEmpty(voList)){
-					Integer schoolSum=0;
-					Integer orgSchoolPeopleSum=0;
-					//Integer incidentOrgSchoolPeopleSum=0;
-					Integer incidentSum=0;
-					Set<String> schoolIdSet=new HashSet<String>(); 
-					Set<String> orgSchoolPeopleIdSet=new HashSet<String>(); 
-					Set<String> incidentOrgSchoolPeopleSet=new HashSet<String>(); 
-					for (OrgSchoolEpidemicRateVO rateVO : voList) {
-						String sicknessValue=ConstantsContainer.getTypeValue("sickness-type",rateVO.getSicknessClassify());
-						if(!sicknessClassifyArr.contains(sicknessValue)){
-							sicknessClassifyArr.add(sicknessValue);
-						}
-						List<Integer> list = serialsData.get(sicknessValue);
-						if(CollectionUtils.isEmpty(list)){
-							list=new ArrayList<Integer>();
-						}
-						if(!schoolIdSet.contains(rateVO.getSchoolId())){
-							schoolIdSet.add(rateVO.getSchoolId());
-							schoolSum+=rateVO.getShcoolTotal();//全校总人数
-						}
+		for (String sickCode : sickCodeGroup) {
+			query.setSicknessClassify(sickCode);
+			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
+			List<Object> data1=new ArrayList<Object>();
+			List<Object> data2=new ArrayList<Object>();
+			for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
+				query.setAffiliations(entry.getValue());
+				if(!affiGroup.contains(entry.getKey())){
+					affiGroup.add(entry.getKey());
+				}
+				List<OrgSchoolEpidemicRateVO> list = epidemicSituationService.queryEpidemicRatesByAffiliation(query);
+				Set<String> schoolIdSet=new HashSet<String>(); 
+				Set<String> orgSchoolPeopleIdSet=new HashSet<String>(); 
+				Set<String> incidentOrgSchoolPeopleSet=new HashSet<String>(); 
+				List<Integer> list2=new ArrayList<Integer>();
+				list2.add(0);//schoolSum
+				list2.add(0);//orgSchoolPeopleSum
+				list2.add(0);//incidentSum
+				for (OrgSchoolEpidemicRateVO rateVO : list) {
+					if(!schoolIdSet.contains(rateVO.getSchoolId())){
+						schoolIdSet.add(rateVO.getSchoolId());
+						list2.set(0,list2.get(0)+rateVO.getShcoolTotal());//全校总人数
+					}
+					if(!incidentOrgSchoolPeopleSet.contains(rateVO.getIncidentOrgSchoolPeopleId())){
 						if(!orgSchoolPeopleIdSet.contains(rateVO.getOrgSchoolPeopleId())){
 							orgSchoolPeopleIdSet.add(rateVO.getOrgSchoolPeopleId());
-							orgSchoolPeopleSum+=rateVO.getOrgSchoolPeopleTotal();//班级人数
+							list2.set(1,list2.get(1)+rateVO.getOrgSchoolPeopleTotal());//班级人数
 						}
-						if(!incidentOrgSchoolPeopleSet.contains(rateVO.getIncidentOrgSchoolPeopleId())){
-							incidentOrgSchoolPeopleSet.add(rateVO.getIncidentOrgSchoolPeopleId());
-							//incidentOrgSchoolPeopleSum+=rateVO.getOrgSchoolPeopleTotal();
-							incidentSum+=rateVO.getIncidentTotol();//患病人数
-						}
-						System.out.println("schoolSum---->"+schoolSum);
-						System.out.println("orgSchoolPeopleSum---->"+orgSchoolPeopleSum);
-						System.out.println("incidentSum---->"+incidentSum);
-						
-						serialsData.put(sicknessValue,list);
+						incidentOrgSchoolPeopleSet.add(rateVO.getIncidentOrgSchoolPeopleId());
+						list2.set(2,list2.get(2)+rateVO.getIncidentTotol());//患病人数
 					}
 				}
+				
+				if(list2.get(2)>0){
+					data1.add(round(list2.get(2).toString(),list2.get(1).toString(),2));
+					data2.add(round(list2.get(2).toString(),list2.get(0).toString(),2));
+				}else{
+					data1.add(0);
+					data2.add(0);
+				}
+				//System.out.println(entry.getKey()+list2);
 			}
+			//System.out.println("-------班级罹患率------->"+data1);
+			//System.out.println("-------全校罹患率-------->"+data2);
+			serialData1.add(data1);
+			serialData2.add(data2);
 		}
 		result.put("affiGroup", affiGroup);
-		result.put("data", data);
-		System.out.println(result);
+		result.put("sickGroup", sickGroup);
+		result.put("serialData1", serialData1);
+		result.put("serialData2", serialData2);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
+	/**
+	 * 学校性质，统计学校数量
+	 * @param query
+	 * @return
+	 */
+	@RequestMapping("/epidemic/ratesbyNature")
+	@ResponseBody
+	public Object epidemicRatesbyNature(OrgSchoolCountsQuery query) {
+		List<KeyValue> type = ConstantsContainer.getType("nature-type");
+		Map<String,String> affiliationMap=new HashMap<>();
+		for (KeyValue keyValue : type) {
+			affiliationMap.put( keyValue.getValue(),keyValue.getKey());
+		}
+		
+		List<String> sickGroup=new ArrayList<String>();
+		List<String> sickCodeGroup=new ArrayList<String>();
+		List<KeyValue> type2 = ConstantsContainer.getType("sickness-type");
+		for (KeyValue keyValue : type2) {
+			sickCodeGroup.add(keyValue.getKey());
+			sickGroup.add(keyValue.getValue());
+		}
+		Map<String,Object> result=new HashMap<String, Object>();
+		List<String> natureGroup=new ArrayList<String>();
+		List<List<Object>> serialData1=new ArrayList<List<Object>>();
+		List<List<Object>> serialData2=new ArrayList<List<Object>>();
+		
+		for (String sickCode : sickCodeGroup) {
+			query.setSicknessClassify(sickCode);
+			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
+			List<Object> data1=new ArrayList<Object>();
+			List<Object> data2=new ArrayList<Object>();
+			for (Entry<String, String>  entry: affiliationMap.entrySet()) {
+				query.setNature(entry.getValue());
+				if(!natureGroup.contains(entry.getKey())){
+					natureGroup.add(entry.getKey());
+				}
+				List<OrgSchoolEpidemicRateVO> list = epidemicSituationService.queryEpidemicRatesByNature(query);
+				Set<String> schoolIdSet=new HashSet<String>(); 
+				Set<String> orgSchoolPeopleIdSet=new HashSet<String>(); 
+				Set<String> incidentOrgSchoolPeopleSet=new HashSet<String>(); 
+				List<Integer> list2=new ArrayList<Integer>();
+				list2.add(0);//schoolSum
+				list2.add(0);//orgSchoolPeopleSum
+				list2.add(0);//incidentSum
+				for (OrgSchoolEpidemicRateVO rateVO : list) {
+					if(!schoolIdSet.contains(rateVO.getSchoolId())){
+						schoolIdSet.add(rateVO.getSchoolId());
+						list2.set(0,list2.get(0)+rateVO.getShcoolTotal());//全校总人数
+					}
+					if(!incidentOrgSchoolPeopleSet.contains(rateVO.getIncidentOrgSchoolPeopleId())){
+						if(!orgSchoolPeopleIdSet.contains(rateVO.getOrgSchoolPeopleId())){
+							orgSchoolPeopleIdSet.add(rateVO.getOrgSchoolPeopleId());
+							list2.set(1,list2.get(1)+rateVO.getOrgSchoolPeopleTotal());//班级人数
+						}
+						incidentOrgSchoolPeopleSet.add(rateVO.getIncidentOrgSchoolPeopleId());
+						list2.set(2,list2.get(2)+rateVO.getIncidentTotol());//患病人数
+					}
+				}
+				
+				if(list2.get(2)>0){
+					data1.add(round(list2.get(2).toString(),list2.get(1).toString(),2));
+					data2.add(round(list2.get(2).toString(),list2.get(0).toString(),2));
+				}else{
+					data1.add(0);
+					data2.add(0);
+				}
+				//System.out.println(entry.getKey()+list2);
+			}
+			//System.out.println("-------班级罹患率------->"+data1);
+			//System.out.println("-------全校罹患率-------->"+data2);
+			serialData1.add(data1);
+			serialData2.add(data2);
+		}
+		result.put("natureGroup", natureGroup);
+		result.put("sickGroup", sickGroup);
+		result.put("serialData1", serialData1);
+		result.put("serialData2", serialData2);
+		//System.out.println(result);
+		return CommonResponse.getSuccessResponse(result);
+	}
+	
+	
+
+	/**
+     * 提供精确的小数位四舍五入处理。
+     * @param divisor 除数
+     * @param dividend 被除数
+     * @param scale 小数点后保留几位
+     * @return 四舍五入后的结果
+     */
+	public Double round(String divisor, String dividend, int scale) {
+		if (scale < 0) {
+		    throw new IllegalArgumentException("The scale must be a positive integer or zero");
+		}
+		BigDecimal divisorBig = new BigDecimal(divisor);
+		BigDecimal dividendBig = new BigDecimal(dividend);
+		return divisorBig.divide(dividendBig, scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
 }

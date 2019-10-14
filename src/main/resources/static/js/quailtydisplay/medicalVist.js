@@ -61,7 +61,7 @@ $(function(){
                 // 13002急诊人次数  14001住院人次数   13001门诊人次数
                 //  31007急诊人次    31008门诊人次       31004入院人次
                 for(var i=0;i<rawData.result['13001'].length;i++){
-                       arr13001Month.push(rawData.result['13001'][i].day)
+                       arr13001Month.push(rawData.result['13001'][i].year+"-"+rawData.result['13001'][i].month+"-"+rawData.result['13001'][i].day)
                        arr13001MonthY.push(rawData.result['13001'][i].totalNum)
                 }
                 for(var i=0;i<rawData.result['13002'].length;i++){
@@ -105,7 +105,10 @@ $(function(){
                             //echarts开始
                             medicaladviceoption ={
                                       tooltip : {
-                                          trigger: 'axis'
+                                          trigger: 'axis',
+                                          axisPointer: {
+                                              type: 'shadow'
+                                          }
                                               },
                                       legend: {
                                            data:['急诊人次','入院人次','普通门诊人次'],

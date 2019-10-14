@@ -55,7 +55,7 @@ $(function(){
             }
         },
          series:[{
-            data: month21004Data.valuesMap['total'], // total 如果是单位，就改成该单位的id
+            data: ['0','0','0','0','0','0','0','0','0','0'], // total 如果是单位，就改成该单位的id
             type: 'line',
             lineStyle: {
                 color: '#f45e23',

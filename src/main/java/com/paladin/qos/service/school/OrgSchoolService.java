@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,13 +143,15 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	if (school == null) {
 		throw new BusinessException("没有对应需要更新的学校信息");
 	}
+	//修改时验证学校信息是否已添加
+	if(!StringUtils.equals(school.getSchoolYear(), dto.getSchoolYear()) ){
+		OrgSchool orgSchoolDetail = this.orgSchoolDetail(dto.getParentSchoolId(),dto.getSchoolYear());
+		if(orgSchoolDetail!=null){
+			throw new BusinessException("该年度学校信息已录入");
+		}
+	}
 
 	SimpleBeanCopyUtil.simpleCopy(dto, school);
-	//修改时验证学校信息是否已添加
-	OrgSchool orgSchoolDetail = this.orgSchoolDetail(dto.getParentSchoolId(),dto.getSchoolYear());
-	if(orgSchoolDetail!=null){
-		throw new BusinessException("该年度学校信息已录入");
-	}
 	//该学校不是父节点
 	List<OrgSchoolName> orgSchoolNameList = orgSchoolNameService.searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID, QueryType.EQUAL, school.getParentSchoolId()));
 	if(!CollectionUtils.isEmpty(orgSchoolNameList)){

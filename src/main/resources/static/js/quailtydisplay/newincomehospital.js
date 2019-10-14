@@ -43,7 +43,7 @@ $("#incomeSelect").trigger("change")
                                                var newincomehosiptalOptions={
                                                                    tooltip : {
                                                                        trigger: 'item',
-                                                                       formatter: "{a} <br/>{b} : {c} ({d}%)"
+                                                                       formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
                                                                    },
                                                                    visualMap: {
                                                                        show: false,
@@ -55,7 +55,7 @@ $("#incomeSelect").trigger("change")
                                                                    },
                                                                    series : [
                                                                        {
-                                                                           name:'支付方式',
+                                                                           name:'收入分类',
                                                                            type:'pie',
                                                                            radius : '70%',
                                                                            center: ['50%', '50%'],

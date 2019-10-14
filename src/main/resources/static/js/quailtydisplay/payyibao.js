@@ -23,7 +23,7 @@ var newspotitalOptions=function(id){
     var newspotitalOptionsss={
     tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
     },
     visualMap: {
         show: false,
