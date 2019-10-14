@@ -10,12 +10,12 @@
 <script type="text/javascript" src="/static/assets/map/eventwrapper.min.js"></script>
 
 <!--服务器误删开始-->
-<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>
+<!--<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>-->
 <!--服务器误删结束-->
 
 <!--服务器删除开始-->
-<!--<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
-<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>-->
+<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <!--服务器删除结束-->
 
 
@@ -222,9 +222,6 @@ $.ajax({
                      + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName
                               + "</br>"
-                              + "<b class='text-0efcff'>机构编码：</b>"
-                              + markerArr[i].unitId
-                               + "</br>"
                               + "<b class='text-0efcff'>当月门诊次数：</b>"
                               + markerArr[i].patients
                               + "</br>"
@@ -234,7 +231,6 @@ $.ajax({
                               + "<b class='text-0efcff'>地址：</b>"
                               + markerArr[i].orgAddress
                               + "</p>";
-
 
                 //创建百度样式检索信息窗口对象
                 searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map, info[i], {

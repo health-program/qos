@@ -15,56 +15,34 @@ var dataMap={}
                       //急诊人数开始
                          //指定图标的配置和数据
                      var incomedsOptions={
+                         color: ['#ffffff', '#4aa4d4','#19D1FF'], //环形图每块的颜色
                        tooltip : {
                            trigger: 'item',
                            formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
                        },
-                       visualMap: {
-                           show: false,
-                            min: 800,
-                            max: 50000,
-                           inRange: {
-                               color: ['#5569be']
-                           }
-                       },
+
                        series : [
-                           {
-                               name:'收入分类',
-                               type:'pie',
-                               radius : '70%',
-                               center: ['50%', '50%'],
-                               data:[
-                                   {value:data31011, name:'药品'},
-                                   {value:data31012, name:'其他'},
-                                   {value:data31013, name:'医疗'},
-                               ].sort(function (a, b) { return a.value - b.value; }),
-                               roseType: 'radius',
-                               label: {
-                                   normal: {
-                                       textStyle: {
-                                           color: '#2cffff'
+
+                       {
+                                       name: '访问来源',
+                                       type: 'pie',
+                                       radius : '75%',
+                                       center: ['52%', '60%'],
+                                        data:[
+                                                        {value:data31011, name:'药品'},
+                                                                                         {value:data31012, name:'其他'},
+                                                                                         {value:data31013, name:'医疗'},
+                                                  ].sort(function (a, b) { return a.value - b.value; }),
+                                       itemStyle: {
+                                           emphasis: {
+                                               shadowBlur: 10,
+                                               shadowOffsetX: 0,
+                                               shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                           }
                                        }
                                    }
-                               },
-                               labelLine: {
-                                   normal: {
-                                       lineStyle: {
-                                           color: '#2cffff'
-                                       },
-                                       smooth: 0.2,
-                                       length: 10,
-                                       length2: 20
-                                   }
-                               },
-                               itemStyle: {
-                                   normal: {
-                                       color: '#2cffff',
-                                       shadowBlur: 200,
-                                       shadowColor: 'rgba(0, 0, 0, 0.5)'
-                                   }
-                               }
 
-                           }
+
                        ]
                    };
                          //初始化echarts实例
@@ -189,3 +167,46 @@ $("#incomeSelect").val('31009')
 $("#incomeSelect").trigger("change")
 
  })
+
+
+ /*
+
+                           {
+                               name:'收入分类',
+                               type:'pie',
+                               radius : '70%',
+                               center: ['50%', '50%'],
+                               data:[
+                                   {value:data31011, name:'药品'},
+                                   {value:data31012, name:'其他'},
+                                   {value:data31013, name:'医疗'},
+                               ].sort(function (a, b) { return a.value - b.value; }),
+                               roseType: 'radius',
+                               label: {
+                                   normal: {
+                                       textStyle: {
+                                           color: '#2cffff'
+                                       }
+                                   }
+                               },
+                               labelLine: {
+                                   normal: {
+                                       lineStyle: {
+                                           color: '#2cffff'
+                                       },
+                                       smooth: 0.2,
+                                       length: 10,
+                                       length2: 20
+                                   }
+                               },
+                               itemStyle: {
+                                   normal: {
+                                       color: '#2cffff',
+                                       shadowBlur: 200,
+                                       shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                   }
+                               }
+
+                           }
+
+ */

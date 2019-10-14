@@ -54,6 +54,8 @@
       height:6vw;
       display:inline-block;
       float:left;
+
+
     }
 
     .newyiyuanss,.newshequss{
@@ -63,7 +65,7 @@
       display:inline-block;
       float:left;
       text-align:center;
-}
+  }
 
 #newincomehosiptal{
    margin-top:0.5vh;
@@ -72,6 +74,10 @@
 #list1 li{
   height:50px;
   line-height:50px;
+}
+
+.newyiyuanss,.newshequss{
+     margin-left: 1vw;
 }
 </style>
 
@@ -233,8 +239,13 @@
 
 
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomeshequ.js"></script><!--收入分类对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomehospital.js"></script><!--收入分类对比-->
+
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
 <script>
@@ -313,9 +324,6 @@
                               + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName
                               + "</br>"
-                              + "<b class='text-0efcff'>机构编码：</b>"
-                              + markerArr[i].unitId
-                               + "</br>"
                               + "<b class='text-0efcff'>当月门诊次数：</b>"
                               + markerArr[i].patients
                               + "</br>"
