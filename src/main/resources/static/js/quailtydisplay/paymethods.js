@@ -86,14 +86,12 @@ $(function(){
         return c.toFixed(fixed || 2);
     }
      var arr={
-          eventIds:'31009,31010',  // 伟华
-          startTime:today
+          eventIds:'31009,31010'  // 伟华
       };
 
          if(selectIDValue=='31009'){
                         arr = {
-                            eventIds:'31009,31010',  // 伟华
-                            startTime:today
+                            eventIds:'31009,31010'  // 伟华
                         }
 
                        $.ajax({
@@ -111,8 +109,8 @@ $(function(){
          var selectIDValue= $('#selectID option:selected') .val();
          if(selectIDValue=='31009'){
                arr = {
-                   eventIds:'31009,31010',  // 伟华
-                   startTime:today
+                   eventIds:'31009,31010' // 伟华
+
                }
                   $.ajax({
                    type : "post",    //请求类型
@@ -128,7 +126,6 @@ $(function(){
          if(selectIDValue=='31010'){
          arr={
                  eventIds:'15005,15006',  // 伟华
-                 startTime:today
               }
 
          $.ajax({

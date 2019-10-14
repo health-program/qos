@@ -24,14 +24,12 @@ $("#incomeSelect").trigger("change")
 
 
        var arr={
-           eventIds:'15003,15004,15002',  // 周亚
-            startTime:today
+           eventIds:'15003,15004,15002' // 周亚
        };
 
       if(incomeSelectValues=='31010'){
                          arrs = {
-                              eventIds:'15003,15004,15002',  // 周亚
-                             startTime:today
+                              eventIds:'15003,15004,15002'  // 周亚
                          }
                         $.ajax({
                              type : "post",    //请求类型

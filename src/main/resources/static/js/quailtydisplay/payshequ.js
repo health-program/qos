@@ -101,14 +101,12 @@ $(function(){
 
 
      var arr={
-          eventIds:'15005,15006',  // 伟华
-          startTime:today
-      };
+          eventIds:'15005,15006' // 伟华
+     };
 
          if(selectIDValue=='31010'){
                         arr = {
-                              eventIds:'15005,15006',  // 伟华
-                              startTime:today
+                              eventIds:'15005,15006'  // 伟华
                         }
 
                        $.ajax({
@@ -127,8 +125,7 @@ $(function(){
 
          if(selectIDValue=='31010'){
          arr={
-                 eventIds:'15005,15006',  // 伟华
-                 startTime:today
+                 eventIds:'15005,15006'  // 伟华
               }
 
          $.ajax({

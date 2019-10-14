@@ -129,8 +129,7 @@ var dataMap={}
       var incomeSelectValue= $('#incomeSelect option:selected') .val();
       if(incomeSelectValue=='31009'){
                 arr = {
-                   eventIds:'31011,31012,31013',  // 伟华
-                    startTime:today
+                   eventIds:'31011,31012,31013'// 伟华
                 }
 
                $.ajax({
@@ -148,8 +147,7 @@ var dataMap={}
 
       if(incomeSelectValue=='31010'){
              arr={
-                  eventIds:'15003,15004,15002',  // 周亚
-                  startTime:today
+                  eventIds:'15003,15004,15002' // 周亚
                }
 
           $.ajax({

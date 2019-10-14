@@ -38,7 +38,7 @@ $(function(){
          }
          var arr1 = {
                     eventIds:'31007,31004,31008', //  31007急诊人次    31008门诊人次       31004入院人次
-                    startTime:today,
+                    startTime:jian25tian,
                     byUnit: 0
          }
 
