@@ -4,10 +4,10 @@
 
 
      var now = new Date();
-                 var year = now.getFullYear(); //得到年份
-                 var month = now.getMonth()+1;//得到月份
-                 var date = now.getDate();//得到日期
-                var today=year + "-" + month + "-" + date;
+     var year = now.getFullYear(); //得到年份
+     var month = now.getMonth()+1;//得到月份
+     var date = now.getDate();//得到日期
+      var today=year + "-" + month + "-" + date;
 
 
 
@@ -21,56 +21,31 @@ var newshequOptions=function(id){
     var eventId = $("#selectID").val();
     var data = dataMap[eventId];
     var newshequOptions={
+     color: ['#567db8', '#4aa4d4'], //环形图每块的颜色
     tooltip : {
         trigger: 'item',
         formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
     },
-    visualMap: {
-        show: false,
-         min: 800,
-         max: 50000,
-        inRange: {
-            color: ['#5569be']
-        }
-    },
     series : [
-        {
-            name:'支付方式',
-            type:'pie',
-            radius : '80%',
-            center: ['50%', '50%'],
-            data:[
-                {value:data31009, name:'医保'},
-                {value:data31010, name:'自费'}
-            ].sort(function (a, b) { return a.value - b.value; }),
-            roseType: 'radius',
-            label: {
-                normal: {
-                    textStyle: {
-                        color: '#2cffff'
+
+     {
+                    name: '访问来源',
+                    type: 'pie',
+                    radius : '75%',
+                    center: ['50%', '50%'],
+                     data:[
+                                   {value:data31009, name:'医保'},
+                                    {value:data31010, name:'自费'}
+                               ].sort(function (a, b) { return a.value - b.value; }),
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
                     }
                 }
-            },
-            labelLine: {
-                normal: {
-                    lineStyle: {
-                        color: '#2cffff'
-                    },
-                    smooth: 0.2,
-                    length: 10,
-                    length2: 20
-                }
-            },
-            itemStyle: {
-                normal: {
-                    color: '#2cffff',
-                    shadowBlur: 200,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-
-        }
-    ]
+     ]
 };
     var newshequ_id = echarts.init(document.getElementById('newshequ'));
       newshequ_id.setOption(newshequOptions);
@@ -172,3 +147,42 @@ $("#selectID").trigger("change")
 
 
 })
+
+
+
+  /*  {
+            name:'支付方式',
+            type:'pie',
+            radius : '80%',
+            center: ['50%', '50%'],
+            data:[
+                {value:data31009, name:'医保'},
+                {value:data31010, name:'自费'}
+            ].sort(function (a, b) { return a.value - b.value; }),
+            roseType: 'radius',
+            label: {
+                normal: {
+                    textStyle: {
+                        color: '#2cffff'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    lineStyle: {
+                        color: '#2cffff'
+                    },
+                    smooth: 0.2,
+                    length: 10,
+                    length2: 20
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: '#2cffff',
+                    shadowBlur: 200,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+
+        }*/
