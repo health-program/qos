@@ -96,7 +96,7 @@ var echartses=function(id){
                grid: {
                               left: 45,
                               right: 20,
-                              bottom: 10,
+                              bottom: 20,
                               containLabel: true
                           },
               axisLabel: {
