@@ -254,6 +254,14 @@ $.ajax({
 
 
 
+
+
+
+            }
+           //结束
+
+
+
             var skipIndex = 0;
 
             window.setInterval(function() {
@@ -262,14 +270,9 @@ $.ajax({
                     win = searchInfoWindow[skipIndex++];
                 win.open(m);
                 map.panTo(point[i]);
-            }, 10000);
+            }, 3000);
 
 
-
-
-
-            }
-           //结束
         }
 
         //结束
