@@ -37,17 +37,17 @@ public class PhysicalManagementController {
 
 	@GetMapping("/index")
 	public Object dataIndex(Model model) {
-		List<Integer> types=new ArrayList<>();
-		types.add(DataUnit.TYPE_COMMUNITY);
-		List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
-		Iterator<DataUnitVO> it=dataUnitVOList.iterator();
-		while(it.hasNext()){
-			DataUnitVO dataUnitVO=it.next();
-			if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
-				it.remove();
-			}
-		}
-		model.addAttribute("unit", dataUnitVOList);
+//		List<Integer> types=new ArrayList<>();
+//		types.add(DataUnit.TYPE_COMMUNITY);
+//		List<DataUnitVO> dataUnitVOList =dataUnitService.selectData(types);
+//		Iterator<DataUnitVO> it=dataUnitVOList.iterator();
+//		while(it.hasNext()){
+//			DataUnitVO dataUnitVO=it.next();
+//			if(StringUtils.equalsIgnoreCase("320583810343",dataUnitVO.getId())){
+//				it.remove();
+//			}
+//		}
+//		model.addAttribute("unit", dataUnitVOList);
 		return "/qos/exhibition/physical_index";
 	}
 
