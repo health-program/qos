@@ -47,7 +47,15 @@ $(function(){
            var dataMap14002=convertUnitChartData(rawData.result, '14002', false); //   true 比率  false总数
          var people = {
          tooltip: {
-                          show: true //显示提示框
+             show: true ,//显示提示框
+             // formatter:function (params) {
+             //     debugger;
+             //     var result = '';
+             //     params.forEach(function (item) {
+             //         result += item.name+"<br>" + item.marker + item.value+"人" ;
+             //     });
+             //     return result;
+             // },
                     },
         xAxis: [{
             type: 'category',
@@ -70,7 +78,7 @@ $(function(){
                    interval:0,
                    rotate:45,
                    formatter: function(value) {
-                       var reg = new RegExp('社区卫生服务中心'                                    , "g");
+                       var reg = new RegExp('社区卫生服务中心', "g");
                        return value.replace(reg, '');
                     }
             }
@@ -91,7 +99,7 @@ $(function(){
 
         ],
         series: [{
-                name: '住院',
+                name: '住院(人)',
                 type: 'bar',
                 data: dataMap14001['values'],
                 itemStyle: {
@@ -105,7 +113,7 @@ $(function(){
                 }
              },
             {
-                name: '出院',
+                name: '出院（人）',
                 type: 'bar',
                 data: dataMap14002['values'],
                 itemStyle: {

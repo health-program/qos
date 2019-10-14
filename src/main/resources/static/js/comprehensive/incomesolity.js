@@ -43,6 +43,13 @@ $(function(){
             var emergencyOption = {
                    tooltip: {
                                  trigger: 'axis',
+                       formatter:function (params) {
+                           var result = '';
+                           params.forEach(function (item) {
+                               result += item.name+"<br>" + item.marker + item.value+"元" ;
+                           });
+                           return result;
+                       },
                                  axisPointer: {
                                      type: 'shadow'
                                  }

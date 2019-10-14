@@ -41,6 +41,13 @@ $(function(){
             var emergencyoption = {
                    tooltip: {
                                  trigger: 'axis',
+                       formatter:function (params) {
+                           var result = '';
+                           params.forEach(function (item) {
+                               result += item.name+"<br>" + item.marker + item.value+"人" ;
+                           });
+                           return result;
+                       },
                                  axisPointer: {
                                      type: 'shadow'
                                  }

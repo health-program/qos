@@ -71,6 +71,7 @@ $(function(){
 var echartses=function(id){
   var eventId = $("#selectID").val();
     var data = dataMap[eventId];
+    debugger;
    //急诊人数开始
       //指定图标的配置和数据
       var emergencyoption = {
