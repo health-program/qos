@@ -4,7 +4,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  建档率，公开率（使用率==建档率），
-              eventIds:'22012'
+              eventIds:'22012',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序
