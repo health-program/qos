@@ -309,7 +309,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		
 		for (String sickCode : sickCodeGroup) {
 			query.setSicknessClassify(sickCode);
-			System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
+			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
 			List<Object> data1=new ArrayList<Object>();
 			List<Object> data2=new ArrayList<Object>();
 			for (Entry<String,List<String>>  entry: affiliationGroup.entrySet()) {
@@ -349,8 +349,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 				}
 				//System.out.println(entry.getKey()+list2);
 			}
-			System.out.println("-------班级罹患率------->"+data1);
-			System.out.println("-------全校罹患率-------->"+data2);
+			//System.out.println("-------班级罹患率------->"+data1);
+			//System.out.println("-------全校罹患率-------->"+data2);
 			serialData1.add(data1);
 			serialData2.add(data2);
 		}
@@ -358,7 +358,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("sickGroup", sickGroup);
 		result.put("serialData1", serialData1);
 		result.put("serialData2", serialData2);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
@@ -390,7 +390,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		
 		for (String sickCode : sickCodeGroup) {
 			query.setSicknessClassify(sickCode);
-			System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
+			//System.out.println("sickCode--->"+sickCode+"---"+ConstantsContainer.getTypeValue("sickness-type",sickCode));
 			List<Object> data1=new ArrayList<Object>();
 			List<Object> data2=new ArrayList<Object>();
 			for (Entry<String, String>  entry: affiliationMap.entrySet()) {
@@ -430,8 +430,8 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 				}
 				//System.out.println(entry.getKey()+list2);
 			}
-			System.out.println("-------班级罹患率------->"+data1);
-			System.out.println("-------全校罹患率-------->"+data2);
+			//System.out.println("-------班级罹患率------->"+data1);
+			//System.out.println("-------全校罹患率-------->"+data2);
 			serialData1.add(data1);
 			serialData2.add(data2);
 		}
@@ -439,7 +439,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("sickGroup", sickGroup);
 		result.put("serialData1", serialData1);
 		result.put("serialData2", serialData2);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
