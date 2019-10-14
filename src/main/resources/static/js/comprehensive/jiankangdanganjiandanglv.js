@@ -44,10 +44,6 @@ $(function(){
            /*dataMap['13002']=convertUnitChartData(rawData, '13002', true)*/
 
            var dataMap=convertUnitChartData(rawData, '22001', true); //
-
-           debugger
-
-
               //急诊人数开始
                  var jiankangdanganjiandanglvOption = {
                    tooltip: {
