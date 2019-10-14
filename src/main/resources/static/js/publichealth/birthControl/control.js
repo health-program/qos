@@ -74,8 +74,7 @@ function generatorBycsChart(chart) {
                 ],
                 yAxis : [
                     {
-                        type : 'category',
-                        axisTick : {show: false},
+
                         data : time,
                           axisLine: {
                               show:false
