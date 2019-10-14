@@ -220,17 +220,21 @@ $.ajax({
 
                 // 创建信息窗口对象
                 info[i] = "<p style=’font-size:12px;line-height:1.6em;’>" +
-                    "</br><b class='text-0efcff'>名称：</b>" +
-                    markerArr[i].orgName +
-                    "</br><b class='text-0efcff'>机构编码：</b>" +
-                    markerArr[i].unitId +
-                    "</br><b class='text-0efcff'>当月门诊次数：</b>" +
-                    markerArr[i].patients +
-                    "</br><b class='text-0efcff'>当月住院人次：</b>" +
-                    markerArr[i].hospital +
-                    "</br><b class='text-0efcff'>地址：</b>" +
-                    markerArr[i].orgAddress +
-                    "</br></p>";
+                     + "<b class='text-0efcff'>名称：</b>"
+                              + markerArr[i].orgName
+                              + "</br>"
+                              + "<b class='text-0efcff'>机构编码：</b>"
+                              + markerArr[i].unitId
+                               + "</br>"
+                              + "<b class='text-0efcff'>当月门诊次数：</b>"
+                              + markerArr[i].patients
+                              + "</br>"
+                              + "<b class='text-0efcff'>当月住院人次：</b>"
+                              + markerArr[i].hospital
+                              + "</br>"
+                              + "<b class='text-0efcff'>地址：</b>"
+                              + markerArr[i].orgAddress
+                              + "</p>";
 
 
                 //创建百度样式检索信息窗口对象
@@ -266,15 +270,20 @@ $.ajax({
 
 
 
-            var skipIndex = 0;
-
-            window.setInterval(function() {
+         var skipIndex = 0;
+         window.setInterval(function() {
                 if (skipIndex >= marker.length) skipIndex = 0;
                 var m = marker[skipIndex],
                     win = searchInfoWindow[skipIndex++];
                 win.open(m);
                 map.panTo(point[i]);
             }, 3000);
+
+
+
+
+
+
 
 
         }
