@@ -11,7 +11,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  孕妇建卡数，早孕建卡数
-              eventIds:'13319,13320'
+              eventIds:'13319,13320',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序

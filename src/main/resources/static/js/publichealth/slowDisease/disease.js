@@ -37,6 +37,7 @@ function initTable() {
             },
             queryParams: function(params) {
                 params.eventIds = '22004,22005,22006,22007';
+                params.ignoreUnitIds = '320583810343';
                 requestParams = params;
                 return params;
             },

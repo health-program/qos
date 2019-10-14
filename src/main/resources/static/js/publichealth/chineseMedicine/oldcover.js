@@ -2,7 +2,8 @@
 
 $(function(){
          var arr = {
-              eventIds:'22009'
+              eventIds:'22009',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序

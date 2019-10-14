@@ -10,7 +10,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  儿童访视数，儿童建卡数
-              eventIds:'13321,13203'
+              eventIds:'13321,13203',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序

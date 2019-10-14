@@ -3,7 +3,8 @@ $(function () {
     });
 var bycsChart = echarts.init(document.getElementById('emergency'));
 function generatorBycsChart(chart) {
-        let startTime = $("#startTime").val();
+	debugger
+        let startTime = "2015-01-01";
         let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
         $.postAjax("/qos/analysis/data/get/month/instalments",{ startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
@@ -21,8 +22,6 @@ function generatorBycsChart(chart) {
                 byyValueTotal = byyValue.reduce((previousValue, currentValue) => previousValue + currentValue );
                 bytValueTotal = bytValue.reduce((previousValue, currentValue) => previousValue + currentValue );
             }
-            $("#byt").text(bytValueTotal);
-            $("#byy").text(byyValueTotal);
             if (byyValueTotal === 0 && bytValueTotal === 0) {
                 showChartInfo(chart,'暂无数据');
                 return false;
@@ -75,13 +74,10 @@ function generatorBycsChart(chart) {
                         axisTick : {show: false},
                         data : time,
                           axisLabel:{
-                                                    formatter: function (data) {
-                                                        return (Math.abs(data));
-                                                    },
-                                                   textStyle: {
-                                                           color: '#ffffff'
-                                                     }
-                                                }
+                                       textStyle: {
+                                               color: '#ffffff'
+                                         }
+                                    }
                     }
                 ],
                 series : [
