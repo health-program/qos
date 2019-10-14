@@ -10,7 +10,7 @@ $(function () {
 
 
 var bycsChart = echarts.init(document.getElementById('emergency'));
-    function generatorBycsChart(chart) {
+function generatorBycsChart(chart) {
         let startTime =todayss;
         let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
