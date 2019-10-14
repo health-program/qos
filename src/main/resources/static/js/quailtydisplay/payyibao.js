@@ -3,16 +3,27 @@
    var  data31010;
 
 
+
+     var now = new Date();
+                 var year = now.getFullYear(); //得到年份
+                 var month = now.getMonth()+1;//得到月份
+                 var date = now.getDate();//得到日期
+                var today=year + "-" + month + "-" + date;
+
+
+
+
+
      var selectIDValue='31009';
 //封装的方法开始
        // 15005,15006
-var paycomparsionOptions=function(id){
+var newspotitalOptions=function(id){
     var eventId = $("#selectID").val();
     var data = dataMap[eventId];
-    var paycomparsionOptions={
+    var newspotitalOptionsss={
     tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
     },
     visualMap: {
         show: false,
@@ -61,16 +72,12 @@ var paycomparsionOptions=function(id){
         }
     ]
 };
-    var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
-      paycomparsion_id.setOption(paycomparsionOptions);
+    var newspotital_id = echarts.init(document.getElementById('newspotital'));
+      newspotital_id.setOption(newspotitalOptionsss);
  }
 //封装的方法结束
 
-     var now = new Date();
-                 var year = now.getFullYear(); //得到年份
-                 var month = now.getMonth()+1;//得到月份
-                 var date = now.getDate();//得到日期
-                var today=year + "-" + month + "-" + date;
+
 
 
 
@@ -91,7 +98,7 @@ $(function(){
 
          if(selectIDValue=='31009'){
                         arr = {
-                            eventIds:'31009,31010'  // 伟华
+                            eventIds:'31009,31010' // 伟华
                         }
 
                        $.ajax({
@@ -101,7 +108,7 @@ $(function(){
                             success: function (rawData) {
                             data31009 = rawData.result['31009']
                             data31010 = rawData.result['31010']
-                             paycomparsionOptions()
+                             newspotitalOptions()
                            }
                         });
               }
@@ -109,8 +116,7 @@ $(function(){
          var selectIDValue= $('#selectID option:selected') .val();
          if(selectIDValue=='31009'){
                arr = {
-                   eventIds:'31009,31010' // 伟华
-
+                   eventIds:'31009,31010'  // 伟华
                }
                   $.ajax({
                    type : "post",    //请求类型
@@ -119,47 +125,13 @@ $(function(){
                    success: function (rawData) {
                    data31009 = rawData.result['31009']
                    data31010 = rawData.result['31010']
-                   paycomparsionOptions()
+                   newspotitalOptions()
                   }
                });
      }
-         if(selectIDValue=='31010'){
-         arr={
-                 eventIds:'15005,15006',  // 伟华
-              }
 
-         $.ajax({
-              type : "post",    //请求类型
-              url : "/qos/analysis/data/get/total",//请求的 URL地址
-              data:arr,
-              success: function (rawData) {
-              data31009 = rawData.result['15005']
-              data31010 = rawData.result['15006']
-              paycomparsionOptions()
-             }
-          });
-
-     }
      })
-         function convertMonthChartData(data, eventId, isRate) {
-        var edata = data[eventId],
-            max = 0,
-            unit = [],
-            values = [];
-        edata && edata.forEach(function(item) {
-            var r = isRate ? getRateNum(item) : item.count;
-            max = Math.max(r, max);
-            values.push(r);
-            unit.push(item.unitName);
-        });
-        return {
-            max: max,
-            unit: unit,
-            values: values
-        }
-    }
-          //指定图标的配置和数据
-          // 21001 综合健康管理服务包签约率（收费）
+
 
 
 

@@ -37,7 +37,8 @@ $(function(){
     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
-           eventIds:'21021,21022,21023,21024,21025,21026,21027,21028,21029'
+           eventIds:'21021,21022,21023,21024,21025,21026,21027,21028,21029',
+           ignoreUnitIds : '320583810343'
        }
 
 
@@ -77,15 +78,13 @@ var echartses=function(id){
                       trigger: 'axis',
                       axisPointer: {
                           type: 'shadow'
-                      }
+                      },formatter: function (params) {
+                          return params[0].name + '<br/>'
+                          + params[0].data + '%<br/>'
+                  }
                   },
 
-         dataZoom:{
-                   realtime:true, //拖动滚动条时是否动态的更新图表数据
-                   height:25,//滚动条高度
-                   start:40,//滚动条开始位置（共100等份）
-                   end:65//结束位置（共100等份）
-          },
+
          xAxis: {
               type: 'category',
               data: data.unit,
@@ -100,7 +99,7 @@ var echartses=function(id){
                grid: {
                               left: 45,
                               right: 20,
-                              bottom: 10,
+                              bottom: 20,
                               containLabel: true
                           },
               axisLabel: {
@@ -111,7 +110,7 @@ var echartses=function(id){
                                interval:0,
                                rotate:30,
                                formatter: function(value) {
-                                    var reg = new RegExp('卫生服务中心', "g");
+                                    var reg = new RegExp('社区卫生服务中心', "g");
                                 	return value.replace(reg, '');
                              }
                           }

@@ -28,7 +28,7 @@ function getActiveRate(row) {
 }
 
 $(function(){
-	
+
 	function compareBigToSmall(property){
         return function(a,b){
             var value1 = a[property];
@@ -36,8 +36,8 @@ $(function(){
             return  value2 - value1;
         }
     };
-	
-	
+
+
 	$.ajax({
 		type : "post",    //请求类型
         url : "/qos/gongwei/archives/search/all",//请求的 URL地址
@@ -64,7 +64,7 @@ $(function(){
     	                    type: 'shadow'
     	                }
     	            },
-    	            
+
             		  xAxis: {
             		        type: 'category',
             		        data: unit22001DatanewArrayunit22001DatanewArray.unit,
@@ -114,7 +114,7 @@ $(function(){
             		        type: 'bar'
             		    }]
             		};
-        	
+
         	//初始化echarts实例
             var medicalAdvice_id = echarts.init(document.getElementById('emergency'));
             medicalAdvice_id.setOption(medicaladviceoption1);

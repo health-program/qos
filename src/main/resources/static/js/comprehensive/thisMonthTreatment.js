@@ -30,7 +30,8 @@ $(function(){
     var unitNameArray=[];
     var teamNumArray=[];
        var arr = {
-               eventIds:'13003'
+               eventIds:'13003',
+               ignoreUnitIds:'320583810343'
            }
       $.ajax({
        type : "post",    //请求类型
@@ -39,7 +40,7 @@ $(function(){
          success: function (rawData) {
             rawData = rawData.result;  //  unitName
                var dataMap=convertUnitChartData(rawData, '13003', false); //
-            var emergencyOption = {
+            var jizhenrencishuOption = {
                    tooltip: {
                                  trigger: 'axis',
                                  axisPointer: {
@@ -56,20 +57,17 @@ $(function(){
                                                           interval:0,
                                                           rotate:30,
                                                           formatter: function(value) {
-                                                               var reg = new RegExp('卫生服务中心', "g");
+                                                               var reg = new RegExp('社区卫生服务中心', "g");
                                                            	return value.replace(reg, '');
                                                         }
                                                      },
 
                            grid:{
-
-                             left:'10%',
-
-                             bottom:'35%'
+                                 left:'10%',
+                                 bottom:'35%'
 
                              },
                          data:dataMap['unit'],
-
                          axisLine: {
                              lineStyle: {
                                  color: '#19d1ff',
@@ -84,25 +82,19 @@ $(function(){
                                          containLabel: true
                                      },
                           axisLabel: {
-                                                                                 show: true,
-                                                                                 textStyle: {
-                                                                                     color: '#19d1ff',
-                                                                                },
-                                                                                  interval:0,
-                                                                                  rotate:30,
-                                                                                  formatter: function(value) {
-                                                                                       var reg = new RegExp('卫生服务中心', "g");
-                                                                                   	return value.replace(reg, '');
-                                                                                }
-                                                                             },
+                                    show: true,
+                                    textStyle: {
+                                         color: '#19d1ff',
+                                    },
+                                    interval:0,
+                                    rotate:30,
+                                    formatter: function(value) {
+                                         var reg = new RegExp('社区卫生服务中心', "g");
+                                     	return value.replace(reg, '');
+                                      }
+                          },
                      },
-                     dataZoom:{
-                             realtime:true, //拖动滚动条时是否动态的更新图表数据
-                              height:25,//滚动条高度
-                              start:40,//滚动条开始位置（共100等份）
-                             end:100//结束位置（共100等份）
-                      },
-                     yAxis: {
+                   yAxis: {
                          type: 'value',
                          splitLine: {
                              show: false
@@ -134,20 +126,9 @@ $(function(){
                      }]
                  };
                  //初始化echarts实例
-              var emergencyID = echarts.init(document.getElementById('emergency'));
-               emergencyID.setOption(emergencyOption);
+              var jizhenrencishuID = echarts.init(document.getElementById('jizhenrencishu'));
+               jizhenrencishuID.setOption(jizhenrencishuOption);
                    //急诊人数结束
          }
     });
-
-
-
-
-
-
-
-
-
-
-
 })

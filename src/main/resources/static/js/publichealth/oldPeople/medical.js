@@ -4,7 +4,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  建档率，公开率（使用率==建档率），
-              eventIds:'22003'
+              eventIds:'22003',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序
@@ -55,9 +56,13 @@ $(function(){
       		        type: 'category',
       		        data: unit22003DatanewArrayunit22003DatanewArray.unit,
       		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+                          interval: 0,
+                          rotate: 0, //角度顺时针计算的
+                         formatter: function(value) {
+                             var reg = new RegExp('社区卫生服务中心', "g");
+                                 return value.replace(reg, '');
+                         }
+                   },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',

@@ -1,14 +1,17 @@
 $(function () {
         generatorBycsChart(bycsChart);
     });
+
+        var now = new Date();
+                     var year = now.getFullYear(); //得到年份
+                     var month = now.getMonth()+1;//得到月份
+                     var date = now.getDate();//得到日期
+                    var todayss=year + "-" + month + "-" + date;
+
+
 var bycsChart = echarts.init(document.getElementById('emergency'));
 function generatorBycsChart(chart) {
-        chart.showLoading({
-            text: '数据正在努力加载...',
-            textStyle: { fontSize : 30 , color: '#444' },
-            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
-        });
-        let startTime = $("#startTime").val();
+        let startTime =todayss;
         let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
         $.postAjax("/qos/analysis/data/get/month/instalments",{ startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
@@ -26,8 +29,6 @@ function generatorBycsChart(chart) {
                 byyValueTotal = byyValue.reduce((previousValue, currentValue) => previousValue + currentValue );
                 bytValueTotal = bytValue.reduce((previousValue, currentValue) => previousValue + currentValue );
             }
-            $("#byt").text(bytValueTotal);
-            $("#byy").text(byyValueTotal);
             if (byyValueTotal === 0 && bytValueTotal === 0) {
                 showChartInfo(chart,'暂无数据');
                 return false;
@@ -48,7 +49,7 @@ function generatorBycsChart(chart) {
                 },
 
                 legend: {
-                    top: 'bottom',
+                    top: 'top',
                     data:[ '避孕套','避孕药'],
                     textStyle: {
                              color: '#ffffff'
@@ -63,7 +64,7 @@ function generatorBycsChart(chart) {
                 xAxis : [
                     {
                         type : 'value',
-                        position : 'top',
+                        position : 'bottom',
                         axisLabel:{
                             formatter: function (data) {
                                 return (Math.abs(data));
@@ -80,13 +81,10 @@ function generatorBycsChart(chart) {
                         axisTick : {show: false},
                         data : time,
                           axisLabel:{
-                                                    formatter: function (data) {
-                                                        return (Math.abs(data));
-                                                    },
-                                                   textStyle: {
-                                                           color: '#ffffff'
-                                                     }
-                                                }
+                                       textStyle: {
+                                               color: '#ffffff'
+                                         }
+                                    }
                     }
                 ],
                 series : [

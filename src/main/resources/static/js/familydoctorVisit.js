@@ -11,14 +11,21 @@ $(function(){
         url : "/qos/analysis/data/get/month/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-       var  month21003Data=convertMonthChartData(rawData.result, '21003', true); //
+        var  month21003Data=convertMonthChartData(rawData.result, '21003', true); //
+        	
+    
+            
+            
        var option = {
-        tooltip: {
-                             trigger: 'axis',
-                             axisPointer: {
-                                 type: 'shadow'
-                             }
-                         },
+    		   tooltip: {
+    	           trigger: 'axis',
+    	           axisPointer: {
+    	              type: 'shadow'
+    	           },formatter: function (params) {
+    	               return params[0].name + '<br/>'
+    	               + params[0].data + '%<br/>'
+    	       }
+    	        },
         xAxis: {
             type: 'category',
             data: month21003Data.month,

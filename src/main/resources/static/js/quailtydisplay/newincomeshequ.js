@@ -17,7 +17,7 @@ var dataMap={}
                      var incomedsOptions={
                        tooltip : {
                            trigger: 'item',
-                           formatter: "{a} <br/>{b} : {c} ({d}%)"
+                           formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
                        },
                        visualMap: {
                            show: false,
@@ -29,14 +29,14 @@ var dataMap={}
                        },
                        series : [
                            {
-                               name:'支付方式',
+                               name:'收入分类',
                                type:'pie',
                                radius : '70%',
                                center: ['50%', '50%'],
                                data:[
-                                   {value:data31011, name:'药品收入'},
-                                   {value:data31012, name:'其他收入'},
-                                   {value:data31013, name:'医疗收入'},
+                                   {value:data31011, name:'药品'},
+                                   {value:data31012, name:'其他'},
+                                   {value:data31013, name:'医疗'},
                                ].sort(function (a, b) { return a.value - b.value; }),
                                roseType: 'radius',
                                label: {
@@ -68,8 +68,8 @@ var dataMap={}
                        ]
                    };
                          //初始化echarts实例
-                      var incomeKind = echarts.init(document.getElementById('incomeKind'));
-                         incomeKind.setOption(incomedsOptions);
+                      var newincomeshequID = echarts.init(document.getElementById('newincomeshequ'));
+                         newincomeshequID.setOption(incomedsOptions);
                          //急诊人数结束
                    }
              //封装方法结束
@@ -81,7 +81,6 @@ var dataMap={}
                               var month = now.getMonth()+1;//得到月份
                               var date = now.getDate();//得到日期
                              var today=year + "-" + month + "-" + date;
-
 
 
 
@@ -101,13 +100,15 @@ var dataMap={}
          return c.toFixed(fixed || 2);
      }
      var arr={
-           eventIds:'31011,31012,31013'  // 伟华
+           eventIds:'31011,31012,31013',  // 伟华
+           startTime:today
        };
 
 
           if(incomeSelectValue=='31009'){
                          arr = {
-                              eventIds:'31011,31012,31013'  // 伟华
+                              eventIds:'31011,31012,31013',  // 伟华
+                             startTime:today
                          }
                         $.ajax({
                              type : "post",    //请求类型
@@ -128,7 +129,7 @@ var dataMap={}
       var incomeSelectValue= $('#incomeSelect option:selected') .val();
       if(incomeSelectValue=='31009'){
                 arr = {
-                   eventIds:'31011,31012,31013'  // 伟华
+                   eventIds:'31011,31012,31013'// 伟华
                 }
 
                $.ajax({
@@ -146,7 +147,7 @@ var dataMap={}
 
       if(incomeSelectValue=='31010'){
              arr={
-                  eventIds:'15003,15004,15002'  // 周亚
+                  eventIds:'15003,15004,15002' // 周亚
                }
 
           $.ajax({

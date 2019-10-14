@@ -55,7 +55,7 @@ $(function(){
                                                           interval:0,
                                                           rotate:30,
                                                           formatter: function(value) {
-                                                               var reg = new RegExp('卫生服务中心', "g");
+                                                               var reg = new RegExp('社区卫生服务中心'                                    , "g");
                                                            	return value.replace(reg, '');
                                                         }
                                                      },
@@ -83,25 +83,19 @@ $(function(){
                                          containLabel: true
                                      },
                           axisLabel: {
-                                                                                 show: true,
-                                                                                 textStyle: {
-                                                                                     color: '#19d1ff',
-                                                                                },
+                                  show: true,
+                                  textStyle: {
+                                       color: '#19d1ff',
+                                   },
                                                                                   interval:0,
                                                                                   rotate:30,
                                                                                   formatter: function(value) {
-                                                                                       var reg = new RegExp('卫生服务中心', "g");
+                                                                                       var reg = new RegExp('社区卫生服务中心', "g");
                                                                                    	return value.replace(reg, '');
                                                                                 }
                                                                              },
                      },
-                     dataZoom:{
-                             realtime:true, //拖动滚动条时是否动态的更新图表数据
-                              height:25,//滚动条高度
-                              start:40,//滚动条开始位置（共100等份）
-                             end:100//结束位置（共100等份）
-                      },
-                     yAxis: {
+                    yAxis: {
                          type: 'value',
                          splitLine: {
                              show: false
@@ -134,8 +128,8 @@ $(function(){
                      }]
                  };
                  //初始化echarts实例
-              var myChartEdoctor = echarts.init(document.getElementById('doctor'));
-               myChartEdoctor.setOption(emergencyoption);
+              var myChartEjiatingyisheng = echarts.init(document.getElementById('jiatingyisheng'));
+               myChartEjiatingyisheng.setOption(emergencyoption);
                    //急诊人数结束
          }
     });

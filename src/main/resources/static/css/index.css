@@ -131,11 +131,13 @@
 
 .fourclass .left {
     display: inline-block;
-    float: left
+    float: left;
+
 }
 
 .fourclass .left img {
     margin: 1.5vh 1vh 1.5vh 1.5vh;
+      margin-left:7vw;
 }
 
 .fourclass .right {
@@ -488,7 +490,7 @@ select {
         #individualization,
         #effective,
         #visiting,
-        #signingDoctor {
+        #signingDoctor{
             width: 52vh;
             height: 20vh;
         }
@@ -535,4 +537,15 @@ select {
 
 #mide_right{
   margin-left:1vh!important;
+}
+.BMapLib_SearchInfoWindow .BMapLib_bubble_close{
+  background:url('../../static/image/index/close.png');
+  background-size:cover;
+  width:14px!important;
+  height:14px!important;
+  margin-top:5px;
+}
+#jizhenrencishu,#jiatingyisheng,#jiankangdanganjiandanglv{
+   width: 60vh;
+   height: 20vh;
 }

@@ -130,6 +130,7 @@
             },
             queryParams: function(params) {
             	params.eventIds = '21001,21002';
+            	params.ignoreUnitIds = '320583810343'
                 requestParams = params;
                 return params;
             },
@@ -248,6 +249,23 @@
     var jkglfwbqysChart = echarts.init(document.getElementById('jkglfwbqysChart'));
     function jkglfwbqysChart1(response){
     	 var ev21001= convertUnitChartData(response, '21001', true);
+    	 var labelOption = {
+		            normal: {
+		                show: true,
+		                position: 'top',
+		                distance: 11,
+		                align: 'center',
+		                verticalAlign: 'top',
+		                rotate: 0,
+		                formatter: '{c}',
+		                fontSize: 11,
+		                rich: {
+		                    name: {
+		                        textBorderColor: '#fff'
+		                    }
+		                }
+		            }
+		        };
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -288,6 +306,7 @@
     		            name:'健康管理服务包签约数',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:ev21001.values
     		        }
     		    ]
@@ -299,7 +318,23 @@
     var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
     function qygxhfwsChart1(response){
     	var ev21002= convertUnitChartData(response, '21002', true);
-    	debugger;
+    	var labelOption = {
+	            normal: {
+	                show: true,
+	                position: 'top',
+	                distance: 11,
+	                align: 'center',
+	                verticalAlign: 'top',
+	                rotate: 0,
+	                formatter: '{c}',
+	                fontSize: 11,
+	                rich: {
+	                    name: {
+	                        textBorderColor: '#fff'
+	                    }
+	                }
+	            }
+	        };
     	option = {
     		    color: ['#3398DB'],
     		    tooltip : {
@@ -340,6 +375,7 @@
     		            name:'个性化服 务签约数',
     		            type:'bar',
     		            barWidth: '60%',
+    		            label: labelOption,
     		            data:ev21002.values
     		        }
     		    ]
@@ -405,21 +441,18 @@
                     trigger: 'item',
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
-                title: {
-                    text: '健康管理服务包签约率',
-                },
                 color: ['#3398DB','#999999'],
                 graphic: [{ //环形图中间添加文字
                     type: 'text', //通过不同top值可以设置上下显示
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'服务包签约率',
+                        text: res[unitId].rate+'%'+'\n'+'健康管理服务包签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
                         height: 30,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontFamily: "Microsoft YaHei"
                     }
                 }],
@@ -427,7 +460,7 @@
                     {
                         name:'健康管理服务包签约率',
                         type:'pie',
-                        radius: ['50%', '70%'],
+                        radius: ['70%', '95%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -470,29 +503,26 @@
                     trigger: 'item',
                     formatter: "{a} <br/>{b}: {c} ({d}%)"
                 },
-                title: {
-                    text: '个性化服 务签约数',
-                },
                 color: ['#3398DB','#999999'],
                 graphic: [{ //环形图中间添加文字
                     type: 'text', //通过不同top值可以设置上下显示
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'个性化服务签约率',
+                        text: res[unitId].rate+'%'+'\n'+'个性化服务签约率(收费)',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
                         height: 30,
-                        fontSize: 10,
+                        fontSize: 12,
                         fontFamily: "Microsoft YaHei"
                     }
                 }],
                 series: [
                     {
-                        name:'个性化服务签约率',
+                        name:'个性化服务签约率(收费)',
                         type:'pie',
-                        radius: ['50%', '70%'],
+                        radius: ['70%', '95%'],
                         avoidLabelOverlap: false,
                         label: {
                             normal: {
@@ -509,7 +539,7 @@
                         data:[
                             {
                                 value:res[unitId].eventNum,
-                                name:'个性化服务签约率'
+                                name:'个性化服务签约率(收费)'
                             },
                             {
                                 value:res[unitId].totalNum-res[unitId].eventNum,

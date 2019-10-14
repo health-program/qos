@@ -297,7 +297,13 @@
            sumOpen+=it.openBedNumber;
            sumUse+=it.userBedNumber;
         }
-        var x = sumUse * 100 / sumOpen;
+        var x;
+        if (sumUse !=0 && sumOpen !=0){
+             x= sumUse * 100 / sumOpen;
+        }else{
+             x=0;
+        }
+
         occupyRate=x.toFixed(2) * 1;
         remainRate=(100-occupyRate).toFixed(2);
         pieMessage=occupyRate+"%";

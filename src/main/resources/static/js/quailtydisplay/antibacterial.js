@@ -47,12 +47,20 @@ $(function(){
 
 
     var antibacterialOptions ={
-          tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'shadow'
-                }
-           },
+    		 tooltip: {
+	                trigger: 'axis',
+	                formatter: function(params, ticket, callback) {
+	                    var html = params[0].axisValueLabel + '：';
+	                    for (var i = 0; i < params.length; i++) {
+	                        var param = params[i];
+	                        html += '<br/>' + param.marker + '抗菌药物使用率' + '：' + param.value + '%';
+	                    }
+	                    return html;
+	                },
+	                axisPointer: {
+	                    type: 'shadow'
+	                }
+	            },
                                               xAxis: {
                                                   type: 'category',
 
@@ -101,7 +109,12 @@ $(function(){
                                                           width: 2,
                                                           //这里是为了突出显示加上的
                                                       }
-                                                  }
+                                                  },
+                                                  axisLabel: {
+                              	                    formatter: function(val) {
+                              	                        return val + '%';
+                              	                    }
+                              	                },
                                               },
                                               series: [{
                                                   itemStyle: {

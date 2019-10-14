@@ -2,7 +2,7 @@ $(function(){
 
 
     //指定图标的配置和数据
-    // 21001 综合健康管理服务包签约率（收费）
+// 个性化服务签约率（收费）
          var arr = {
            eventIds:'21002'
          }
@@ -17,7 +17,10 @@ $(function(){
                              trigger: 'axis',
                              axisPointer: {
                                  type: 'shadow'
-                             }
+                             },formatter: function (params) {
+                                 return params[0].name + '<br/>'
+                                 + params[0].data + '%<br/>'
+                         }
                          },
         xAxis: {
             type: 'category',

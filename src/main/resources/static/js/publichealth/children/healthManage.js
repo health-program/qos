@@ -11,7 +11,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  儿童体检数，儿童建卡数
-              eventIds:'13209,13203'
+              eventIds:'13209,13203',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序
@@ -82,10 +83,14 @@ $(function(){
       		  xAxis: {
       		        type: 'category',
       		        data: arr13203Month,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+      		                    		        axisLabel: {
+                                                 interval: 0,
+                                                 rotate: 0, //角度顺时针计算的
+                                                 formatter: function(value) {
+                                                      var reg = new RegExp('社区卫生服务中心', "g");
+                                                        return value.replace(reg, '');
+                                                 }
+                                               },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',

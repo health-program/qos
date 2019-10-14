@@ -15,14 +15,30 @@
 
 $(function(){
     //支付方式对比
+            var now = new Date();
+                    var year = now.getFullYear(); //得到年份
+                    var month = now.getMonth()+1;//得到月份
+                    var date = now.getDate();//得到日期
+                   var today=year + "-" + month + "-" + date;
+
+
+
+	var date1 = new Date();
+		var date2 = new Date(date1);
+		  date2.setDate(date1.getDate() -25);
+		  var jian25tian = date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate()
+
+
+
+
          var arr = {
            eventIds:'13002,14001,13001', // 13002急诊人次数  14001住院人次数   13001门诊人次数
-           startTime:'2019-09-10',
+           startTime:jian25tian,
            byUnit: 0
          }
          var arr1 = {
                     eventIds:'31007,31004,31008', //  31007急诊人次    31008门诊人次       31004入院人次
-                    startTime:'2019-09-10',
+                    startTime:jian25tian,
                     byUnit: 0
          }
 
@@ -45,7 +61,7 @@ $(function(){
                 // 13002急诊人次数  14001住院人次数   13001门诊人次数
                 //  31007急诊人次    31008门诊人次       31004入院人次
                 for(var i=0;i<rawData.result['13001'].length;i++){
-                       arr13001Month.push(rawData.result['13001'][i].day)
+                       arr13001Month.push(rawData.result['13001'][i].year+"-"+rawData.result['13001'][i].month+"-"+rawData.result['13001'][i].day)
                        arr13001MonthY.push(rawData.result['13001'][i].totalNum)
                 }
                 for(var i=0;i<rawData.result['13002'].length;i++){
@@ -89,7 +105,10 @@ $(function(){
                             //echarts开始
                             medicaladviceoption ={
                                       tooltip : {
-                                          trigger: 'axis'
+                                          trigger: 'axis',
+                                          axisPointer: {
+                                              type: 'shadow'
+                                          }
                                               },
                                       legend: {
                                            data:['急诊人次','入院人次','普通门诊人次'],
@@ -101,13 +120,15 @@ $(function(){
 
                                       grid: {
                                             left: '3%',
-                                            right: '4%',
+                                            right: '8%',
                                             bottom: '3%',
                                             containLabel: true
                                              },
                                        xAxis : [
                                               {
                                              type : 'category',
+                                             name:"日期",//坐标轴名称。
+                                             nameLocation:'end',//坐标轴名称显示位置。
                                              boundaryGap : false,
                                              axisLine:{
                                                          lineStyle:{
@@ -121,6 +142,8 @@ $(function(){
                                            yAxis : [
                                               {
                                                type : 'value',
+                                               name:"人数",//坐标轴名称。
+                                               nameLocation:'end',//坐标轴名称显示位置。
                                                axisLine:{
                                                  lineStyle:{
                                                          color:'#ffffff',

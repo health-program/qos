@@ -33,10 +33,10 @@ $(function(){
            $(".doctor_isTeamCaptain").each(function(index,data){
                 var doctor_isTeamCaptain=$(".doctor_isTeamCaptain").eq(index).text();
                 if(doctor_isTeamCaptain==0){
-                      $(".doctor_isTeamCaptain").eq(index).text('女')
+                      $(".doctor_isTeamCaptain").eq(index).text('否')
                 }
                 if(doctor_isTeamCaptain==1){
-                      $(".doctor_isTeamCaptain").eq(index).text('男')
+                      $(".doctor_isTeamCaptain").eq(index).text('是')
                }
             })
 

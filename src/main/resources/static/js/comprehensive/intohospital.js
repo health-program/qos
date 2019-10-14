@@ -33,7 +33,8 @@ $(function(){
     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
-           eventIds:'14001,14002'
+           eventIds:'14001,14002',
+           ignoreUnitIds:'320583810343'
        }
 
 
@@ -69,7 +70,7 @@ $(function(){
                    interval:0,
                    rotate:45,
                    formatter: function(value) {
-                       var reg = new RegExp('卫生服务中心', "g");
+                       var reg = new RegExp('社区卫生服务中心'                                    , "g");
                        return value.replace(reg, '');
                     }
             }

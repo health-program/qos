@@ -1,24 +1,25 @@
 $(function(){
 
-
-    //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
          var arr = {
            eventIds:'21001'
          }
       $.ajax({
-         type : "post",    //请求类型
+        type : "post",    //请求类型
         url : "/qos/analysis/data/get/month/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-       var  month21001Data=convertMonthChartData(rawData.result, '21001', true); //
+       var  month21001Data=convertMonthChartData(rawData.result, '21001', true);
        var option = {
         tooltip: {
-                             trigger: 'axis',
-                             axisPointer: {
-                                 type: 'shadow'
-                             }
-                         },
+           trigger: 'axis',
+           axisPointer: {
+              type: 'shadow'
+           },formatter: function (params) {
+               return params[0].name + '<br/>'
+               + params[0].data + '%<br/>'
+       }
+        },
         xAxis: {
             type: 'category',
             data: month21001Data.month,
@@ -67,20 +68,10 @@ $(function(){
     //初始化echarts实例
     var myChart = echarts.init(document.getElementById('chartmain'));
     myChart.setOption(option);
-
-
-        window.addEventListener("resize", function () {
+    window.addEventListener("resize", function () {
             myChart.resize();
         });
 
-
-
-
-
-
          }
     });
-
-
-
 })

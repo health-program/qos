@@ -4,7 +4,8 @@ $(function(){
     //支付方式对比
          var arr = {
          //  建档率，公开率（使用率==建档率），
-              eventIds:'22012'
+              eventIds:'22012',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序
@@ -21,19 +22,13 @@ $(function(){
          url : "/qos/analysis/data/get/unit",//请求的 URL地址
          data:arr,
          success: function (rawData) {
-         console.log(111);
          var  unit22012Data=convertUnitChartData(rawData.result, '22012', true); //
          var ev22012 = convertUnitChartData(rawData.result, '22012', true);
          var ev22012Sort = rawData.result['22012'];
          var ev22012DataArray = ev22012Sort;
-
-        var newast22012 = {}
-        newast22012['22012']=ev22012DataArray
+         var newast22012 = {}
+           newast22012['22012']=ev22012DataArray
         var unit22012DatanewArrayunit22012DatanewArray=convertUnitChartData(newast22012, '22012', true);
-
-
-
-
          //社区建档率
         var medicaladviceoption2oldPeople = {
         	
@@ -54,10 +49,14 @@ $(function(){
       		  xAxis: {
       		        type: 'category',
       		        data: unit22012DatanewArrayunit22012DatanewArray.unit,
-      		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+      		                   		        axisLabel: {
+                                                interval: 0,
+                                                rotate: 0, //角度顺时针计算的
+                                                formatter: function(value) {
+                                                     var reg = new RegExp('社区卫生服务中心', "g");
+                                                       return value.replace(reg, '');
+                                                }
+                                              },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',

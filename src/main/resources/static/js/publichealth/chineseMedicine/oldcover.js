@@ -2,7 +2,8 @@
 
 $(function(){
          var arr = {
-              eventIds:'22009'
+              eventIds:'22009',
+              ignoreUnitIds:'320583810343'
 
          }
          //从大到小排序
@@ -53,9 +54,13 @@ $(function(){
       		        type: 'category',
       		        data: unit22009DatanewArrayunit22009DatanewArray.unit,
       		        axisLabel: {
-	                    interval: 0,
-	                    rotate: 23 //角度顺时针计算的
-	                },
+                                                interval: 0,
+                                                rotate: 0, //角度顺时针计算的
+                                                formatter: function(value) {
+                                                     var reg = new RegExp('社区卫生服务中心', "g");
+                                                       return value.replace(reg, '');
+                                                }
+                                              },
       		        axisLine:{
                           lineStyle:{
                               color:'#19d1ff',

@@ -21,8 +21,8 @@
             <img src="../../../static/image/index/home.png" />家庭医生
         </span>
         <div class="middle">
-            <a href=""> <span class="text-00e4ff"> 昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
-            <a href=""> <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span></a>
+            <a href=""> <span class="text-00e4ff"> 昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span></a>
+            <a href=""> <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
         </div>
         <div class='right'>
             <a href=""><span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
@@ -35,9 +35,7 @@
             <div class="bg_opacity">
                 <div class="header line">重点人群签约率</div>
                 <div class="fr width100 text-align-right pr-70 position-absolute absolute1 absolute2">
-                    <div class="mb5">
-
-                    </div>
+                    <div class="mb5"></div>
                     <div>
                         <select id="selectID">
                             <option value="21021">残疾人签约率</option>
@@ -65,14 +63,12 @@
         </div>
         <div class="middle">
              <div id="demo" class="carousel slide" data-ride="carousel">
-
                 <ul class="carousel-indicators">
                     <li data-target="#demo" data-slide-to="0" class="active"></li>
                     <li data-target="#demo" data-slide-to="1"></li>
                     <li data-target="#demo" data-slide-to="2"></li>
                 </ul>
-
-                <div class="carousel-inner">
+                 <div class="carousel-inner">
                     <div class="carousel-item active">
                         <ul>
                             <li class="doctor-mid-bg">
@@ -162,13 +158,7 @@
                         </ul>
                     </div>
                 </div>
-
-            </div>
-
-
-
-
-
+             </div>
 
             <div class="roll">
                 <div class="header header_bg doctorheader rollheader">
@@ -214,40 +204,26 @@
     </div>
 </body>
 <div th:include="/qos/footer" />
-<script type="text/javascript" src="/static/js/familydoctorManagement.js"></script>
-<script type="text/javascript" src="/static/js/familydoctorService.js"></script>
-<script type="text/javascript" src="/static/js/familydoctorPerformance.js"></script>
-<script type="text/javascript" src="/static/js/familydoctorVisit.js"></script>
-<script type="text/javascript" src="/static/js/familydoctorDoctorVisit.js"></script>
-<script type="text/javascript" src="/static/js/familydoctorAssessment.js"></script>
-<script type="text/javascript" src="/static/js/familydoctor/focusgroup.js"></script>
+<script type="text/javascript" src="/static/js/familydoctorManagement.js"></script><!--综合健康管理服务包签约率（收费）-->
+<script type="text/javascript" src="/static/js/familydoctorService.js"></script><!--个性化服务签约率（收费）-->
+<script type="text/javascript" src="/static/js/familydoctorPerformance.js"></script><!--个性化服务签约率（收费）-->
+<script type="text/javascript" src="/static/js/familydoctorVisit.js"></script><!--签约医生门诊就诊率-->
+<script type="text/javascript" src="/static/js/familydoctorDoctorVisit.js"></script><!--签约医生门诊就诊率-->
+<script type="text/javascript" src="/static/js/familydoctorAssessment.js"></script><!--轮播多个数据展示-->
+<script type="text/javascript" src="/static/js/familydoctor/focusgroup.js"></script><!--重点人群签约率-->
 <script type="text/javascript" src="/static/js/familydoctor/yearService.js"></script><!--年度服务有效履约率-->
 <script type="text/javascript" src="/static/js/familydoctor/sociologyName.js"></script><!--社区名称-->
 <script>
 $(function() {
-
-
-    // individualization  年度服务有效履约率没做
-
-
-
-<!--    var myChart2 = echarts.init(document.getElementById('effective'));-->
-<!--    myChart2.setOption(option);-->
-
-
-
-
-
     // 无缝滚动
-
-
     var box = document.getElementById("box");
     var l1 = document.getElementById("list1");
     var l2 = document.getElementById("list2");
     l2.innerHTML = l1.innerHTML; //克隆list1的数据，使得list2和list1的数据一样
     function scrollup() {
-        if (box.scrollTop >= l1.offsetHeight) { //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
+         if (box.scrollTop >= 850) { //滚动条距离顶部的值恰好等于list1的高度时，达到滚动临界点，此时将让scrollTop=0,让list1回到初始位置，实现无缝滚动
             box.scrollTop = 0;
+        	//box.scrollTop++;
         } else {
             box.scrollTop++;
         }

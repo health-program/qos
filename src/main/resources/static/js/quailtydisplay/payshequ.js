@@ -3,16 +3,27 @@
    var  data31010;
 
 
-     var selectIDValue='31009';
+     var now = new Date();
+                 var year = now.getFullYear(); //得到年份
+                 var month = now.getMonth()+1;//得到月份
+                 var date = now.getDate();//得到日期
+                var today=year + "-" + month + "-" + date;
+
+
+
+
+
+
+     var selectIDValue='31010';
 //封装的方法开始
        // 15005,15006
-var paycomparsionOptions=function(id){
+var newshequOptions=function(id){
     var eventId = $("#selectID").val();
     var data = dataMap[eventId];
-    var paycomparsionOptions={
+    var newshequOptions={
     tooltip : {
         trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
+        formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
     },
     visualMap: {
         show: false,
@@ -61,16 +72,12 @@ var paycomparsionOptions=function(id){
         }
     ]
 };
-    var paycomparsion_id = echarts.init(document.getElementById('paycomparsion'));
-      paycomparsion_id.setOption(paycomparsionOptions);
+    var newshequ_id = echarts.init(document.getElementById('newshequ'));
+      newshequ_id.setOption(newshequOptions);
  }
 //封装的方法结束
 
-     var now = new Date();
-                 var year = now.getFullYear(); //得到年份
-                 var month = now.getMonth()+1;//得到月份
-                 var date = now.getDate();//得到日期
-                var today=year + "-" + month + "-" + date;
+
 
 
 
@@ -85,13 +92,21 @@ $(function(){
         }
         return c.toFixed(fixed || 2);
     }
-     var arr={
-          eventIds:'31009,31010'  // 伟华
-      };
 
-         if(selectIDValue=='31009'){
+        var now = new Date();
+              var year = now.getFullYear(); //得到年份
+              var month = now.getMonth()+1;//得到月份
+              var date = now.getDate();//得到日期
+             var today=year + "-" + month + "-" + date;
+
+
+     var arr={
+          eventIds:'15005,15006' // 伟华
+     };
+
+         if(selectIDValue=='31010'){
                         arr = {
-                            eventIds:'31009,31010'  // 伟华
+                              eventIds:'15005,15006'  // 伟华
                         }
 
                        $.ajax({
@@ -99,33 +114,18 @@ $(function(){
                             url : "/qos/analysis/data/get/total",//请求的 URL地址
                             data:arr,
                             success: function (rawData) {
-                            data31009 = rawData.result['31009']
-                            data31010 = rawData.result['31010']
-                             paycomparsionOptions()
+                             data31009 = rawData.result['15005']
+                             data31010 = rawData.result['15006']
+                             newshequOptions()
                            }
                         });
               }
          $("#selectID").change(function(data){
          var selectIDValue= $('#selectID option:selected') .val();
-         if(selectIDValue=='31009'){
-               arr = {
-                   eventIds:'31009,31010' // 伟华
 
-               }
-                  $.ajax({
-                   type : "post",    //请求类型
-                   url : "/qos/analysis/data/get/total",//请求的 URL地址
-                   data:arr,
-                   success: function (rawData) {
-                   data31009 = rawData.result['31009']
-                   data31010 = rawData.result['31010']
-                   paycomparsionOptions()
-                  }
-               });
-     }
          if(selectIDValue=='31010'){
          arr={
-                 eventIds:'15005,15006',  // 伟华
+                 eventIds:'15005,15006'  // 伟华
               }
 
          $.ajax({
@@ -135,7 +135,7 @@ $(function(){
               success: function (rawData) {
               data31009 = rawData.result['15005']
               data31010 = rawData.result['15006']
-              paycomparsionOptions()
+              newshequOptions()
              }
           });
 
@@ -164,7 +164,7 @@ $(function(){
 
 
 
-$("#selectID").val('31009')
+$("#selectID").val('31010')
 // 触发事件
 $("#selectID").trigger("change")
 
