@@ -54,6 +54,8 @@
       height:6vw;
       display:inline-block;
       float:left;
+
+
     }
 
     .newyiyuanss,.newshequss{
@@ -63,7 +65,7 @@
       display:inline-block;
       float:left;
       text-align:center;
-}
+  }
 
 #newincomehosiptal{
    margin-top:0.5vh;
@@ -72,6 +74,10 @@
 #list1 li{
   height:50px;
   line-height:50px;
+}
+
+.newyiyuanss,.newshequss{
+     margin-left: 1vw;
 }
 </style>
 
@@ -82,8 +88,8 @@
         </span>
         <div class="middle">
          <!--   <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
-            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
+            <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            -->
         </div>
         <!--<div class='right'>
             <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -95,7 +101,7 @@
             <div id="quailty_middle_left">
                 <div class="quailty_middle_hospitel">
                     <div class="quailty_bottom_header1">
-                        医院就诊top5
+                        医院就诊
                     </div>
                     <div id="middle_hospitel">
 
@@ -103,7 +109,7 @@
                 </div>
                 <div class="quailty_middle_social">
                     <div class="quailty_bottom_header1">
-                        社区就诊top5
+                        社区就诊
                     </div>
                     <div id="medicalAdvice">
 
@@ -183,7 +189,7 @@
                 </div>
                 <div class="quailty_right_antibacterial">
                     <div class="quailty_bottom_header2">
-                        抗菌药物使用top5
+                        抗菌药物使用
                     </div>
                     <div id="antibacterial"></div>
                 </div>
@@ -220,16 +226,27 @@
 </body>
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/quailtydisplay/common.js"></script><!--旭武封装的方法的month等-->
-<script type="text/javascript" src="/static/js/quailtydisplay/communityVist.js"></script><!--社区就诊top5-->
-<script type="text/javascript" src="/static/js/quailtydisplay/hospitalVist.js"></script><!--医院就诊top5-->
+<script type="text/javascript" src="/static/js/quailtydisplay/communityVist.js"></script><!--社区就诊-->
+<script type="text/javascript" src="/static/js/quailtydisplay/hospitalVist.js"></script><!--医院就诊-->
 <script type="text/javascript" src="/static/js/quailtydisplay/medicalVist.js"></script><!--就诊人次时间走势-->
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/paymethods.js"></script><!--支付方式对比-->
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/payyibao.js"></script><!--支付方式医保-->
 <script type="text/javascript" src="/static/js/quailtydisplay/payshequ.js"></script><!--支付方式社区-->
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/incomeKind.js"></script><!--收入分类对比-->
+
+
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomeshequ.js"></script><!--收入分类对比-->
 <script type="text/javascript" src="/static/js/quailtydisplay/newincomehospital.js"></script><!--收入分类对比-->
-<script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用top5-->
+
+
+
+<script type="text/javascript" src="/static/js/quailtydisplay/antibacterial.js"></script><!--抗菌药物使用-->
 <script type="text/javascript" src="/static/js/quailtydisplay/patientList.js"></script><!--患者列表-->
 <script>
 
@@ -307,9 +324,6 @@
                               + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName
                               + "</br>"
-                              + "<b class='text-0efcff'>机构编码：</b>"
-                              + markerArr[i].unitId
-                               + "</br>"
                               + "<b class='text-0efcff'>当月门诊次数：</b>"
                               + markerArr[i].patients
                               + "</br>"

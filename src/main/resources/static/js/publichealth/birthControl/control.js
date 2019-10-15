@@ -1,20 +1,10 @@
 $(function () {
         generatorBycsChart(bycsChart);
     });
-
-        var now = new Date();
-                     var year = now.getFullYear(); //得到年份
-                     var month = now.getMonth()+1;//得到月份
-                     var date = now.getDate();//得到日期
-                    var todayss=year + "-" + month + "-" + date;
-
-
 var bycsChart = echarts.init(document.getElementById('emergency'));
 function generatorBycsChart(chart) {
-        let startTime =todayss;
-        let endTime = $("#endTime").val();
         let eventIds = '13104,13103';
-        $.postAjax("/qos/analysis/data/get/month/instalments",{ startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
+        $.postAjax("/qos/analysis/data/get/month/instalments",{'eventIds':eventIds},function (res) {
             let byyValue = [];
             let bytValue = [];
             let time = [];
@@ -34,7 +24,7 @@ function generatorBycsChart(chart) {
                 return false;
             }
             chart.hideLoading();
-        let    option = {
+        let  option = {
                 color: ['#3398DB','#6087BF'],
                 tooltip : {
                     trigger: 'axis',
@@ -52,7 +42,7 @@ function generatorBycsChart(chart) {
                     top: 'top',
                     data:[ '避孕套','避孕药'],
                     textStyle: {
-                             color: '#ffffff'
+                        color: '#ffffff'
                     }
                  },
                 grid: {
@@ -65,26 +55,35 @@ function generatorBycsChart(chart) {
                     {
                         type : 'value',
                         position : 'bottom',
+                         axisLine: {
+                             lineStyle: {
+                                                type: 'solid',
+                                                color: '#00CEFF',//左边线的颜色
+                                                width:'1'//坐标线的宽度
+                                            }
+                                        },
                         axisLabel:{
                             formatter: function (data) {
                                 return (Math.abs(data));
                             },
                            textStyle: {
-                                   color: '#ffffff'
+                                   color: '#00e4ff'
                              }
                         }
                     }
                 ],
                 yAxis : [
                     {
-                        type : 'category',
-                        axisTick : {show: false},
+
                         data : time,
-                          axisLabel:{
-                                       textStyle: {
-                                               color: '#ffffff'
-                                         }
-                                    }
+                          axisLine: {
+                              show:false
+                          },
+                         axisLabel:{
+                             textStyle: {
+                             color: '#00CEFF'
+                             }
+                      }
                     }
                 ],
                 series : [

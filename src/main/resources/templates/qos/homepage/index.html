@@ -10,12 +10,12 @@
 <script type="text/javascript" src="/static/assets/map/eventwrapper.min.js"></script>
 
 <!--服务器误删开始-->
-<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>
+<!--<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>-->
 <!--服务器误删结束-->
 
 <!--服务器删除开始-->
-<!--<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
-<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>-->
+<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <!--服务器删除结束-->
 
 
@@ -31,7 +31,7 @@
         <div class="middle">
             <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
             <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <!-- <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市学校及疫情数据质量展示</span>-->
+            <!-- -->
         </div>
         <div class='right'>
             <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -81,9 +81,24 @@
     <div id="middle">
         <div class="left position-relative">
             <div class="bg_opacity">
-                <div class="headers line">新建健康档案数</div>
-              <div id="chartmain"></div>
-                <!--<div id="jiankangdanganjiandanglv"></div>-->
+                <div class="header line">重点人群签约率</div>
+                <div class="fr width100 text-align-right pr-70 position-absolute absolute1 absolute2">
+                    <div class="mb5"></div>
+                    <div style="margin-right: -20%">
+                        <select id="selectID">
+                            <option value="21021">残疾人签约率</option>
+                            <option value="21022">高血压患者签约率</option>
+                            <option value="21023">糖尿病患者签约率</option>
+                            <option value="21024">孕产妇签约率</option>
+                            <option value="21025">0-6周岁儿童签约率</option>
+                            <option value="21026">65周岁及以上老年人签约率</option>
+                            <option value="21027">严重肺结核患者签约率</option>
+                            <option value="21028">重精神障碍患者签约率</option>
+                            <option value="21029">疾病筛查高危人员签约率</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="chartmain"></div>
             </div>
             <div class="bg_opacity">
                 <div class="headers line">昆山门急诊人次数</div>
@@ -222,9 +237,6 @@ $.ajax({
                      + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName
                               + "</br>"
-                              + "<b class='text-0efcff'>机构编码：</b>"
-                              + markerArr[i].unitId
-                               + "</br>"
                               + "<b class='text-0efcff'>当月门诊次数：</b>"
                               + markerArr[i].patients
                               + "</br>"
@@ -234,7 +246,6 @@ $.ajax({
                               + "<b class='text-0efcff'>地址：</b>"
                               + markerArr[i].orgAddress
                               + "</p>";
-
 
                 //创建百度样式检索信息窗口对象
                 searchInfoWindow[i] = new BMapLib.SearchInfoWindow(map, info[i], {
