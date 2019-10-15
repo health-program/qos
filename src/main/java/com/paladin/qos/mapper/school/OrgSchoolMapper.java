@@ -1,6 +1,7 @@
 package com.paladin.qos.mapper.school;
 
 import java.util.List;
+import java.util.Map;
 
 import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.school.OrgSchool;
@@ -19,7 +20,7 @@ public interface OrgSchoolMapper extends CustomMapper<OrgSchool>{
     
     public List<OrgSchoolDoctorCountVO> schoolDoctorCount(OrgSchoolQuery query);
     
-    public OrgSchoolVO parentSchoolId(String id);
+    public OrgSchoolVO parentSchoolId(Map<String,Object> params);
 
 	public List<OrgSchoolCountsGroupByNatureVO> schoolCountsGroupByNature(
 			OrgSchoolCountsQuery query);
@@ -32,4 +33,6 @@ public interface OrgSchoolMapper extends CustomMapper<OrgSchool>{
 
 	public List<OrgSchoolCountsGroupByNatureVO> schoolPeopleCountsGroupByAffiliation(
 			OrgSchoolCountsQuery query);
+
+	public void updateSchoolTotal(String orgSchoolId);
 }

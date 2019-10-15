@@ -22,7 +22,7 @@
 </select>
 
 <select id="parentSchoolId" resultType="com.paladin.qos.service.school.vo.OrgSchoolVO">
-	SELECT * FROM org_school WHERE parent_school_id = #{id}
+	SELECT * FROM org_school WHERE parent_school_id = #{id} and school_year = #{schoolYear}
 </select>
 
 <select id="schoolPersonnelCount" resultType="com.paladin.qos.service.school.vo.OrgSchoolPersonnelCountVO">
@@ -153,5 +153,16 @@
 			group by t.affiliation
 		) tmp group by name
 	</select>
+
+	<update id="updateSchoolTotal" parameterType="string">
+		update org_school t
+		set t.total=(
+			select sum(total)
+			from org_school_people
+			where school_id=#{0}
+		)
+		where t.id=#{0}
+		
+	</update>
 
 </mapper>

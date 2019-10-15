@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.codec.binary.StringUtils;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.ExcelImportResult;
@@ -32,6 +33,7 @@ import com.paladin.framework.excel.read.DefaultReadColumn;
 import com.paladin.framework.excel.read.ExcelReadException;
 import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.mapper.school.OrgSchoolMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
@@ -119,17 +121,19 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	if (peoples == null || peoples.size() == 0) {
 		throw new BusinessException("人数不能为空");
 	}
-	//计算学生总数
-	Integer total=0;
 	for (OrgSchoolPeopleDTO orgSchoolPeopleDTO : peoples) {
 	    OrgSchoolPeople people = new OrgSchoolPeople();
 	    SimpleBeanCopyUtil.simpleCopy(orgSchoolPeopleDTO, people);
+	    List<OrgSchoolPeople> list = orgSchoolPeopleService.getGrade(schoolId,people.getSchoolSection(),people.getGrade(),people.getKlass());
+	    if(!CollectionUtils.isEmpty(list)){
+	    	throw new BusinessException("该班级["+people.getKlass()+"]信息重复！");
+	    }
 	    people.setSchoolId(schoolId);
-	    total+=people.getTotal();
 	    orgSchoolPeopleService.save(people);
 	}
-	school.setTotal(total);
-	return save(school);
+	int result= save(school);
+	this.updateSchoolTotal(schoolId);
+	return result;
     }
     
     @Transactional
@@ -163,16 +167,19 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		throw new BusinessException("人数不能为空");
 	}
 	orgSchoolPeopleService.deletePeople(schoolId);
-	Integer total=0;
 	for (OrgSchoolPeopleDTO orgSchoolPeopleDTO : dtos) {
 	    OrgSchoolPeople people = new OrgSchoolPeople();
 	    SimpleBeanCopyUtil.simpleCopy(orgSchoolPeopleDTO, people);
+	    List<OrgSchoolPeople> list = orgSchoolPeopleService.getGrade(schoolId,people.getSchoolSection(),people.getGrade(),people.getKlass());
+	    if(!CollectionUtils.isEmpty(list)){
+	    	throw new BusinessException("该班级["+people.getKlass()+"]信息重复！");
+	    }
 	    people.setSchoolId(schoolId);
-	    total+=people.getTotal();
 	    orgSchoolPeopleService.save(people);
 	}
-	school.setTotal(total);
-	return update(school);
+	int result= update(school);
+	this.updateSchoolTotal(schoolId);
+	return result;
     }
     
     /**
@@ -265,10 +272,13 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 	    try {
 		OrgSchoolPeople people = new OrgSchoolPeople();
 		SimpleBeanCopyUtil.simpleCopy(excelOrgSchool, people);
-
-		OrgSchoolVO schoolVO = orgSchoolMapper.parentSchoolId(schoolNameVO.getId());
+		
+		Map<String,Object> param=new HashMap<String,Object>();
+		param.put("id", schoolNameVO.getId());
+		param.put("schoolYear", excelOrgSchool.getSchoolYear());
+		OrgSchoolVO schoolVO = orgSchoolMapper.parentSchoolId(param);
 		if (schoolVO != null) {
-		  List<OrgSchoolPeople> list = orgSchoolPeopleService.getGrade(schoolVO.getId(), people.getGrade());
+		  List<OrgSchoolPeople> list = orgSchoolPeopleService.getGrade(schoolVO.getId(),people.getSchoolSection(),people.getGrade(),people.getKlass());
 		    if(!CollectionUtils.isEmpty(list)){
 			errors.add(new ExcelImportError(i, "年级已经存在"));
 			continue;
@@ -279,7 +289,8 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		    people.setTotal(excelOrgSchool.getGradeTotal());
 		    people.setSchoolId(schoolVO.getId());
 		    orgSchoolPeopleService.save(people);
-
+		    //更新学校总人数
+		    this.updateSchoolTotal(schoolVO.getId());
 		} else {
 		    String OrgSchoolId = UUIDUtil.createUUID();
 		    OrgSchool orgSchool = new OrgSchool();
@@ -292,6 +303,8 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		    people.setSchoolId(OrgSchoolId);
 		    people.setTotal(excelOrgSchool.getGradeTotal());
 		    orgSchoolPeopleService.save(people);
+		    //更新学校总人数
+		    this.updateSchoolTotal(OrgSchoolId);
 		}
 
 	    } catch (BusinessException e) {
@@ -306,7 +319,15 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     return new ExcelImportResult(i, errors);
     }
 
-    /**
+    @Transactional
+    public void updateSchoolTotal(String orgSchoolId) {
+		if(StringUtil.isEmpty(orgSchoolId)){
+			return;
+		}
+    	orgSchoolMapper.updateSchoolTotal(orgSchoolId);
+	}
+
+	/**
      * 按学校性质，统计学校数量
      * @param query
      * @return

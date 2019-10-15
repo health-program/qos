@@ -9,7 +9,11 @@ public class OrgSchoolPeople extends BaseModel {
     
     public static final String COLUMN_SCHOOL_ID= "schoolId";
     
+    public static final String COLUMN_SCHOOL_SECTION= "schoolSection";
+    
     public static final String COLUMN_SCHOOL_GRADE= "grade";
+    
+    public static final String COLUMN_SCHOOL_KLASS= "klass";
 
 	// 主键
     	@Id
