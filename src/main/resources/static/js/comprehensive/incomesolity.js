@@ -74,7 +74,6 @@ $(function(){
                               bottom:'35%'
                              },
                          data:dataMap['unit'],
-
                          axisLine: {
                              lineStyle: {
                                  color: '#19d1ff',
