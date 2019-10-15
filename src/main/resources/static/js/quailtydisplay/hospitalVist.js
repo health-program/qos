@@ -63,128 +63,113 @@ $(function(){
   var  unit31008DatanewArrayunit31008DatanewArray=convertUnitChartData(newast31008, '31008', false);
 
 
+
+
+var data1 = [20, 30, 20, 30, 20, 30, 20, 30, 20, 30];
+var data2 = [9, 30, 9, 60, 70, 20, 59, 20, 49, 20];
+var data3 = [20, 30, 20, 30, 20, 30, 20, 30, 20, 30];
+var data4 = [9, 30, 9, 60, 70, 20, 59, 20, 49, 20];
+var datacity = ['济南市', '青岛市', '淄博市', '枣庄', '东营', '烟台市', '潍坊市', '济宁市', '威海市', '泰安市'];
+
+
+
+
          //社区就诊开始
-          var medicalAdviceOption={
-                   legend: {
-                       name: [],
-                       orient: 'align',
-                       align: 'left',
-                       right: 15,
-                       top: 'top',
-                       textStyle: {
-                           color: '#fff',
-                           fontSize: 14,
-                       },
-                   },
+          var medicalAdviceOption= {
+                                       color: ['#388BFF', '#05C3FA', '#F6931C', '#FFD52E'],
+                                       tooltip: {
+                                           trigger: 'axis',
+                                       },
+                                       legend: {
 
-                   tooltip: {
-                       trigger: 'axis',
-                       axisPointer: {
-                           type: 'shadow'
-                       }
-                   },
-                   xAxis: {
-                          type: 'value',
-                          position: 'bottom',
-                          axisLabel: {
-                              show: true,
-                              color: '#fff',
-                              fontSize: 14,
-                              interval:0,
-                                 rotate:40
-                          },
-                          splitLine: {
-                              show: false
-                          },
-                          axisLine: {
-                              // show:false,
-                              lineStyle: {
-                                  color: '#FFFFFF'
-                              }
-                          },
-                          axisTick: {
-                              show: false
-                          },
+                                           top: '8%',
+                                           data: ['存量', '新增', '拆除', '整改'],
+                                       },
+                                       grid: { //图表的位置
+                                           top: '20%',
+                                           left: '3%',
+                                           right: '4%',
+                                           bottom: '5%',
+                                           containLabel: true
+                                       },
+                                       yAxis: [{
+                                           type: 'value',
+                                           axisLabel: {
+                                               show: true,
+                                               interval: 'auto',
+                                               formatter: '{value} '
+                                           },
+                                           splitLine: {
+                                               show: true,
+                                               lineStyle: {
+                                                   type: 'dashed',
+                                                   color:'#ffffff'
+                                               }
+                                           },
+                                           show: true
 
-                      },
-                   yAxis: [{
-                       type: 'category',
-                       inverse: true,
-                       axisTick: {
-                           show: false
-                       },
-                       axisLine: {
-                           lineStyle: {
-                               color: '#FFFFFF',
-                           }
-                       },
-                       data:unit31008DatanewArrayunit31008DatanewArray.unit,
-                        axisLabel: {
-                           show: true,
-                           color: '#fff',
-                            fontSize: 14,
-                            formatter: function(value) {
-                            var reg = new RegExp('昆山市', "g");
-                               if (value.length > 3) {
-                                 return value.replace(reg, '').substring(0, 3) + ".";
-                               } else {
-                                 return value;
-                               }
-                              },
-                         }
-                   }, ],
-                   series: [
-                          {
-                            name: '当日',
-                            position: 'top',
-                            type: 'bar',
-                            stack: '费用',
-                            data: unit31007DatanewArrayunit31007DatanewArray.values,
-                           //data: [2.5, 2, 1.5, 2.5, 4],
-                           barWidth: '80%',
-                           itemStyle: {
-                               color: '#567db8',
-                           },
-                        },
-                        {
-                           name: '当月',
-                           position: 'top',
-                           type: 'bar',
-                            stack: '费用',
-                           data: unit31008DatanewArrayunit31008DatanewArray.values,
-                           // data: [2, 3, 2, 2, 2.5],
-                           barWidth: '80%',
-                           itemStyle: {
-                                color: '#4aa4d4',
-                           },
-                         },
-                          {
-                                                     name: '门诊人次',
-                                                     position: 'top',
-                                                     type: 'bar',
-                                                     stack: '费用',
-                                                     data: unit31007DatanewArrayunit31007DatanewArray.values,
-                                                    //data: [2.5, 2, 1.5, 2.5, 4],
-                                                    barWidth: '80%',
-                                                    itemStyle: {
-                                                        color: '#567db8',
-                                                    },
-                                                 },
-                                                 {
-                                                  name: '急诊人次',
-                                                    position: 'top',
-                                                    type: 'bar',
-                                                     stack: '费用',
-                                                    data: unit31008DatanewArrayunit31008DatanewArray.values,
-                                                    // data: [2, 3, 2, 2, 2.5],
-                                                    barWidth: '80%',
-                                                    itemStyle: {
-                                                         color: '#4aa4d4',
-                                                    },
-                                                  }
-                     ]
-               };
+                                       }],
+                                       xAxis: [{
+                                           type: 'category',
+                                           axisLabel: {
+                                               interval: 0,
+                                               show: true,
+                                               splitNumber: 15,
+                                               textStyle: {
+                                                   fontSize: 10,
+                                                   color: '#000'
+                                               },
 
+                                           },
+                                           data: datacity,
+                                           axisLine:{
+                                                 lineStyle:{
+                                                      color:'#ffffff',
+                                                      width:2,//这里是为了突出显示加上的
+                                                }
+                                             }
+                                       }],
+                                       series: [{
+                                               name: '存量',
+                                               type: 'bar',
+                                               stack: 'sum',
+                                               barWidth: '10px',
+                                               data: data1,
+                                                 axisLine:{
+                                                                                                lineStyle:{
+                                                                                                     color:'#ffffff',
+                                                                                                     width:2,//这里是为了突出显示加上的
+                                                                                               }
+                                                                                            }
+                                              },
+                                           {
+                                               name: '新增',
+                                               type: 'bar',
+                                               barWidth: '10px',
+                                               stack: 'sum',
+                                               data: data2,
+
+                                           },
+                                           {
+                                               name: '拆除',
+                                               type: 'bar',
+                                               color: '#F6931C',
+                                               stack: 'sum1',
+                                               barWidth: '10px',
+                                               data: data3
+
+                                           },
+                                           {
+                                               name: '整改',
+                                               type: 'bar',
+                                               color: '#FFD52E',
+                                               stack: 'sum1',
+                                               barWidth: '20px',
+                                               data: data3
+
+                                           },
+                                       ]
+                                   };
 
 
                  //社区就诊结束

@@ -1,7 +1,8 @@
 $(function(){
     //支付方式对比
          var arr = {
-           eventIds:'13001,13002,13003'
+           eventIds:'13001,13002,13003',
+           ignoreUnitIds:'320583810343'
          }
 
 
@@ -16,6 +17,10 @@ $(function(){
 
 
 
+        var ri = {
+             eventIds:'13003',
+             ignoreUnitIds:'320583810343'
+        }
 
 
 
@@ -35,7 +40,7 @@ $(function(){
 
 
         var  unit13003Data13003=rawData.result['13003'].sort(compareBigToSmall('count'));
-        var unit13003DataArray= unit13003Data13003.slice(0,5)
+        var unit13003DataArray= unit13003Data13003
          // 排名最高的已经有了
 
 
@@ -70,104 +75,121 @@ $(function(){
   var  unit13002DatanewArrayunit13002DatanewArray=convertUnitChartData(newast13002, '13002', false);
 
 
+// 指定图表的配置项和数据
+var data1 = [20, 30, 20, 30, 20, 30, 20, 30, 20, 30];
+var data2 = [9, 30, 9, 60, 70, 20, 59, 20, 49, 20];
+var data3 = [20, 30, 20, 30, 20, 30, 20, 30, 20, 30];
+var data4 = [9, 30, 9, 60, 70, 20, 59, 20, 49, 20];
+var datacity =unit13002DatanewArrayunit13002DatanewArray.unit;
+
+
+
+
+
+
          //社区就诊开始
           var medicalAdviceOption={
-                   legend: {
-                       name: [],
-                       orient: 'align',
-                       align: 'left',
-                       right: 15,
-                       top: 'top',
-                       textStyle: {
-                           color: '#fff',
-                           fontSize: 14,
-                       },
-                   },
+                                      color: ['#388BFF', '#05C3FA', '#F6931C', '#FFD52E'],
+                                      tooltip: {
+                                          trigger: 'axis',
+                                      },
+                                      legend: {
+                                          top: '8%',
+                                           textStyle: {
+                                               fontSize: 10,
+                                                color: '#fff'
+                                            },
+                                          data: ['存量', '新增', '拆除', '整改'],
+                                      },
+                                      grid: { //图表的位置
+                                          top: '20%',
+                                          left: '3%',
+                                          right: '2%',
+                                          bottom: '5%',
+                                          containLabel: true
+                                      },
+                                      yAxis: [{
+                                          type: 'value',
+                                          axisLabel: {
+                                              show: true,
+                                              interval: 'auto',
+                                              formatter: '{value} '
+                                          },
+                                          splitLine: {
+                                              show: true,
+                                              lineStyle: {
+                                                  type: 'dashed'
+                                              }
+                                          },
+                                          show: true,
+                                          axisLabel: {
+                                              interval: 0,
+                                              show: true,
+                                              splitNumber: 15,
+                                              textStyle: {
+                                                 fontSize: 10,
+                                                 color: '#fff'
+                                              },
+                                             },
 
-                   tooltip: {
-                       trigger: 'axis',
-                       axisPointer: {
-                           type: 'shadow'
-                       }
-                   },
-                   xAxis: {
-                          type: 'value',
-                          position: 'bottom',
-                          axisLabel: {
-                              show: true,
-                              color: '#fff',
-                              fontSize: 14,
-                              interval:0,
-                              rotate:40
-                          },
-                          splitLine: {
-                              show: false
-                          },
-                          axisLine: {
-                              // show:false,
-                              lineStyle: {
-                                  color: '#FFFFFF'
-                              }
-                          },
-                          axisTick: {
-                              show: false
-                          },
 
-                      },
-                   yAxis: [{
-                       type: 'category',
-                       inverse: true,
-                       axisTick: {
-                           show: false
-                       },
-                       axisLine: {
-                           lineStyle: {
-                               color: '#FFFFFF',
-                           }
-                       },
-                       data:unit13002DatanewArrayunit13002DatanewArray.unit,
-                        axisLabel: {
-                           show: true,
-                           color: '#fff',
-                           fontSize: 14,
-                           interval:0,
-                           formatter: function(value) {
-                           if (value.length > 2) {
-                             return value.substring(0, 2) + "...";
-                           } else {
-                             return value;
-                           }
-                         }
-                       }
-                   }, ],
-                   series: [
-                          {
-                            name: '门诊人次',
-                            position: 'top',
-                            type: 'bar',
-                            stack: '费用',
-                            data: unit13001DatanewArrayunit13001DatanewArray.values,
-                           //data: [2.5, 2, 1.5, 2.5, 4],
-                           barWidth: '80%',
-                           itemStyle: {
-                               color: '#567db8',
-                           },
-                        },
-                        {
-                         name: '急诊人次',
-                           position: 'top',
-                           type: 'bar',
-                            stack: '费用',
-                           data: unit13002DatanewArrayunit13002DatanewArray.values,
-                           // data: [2, 3, 2, 2, 2.5],
-                           barWidth: '80%',
-                           itemStyle: {
-                                color: '#4aa4d4',
-                           },
-                         }
-                     ]
-               };
+                                      }],
+                                      xAxis: [{
+                                          type: 'category',
+                                          axisLabel: {
+                                              interval: 0,
+                                              show: true,
+                                              splitNumber: 15,
+                                              textStyle: {
+                                                  fontSize: 10,
+                                                  color: '#fff'
+                                              },
+                                             interval:0,
+                                             rotate:40,
+                                             formatter: function(value) {
+                                                 var reg = new RegExp('社区卫生服务中心', "g");
+                                                  	 return value.replace(reg, '');
+                                               }
+                                             },
+                                          data: datacity
+                                      }],
+                                      series: [{
+                                              name: '存量',
+                                              type: 'bar',
+                                              stack: 'sum',
+                                              barWidth: '5px',
+                                              data: data1
 
+
+                                          },
+                                          {
+                                              name: '新增',
+                                              type: 'bar',
+                                              barWidth: '5px',
+                                              stack: 'sum',
+                                              data: data2,
+
+                                          },
+                                          {
+                                              name: '拆除',
+                                              type: 'bar',
+                                              color: '#F6931C',
+                                              stack: 'sum1',
+                                              barWidth: '5px',
+                                              data: data3
+
+                                          },
+                                          {
+                                              name: '整改',
+                                              type: 'bar',
+                                              color: '#FFD52E',
+                                              stack: 'sum1',
+                                              barWidth: '5px',
+                                              data: data3
+
+                                          },
+                                      ]
+                                  };
 
 
                  //社区就诊结束
