@@ -135,7 +135,7 @@ $(function(){
                    }, ],
                    series: [
                           {
-                            name: '门诊人次',
+                            name: '当日',
                             position: 'top',
                             type: 'bar',
                             stack: '费用',
@@ -147,7 +147,7 @@ $(function(){
                            },
                         },
                         {
-                         name: '急诊人次',
+                           name: '当月',
                            position: 'top',
                            type: 'bar',
                             stack: '费用',
@@ -157,7 +157,31 @@ $(function(){
                            itemStyle: {
                                 color: '#4aa4d4',
                            },
-                         }
+                         },
+                          {
+                                                     name: '门诊人次',
+                                                     position: 'top',
+                                                     type: 'bar',
+                                                     stack: '费用',
+                                                     data: unit31007DatanewArrayunit31007DatanewArray.values,
+                                                    //data: [2.5, 2, 1.5, 2.5, 4],
+                                                    barWidth: '80%',
+                                                    itemStyle: {
+                                                        color: '#567db8',
+                                                    },
+                                                 },
+                                                 {
+                                                  name: '急诊人次',
+                                                    position: 'top',
+                                                    type: 'bar',
+                                                     stack: '费用',
+                                                    data: unit31008DatanewArrayunit31008DatanewArray.values,
+                                                    // data: [2, 3, 2, 2, 2.5],
+                                                    barWidth: '80%',
+                                                    itemStyle: {
+                                                         color: '#4aa4d4',
+                                                    },
+                                                  }
                      ]
                };
 

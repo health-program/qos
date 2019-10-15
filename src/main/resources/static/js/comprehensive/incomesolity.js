@@ -42,7 +42,7 @@ $(function(){
                var dataMap=convertUnitChartData11(rawData, '15002', false); //
             var emergencyOption = {
                    tooltip: {
-                                 trigger: 'axis',
+                       trigger: 'axis',
                        formatter:function (params) {
                            var result = '';
                            params.forEach(function (item) {
@@ -57,10 +57,10 @@ $(function(){
                      xAxis: {
                          type: 'category',
                             axisLabel: {
-                                                         show: true,
-                                                         textStyle: {
-                                                             color: '#19d1ff',
-                                                        },
+                                show: true,
+                                textStyle: {
+                                     color: '#19d1ff',
+                                      },
                                                           interval:0,
                                                           rotate:30,
                                                           formatter: function(value) {
@@ -70,11 +70,8 @@ $(function(){
                                                      },
 
                            grid:{
-
-                             left:'10%',
-
-                             bottom:'35%'
-
+                              left:'20%',
+                              bottom:'35%'
                              },
                          data:dataMap['unit'],
 

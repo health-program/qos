@@ -216,7 +216,7 @@ $.ajax({
             var marker = new Array(); //存放标注点对象的数组
             var info = new Array(); //存放提示信息窗口对象的数组
             var searchInfoWindow = new Array(); //存放检索信息窗口对象的数组
-            var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
+
             for (var i = 0; i < markerArr.length; i++) {
                 var p0 = markerArr[i].orgLon; //orgLon
                 var p1 = markerArr[i].orgLat; //按照原数组的point格式将地图点坐标的经纬度分别提出来
@@ -233,6 +233,12 @@ $.ajax({
                 }
 
                 // 创建信息窗口对象
+                console.log(markerArr[i].orgType)
+                if(markerArr[i].orgType==1){
+                     var myIcon = new BMap.Icon("../../../static/image/index/map_hospitalnew.png", new BMap.Size(15, 20));
+                } else {
+                     var myIcon = new BMap.Icon("../../../static/image/index/maphouse.png", new BMap.Size(15, 20));
+                }
                 info[i] = "<p style=’font-size:12px;line-height:1.6em;’>" +
                      + "<b class='text-0efcff'>名称：</b>"
                               + markerArr[i].orgName

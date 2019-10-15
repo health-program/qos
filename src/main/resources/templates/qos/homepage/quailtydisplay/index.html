@@ -7,12 +7,12 @@
 <script type="text/javascript" src="/static/assets/echarts/echarts.min.js"></script>
 <script type="text/javascript" src="/static/assets/map/eventwrapper.min.js"></script>
 <!--服务器误删开始-->
-<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>
+<!--<script type="text/javascript" src="/static/assets/map/mapAPI.min_server.js"></script>-->
 <!--服务器误删结束-->
 
 <!--服务器删除开始-->
-<!--<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
-<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>-->
+<script type="text/javascript" src="/static/assets/map/mapapi.js"></script>
+<script type="text/javascript" src="/static/assets/map/mapgetscript.js"></script>
 <!--服务器删除结束-->
 <script type="text/javascript" src="/static/assets/map/SearchInfoWindow_min.js"></script>
 <style>
@@ -87,15 +87,14 @@
              全区域医疗服务质量展示
         </span>
         <div class="middle">
-         <!--   <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
+            <span class="text-00e4ff">昆山市医疗服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;/</span>
             <span class="text-00B4FF">&nbsp;&nbsp;&nbsp;&nbsp;昆山市社区卫生服务综合质量展示&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            -->
         </div>
-        <!--<div class='right'>
+        <div class='right'>
             <span class="text-00B4FF"><i class="circle">•</i>社区医疗&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="text-00B4FF"><i class="circle">•</i>基本公共卫生&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span class="text-00B4FF"><i class="circle">•</i>家庭医生</span>
-        </div>-->
+        </div>
     </nav>
         <div id="quailty_middle">
             <div id="quailty_middle_left">
@@ -302,7 +301,7 @@
                   var marker = new Array(); //存放标注点对象的数组
                   var info = new Array(); //存放提示信息窗口对象的数组
                   var searchInfoWindow = new Array();//存放检索信息窗口对象的数组
-                  var myIcon = new BMap.Icon("../../../static/image/index/map_indexred.png", new BMap.Size(20, 25));
+
 
                   for (var i = 0; i < markerArr.length; i++) {
                       var p0 = markerArr[i].orgLon; //orgLon
@@ -318,6 +317,13 @@
                                 return '否'
                             }
                       }
+
+                console.log('orgType'+markerArr[i].orgType)
+                if(markerArr[i].orgType==1){
+                     var myIcon = new BMap.Icon("../../../static/image/index/map_hospitalnew.png", new BMap.Size(15, 20));
+                } else {
+                     var myIcon = new BMap.Icon("../../../static/image/index/maphouse.png", new BMap.Size(15, 20));
+                }
 
                       // 创建信息窗口对象
                           info[i] = "<p style=’font-size:12px;line-height:1.6em;’>"
