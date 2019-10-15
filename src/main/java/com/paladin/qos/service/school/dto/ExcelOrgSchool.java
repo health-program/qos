@@ -11,49 +11,52 @@ public class ExcelOrgSchool {
     	@ReadProperty(cellIndex = 0)
  	private String parentSchoolName;// 学校名称
     	
-    	@ReadProperty(cellIndex = 1,enumType="nature-type")
+    	@ReadProperty(cellIndex = 1)
+    private String schoolYear;
+    	
+    	@ReadProperty(cellIndex = 2,enumType="nature-type")
  	private Integer nature;// 性质
 
-    	@ReadProperty(cellIndex = 2,enumType="subordination-type")
+    	@ReadProperty(cellIndex = 3,enumType="subordination-type")
  	private Integer affiliation;// 隶属关系
  	
-    	@ReadProperty(cellIndex = 3,enumType="region-type")
+    	@ReadProperty(cellIndex = 4,enumType="region-type")
  	private String district;// 区域
  	
-    	@ReadProperty(cellIndex = 4)
+    	@ReadProperty(cellIndex = 5)
  	private String mainLeaderName;// 主要领导姓名
  	
-    	@ReadProperty(cellIndex = 5)
+    	@ReadProperty(cellIndex = 6)
  	private String mainLeaderCellphone;// 主要领导电话
  	
-    	@ReadProperty(cellIndex = 6)
+    	@ReadProperty(cellIndex = 7)
  	private String chargeLeaderName;// 分管领导姓名
  	
-    	@ReadProperty(cellIndex = 7)
+    	@ReadProperty(cellIndex = 8)
  	private String chargeLeaderCellphone;// 分管领导电话
  	
-    	@ReadProperty(cellIndex = 8)
+    	@ReadProperty(cellIndex = 9)
  	private String specificChargeLeaderName;// 具体负责人姓名
 
-    	@ReadProperty(cellIndex = 9)
+    	@ReadProperty(cellIndex = 10)
  	private String specificChargeLeaderCellphone;// 具体负责人电话
  	
-    	@ReadProperty(cellIndex = 10)
+    	@ReadProperty(cellIndex = 11)
  	private Integer schoolDoctorFull;// 校医(专职)人数
     	
-    	@ReadProperty(cellIndex = 11)
+    	@ReadProperty(cellIndex = 12)
  	private Integer schoolDoctorPart;// 校医(兼职)人数
  	
-    	@ReadProperty(cellIndex = 12)
+    	@ReadProperty(cellIndex = 13)
  	private Integer healthTeacherFull;// 保健老师(专职)人数
     	
-    	@ReadProperty(cellIndex = 13)
+    	@ReadProperty(cellIndex = 14)
  	private Integer healthTeacherPart;// 保健老师(兼职)人数
     	
-    	@ReadProperty(cellIndex = 14)
+    	@ReadProperty(cellIndex = 15)
  	private Integer logistics;// 后勤保障人数
  	
-    	@ReadProperty(cellIndex = 15)
+    	//@ReadProperty(cellIndex = 15)
  	private Integer total;//学生总人数
     	
     	@ReadProperty(cellIndex = 16)
@@ -66,12 +69,15 @@ public class ExcelOrgSchool {
  	private Integer grade;// 年级
 
     	@ReadProperty(cellIndex = 19)
+    private String klass;// 班级	
+    
+    	@ReadProperty(cellIndex = 20)
  	private Integer gradeTotal;// 年级学生人数
 
-    	@ReadProperty(cellIndex = 20)
+    	@ReadProperty(cellIndex = 21)
  	private Integer boarders;// 寄宿生人数
 
-    	@ReadProperty(cellIndex = 21)
+    	@ReadProperty(cellIndex = 22)
  	private Integer teaching;// 教职员工人数
 
 	public String getParentSchoolName() {
@@ -250,5 +256,21 @@ public class ExcelOrgSchool {
 	public void setTeaching(Integer teaching) {
 	    this.teaching = teaching;
 	}
-    	
+
+	public String getSchoolYear() {
+		return schoolYear;
+	}
+
+	public void setSchoolYear(String schoolYear) {
+		this.schoolYear = schoolYear;
+	}
+
+	public String getKlass() {
+		return klass;
+	}
+
+	public void setKlass(String klass) {
+		this.klass = klass;
+	}
+    
 }
