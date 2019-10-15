@@ -18,7 +18,7 @@ var dataMap={}
                          color: ['#ffffff', '#4aa4d4','#19D1FF'], //环形图每块的颜色
                        tooltip : {
                            trigger: 'item',
-                           formatter: "{a} <br/>{b}(元) : {c} ({d}%)"
+                           formatter: "{a} <br/>{b} : {c}(元) ({d}%)"
                        },
 
                        series : [
