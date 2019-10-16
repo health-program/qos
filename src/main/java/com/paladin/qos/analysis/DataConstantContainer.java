@@ -96,7 +96,6 @@ public class DataConstantContainer implements VersionContainer {
 			event.setTargetType(dataEvent.getTargetType());
 			event.setRealTimeEnabled(realTimeEnabled != null && realTimeEnabled.intValue() == 1);
 			event.setRealTimeInterval(realTimeInterval == null ? DEFAULT_REAL_TIME_INTERVAL : realTimeInterval);
-			event.setProcessBefore(dataEvent.getProcessBefore());
 
 			events.add(event);
 			eventMap.put(id, event);
@@ -148,7 +147,6 @@ public class DataConstantContainer implements VersionContainer {
 				communities.add(unit);
 				communityKeyValues.add(new KeyValue(id, name));
 			}
-
 		}
 
 		constantsContainer.putConstant(TYPE_EVENT, eventKeyValues);
@@ -240,7 +238,6 @@ public class DataConstantContainer implements VersionContainer {
 		private int eventType;
 		private int targetType;
 		private String dataSource;
-		private int processBefore;
 		private boolean realTimeEnabled;
 		private int realTimeInterval;
 		private boolean enabled;
@@ -307,14 +304,6 @@ public class DataConstantContainer implements VersionContainer {
 
 		public void setDataSource(String dataSource) {
 			this.dataSource = dataSource;
-		}
-
-		public int getProcessBefore() {
-			return processBefore;
-		}
-
-		public void setProcessBefore(int processBefore) {
-			this.processBefore = processBefore;
 		}
 	}
 
