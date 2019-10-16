@@ -651,4 +651,32 @@ public class AnalysisService {
 		return analysisMapper.findRegisterList();
 	}
 
+	public List<DataCountUnit> getOutPatientNumber() {
+
+		List<DataCountUnit> result = analysisMapper.getOutPatientNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getEmergencyNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getEmergencyNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getTodayNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getTodayNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getThisMonthNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getThisMonthNumber();
+		orderByUnit(result);
+		return result;
+	}
+
 }

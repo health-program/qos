@@ -93,4 +93,12 @@ public interface AnalysisMapper {
 
 	List<Register> findRegisterList();
 
+	List<DataCountUnit> getOutPatientNumber();
+
+	List<DataCountUnit> getEmergencyNumber();
+
+	List<DataCountUnit> getTodayNumber();
+
+	List<DataCountUnit> getThisMonthNumber();
+
 }

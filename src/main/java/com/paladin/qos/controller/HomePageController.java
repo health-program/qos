@@ -1,7 +1,9 @@
 package com.paladin.qos.controller;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,6 +21,7 @@ import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 
 /**   
  * @author MyKite
@@ -58,6 +61,11 @@ public class HomePageController {
 		return "/qos/homepage/quailtydisplay/index";
 	}
 	
+	/**
+	 * 患者列表
+	 * @param id
+	 * @return
+	 */
 	@RequestMapping(value = "/quailtydisplay/getRegisterList", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getRegisterList(String id) {
@@ -65,6 +73,27 @@ public class HomePageController {
 		Collections.reverse(registerList);
 		return CommonResponse.getSuccessResponse(registerList);
 	}
+	
+	/**
+	 * 门诊人次，急诊人次，当日门急诊量，当月门急诊量
+	 */
+	@RequestMapping(value = "/quailtydisplay/getOutPatientNumber", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getOutPatientNumber() {
+		Map<String,Object> map  = new HashMap<String,Object>();
+		List<DataCountUnit> patientNumberList = registerService.getOutPatientNumber();//门诊人次
+		List<DataCountUnit> emergencyNumberList = registerService.getEmergencyNumber();//急诊人次
+		List<DataCountUnit> todayNumberList = registerService.getTodayNumber();//当日门急诊量
+		List<DataCountUnit> thisMonthNumberList = registerService.getThisMonthNumber();//当月门急诊量
+		map.put("patientNumberList",patientNumberList );
+		map.put("emergencyNumberList", emergencyNumberList);
+		map.put("todayNumberList",todayNumberList );
+		map.put("thisMonthNumberList",thisMonthNumberList );
+		
+		return CommonResponse.getSuccessResponse(map);
+	}
+	
+	
 }
 
 
