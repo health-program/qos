@@ -650,6 +650,8 @@ public class AnalysisService {
 	public List<Register> findRegisterList() {
 		return analysisMapper.findRegisterList();
 	}
+	
+	
 
 	public List<DataCountUnit> getOutPatientNumber() {
 
@@ -675,6 +677,34 @@ public class AnalysisService {
 	public List<DataCountUnit> getThisMonthNumber() {
 		
 		List<DataCountUnit> result = analysisMapper.getThisMonthNumber();
+		orderByUnit(result);
+		return result;
+	}
+	
+	public List<DataCountUnit> getHospitalOutPatientNumber() {
+
+		List<DataCountUnit> result = analysisMapper.getHospitalOutPatientNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getHospitalEmergencyNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getHospitalEmergencyNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getHospitalTodayNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getHospitalTodayNumber();
+		orderByUnit(result);
+		return result;
+	}
+
+	public List<DataCountUnit> getHospitalThisMonthNumber() {
+		
+		List<DataCountUnit> result = analysisMapper.getHospitalThisMonthNumber();
 		orderByUnit(result);
 		return result;
 	}

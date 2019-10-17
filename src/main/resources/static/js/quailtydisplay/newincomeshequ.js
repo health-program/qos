@@ -24,7 +24,7 @@ var dataMap={}
                        series : [
 
                        {
-                                       name: '访问来源',
+                                       name: '医院',
                                        type: 'pie',
                                        radius : '75%',
                                        center: ['52%', '60%'],

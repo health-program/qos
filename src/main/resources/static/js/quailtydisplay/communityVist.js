@@ -137,7 +137,7 @@ function getNumbers(){
                                              color: '#FFD52E',
                                              stack: 'sum1',
                                              barWidth: '5px',
-                                             data: data3
+                                             data: data4
 
                                          },
                                      ]

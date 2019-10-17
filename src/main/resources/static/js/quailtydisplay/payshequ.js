@@ -29,7 +29,7 @@ var newshequOptions=function(id){
     series : [
 
      {
-                    name: '访问来源',
+                    name: '社区',
                     type: 'pie',
                     radius : '75%',
                     center: ['50%', '50%'],

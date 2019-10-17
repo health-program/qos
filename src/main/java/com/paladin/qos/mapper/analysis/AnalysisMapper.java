@@ -100,5 +100,13 @@ public interface AnalysisMapper {
 	List<DataCountUnit> getTodayNumber();
 
 	List<DataCountUnit> getThisMonthNumber();
+	
+	List<DataCountUnit> getHospitalOutPatientNumber();
+
+	List<DataCountUnit> getHospitalEmergencyNumber();
+
+	List<DataCountUnit> getHospitalTodayNumber();
+
+	List<DataCountUnit> getHospitalThisMonthNumber();
 
 }

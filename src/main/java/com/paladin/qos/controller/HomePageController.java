@@ -7,18 +7,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
@@ -94,6 +90,24 @@ public class HomePageController {
 	}
 	
 	
+	/**
+	 * 医院门诊人次，医院急诊人次，医院当日门急诊量，医院当月门急诊量
+	 */
+	@RequestMapping(value = "/hospital/getOutPatientNumber", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getHospitalOutPatientNumber() {
+		Map<String,Object> map  = new HashMap<String,Object>();
+		List<DataCountUnit> patientNumberList = registerService.getHospitalOutPatientNumber();//门诊人次
+		List<DataCountUnit> emergencyNumberList = registerService.getHospitalEmergencyNumber();//急诊人次
+		List<DataCountUnit> todayNumberList = registerService.getHospitalTodayNumber();//当日门急诊量
+		List<DataCountUnit> thisMonthNumberList = registerService.getHospitalThisMonthNumber();//当月门急诊量
+		map.put("patientHospitalNumberList",patientNumberList );
+		map.put("emergencyHospitalNumberList", emergencyNumberList);
+		map.put("todayNumberHospitalList",todayNumberList );
+		map.put("thisMonthNumberHospitalList",thisMonthNumberList );
+		
+		return CommonResponse.getSuccessResponse(map);
+	}
 }
 
 

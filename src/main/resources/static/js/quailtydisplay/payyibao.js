@@ -21,7 +21,7 @@ var newspotitalOptions=function(id){
    series : [
 
      {
-                name: '访问来源',
+                name: '医院',
                 type: 'pie',
                 radius : '75%',
                 center: ['50%', '50%'],

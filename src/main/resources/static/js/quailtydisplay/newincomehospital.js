@@ -50,7 +50,7 @@ $("#incomeSelect").trigger("change")
                                                                    series : [
 
                                                                     {
-                                                                                                          name: '访问来源',
+                                                                                                          name: '社区',
                                                                                                           type: 'pie',
                                                                                                           radius : '75%',
                                                                                                           center: ['52%', '60%'],
