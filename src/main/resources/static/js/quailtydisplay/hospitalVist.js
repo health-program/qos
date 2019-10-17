@@ -61,6 +61,7 @@ function gethospitelNumbers(){
                                          containLabel: true
                                      },
                                      yAxis: [{
+
                                          type: 'value',
                                          axisLabel: {
                                              show: true,
@@ -84,10 +85,15 @@ function gethospitelNumbers(){
                                              },
                                             },
 
-
+                                        splitLine:{
+                                           show:false
+                                        }
                                      }],
                                      xAxis: [{
                                          type: 'category',
+                                         splitLine:{
+                                            show:false
+                                         },
                                          axisLabel: {
                                              interval: 0,
                                              show: true,

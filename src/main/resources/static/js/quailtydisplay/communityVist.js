@@ -73,6 +73,9 @@ function getNumbers(){
                                                  type: 'dashed'
                                              }
                                          },
+                                         splitLine:{
+                                            show:false
+                                         },
                                          show: true,
                                          axisLabel: {
                                              interval: 0,
@@ -103,7 +106,10 @@ function getNumbers(){
                                                  	 return value.replace(reg, '');
                                               }
                                             },
-                                         data: datacity
+                                         data: datacity,
+                                         splitLine:{
+                                            show:false
+                                         }
                                      }],
                                      series: [{
                                              name: '门诊人次',
