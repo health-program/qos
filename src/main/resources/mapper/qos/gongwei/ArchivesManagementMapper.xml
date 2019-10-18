@@ -13,6 +13,18 @@
         on d2.unit_id=f.id;
     </select>
 
+    <select id="get12MonthArchives" resultType="com.paladin.qos.service.gongwei.vo.ArchivesMonthsVO">
+        select  sum(total_num) as archivesNumber  from  data_processed_day
+        where event_id=#{eventId}
+        and year=#{year}
+        and month =#{day}
+    </select>
+
+    <select id="getArchivesNumber" resultType="java.lang.Long">
+        select  sum(total_num)   from  data_processed_day
+        where event_id=#{eventId}
+       and serial_number <![CDATA[<]]> #{date}
+    </select>
 
 </mapper>
 
