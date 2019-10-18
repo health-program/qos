@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-     <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type" /> 
+    <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type,school-section-type,grade-type" />
     <section class="content-header">
         <h1>疫情管理</h1>
         <ol class="breadcrumb">
@@ -16,64 +16,38 @@
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
-    function findParentNode(id, nodes, path) {
-    	  if(!path){
-    		  path=[];
-    	  }
-    	  var currentNode;
-    	  for(var i = 0; i < nodes.length; i++) {
-    	      //先找出当前节点
-    	      if(nodes[i].id==id){
-    	    	  currentNode=nodes[i];
-    	    	  path.push(currentNode);
-    	    	  findParentNode(currentNode.parentId, nodes, path);
-    	      }
-    	  }
-    }
- 
     var options = {
         id: "model",
         cancelBtn: false,
         name: "新增",
         url: "/qos/epidemic/save",
-        formButtonBar:[{
-            id:  'reply_btn',
+        formButtonBar: [{
+            id: 'reply_btn',
             type: 'button',
-            name:  '返回',
+            name: '返回',
             class: 'btn btn-default btn-block',
             order: 2
         }],
-        columns: [
-		{ title: "班级",isListData:true, name: "grade",required: "required", colspan:2,
-			inputType: "SELECT-TREE-SERVER", 
-			idField:'id',nameField:'name',url:'/qos/org/school/people/findList',
-			viewPathName:true
-			/* selectedHandler:function(data){
-					if(data.level!='4'){
-						$.errorMessage("只能选择班级！");
-						return false;
-					}
-					var treedata1 = this.serverTreeData;
-					var treedata = this.serverTreeListData;
-					debugger;
-					var path=[],pathStr='';
-					findParentNode(data.id,treedata,path);	
-					path.forEach(function(item){
-						pathStr=item.name+'  '+pathStr;
-					})
-					return {
-						name: pathStr,
-						value: data.id
-					}
-				} */
-			},
-            { title: "学年", name: "schoolYear", required: "required", inputType: "DATE", attr:{class: "form-control tonto-datepicker-year"} },
-            { title: "报告单位", name: "reportUnit", required: "required",inputType: "SELECT", enum: "report-unit-type"},
-            { title: "病种分类", name: "sicknessClassify",required: "required", inputType: "SELECT", enum: "sickness-type" },
-            { title: "区域", name: "region", required: "required",inputType: "SELECT",enum:"region-type" },
+        columns: [{
+                title: "班级",
+                name: "grade",
+                required: "required",
+                colspan: 2,
+                inputType: "SELECT-TREE-SERVER",
+                url: '/qos/org/school/people/findList',
+                viewPathName: true,
+                isListData: false,
+                selectedHandler : function(node){
+                    return node.data.isClass? true: false;
+                },
+                selectDataFilter: classDataHandler
+            },
+            { title: "报告单位", name: "reportUnit", required: "required", inputType: "SELECT", enum: "report-unit-type" },
+            { title: "病种分类", name: "sicknessClassify", required: "required", inputType: "SELECT", enum: "sickness-type" },
+            { title: "区域", name: "region", required: "required", inputType: "SELECT", enum: "region-type" },
             { title: "发病人数(首周)", name: "firstWeek", required: "required", inputType: "NUMBER" },
             //{ title: "班级", name: "grade", inputType: "TEXT" },
-            
+
             { title: "发病人数(累计)", name: "total", required: "required", inputType: "NUMBER" },
             { title: "停课班级数", name: "suspendGradeNumber", inputType: "NUMBER" },
             { title: "应急接种班级数", name: "vaccinationGradeNumber", inputType: "NUMBER" },
@@ -82,34 +56,107 @@
             { title: "停课时间", name: "suspendData", inputType: "DATE" },
             { title: "出动人次数(市级专业部门)", name: "municipalLeveNumber", inputType: "NUMBER" },
             { title: "出动人次数(区镇级专业部门)", name: "districtTownNumber", inputType: "NUMBER" },
-            { title: "是否原因溯源", name: "isReasonTraceability", inputType: "RADIO",enum: "boolean-type" },
-            { title: "溯源是否清楚", name: "isTraceabilityClear", inputType: "RADIO", enum: "boolean-type"},
-            { title: "是否预警值", name: "isEarlyWarningValue", inputType: "RADIO",enum: "boolean-type", colspan: 2 },
+            { title: "是否原因溯源", name: "isReasonTraceability", inputType: "RADIO", enum: "boolean-type" },
+            { title: "溯源是否清楚", name: "isTraceabilityClear", inputType: "RADIO", enum: "boolean-type" },
+            { title: "是否预警值", name: "isEarlyWarningValue", inputType: "RADIO", enum: "boolean-type", colspan: 2 },
             { title: "备注", name: "remarks", inputType: "TEXTAREA" }
         ]
     }
 
     var model;
-    
+
     $(function() {
-    	var html = generateEditHtml(options);
+        var html = generateEditHtml(options);
         $(".content").html(html);
-        $("#reply_btn").click(function () {
+        $("#reply_btn").click(function() {
             window.location = "/qos/epidemic/index";
         });
-        
-       	$.initComponment($(".content"));
+
+        $.initComponment($(".content"));
 
         model = new tonto.Model("model", options.columns, {
-            pattern:"edit",
-            successCallback:function(){
-            	$.successAlert("保存成功", function() {
+            pattern: "edit",
+            successCallback: function() {
+                $.successAlert("保存成功", function() {
                     window.location = "/qos/epidemic/index";
                 });
             }
         });
         model.setData(null);
     });
+
+    function classDataHandler(column, data) {
+        console.log(data);
+        var schoolNames = data.schoolName,
+            schoolPeople = data.schoolPeople,
+            schoolYear = data.schoolYear;
+
+        var nameMap = {};
+        schoolNames.forEach(function(name) {
+            nameMap[name.id] = name.schoolFullName;
+        });
+
+        var yearMap = {};
+        var yearSchoolNodeMap = {};
+
+        schoolYear.forEach(function(sy) {
+            var y = sy.schoolYear;
+            var yearNode = yearMap[y];
+
+            if (!yearNode) {
+                yearNode = {
+                    name: y + '学年',
+                    id: y,
+                    children: []
+                }
+                yearMap[y] = yearNode;
+            }
+
+            var yearSchoolNode = {
+                name: nameMap[sy.parentSchoolId],
+                id: sy.id,
+                children: []
+            }
+
+            yearNode.children.push(yearSchoolNode);
+            yearSchoolNodeMap[sy.id] = yearSchoolNode;
+        });
+
+        var schoolPeopleNodeMap = {};
+
+        schoolPeople.forEach(function(sp) {
+            var id = sp.schoolId,
+                spId = sp.schoolSection + '-' + sp.grade;
+
+            var yearSchoolNode = yearSchoolNodeMap[id];
+            if (yearSchoolNode) {
+                var schoolPeopleNode = schoolPeopleNodeMap[id];
+                if (!schoolPeopleNode) {
+                    schoolPeopleNode = {
+                        name: $.getConstantEnumValue('school-section-type', sp.schoolSection) + '-' + $.getConstantEnumValue('grade-type', sp.grade),
+                        id: spId,
+                        children: []
+                    }
+
+                    yearSchoolNode.children.push(schoolPeopleNode);
+                    schoolPeopleNodeMap[id] = schoolPeopleNode;
+                }
+
+                schoolPeopleNode.children.push({
+                    name: sp.klass,
+                    id: sp.id,
+                    isClass : true
+                });
+            }
+        });
+
+        var treedata = [];
+        for (var o in yearMap) {
+            treedata.push(yearMap[o]);
+        }
+
+        return treedata;
+    }
     </script>
 </body>
 

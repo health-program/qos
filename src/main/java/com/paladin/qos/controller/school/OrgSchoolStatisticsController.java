@@ -135,7 +135,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("natureGroup", natureGroup);
 		result.put("affiGroup", affiGroup);
 		result.put("data", data);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 
@@ -168,7 +168,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("affiGroup", affiGroup);
 		result.put("natureGroup", group);
 		result.put("data", data);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	
@@ -210,7 +210,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("natureGroup", natureGroup);
 		result.put("affiGroup", affiGroup);
 		result.put("data", data);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 
@@ -243,7 +243,7 @@ public class OrgSchoolStatisticsController extends ControllerSupport {
 		result.put("affiGroup", affiGroup);
 		result.put("natureGroup", group);
 		result.put("data", data);
-		System.out.println(result);
+		//System.out.println(result);
 		return CommonResponse.getSuccessResponse(result);
 	}
 	/**
