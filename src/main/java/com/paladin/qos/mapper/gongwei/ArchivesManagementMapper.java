@@ -1,5 +1,6 @@
 package com.paladin.qos.mapper.gongwei;
 
+import com.paladin.qos.service.gongwei.vo.ArchivesMonthsVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -11,4 +12,10 @@ public interface ArchivesManagementMapper {
     //档案总数
     ArchivesManagementVO getArchivesTotal (@Param("eventId1") String eventId1, @Param("eventId2") String eventId2, @Param("unitId") String unitId);
 
+
+    //一个月档案数
+    ArchivesMonthsVO get12MonthArchives(@Param("eventId") String eventId, @Param("year") Integer year, @Param("day") Integer day);
+
+    //获得12个月前所有档案数
+    Long getArchivesNumber(@Param("eventId") String eventId, @Param("date") Integer date);
 }

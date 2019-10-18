@@ -2,6 +2,8 @@ package com.paladin.qos.service.gongwei;
 
 import java.util.Date;
 
+import com.paladin.qos.analysis.TimeUtil;
+import com.paladin.qos.service.gongwei.vo.ArchivesMonthsVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,18 @@ public class ArchivesManagementService extends BaseExhibitionDataAcquire {
         return archivesManagementVO;
     }
 
+
+
+    public ArchivesMonthsVO find12MonthArchives(String eventId,Integer year,Integer day){
+
+        return  archivesManagementMapper.get12MonthArchives(eventId,year,day);
+    }
+
+    public Long findArchivesNumber(String eventId,Date date){
+        Integer dateInt=TimeUtil.getSerialNumberByDay(date);
+        Long number =archivesManagementMapper.getArchivesNumber(eventId,dateInt);
+        return null==number ? 0l:number;
+    }
 
 
 
