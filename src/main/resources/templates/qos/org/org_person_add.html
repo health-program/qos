@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
+<section class="content-header">
+    <h1>机构人员添加</h1>
+    <ol class="breadcrumb">
+        <li><a href="/qos/count/referral/index"><i class="fa fa-table"></i>列表</a></li>
+        <li class="active">新增</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        url: "/qos/org/person/save",
+        cancelBtn: false,
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
+        columns: [
+            { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
+            { title: "年度", name: "year", required: "required", inputType: "TEXT" },
+            { title: "在岗人员总计",name: "workPersonTotal",inputType: "NUMBER"},
+            { title: "在编人员",name: "formatPerson",inputType: "NUMBER"},
+            { title: "备案制人员",name: "beianzhiPerson",inputType: "NUMBER"},
+
+            { title: "人事代理",name: "renshiPerson",inputType: "NUMBER"},
+            { title: "合同制人员",name: "hetongzhiPerson",inputType: "NUMBER"},
+            { title: "退休返聘",name: "tuixiuPerson",inputType: "NUMBER"},
+            { title: "卫技人员",name: "healthPerson",inputType: "NUMBER"},
+            { title: "非卫技人员",name: "nonHealthPerson",inputType: "NUMBER"},
+
+
+            { title: "人口数",name: "personNumber",inputType: "NUMBER"},
+            { title: "需配置数",name: "peizhiPerson",inputType: "NUMBER"},
+            { title: "现有数",name: "xianyouPerson",inputType: "NUMBER"},
+
+            { title: "需求",name: "xuqiuPerson",inputType: "NUMBER"},
+            { title: "高级",name: "highPerson",inputType: "NUMBER"},
+            { title: "中级",name: "middlePerson",inputType: "NUMBER"},
+            { title: "低级",name: "lowPerson",inputType: "NUMBER"},
+            { title: "员级",name: "yuanjiPerson",inputType: "NUMBER"},
+            { title: "未定级",name: "weidingjiPerson",inputType: "NUMBER"},
+
+            { title: "硕士",name: "masterPerson",inputType: "NUMBER"},
+            { title: "本科",name: "benkePerson",inputType: "NUMBER"},
+            { title: "大专",name: "dazhuanPerson",inputType: "NUMBER"},
+            { title: "中专",name: "zhongzhuanPerson",inputType: "NUMBER"},
+            { title: "30岁及以下(男)",name: "underThirtyM",inputType: "NUMBER"},
+            { title: "31-40岁(男)",name: "thirtyFortyM",inputType: "NUMBER"},
+            { title: "41-50岁(男)",name: "fortyFiftyM",inputType: "NUMBER"},
+            { title: "51-60岁(男)",name: "fiftySixtyM",inputType: "NUMBER"},
+            { title: "60岁以上(男)",name: "beyondSixtyM",inputType: "NUMBER"},
+            { title: "30岁及以下(女)",name: "underThirtyF",inputType: "NUMBER"},
+            { title: "31-40岁(女)",name: "thirtyFortyF",inputType: "NUMBER"},
+            { title: "41-50岁(女)",name: "fortyFiftyF",inputType: "NUMBER"},
+            { title: "51-60岁(女)",name: "fiftySixtyF",inputType: "NUMBER"},
+            { title: "60岁以上(女)",name: "beyondSixtyF",inputType: "NUMBER"},
+
+            { title: "站点非卫技人员",name: "zFeiweijiPerson",inputType: "NUMBER"},
+            { title: "全科",name: "zQuankePerson",inputType: "NUMBER"},
+            { title: "临床",name: "zLinchuangPerson",inputType: "NUMBER"},
+            { title: "中医",name: "zZhongyiPerson",inputType: "NUMBER"},
+            { title: "乡村医生",name: "zXiangcunPerson",inputType: "NUMBER"},
+            { title: "乡镇助理",name: "zZhuliPerson",inputType: "NUMBER"},
+            { title: "护理",name: "zHuliPerson",inputType: "NUMBER"},
+            { title: "其他",name: "zQitaPerson",inputType: "NUMBER"}
+        ]
+    }
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $("#reply_btn").click(function () {
+            window.location = "/qos/org/person/index";
+        });
+        $.initComponment($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功", function() {
+                    window.location = "/qos/org/person/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+
+</script>
+</body>
+
+</html>

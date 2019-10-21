@@ -1,0 +1,29 @@
+package com.paladin.qos.service.org.dto;
+
+import com.paladin.framework.common.OffsetPage;
+import com.paladin.framework.common.QueryCondition;
+import com.paladin.framework.common.QueryType;
+
+import java.util.List;
+
+public class OrgPersonQuery extends OffsetPage {
+
+	private String unitId;
+	private Integer year;
+
+	public String getUnitId() {
+		return unitId;
+	}
+
+	public void setUnitId(String unitId) {
+		this.unitId = unitId;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+}
