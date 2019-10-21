@@ -418,46 +418,50 @@
 	</select>
 	
 	<select id="getOutPatientNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	     SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '13001' and unit_id!='320583810343'
+	     SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	     WHERE event_id = '13001' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getEmergencyNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	      SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '13002' and unit_id!='320583810343'
+	      SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	      WHERE event_id = '13002' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getTodayNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-		SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '13003' and unit_id!='320583810343'
+		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
+         WHERE event_id = '13001' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getThisMonthNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '13003' and unit_id!='320583810343'
+         WHERE event_id = '13002' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalOutPatientNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	     SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '31008' and unit_id!='320583810343'
+	     SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	     WHERE event_id = '31008' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalEmergencyNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	      SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '31007' and unit_id!='320583810343'
+	      SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	      WHERE event_id = '31007' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalTodayNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-		SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '31001' and unit_id!='320583810343'
+		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
+         WHERE event_id = '31008' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalThisMonthNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '31001' and unit_id!='320583810343'
+         WHERE event_id = '31007' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 </mapper>

@@ -71,16 +71,16 @@ public class HomePageController {
 	}
 	
 	/**
-	 * 门诊人次，急诊人次，当日门急诊量，当月门急诊量
+	 * 社区当天门诊人次，社区当天急诊人次，当月门诊人次，当月急诊人次
 	 */
 	@RequestMapping(value = "/quailtydisplay/getOutPatientNumber", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getOutPatientNumber() {
 		Map<String,Object> map  = new HashMap<String,Object>();
-		List<DataCountUnit> patientNumberList = registerService.getOutPatientNumber();//门诊人次
-		List<DataCountUnit> emergencyNumberList = registerService.getEmergencyNumber();//急诊人次
-		List<DataCountUnit> todayNumberList = registerService.getTodayNumber();//当日门急诊量
-		List<DataCountUnit> thisMonthNumberList = registerService.getThisMonthNumber();//当月门急诊量
+		List<DataCountUnit> patientNumberList = registerService.getOutPatientNumber();//当天门诊人次
+		List<DataCountUnit> emergencyNumberList = registerService.getEmergencyNumber();//当天急诊人次
+		List<DataCountUnit> todayNumberList = registerService.getTodayNumber();//当月门诊人次
+		List<DataCountUnit> thisMonthNumberList = registerService.getThisMonthNumber();//当月急诊人次
 		map.put("patientNumberList",patientNumberList );
 		map.put("emergencyNumberList", emergencyNumberList);
 		map.put("todayNumberList",todayNumberList );
@@ -91,16 +91,16 @@ public class HomePageController {
 	
 	
 	/**
-	 * 医院门诊人次，医院急诊人次，医院当日门急诊量，医院当月门急诊量
+	 * 医院当天门诊人次，医院当天急诊人次，当月门诊人次，当月急诊人次
 	 */
 	@RequestMapping(value = "/hospital/getOutPatientNumber", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getHospitalOutPatientNumber() {
 		Map<String,Object> map  = new HashMap<String,Object>();
-		List<DataCountUnit> patientNumberList = registerService.getHospitalOutPatientNumber();//门诊人次
-		List<DataCountUnit> emergencyNumberList = registerService.getHospitalEmergencyNumber();//急诊人次
-		List<DataCountUnit> todayNumberList = registerService.getHospitalTodayNumber();//当日门急诊量
-		List<DataCountUnit> thisMonthNumberList = registerService.getHospitalThisMonthNumber();//当月门急诊量
+		List<DataCountUnit> patientNumberList = registerService.getHospitalOutPatientNumber();//当天门诊人次
+		List<DataCountUnit> emergencyNumberList = registerService.getHospitalEmergencyNumber();//当天急诊人次
+		List<DataCountUnit> todayNumberList = registerService.getHospitalTodayNumber();//当月门诊人次
+		List<DataCountUnit> thisMonthNumberList = registerService.getHospitalThisMonthNumber();//当月急诊人次
 		map.put("patientHospitalNumberList",patientNumberList );
 		map.put("emergencyHospitalNumberList", emergencyNumberList);
 		map.put("todayNumberHospitalList",todayNumberList );
