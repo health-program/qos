@@ -13,6 +13,7 @@ import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.org.OrgPersonService;
 import com.paladin.qos.service.org.dto.OrgPersonDTO;
 import com.paladin.qos.service.org.dto.OrgPersonQuery;
+import com.paladin.qos.service.org.vo.OrgPersonReport;
 import com.paladin.qos.service.org.vo.OrgPersonVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,7 +82,7 @@ public class OrgPersonController extends ControllerSupport {
         model.setId(id);
         model.setUnitName(unitName);
         if (orgPersonService.save(model) > 0) {
-            return CommonResponse.getSuccessResponse(beanCopy(orgPersonService.get(id), new CountReferralVO()));
+            return CommonResponse.getSuccessResponse(beanCopy(orgPersonService.get(id), new OrgPersonVO()));
         }
         return CommonResponse.getFailResponse();
 	}
@@ -108,5 +109,11 @@ public class OrgPersonController extends ControllerSupport {
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgPersonService.removeByPrimaryKey(id));
+    }
+
+    @RequestMapping(value = "/select/data", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object selectData() {
+        return  CommonResponse.getSuccessResponse(orgPersonService.getTotalNumber());
     }
 }
