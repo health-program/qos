@@ -483,15 +483,7 @@ margin-top: 16px;
     <div th:include="/qos/footer" />
     <script type="text/javascript">
 		$(function () {
-		let	config = {
-				'interval': 1, //间隔天数，间隔为整数
-				'runNow': false, //是否立即运行
-				'time': "16:19:00" //执行的时间点 时在0~23之间
-			};
-
 			initData();
-
-			timeoutFunc(config, initData);
 		});
 		var eventIds = '21005,21006,21007,21008,21009,21010,21011,21012,21013,21014,21015,21016,21017,21018,21019,21020';
 		function initData() {
@@ -505,37 +497,6 @@ margin-top: 16px;
 				})
 
 			})
-		}
-
-
-		//定时任务
-		function timeoutFunc(config, func) {
-
-			if (config.runNow) {
-				let timeInterval,nowTime,nowSeconds,targetSeconds,interval;
-
-				interval =config.interval;
-
-				nowTime = new Date();
-
-				nowSeconds = nowTime.getHours() * 3600 + nowTime.getMinutes() * 60 + nowTime.getSeconds();
-
-				let timePoints = config.time.split(':').map(i => parseInt(i));
-
-				targetSeconds =  timePoints[0] * 3600 + timePoints[1] * 60 + timePoints[2];
-
-				timeInterval = targetSeconds > nowSeconds ? targetSeconds - nowSeconds: targetSeconds + 24 * 3600 - nowSeconds;
-
-				setTimeout(() => {
-
-					func();
-
-					setInterval(func, interval * 3600000)
-
-				}, timeInterval*1000)
-
-			}
-
 		}
 
     </script>

@@ -1,24 +1,19 @@
 package com.paladin.qos.controller.exhibition;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * <儿童保健管理>
@@ -86,7 +81,9 @@ public class ChildCareManagementController {
 	@RequestMapping(value = "/search/ettj", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object searchEttj(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit("13209", request.getStartTime(), request.getEndTime(),null));
+		List<String> ids = Arrays.asList("320583467170249","320583467170257","320583467170265","320583467170337","320583467170345","320583467170353","320583467170361"
+		,"320583467170417","320583467170441","320583467170468","320583467170476","320583467170505","320583467170513");
+		return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit("13209", request.getStartTime(), request.getEndTime(),ids));
 	}
 
 	@RequestMapping(value = "/search/yesl", method = { RequestMethod.GET, RequestMethod.POST })

@@ -164,7 +164,7 @@
                 <div class="col-md-12">
                     <div class="box box-solid" style="margin-bottom: 5px">
                         <div class="box-header with-border no-pad-top">
-                            <h3 class="box-title" style="letter-spacing: 3px">母婴阻塞</h3>
+                            <h3 class="box-title" style="letter-spacing: 3px">母婴阻断</h3>
                         </div>
                         <div class="box-body no-padding">
                             <form class="form-horizontal">
@@ -562,7 +562,7 @@
                 let month13304 = convertMonthChartData(res, '13304', false);
                 datas = month13304.valuesMap['total'];
                 time = month13304.month;
-                total = datas.reduce((previousValue, currentValue) => previousValue + currentValue )
+                total = datas.reduce((previousValue, currentValue) => {  return previousValue + currentValue},0 )
             }
             $("#yfscTotal").text(total + "人次");
             if (total === 0) {
