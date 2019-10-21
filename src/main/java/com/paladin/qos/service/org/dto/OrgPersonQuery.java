@@ -11,6 +11,7 @@ public class OrgPersonQuery extends OffsetPage {
 	private String unitId;
 	private Integer year;
 
+	@QueryCondition(type = QueryType.EQUAL)
 	public String getUnitId() {
 		return unitId;
 	}
@@ -19,6 +20,7 @@ public class OrgPersonQuery extends OffsetPage {
 		this.unitId = unitId;
 	}
 
+	@QueryCondition(type = QueryType.EQUAL)
 	public Integer getYear() {
 		return year;
 	}

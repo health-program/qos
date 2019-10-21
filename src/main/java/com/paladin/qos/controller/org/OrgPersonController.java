@@ -1,6 +1,7 @@
 package com.paladin.qos.controller.org;
 
 import com.paladin.framework.core.ControllerSupport;
+import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
@@ -41,8 +42,9 @@ public class OrgPersonController extends ControllerSupport {
         return "/qos/org/org_person_index";
     }
 
-    @RequestMapping("/find/page")
+    @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
+    @QueryOutputMethod(queryClass = OrgPersonQuery.class, paramIndex = 0)
     public Object findPage(OrgPersonQuery query) {
         return CommonResponse.getSuccessResponse(orgPersonService.searchPage(query));
     }
@@ -102,7 +104,7 @@ public class OrgPersonController extends ControllerSupport {
         }
 
 
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgPersonService.removeByPrimaryKey(id));
