@@ -15,6 +15,7 @@ import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
+import com.paladin.qos.service.analysis.data.DataSigningMonth;
 
 public interface AnalysisMapper {
 
@@ -108,5 +109,7 @@ public interface AnalysisMapper {
 	List<DataCountUnit> getHospitalTodayNumber();
 
 	List<DataCountUnit> getHospitalThisMonthNumber();
+	
+	List<DataSigningMonth> populationSigningNum();//人口签约数
 
 }

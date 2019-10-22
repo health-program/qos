@@ -108,6 +108,12 @@ public class HomePageController {
 		
 		return CommonResponse.getSuccessResponse(map);
 	}
+	
+	@RequestMapping(value = "/population/signing", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object populationSigningNum(){
+	    return CommonResponse.getSuccessResponse(registerService.populationSigningNum());
+	}
 }
 
 

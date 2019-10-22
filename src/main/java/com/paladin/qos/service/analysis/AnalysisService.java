@@ -28,6 +28,7 @@ import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
 import com.paladin.qos.service.analysis.data.DataResult;
+import com.paladin.qos.service.analysis.data.DataSigningMonth;
 
 @Service
 public class AnalysisService {
@@ -709,4 +710,12 @@ public class AnalysisService {
 		return result;
 	}
 
+	/**
+	 * 人口签约数
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<DataSigningMonth> populationSigningNum(){
+	   return analysisMapper.populationSigningNum();
+	}
 }
