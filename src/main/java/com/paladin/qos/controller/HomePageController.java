@@ -121,12 +121,67 @@ public class HomePageController {
 	    return CommonResponse.getSuccessResponse(registerService.populationSigningNum());
 	}
 	
-	    //门急诊折线图社区（今年，去年）13003
-	    @RequestMapping(value = "/data/get/month/twoYear", method = { RequestMethod.GET, RequestMethod.POST })
-		@ResponseBody
-		public Object getTwoYear(){
-		    return CommonResponse.getSuccessResponse(registerService.getTwoYear());
-		}
+	 //门急诊折线图社区（今年，去年）13003
+    @RequestMapping(value = "/data/get/month/twoYear", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object getTwoYear(){
+	    return CommonResponse.getSuccessResponse(registerService.getTwoYear());
+	}
+			
+			//按机构取当月（预约挂号数量41001，总诊疗人次数41002，检查人次数41003，检验人次数41004，医院平均住院日41005）
+			@RequestMapping(value = "/data/get/unit", method = { RequestMethod.GET, RequestMethod.POST })
+			@ResponseBody
+			public Object getProcessedDataByUnit(AnalysisRequest request) {
+				Date startDate = TimeUtil.FirstDayOfThisMonth();
+				Date endDate = new Date();
+				List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+				List<String> eventIds = request.getEventIds();
+				if (eventIds != null && eventIds.size() > 0) {
+					Map<String, Object> map = new HashMap<>();
+					for (String eventId : eventIds) {
+						Event event = DataConstantContainer.getEvent(eventId);
+						if (event != null) {
+							int eventType = event.getEventType();
+							int unitType = getUnitType(event);
+							if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+								Object item = registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+								if (item != null) {
+									map.put(eventId, item);
+								}
+							} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+								Object item = registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+								if (item != null) {
+									map.put(eventId, item);
+								}
+							}
+						}
+					}
+					return CommonResponse.getSuccessResponse(map);
+				} else {
+					String eventId = request.getEventId();
+					Event event = DataConstantContainer.getEvent(eventId);
+					if (event != null) {
+						int eventType = event.getEventType();
+						int unitType = getUnitType(event);
+						if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+							return CommonResponse.getSuccessResponse(registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+						} else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+							return CommonResponse.getSuccessResponse(registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+						}
+					}
+				}
+				return CommonResponse.getErrorResponse();
+			}
+			
+			private int getUnitType(Event event) {
+				int targetType = event.getTargetType();
+				if (targetType == DataEvent.TARGET_TYPE_COMMUNITY)
+					return 2;
+				if (targetType == DataEvent.TARGET_TYPE_HOSPITAL)
+					return 1;
+				return 0;
+			}
 }
 
 
