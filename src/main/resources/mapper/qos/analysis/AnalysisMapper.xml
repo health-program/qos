@@ -471,7 +471,7 @@
 	</select>
 	
 	<!-- 门急诊 -->
-	<select id="populationSigningNum" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
+	<select id="getTwoYear" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
 	SELECT DATE_FORMAT( serial_number,'%Y-%m') as month,SUM(total_num) as count from data_processed_day where event_id='13003' GROUP BY DATE_FORMAT( serial_number,'%Y-%m');
 	</select>
 </mapper>

@@ -719,7 +719,7 @@ public class AnalysisService {
 	   return analysisMapper.populationSigningNum();
 	}
 
-	public String getTwoYear() {
+	public List<DataSigningMonth> getTwoYear() {
 		
 		return analysisMapper.getTwoYear();
 	}
