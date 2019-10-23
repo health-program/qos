@@ -112,4 +112,6 @@ public interface AnalysisMapper {
 	
 	List<DataSigningMonth> populationSigningNum();//人口签约数
 
+	String getTwoYear();
+
 }
