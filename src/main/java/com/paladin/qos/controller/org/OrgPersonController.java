@@ -111,9 +111,4 @@ public class OrgPersonController extends ControllerSupport {
         return CommonResponse.getResponse(orgPersonService.removeByPrimaryKey(id));
     }
 
-    @RequestMapping(value = "/select/data", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    public Object selectData() {
-        return  CommonResponse.getSuccessResponse(orgPersonService.getTotalNumber());
-    }
 }

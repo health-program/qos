@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.home.Sign;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -720,7 +721,27 @@ public class AnalysisService {
 	}
 
 	public List<DataSigningMonth> getTwoYear() {
-		
+
 		return analysisMapper.getTwoYear();
+	}
+
+	/**
+	 * 根据月份获取建档率
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<DataSigningMonth> getArchivesRate() {
+
+		return analysisMapper.getArchivesRate();
+	}
+
+
+	/**
+	 * 实际签约信息
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<Sign> getSignInfo(){
+		return analysisMapper.getSignInfo();
 	}
 }

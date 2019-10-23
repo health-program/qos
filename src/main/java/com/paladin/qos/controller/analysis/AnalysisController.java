@@ -22,7 +22,7 @@ import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
 
 @Controller
-@RequestMapping("/qos/analysis")
+@RequestMapping("/analysis")
 public class AnalysisController {
 
 	@Autowired

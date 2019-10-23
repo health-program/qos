@@ -469,9 +469,23 @@
 	<select id="populationSigningNum" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
 	SELECT DATE_FORMAT( serial_number,'%Y-%m') as month,SUM(total_num) as count from data_processed_day where event_id in ('21000','21001') GROUP BY DATE_FORMAT( serial_number,'%Y-%m');
 	</select>
-	
+
+	<!-- 实际签约信息 -->
+	<select id="getSignInfo" resultType="com.paladin.qos.model.home.Sign">
+		 SELECT  createdunitname AS signOrg,selfname as orgName, gender as orgGender, signperiodfrom as orgDate,signteamname as orgTeam,familnew as orgType
+		 from g_fha_person_sign_main
+		 order by createdtime desc
+		 limit 30;
+	</select>
+
 	<!-- 门急诊 -->
 	<select id="getTwoYear" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
 	SELECT DATE_FORMAT( serial_number,'%Y-%m') as month,SUM(total_num) as count from data_processed_day where event_id='13003' GROUP BY DATE_FORMAT( serial_number,'%Y-%m');
 	</select>
+
+	<!--建档率-->
+	<select id="getArchivesRate" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
+		select  DATE_FORMAT(managedate,'%Y-%m') as month ,count(1) from g_fha_person_main where stateid='1'  GROUP BY DATE_FORMAT( managedate,'%Y-%m');
+	</select>
+
 </mapper>

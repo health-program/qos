@@ -2,6 +2,7 @@ package com.paladin.qos.mapper.analysis;
 
 import java.util.List;
 
+import com.paladin.qos.model.home.Sign;
 import org.apache.ibatis.annotations.Param;
 
 import com.paladin.qos.model.register.Register;
@@ -112,6 +113,9 @@ public interface AnalysisMapper {
 	
 	List<DataSigningMonth> populationSigningNum();//人口签约数
 
+	List<Sign> getSignInfo();
+
 	List<DataSigningMonth> getTwoYear();
 
+	List<DataSigningMonth> getArchivesRate();
 }
