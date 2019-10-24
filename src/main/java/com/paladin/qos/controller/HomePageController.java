@@ -1,5 +1,7 @@
 package com.paladin.qos.controller;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,8 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
+import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
 import com.paladin.qos.model.home.Sign;
+import com.paladin.qos.service.analysis.data.DataSigningMonth;
 import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
+import com.paladin.qos.service.gongwei.ArchivesManagementService;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,6 +42,9 @@ public class HomePageController {
 
     @Autowired
     private FamilyDoctorPersonnelService familyDoctorPersonnelService;
+
+    @Autowired
+    private ArchivesManagementService archivesManagementService;
 
     @RequestMapping(value = "/index")
     public String homeIndex(HttpServletRequest request) {
@@ -127,13 +135,6 @@ public class HomePageController {
         return CommonResponse.getSuccessResponse(registerService.getTwoYear());
     }
 
-    //当前时间前12个月建档率
-    @RequestMapping(value = "/data/get/month/archives/rate", method = {RequestMethod.GET, RequestMethod.POST})
-    @ResponseBody
-    public Object getArchivesRate() {
-        return CommonResponse.getSuccessResponse(registerService.getArchivesRate());
-    }
-
     private int getUnitType(Event event) {
         int targetType = event.getTargetType();
         if (targetType == DataEvent.TARGET_TYPE_COMMUNITY)
@@ -196,36 +197,6 @@ public class HomePageController {
     }
 
 
-    @PostMapping("/data/get/month/instalments")
-    @ResponseBody
-    public Object getDataOfMonthByInstalments(AnalysisRequest request) {
-        List<String> eventIds = request.getEventIds();
-        Date startDate = request.getStartTime();
-        Date endDate = request.getEndTime();
-        boolean byUnit = request.getByUnit() == 1;
-        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
-
-        if (eventIds != null && eventIds.size() > 0) {
-            Map<String, Object> map = new HashMap<>();
-            for (String eventId : eventIds) {
-                DataConstantContainer.Event event = DataConstantContainer.getEvent(eventId);
-                if (event != null) {
-                    int unitType = getUnitType(event);
-                    Object item = byUnit ? registerService.getDataSetOfMonth(eventId, unitType, startDate, endDate, ignoreUnitIds)
-                            : registerService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate, ignoreUnitIds);
-                    if (item != null) {
-                        map.put(eventId, item);
-                    }
-                }
-            }
-            return CommonResponse.getSuccessResponse(map);
-        } else {
-            String eventId = request.getEventId();
-            return CommonResponse.getSuccessResponse(registerService.getDataSetOfMonth(eventId, startDate, endDate, ignoreUnitIds));
-        }
-    }
-
-
     //按机构取当月（预约挂号数量41001，总诊疗人次数41002，检查人次数41003，检验人次数41004，医院平均住院日41005）
     @RequestMapping(value = "/data/get/unit", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
@@ -271,6 +242,36 @@ public class HomePageController {
         }
         return CommonResponse.getErrorResponse();
     }
+
+    @PostMapping("/data/get/day/instalments")
+    @ResponseBody
+    public Object getDataOfDayByInstalments(AnalysisRequest request) {
+        List<String> eventIds = request.getEventIds();
+        Date startDate = request.getStartTime();
+        Date endDate = request.getEndTime();
+        boolean byUnit = request.getByUnit() == 1;
+        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int unitType = getUnitType(event);
+                    Object item = byUnit ? registerService.getDataSetOfDay(eventId, unitType, startDate, endDate, ignoreUnitIds)
+                            : registerService.getAnalysisResultByDay(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                    if (item != null) {
+                        map.put(eventId, item);
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            return CommonResponse.getSuccessResponse(registerService.getDataSetOfDay(eventId, startDate, endDate, ignoreUnitIds));
+        }
+    }
+
 
 
 }

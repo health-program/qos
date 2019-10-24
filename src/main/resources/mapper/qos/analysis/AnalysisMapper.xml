@@ -485,7 +485,7 @@
 
 	<!--建档率-->
 	<select id="getArchivesRate" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
-		select  DATE_FORMAT(managedate,'%Y-%m') as month ,count(1) from g_fha_person_main where stateid='1'  GROUP BY DATE_FORMAT( managedate,'%Y-%m');
+		select  DATE_FORMAT(managedate,'%Y-%m') as month ,count(1) as count from g_fha_person_main where stateid='1'  GROUP BY DATE_FORMAT( managedate,'%Y-%m');
 	</select>
 
 </mapper>
