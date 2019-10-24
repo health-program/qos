@@ -274,6 +274,76 @@ public class HomePageController {
 
 
 
+
+    @PostMapping("/data/get/month/instalments")
+    @ResponseBody
+    public Object getDataOfMonthByInstalments(AnalysisRequest request) {
+        List<String> eventIds = request.getEventIds();
+        Date startDate = request.getStartTime();
+        Date endDate = request.getEndTime();
+        boolean byUnit = request.getByUnit() == 1;
+        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int unitType = getUnitType(event);
+                    Object item = byUnit ? registerService.getDataSetOfMonth(eventId, unitType, startDate, endDate, ignoreUnitIds)
+                            : registerService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                    if (item != null) {
+                        map.put(eventId, item);
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            return CommonResponse.getSuccessResponse(registerService.getDataSetOfMonth(eventId, startDate, endDate, ignoreUnitIds));
+        }
+    }
+
+    @PostMapping("/data/get/year/instalments")
+    @ResponseBody
+    public Object getDataOfYearByInstalments(AnalysisRequest request) {
+        Date startDate = request.getStartTime();
+        Date endDate = request.getEndTime();
+        int startYear = TimeUtil.getYear(startDate);
+        int endYear = TimeUtil.getYear(endDate);
+        boolean byUnit = request.getByUnit() == 1;
+        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+        List<String> eventIds = request.getEventIds();
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int unitType = getUnitType(event);
+                    Object item = byUnit ? registerService.getDataSetOfYear(eventId, unitType, startYear, endYear, ignoreUnitIds)
+                            : registerService.getAnalysisResultByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
+                    if (item != null) {
+                        map.put(eventId, item);
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            return CommonResponse.getSuccessResponse(registerService.getDataSetOfYear(eventId, startYear, endYear, ignoreUnitIds));
+        }
+    }
+
+
+    @PostMapping("/get/total/data")
+    @ResponseBody
+    public Object getTotalData (AnalysisRequest request) {
+
+        return  CommonResponse.getSuccessResponse(registerService.getTotalData(request.getDataId()));
+    }
+
+
 }
 
 

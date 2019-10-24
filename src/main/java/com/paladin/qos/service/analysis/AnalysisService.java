@@ -735,6 +735,15 @@ public class AnalysisService {
 		return analysisMapper.getArchivesRate();
 	}
 
+	/**
+	 * 根据月份获取所有建档数
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public Long getArchivesNumber(Date date) {
+
+		return analysisMapper.getArchivesNumber(date);
+	}
 
 	/**
 	 * 实际签约信息
@@ -743,5 +752,11 @@ public class AnalysisService {
 	 */
 	public List<Sign> getSignInfo(){
 		return analysisMapper.getSignInfo();
+	}
+
+
+	//获得数据的总方法
+	public  String getTotalData(String id){
+		return  analysisMapper.getTotalData(id);
 	}
 }

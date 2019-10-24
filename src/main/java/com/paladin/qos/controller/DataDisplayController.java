@@ -1,30 +1,20 @@
 package com.paladin.qos.controller;
 
 import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.analysis.DataConstantContainer;
-import com.paladin.qos.analysis.DataConstantContainer.Event;
-import com.paladin.qos.analysis.TimeUtil;
-import com.paladin.qos.controller.analysis.AnalysisRequest;
-import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
-import com.paladin.qos.model.home.Sign;
-import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
-import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.analysis.data.DataSigningMonth;
-import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
 import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
-import com.paladin.qos.service.gongwei.ArchivesManagementService;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.thymeleaf.util.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -33,7 +23,7 @@ import java.util.*;
  * @version 2019年6月24日 下午3:04:58
  */
 @Controller
-@RequestMapping("/home/page/qos/display")
+@RequestMapping("/data/display")
 public class DataDisplayController {
 
     @Autowired
@@ -43,10 +33,10 @@ public class DataDisplayController {
     private AnalysisService analysisService;
 
     //当前时间前12个月建档率
-    @RequestMapping(value = "/data/get/month/archives/rate", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/get/month/archives/rate", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getArchivesRate() {
-        Long number=0l;
+        Long number = 0l;
         List<FamilyDoctorUnit> familyDoctorUnits = familyDoctorUnitService.findAll();
         for (FamilyDoctorUnit familyDoctorUnit : familyDoctorUnits) {
             BigDecimal value1 = new BigDecimal(familyDoctorUnit.getPopulation());
@@ -64,7 +54,7 @@ public class DataDisplayController {
         Date endDate = ca.getTime();
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
-        ArrayList<Date> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
         Calendar min = Calendar.getInstance();
         Calendar max = Calendar.getInstance();
 
@@ -76,23 +66,45 @@ public class DataDisplayController {
 
         Calendar curr = min;
         while (curr.before(max)) {
-            result.add(curr.getTime());
+            result.add(sdf.format(curr.getTime()));
             curr.add(Calendar.MONTH, 1);
         }
 
-        Map<String, Object> map = new HashMap<>();
-        Date currentDate=new Date();
-        String strCurrentDate=sdf.format(currentDate);
-        List<DataSigningMonth> dataList=analysisService.getArchivesRate();
-        if (!CollectionUtils.isEmpty(dataList)){
-            for (DataSigningMonth data:dataList){
-                map.put(data.getMonth(),data.getCount());
+        Map<String, Double> map = new HashMap<>();
+        Date currentDate = new Date();
+        String strCurrentDate = sdf.format(currentDate);
+        List<DataSigningMonth> dataList = analysisService.getArchivesRate();
+        long total = 0l;
+        if (!CollectionUtils.isEmpty(dataList)) {
+            Iterator<DataSigningMonth> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                DataSigningMonth data = iterator.next();
+                if (StringUtils.equals(data.getMonth(), strCurrentDate)) {
+                    iterator.remove();
+                } else {
+                    for (String strMonth : result) {
+                        if (StringUtils.equals(strMonth, data.getMonth())) {
+                            String strDate=strMonth+"-01";
+                            map.put(strMonth,(analysisService.getArchivesNumber(string2Date(strDate))+Long.valueOf(data.getCount()))/(double)number);
+                        }
+                    }
+                }
             }
         }
-        return CommonResponse.getSuccessResponse(analysisService.getArchivesRate());
+        return CommonResponse.getSuccessResponse(map);
     }
 
-
+    public static Date string2Date(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if (!StringUtils.isEmpty(dateStr)) {
+            try {
+                return sdf.parse(dateStr);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
 
 
 }

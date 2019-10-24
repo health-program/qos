@@ -11,7 +11,7 @@ public class AnalysisRequest {
 	private Date endTime = new Date();
 	private String unitId;
 	private String eventId;
-
+	private String dataId;
 	private List<String> unitIds;
 	private List<String> eventIds;
 
@@ -20,8 +20,16 @@ public class AnalysisRequest {
 	
 	
 	private List<String> ignoreUnitIds;
-	
-	public Date getStartTime() {
+
+    public String getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(String dataId) {
+        this.dataId = dataId;
+    }
+
+    public Date getStartTime() {
 		return startTime;
 	}
 
