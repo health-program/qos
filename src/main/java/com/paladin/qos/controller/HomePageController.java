@@ -1,17 +1,16 @@
 package com.paladin.qos.controller;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataConstantContainer.*;
+import com.paladin.qos.analysis.DataConstantContainer.Event;
+import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
-import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
 import com.paladin.qos.model.home.Sign;
-import com.paladin.qos.service.analysis.data.DataSigningMonth;
+import com.paladin.qos.model.register.Register;
+import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
 import com.paladin.qos.service.gongwei.ArchivesManagementService;
 import org.apache.shiro.util.CollectionUtils;
@@ -19,15 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.paladin.framework.web.response.CommonResponse;
-import com.paladin.qos.analysis.DataConstantContainer;
-import com.paladin.qos.analysis.DataConstantContainer.Event;
-import com.paladin.qos.analysis.TimeUtil;
-import com.paladin.qos.controller.analysis.AnalysisRequest;
-import com.paladin.qos.model.data.DataEvent;
-import com.paladin.qos.model.register.Register;
-import com.paladin.qos.service.analysis.AnalysisService;
-import com.paladin.qos.service.analysis.data.DataCountUnit;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 /**
  * @author MyKite
@@ -273,8 +265,6 @@ public class HomePageController {
     }
 
 
-
-
     @PostMapping("/data/get/month/instalments")
     @ResponseBody
     public Object getDataOfMonthByInstalments(AnalysisRequest request) {
@@ -335,12 +325,32 @@ public class HomePageController {
         }
     }
 
-
-    @PostMapping("/get/total/data")
+    @RequestMapping(value = "/get/total/data", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object getTotalData (AnalysisRequest request) {
+    public Object getTotalData(AnalysisRequest request) {
+        List<Unit> units = DataConstantContainer.getCommunityList();
+        HashMap unitMap = new HashMap();
 
-        return  CommonResponse.getSuccessResponse(registerService.getTotalData(request.getDataId()));
+        for (Unit unit : units) {
+            Unit u = DataConstantContainer.getUnit(unit.getId());
+            String result = null;
+            if (null != u) {
+                result = u.getSource().getGongweiCode();
+                if (null != result)
+                    unitMap.put(result, unit.getName());
+            }
+
+        }
+        List<String> eventIds = request.getEventIds();
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Object item = registerService.getTotalData(eventId);
+                map.put(eventId, item);
+            }
+            return CommonResponse.getSuccessResponse(map.toString(), unitMap);
+        } else
+            return null;
     }
 
 
