@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -147,7 +146,11 @@ public class HomePageController {
     public Object getSignList() {
         List<Sign> signs = new ArrayList<>();
         List<Sign> signList = registerService.getSignInfo();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if (!CollectionUtils.isEmpty(signList)) {
+            for (Sign sign : signList) {
+
+            }
+        }
         return CommonResponse.getSuccessResponse(signList);
     }
 
@@ -186,11 +189,57 @@ public class HomePageController {
     }
 
 
-    //按机构取当月（预约挂号数量41001，总诊疗人次数41002，检查人次数41003，检验人次数41004，医院平均住院日41005）
+    //按机构取当月（预约挂号数量41001，总诊疗人次数41002，检查人次数41003，检验人次数41004，）
     @RequestMapping(value = "/data/get/unit", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getProcessedDataByUnit(AnalysisRequest request) {
         Date startDate = TimeUtil.FirstDayOfThisMonth();
+        Date endDate = new Date();
+        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+        List<String> eventIds = request.getEventIds();
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int eventType = event.getEventType();
+                    int unitType = getUnitType(event);
+                    if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                        Object item = registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        if (item != null) {
+                            map.put(eventId, item);
+                        }
+                    } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                        Object item = registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        if (item != null) {
+                            map.put(eventId, item);
+                        }
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            Event event = DataConstantContainer.getEvent(eventId);
+            if (event != null) {
+                int eventType = event.getEventType();
+                int unitType = getUnitType(event);
+                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                    return CommonResponse.getSuccessResponse(registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                    return CommonResponse.getSuccessResponse(registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                }
+            }
+        }
+        return CommonResponse.getErrorResponse();
+    }
+    
+    //医院平均住院日41005 取前31天
+    @RequestMapping(value = "/data/get/unit/hospital", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getProcessedHospitalDataByUnit(AnalysisRequest request) {
+        Date startDate = TimeUtil.ThirtyOneBefore();
         Date endDate = new Date();
         List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
