@@ -147,7 +147,6 @@ public class HomePageController {
     public Object getSignList() {
         List<Sign> signs = new ArrayList<>();
         List<Sign> signList = registerService.getSignInfo();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return CommonResponse.getSuccessResponse(signList);
     }
 
