@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -146,11 +147,7 @@ public class HomePageController {
     public Object getSignList() {
         List<Sign> signs = new ArrayList<>();
         List<Sign> signList = registerService.getSignInfo();
-        if (!CollectionUtils.isEmpty(signList)) {
-            for (Sign sign : signList) {
-
-            }
-        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return CommonResponse.getSuccessResponse(signList);
     }
 
