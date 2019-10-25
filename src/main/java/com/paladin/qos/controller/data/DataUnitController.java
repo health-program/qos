@@ -1,5 +1,23 @@
 package com.paladin.qos.controller.data;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -9,23 +27,12 @@ import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.controller.data.dto.DataUnitExportCondition;
 import com.paladin.qos.model.data.DataUnit;
-import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataPointMonth;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.data.dto.DataUnitDTO;
 import com.paladin.qos.service.data.dto.DataUnitQuery;
 import com.paladin.qos.service.data.vo.BedReportVO;
 import com.paladin.qos.service.data.vo.DataUnitVO;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping("/qos/data/unit")
@@ -34,8 +41,7 @@ public class DataUnitController extends ControllerSupport {
 	@Autowired
 	private DataUnitService dataUnitService;
 
-	@Autowired
-	private AnalysisService analysisService;
+
 	@GetMapping("/index")
 	public String index() {
 		return "/qos/data/data_unit_index";
