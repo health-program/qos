@@ -3,8 +3,10 @@ package com.paladin.qos.controller;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
 import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.DataMonthRate;
 import com.paladin.qos.service.analysis.data.DataSigningMonth;
 import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
+import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,10 +72,10 @@ public class DataDisplayController {
             curr.add(Calendar.MONTH, 1);
         }
 
-        Map<String, Double> map = new HashMap<>();
         Date currentDate = new Date();
         String strCurrentDate = sdf.format(currentDate);
         List<DataSigningMonth> dataList = analysisService.getArchivesRate();
+        List<DataMonthRate> dataMonthRates=new ArrayList<>();
         long total = 0l;
         if (!CollectionUtils.isEmpty(dataList)) {
             Iterator<DataSigningMonth> iterator = dataList.iterator();
@@ -84,14 +86,18 @@ public class DataDisplayController {
                 } else {
                     for (String strMonth : result) {
                         if (StringUtils.equals(strMonth, data.getMonth())) {
+                            DataMonthRate dataMonthRate=new DataMonthRate();
+                            dataMonthRate.setMonth(strMonth);
                             String strDate=strMonth+"-01";
-                            map.put(strMonth,(analysisService.getArchivesNumber(string2Date(strDate))+Long.valueOf(data.getCount()))/(double)number);
+                            Double value=(analysisService.getArchivesNumber(string2Date(strDate))+Long.valueOf(data.getCount()))/(double)number;
+                            dataMonthRate.setRate(value);
+                            dataMonthRates.add(dataMonthRate);
                         }
                     }
                 }
             }
         }
-        return CommonResponse.getSuccessResponse(map);
+        return CommonResponse.getSuccessResponse(dataMonthRates);
     }
 
     public static Date string2Date(String dateStr) {

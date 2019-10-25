@@ -472,8 +472,9 @@
 
 	<!-- 实际签约信息 -->
 	<select id="getSignInfo" resultType="com.paladin.qos.model.home.Sign">
-		 SELECT  createdunitname AS signOrg,selfname as orgName, gender as orgGender, signperiodfrom as orgDate,signteamname as orgTeam,familnew as orgType
+		 SELECT  createdunitname AS signOrg,selfname as signName, gender as signGender, signperiodtofrom as signDate,teamname as signTeam,familnew as signType
 		 from g_fha_person_sign_main
+		 where STATUS =1  and stateid =0  and LASTFLAG = '1'
 		 order by createdtime desc
 		 limit 30;
 	</select>
