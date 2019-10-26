@@ -294,10 +294,18 @@
     var pieChart3 = echarts.init(document.getElementById('pieChartDiv3'));
 
     function initPieChart1() {
-    	
-        var result = [];
-        result = charResult;
-        var entity = result[15];
+    	 let unitId = selectUnit || 'total';
+         var total=[];
+         for (var i = 0; i < charResult.length; i++) {
+             if (unitId=='total'){
+                 total.push(charResult[i])
+             }else{
+                 if (charResult[i].unitName==unitId){
+                     total.push(charResult[i]);
+                 }
+             }
+         }
+         var entity=total[total.length - 1];
         var ev2V30002 = entity.ev2V30002;
         var evV30001 = (entity.evV30001*100).toFixed(0);
         var evV30002 = entity.evV30002;
@@ -371,9 +379,18 @@
 
 
     function initPieChart2() {
-    	 var result = [];
-         result = charResult;
-         var entity = result[15];
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var entity=total[total.length - 1];
          var ev2V30002 = entity.ev2V30002;
          var evV30001 = (entity.evV30001*100).toFixed(0);
          var evV30002 = entity.evV30002;

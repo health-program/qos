@@ -9,34 +9,7 @@
     <h1>高血压糖尿病情况报表</h1>
 </section>
 <section class="content">
-    <div class="box box-solid">
-        <div class="box-body">
-            <form id="searchbar" class="form-horizontal form-search">
-                <div class="form-group">
-                    <!--<div class="col-md-2">-->
-                        <!--<select name="unitId" class="form-control">-->
-                            <!--<option value="">请选择辖区</option>-->
-                            <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
-                        <!--</select>-->
-                    <!--</div>-->
-                    <div class="col-md-2">
-                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">
-                    </div>
-                    <div class="col-md-2">
-                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="pull-right">
-                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-                        </div>
-                    </div>
-                </div>
-                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                <input type="text" style="display:none">
-            </form>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-md-3">
             <div class="box box-solid">
@@ -205,44 +178,7 @@
         });
     }
 
-    // function convertTableData(eventId,originData, data) {
-    //     var eventData = originData[eventId],
-    //         fieldName = 'ev' + eventId,
-    //         total = 0,
-    //         event = 0;
-    //
-    //     eventData && eventData.forEach(function(item) {
-    //         var id = item.unitId;
-    //         unitData = data[id];
-    //         if (!unitData) {
-    //             unitData = {
-    //                 unitId: id,
-    //                 unitName: item.unitName
-    //             };
-    //             data[id] = unitData;
-    //         }
-    //         unitData[fieldName] = getRate(item);
-    //         unitData[fieldName+'total'] = item.totalNum;
-    //         unitData[fieldName+'event'] = item.eventNum;
-    //         total += item.totalNum;
-    //         event += item.eventNum;
-    //     });
-    //
-    //     var totalData = data['total'];
-    //     if (!totalData) {
-    //         totalData = {
-    //             unitId: 'total',
-    //             unitName: '合计',
-    //         }
-    //         data['total'] = totalData;
-    //     }
-    //     totalData[fieldName] = getRate({
-    //         totalNum: total,
-    //         eventNum: event
-    //     });
-    //     totalData[fieldName+'total']=total;
-    //     totalData[fieldName+'event']=event;
-    // }
+   
 
 
     function unitSelected(row) {

@@ -202,7 +202,7 @@
         totalData[fieldName] = total;
     }
     function unitSelected(row) {
-        selectUnit = row.unitId;
+        selectUnit = row.unitName;
         initPieChart1();
         initPieChart2();
         // initColumnarDiv();
@@ -254,9 +254,18 @@
 
 
     function initPieChart1() {
-    	 var result = [];
-         result = charResult;
-         var entity = result[15];
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var entity=total[total.length - 1];
          var ev1V30003 = entity.ev1V30003;//老年人数体检数
          var evV30003 = (entity.evV30003).toFixed(0);//老年人数
          var evV30008 = entity.evV30008;//有完整年度体检的老年人数
@@ -331,9 +340,18 @@
 
     function initPieChart2() {
 
-    	 var result = [];
-         result = charResult;
-         var entity = result[15];
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var entity=total[total.length - 1];
          var ev1V30003 = entity.ev1V30003;//老年人数体检数
          var evV30003 = (entity.evV30003).toFixed(0);//老年人数
          var evV30008 = entity.evV30008;//有完整年度体检的老年人数
