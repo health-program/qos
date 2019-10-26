@@ -9,34 +9,7 @@
     <h1>辖区建档情况报表</h1>
 </section>
 <section class="content">
-    <!--<div class="box box-solid">-->
-        <!--<div class="box-body">-->
-            <!--<form id="searchbar" class="form-horizontal form-search">-->
-                <!--<div class="form-group">-->
-                    <!--&lt;!&ndash;<div class="col-md-2">&ndash;&gt;-->
-                        <!--&lt;!&ndash;<select name="unitId" class="form-control">&ndash;&gt;-->
-                            <!--&lt;!&ndash;<option value="">请选择辖区</option>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</select>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                    <!--<div class="col-md-2">-->
-                        <!--<input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">-->
-                    <!--</div>-->
-                    <!--<div class="col-md-2">-->
-                        <!--<input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">-->
-                    <!--</div>-->
-                    <!--<div class="col-md-8">-->
-                        <!--<div class="pull-right">-->
-                            <!--<button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>-->
-                            <!--<button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--&lt;!&ndash; 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 &ndash;&gt;-->
-                <!--<input type="text" style="display:none">-->
-            <!--</form>-->
-        <!--</div>-->
-    <!--</div>-->
+    
     <div class="row">
         <div class="col-md-8">
             <div class="box box-solid">
@@ -73,6 +46,7 @@
     });
 
     var table, sumChart, dayChart, sumData, requestParams,selectUnit,dataVal;
+    var charResult=[];
     $(function() {
         var day=new Date();
         day.setTime(day.getTime());
@@ -123,25 +97,44 @@
             columns: [
                 [
                     { title: "辖区", field: "unitName" },
-                    { title: "常住居民数", field: "peopleNumber" },
-                    { title: "健康档案数", field: "activeArchivesNumber" },
-                    { title: "建档率", field: "createArchivesRate" ,
-                        formatter: function(value, row, index) {
-                        if(value)
-                            return value + "%";
-                        }},
-                    { title: "审核公开的健康档案数", field: "publicArchivesNumber" },
-                    { title: "档案公开率", field: "publicArchivesRate",
-                        formatter: function(value, row, index) {
+                    { title: "常住居民数", field: "evV30001",
+                    	formatter: function(value, row, index) {
                             if(value)
-                            return value + "%";
-                        }},
+                                return (value*10000).toFixed(0);
+                        }
+                    },
+                    { title: "健康档案数", field: "ev2V30002",
+                    	formatter: function(value, row, index) {
+                            if(value)
+                                return value.toFixed(0);
+                        }
+                    },
+                    { title: "建档率", field: "createArchivesRate" ,
+                    	formatter: function(value, row, index) {
+                    		if(row.evV30001==0){
+                    			return "0%"
+                    		}else{
+                    			return (row.ev2V30002/(row.evV30001*100)).toFixed(2) * 1+"%";
+                    		}
+                        }
+                    	
+                    },
+                    { title: "审核公开的健康档案数", field: "evV30002" },
+                    { title: "档案公开率", field: "publicArchivesRate",
+                    	formatter: function(value, row, index) {
+                    		if(row.ev1V30001==0){
+                    			return "0%"
+                    		}else{
+                    			return (row.evV30002/row.ev2V30002*100).toFixed(2) * 1+"%";
+                    		}
+                        }
+                    },
 
                     { title: "档案使用率", field: "createArchivesRate",
-                        formatter: function(value, row, index) {
-                            if(value)
-                                return value + "%";
-                        }}
+                    	formatter: function(value, row, index) {
+                    		return "0%";
+                        }
+                    }
                 ]
             ],
             url: '/qos/gongwei/archives/search/all',
@@ -157,39 +150,27 @@
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
                 var data = {};
-                sumData = res || [];
-                var totalPeopleNumber=0;
-                var totalActiveArchivesNumber=0;
-                var totalPublicArchivesNumber=0;
-                for (var i = 0; i < sumData.length; i++) {
-                    var row = sumData[i];
-                    totalPeopleNumber+=row.peopleNumber;
-                    totalActiveArchivesNumber+=row.activeArchivesNumber;
-                    totalPublicArchivesNumber+=row.publicArchivesNumber;
-                    row.createArchivesRate = getActiveRate(row);
-                    row.publicArchivesRate = getPublicRate(row);
+                convertCount2TableData(response, 'V30001', data);
+                convertCount1TableData(response, 'V30002', data);
+                convertCount3TableData(response, 'V30002', data);
+                
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
                 }
-                var total={
-                    "unitName" : "合计",
-                    "peopleNumber" :totalPeopleNumber,
-                    "activeArchivesNumber":totalActiveArchivesNumber,
-                    "createArchivesRate" : getRate(totalPeopleNumber,totalActiveArchivesNumber),
-                    "publicArchivesNumber":totalPublicArchivesNumber,
-                    "publicArchivesRate":getRate(totalActiveArchivesNumber,totalPublicArchivesNumber)
-                }
-                sumData.push(total);
-                dataVal = data|| [];
-
+                charResult = result;
                 initPieChart1();
                 initPieChart2();
                 initPieChart3();
-                return sumData;
+                return result;
             }
         });
     }
-
 
     function unitSelected(row) {
         selectUnit = row.unitName;
@@ -197,299 +178,344 @@
         initPieChart2();
         initPieChart3();
     }
+    
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = parseFloat(item.total);
+            total += parseFloat(item.total);
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    
+    function convertCount1TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev2' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = parseFloat(item.total);
+            total += parseFloat(item.total);
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    
+    function convertCount3TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.publicnum;
+            total += item.publicnum;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed|| 2);
+    }
 
     var pieChart1 = echarts.init(document.getElementById('pieChartDiv1'));
     var pieChart2 = echarts.init(document.getElementById('pieChartDiv2'));
     var pieChart3 = echarts.init(document.getElementById('pieChartDiv3'));
 
     function initPieChart1() {
-        if (sumData==0){
-            showChartInfo(pieChart1, '暂无数据显示');
-            return false;
-        }
-
-        var sumOpen=0;
-        var sumUse=0;
+    	
+        var result = [];
+        result = charResult;
+        var entity = result[15];
+        var ev2V30002 = entity.ev2V30002;
+        var evV30001 = (entity.evV30001*100).toFixed(0);
+        var evV30002 = entity.evV30002;
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
-
-        let unitId = selectUnit || 'total';
-        var total=[];
-        for (var i = 0; i < sumData.length; i++) {
-            if (unitId=='total'){
-                total.push(sumData[i])
-            }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
-                }
-            }
-        }
-
-        for (var i = 0; i < total.length; i++) {
-            var it = total[i];
-            sumOpen+=it.peopleNumber;
-            sumUse+=it.activeArchivesNumber;
-        }
-        var x = sumUse * 100 / sumOpen;
-        occupyRate=x.toFixed(2) * 1;
+       
+        occupyRate=(ev2V30002/evV30001).toFixed(2) * 1;
         remainRate=(100-occupyRate).toFixed(2);
         pieMessage=occupyRate+"%";
-
+        
         var option = {
 
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            // title: {
-            //     text: '建档率',
-            //
-            // },
-            color: ['#3398DB','#999999'],
-            graphic: [{ //环形图中间添加文字
-                type: 'text', //通过不同top值可以设置上下显示
-                left: 'center',
-                top: '45%',
-                style: {
-                    text: pieMessage+'\n'+'建档率',
-                    textAlign: 'center',
-                    fill: 'black', //文字的颜色
-                    width: 30,
-                    height: 30,
-                    fontSize: 20,
-                    fontFamily: "Microsoft YaHei"
-                }
-            }],
-            series: [
-                {
-                    name:'建档率',
-                    type:'pie',
-                    radius: ['50%', '80%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'建档率',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'建档率',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
 
-                    },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:occupyRate,
-                            name:'建档率'
-                        },
-                        {
-                            value:remainRate,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{//禁止鼠标悬停显示提示框
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
-        };
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'建档率'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
         pieChart1.setOption(option,true);
     };
 
 
 
     function initPieChart2() {
-        if (sumData==0){
-            showChartInfo(pieChart2, '暂无数据显示');
-            return false;
-        }
-        var sumOpen=0;
-        var sumUse=0;
-        var occupyRate=0;
-        var remainRate=0;
-        var pieMessage;
-        var total=[];
-        let unitId = selectUnit || 'total';
-        for (var i = 0; i < sumData.length; i++) {
-            if (unitId=='total'){
-                total.push(sumData[i])
-            }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
-                }
-            }
-        }
+    	 var result = [];
+         result = charResult;
+         var entity = result[15];
+         var ev2V30002 = entity.ev2V30002;
+         var evV30001 = (entity.evV30001*100).toFixed(0);
+         var evV30002 = entity.evV30002;
+         var occupyRate=0;
+         var remainRate=0;
+         var pieMessage;
+        
+         occupyRate=(evV30002/ev2V30002*100).toFixed(2) * 1;
+         remainRate=(100-occupyRate).toFixed(2);
+         pieMessage=occupyRate+"%";
+         
+         var option = {
 
-        for (var i = 0; i < total.length; i++) {
-            var it = total[i];
-            sumOpen+=it.activeArchivesNumber;
-            sumUse+=it.publicArchivesNumber;
-        }
-        var x = sumUse * 100 / sumOpen;
-        occupyRate=x.toFixed(2) * 1;
-        remainRate=(100-occupyRate).toFixed(2);
-        pieMessage=occupyRate+"%";
+         	            tooltip: {
+         	                trigger: 'item',
+         	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+         	            },
+         	            color: ['#3398DB','#999999'],
+         	            graphic: [{ //环形图中间添加文字
+         	                type: 'text', //通过不同top值可以设置上下显示
+         	                left: 'center',
+         	                top: '45%',
+         	                style: {
+         	                    text: pieMessage+'\n'+'档案公开率',
+         	                    textAlign: 'center',
+         	                    fill: 'black', //文字的颜色
+         	                    width: 30,
+         	                    height: 30,
+         	                    fontSize: 20,
+         	                    fontFamily: "Microsoft YaHei"
+         	                }
+         	            }],
+         	            series: [
+         	                {
+         	                    name:'档案公开率',
+         	                    type:'pie',
+         	                    radius: ['50%', '80%'],
+         	                    avoidLabelOverlap: false,
+         	                    label: {
+         	                        normal: {
+         	                            show: false,
+         	                            position: 'center'
+         	                        },
 
-        var option = {
-
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            // title: {
-            //     text: '档案公开率',
-            //
-            // },
-            color: ['#3398DB','#999999'],
-            graphic: [{ //环形图中间添加文字
-                type: 'text', //通过不同top值可以设置上下显示
-                left: 'center',
-                top: '45%',
-                style: {
-                    text: pieMessage+'\n'+'档案公开率',
-                    textAlign: 'center',
-                    fill: 'black', //文字的颜色
-                    width: 30,
-                    height: 30,
-                    fontSize: 20,
-                    fontFamily: "Microsoft YaHei"
-                }
-            }],
-            series: [
-                {
-                    name:'档案公开率',
-                    type:'pie',
-                    radius: ['50%', '80%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
-
-                    },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:occupyRate,
-                            name:'档案公开率'
-                        },
-                        {
-                            value:remainRate,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{//禁止鼠标悬停显示提示框
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
-        };
-        pieChart2.setOption(option,true);
+         	                    },
+         	                    labelLine: {
+         	                        normal: {
+         	                            show: false
+         	                        }
+         	                    },
+         	                    data:[
+         	                        {
+         	                            value:occupyRate,
+         	                            name:'档案公开率'
+         	                        },
+         	                        {
+         	                            value:remainRate,
+         	                            name:'',
+         	                            hoverAnimation:false,
+         	                            tooltip:{//禁止鼠标悬停显示提示框
+         	                                show:false,
+         	                            },
+         	                        }
+         	                    ]
+         	                }
+         	            ]
+         	        };
+         pieChart2.setOption(option,true);
     }
 
     function initPieChart3() {
-        if (sumData==0){
-            showChartInfo(pieChart1, '暂无数据显示');
-            return false;
-        }
-
-        var sumOpen=0;
-        var sumUse=0;
+        
+    	var result = [];
+        result = charResult;
+        var entity = result[15];
+        var ev2V30002 = entity.ev2V30002;
+        var evV30001 = (entity.evV30001*100).toFixed(0);
+        var evV30002 = entity.evV30002;
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
-
-        let unitId = selectUnit || 'total';
-        var total=[];
-        for (var i = 0; i < sumData.length; i++) {
-            if (unitId=='total'){
-                total.push(sumData[i])
-            }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
-                }
-            }
-        }
-
-        for (var i = 0; i < total.length; i++) {
-            var it = total[i];
-            sumOpen+=it.peopleNumber;
-            sumUse+=it.activeArchivesNumber;
-        }
-        var x = sumUse * 100 / sumOpen;
-        occupyRate=x.toFixed(2) * 1;
+       
+        occupyRate=0
         remainRate=(100-occupyRate).toFixed(2);
         pieMessage=occupyRate+"%";
-
+        
         var option = {
 
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            // title: {
-            //     text: '建档率',
-            //
-            // },
-            color: ['#3398DB','#999999'],
-            graphic: [{ //环形图中间添加文字
-                type: 'text', //通过不同top值可以设置上下显示
-                left: 'center',
-                top: '45%',
-                style: {
-                    text: pieMessage+'\n'+'档案使用率',
-                    textAlign: 'center',
-                    fill: 'black', //文字的颜色
-                    width: 30,
-                    height: 30,
-                    fontSize: 20,
-                    fontFamily: "Microsoft YaHei"
-                }
-            }],
-            series: [
-                {
-                    name:'档案使用率',
-                    type:'pie',
-                    radius: ['50%', '80%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+        	            tooltip: {
+        	                trigger: 'item',
+        	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+        	            },
+        	            color: ['#3398DB','#999999'],
+        	            graphic: [{ //环形图中间添加文字
+        	                type: 'text', //通过不同top值可以设置上下显示
+        	                left: 'center',
+        	                top: '45%',
+        	                style: {
+        	                    text: pieMessage+'\n'+'档案使用率',
+        	                    textAlign: 'center',
+        	                    fill: 'black', //文字的颜色
+        	                    width: 30,
+        	                    height: 30,
+        	                    fontSize: 20,
+        	                    fontFamily: "Microsoft YaHei"
+        	                }
+        	            }],
+        	            series: [
+        	                {
+        	                    name:'档案使用率',
+        	                    type:'pie',
+        	                    radius: ['50%', '80%'],
+        	                    avoidLabelOverlap: false,
+        	                    label: {
+        	                        normal: {
+        	                            show: false,
+        	                            position: 'center'
+        	                        },
 
-                    },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:occupyRate,
-                            name:'档案使用率'
-                        },
-                        {
-                            value:remainRate,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{//禁止鼠标悬停显示提示框
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
-        };
+        	                    },
+        	                    labelLine: {
+        	                        normal: {
+        	                            show: false
+        	                        }
+        	                    },
+        	                    data:[
+        	                        {
+        	                            value:occupyRate,
+        	                            name:'档案使用率'
+        	                        },
+        	                        {
+        	                            value:remainRate,
+        	                            name:'',
+        	                            hoverAnimation:false,
+        	                            tooltip:{//禁止鼠标悬停显示提示框
+        	                                show:false,
+        	                            },
+        	                        }
+        	                    ]
+        	                }
+        	            ]
+        	        };
         pieChart3.setOption(option,true);
     };
 

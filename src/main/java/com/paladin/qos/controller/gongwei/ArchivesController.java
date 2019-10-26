@@ -5,12 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.alibaba.fastjson.JSON;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.analysis.AnalysisConstant;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.data.vo.DataUnitVO;
 import com.paladin.qos.service.gongwei.ArchivesManagementService;
 import com.paladin.qos.service.gongwei.vo.ArchivesMonthsVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
 
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.analysis.DataByUnit;
+import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.analysis.DataConstantContainer.Unit;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
+import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
@@ -149,7 +155,7 @@ public class ArchivesController {
     }
 
 
-    @RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/search/all123", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object searchAll(AnalysisRequest request) {
 
@@ -178,4 +184,125 @@ public class ArchivesController {
         return CommonResponse.getSuccessResponse(archivesManagementVOList);
     }
 
+    public static <T> List<T> toBeanList(String json, Class<T> clazz) {
+		List<T> beanList = null;
+
+		try {
+			if (json != null) {
+				beanList = JSON.parseArray(json, clazz);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return beanList;
+	}
+    
+ // 单位排序
+ 	private void orderByUnit(List<EntityGongwei> list) {
+ 		if (list != null && list.size() > 0) {
+ 			Collections.sort(list, new Comparator<EntityGongwei>() {
+ 				@Override
+ 				public int compare(EntityGongwei o1, EntityGongwei o2) {
+ 					String uid1 = o1.getUnitId();
+ 					String uid2 = o1.getUnitId();
+ 					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+ 				}
+ 			});
+ 		}
+ 	}
+
+    //常住居民数，健康档案数，档案公开数
+	@RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getTotalData(AnalysisRequest request,EntityGongwei entityGongwei) {
+    	Map<String, Object> map = new HashMap<>();
+    	List<Unit> units = DataConstantContainer.getCommunityList();
+    	List<EntityGongwei> danganList1=new ArrayList<EntityGongwei>();
+    	List<EntityGongwei> publicList1=new ArrayList<EntityGongwei>();
+    	
+    	String item = analysisService.getTotalData("V30001");
+    	String item1 = analysisService.getTotalData("V30002");
+        if(!StringUtils.isEmpty(item)){
+        	List<EntityGongwei> danganList = toBeanList(item,EntityGongwei.class);
+        	for(EntityGongwei shequ:danganList){
+        		
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				danganList1.add(shequ);
+        			}
+        		}
+        	}
+    	}
+    	
+        if(!StringUtils.isEmpty(item1)){
+        	List<EntityGongwei> publicList = toBeanList(item1,EntityGongwei.class);
+        	for(EntityGongwei shequ:publicList){
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				publicList1.add(shequ);
+        			}
+        		}
+        	}
+        }
+    	
+    	orderByUnit(danganList1);
+    	orderByUnit(publicList1);
+    	
+    	map.put("V30001", danganList1);
+    	map.put("V30002", publicList1);
+    	return  CommonResponse.getSuccessResponse(map);
+    }
+    
+	
+	//老年人体检率，老年人健康管理率
+	@RequestMapping(value = "/search/oldPeople", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getoldPeople(AnalysisRequest request,EntityGongwei entityGongwei) {
+    	Map<String, Object> map = new HashMap<>();
+    	List<Unit> units = DataConstantContainer.getCommunityList();
+    	List<EntityGongwei> checkList1=new ArrayList<EntityGongwei>();
+    	List<EntityGongwei> fullYearList1=new ArrayList<EntityGongwei>();
+    	
+    	String item = analysisService.getTotalData("V30003");//老年人数，老年人体检数
+    	String item1 = analysisService.getTotalData("V30008");//老年人数，有完整年度体检的老年人数
+        if(!StringUtils.isEmpty(item)){
+        	List<EntityGongwei> checkList = toBeanList(item,EntityGongwei.class);
+        	for(EntityGongwei shequ:checkList){
+        		
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				checkList1.add(shequ);
+        			}
+        		}
+        	}
+    	}
+    	
+        if(!StringUtils.isEmpty(item1)){
+        	List<EntityGongwei> fullYearList = toBeanList(item1,EntityGongwei.class);
+        	for(EntityGongwei shequ:fullYearList){
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				fullYearList1.add(shequ);
+        			}
+        		}
+        	}
+        }
+    	
+    	orderByUnit(checkList1);
+    	orderByUnit(fullYearList1);
+    	
+    	map.put("V30003", checkList1);
+    	map.put("V30008", fullYearList1);
+    	return  CommonResponse.getSuccessResponse(map);
+    }
+	
+    
 }

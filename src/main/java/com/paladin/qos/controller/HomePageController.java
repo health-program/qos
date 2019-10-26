@@ -146,11 +146,13 @@ public class HomePageController {
     public Object getSignList() {
         List<Sign> signs = new ArrayList<>();
         List<Sign> signList = registerService.getSignInfo();
+
         if (!CollectionUtils.isEmpty(signList)) {
             for (Sign sign : signList) {
 
             }
         }
+
         return CommonResponse.getSuccessResponse(signList);
     }
 

@@ -312,4 +312,16 @@ public class TimeUtil {
 		return lastDateOfPrevMonth;
 	}
 
+	public static Date ThirtyOneBefore() {
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		//指定日期月份减去一
+		c.add(Calendar.DATE, -31);
+		
+		//获取最终的时间
+		Date thirtyOneBefore = c.getTime();
+        return thirtyOneBefore;
+	}
+
 }
