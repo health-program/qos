@@ -1,21 +1,7 @@
 package com.paladin.qos.controller.epidemic;
 
-import java.io.IOException;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.alibaba.druid.util.StringUtils;
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.exception.BusinessException;
@@ -35,6 +21,15 @@ import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
 import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.OrgSchoolPeopleService;
 import com.paladin.qos.service.school.OrgSchoolService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.Valid;
+import java.io.IOException;
 
 /** 疫情管理
  * @author 黄伟华
@@ -108,6 +103,7 @@ public class EpidemicController extends ControllerSupport {
     }
     
     @RequestMapping("/save")
+	@SysControllerLog(action = "新增学校疫情")
     @ResponseBody
     public Object save(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){
 	if (bindingResult.hasErrors()) {
@@ -137,6 +133,7 @@ public class EpidemicController extends ControllerSupport {
     }
     
     @RequestMapping("/update")
+	@SysControllerLog(action = "修改学校疫情")
     @ResponseBody
     public Object update(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){
 		if (bindingResult.hasErrors()) {
@@ -155,6 +152,7 @@ public class EpidemicController extends ControllerSupport {
     
     
     @RequestMapping("/remove")
+	@SysControllerLog(action = "删除学校疫情")
     @ResponseBody
     public Object remove(@RequestParam String id){
 	return CommonResponse.getSuccessResponse(epidemicSituationService.removeByPrimaryKey(id));

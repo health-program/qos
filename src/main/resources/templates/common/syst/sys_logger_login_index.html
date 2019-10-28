@@ -54,7 +54,7 @@
                 [
                 	{ title: "登录账号", field: "account" },
 					{ title: "IP", field: "ip" },
-					{ title: "登录时间", field: "createTime", formatter:"datetime" ,sortable:true}
+					{ title: "操作", field: "loginAction" ,formatter : function (value,row,index) {return value ? value : '无';}}
                 ]
             ],
             url: '/common/sys/logger/login/find/page',

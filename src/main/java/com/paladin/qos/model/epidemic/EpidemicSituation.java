@@ -1,8 +1,9 @@
 package com.paladin.qos.model.epidemic;
 
-import java.util.Date;
-import javax.persistence.Id;
 import com.paladin.framework.common.BaseModel;
+
+import javax.persistence.Id;
+import java.util.Date;
 
 public class EpidemicSituation extends BaseModel{
     
@@ -206,5 +207,8 @@ public class EpidemicSituation extends BaseModel{
 	public void setSchoolYear(String schoolYear) {
 		this.schoolYear = schoolYear;
 	}
+
+    @Override
+    public String toString() { return "学校疫情ID:" + id ; }
     
 }

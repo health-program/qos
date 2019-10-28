@@ -1,27 +1,23 @@
 package com.paladin.common.specific;
 
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationListener;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.HostAuthenticationToken;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.web.subject.WebSubject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.paladin.common.model.syst.SysLoggerLogin;
 import com.paladin.common.service.syst.SysLoggerLoginService;
 import com.paladin.common.service.syst.SysUserService;
 import com.paladin.common.util.IPUtil;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.*;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.web.subject.WebSubject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public class CommonAuthenticationListener implements AuthenticationListener {
 
@@ -39,7 +35,7 @@ public class CommonAuthenticationListener implements AuthenticationListener {
 		if (principal instanceof UserSession) {
 			UserSession userSession = (UserSession) principal;
 
-			String ip = null;
+			String ip;
 			if (token instanceof HostAuthenticationToken) {
 				ip = ((HostAuthenticationToken) token).getHost();
 			} else {
@@ -60,6 +56,10 @@ public class CommonAuthenticationListener implements AuthenticationListener {
 			// 待扩展
 			model.setLoginType(1);
 			model.setUserId(userSession.getUserId());
+			LocalDateTime now = LocalDateTime.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日 hh:mm a");
+			String loginTime = now.format(formatter);
+			model.setLoginAction(userSession.getUserName()+"：登录系统("+loginTime+")");
 			model.setCreateTime(new Date());
 
 			sysLoggerLoginService.save(model);

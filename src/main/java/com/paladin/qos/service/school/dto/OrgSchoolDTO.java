@@ -223,5 +223,9 @@ public class OrgSchoolDTO {
 	public void setSchoolYear(String schoolYear) {
 	    this.schoolYear = schoolYear;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "学校ID:" + id;
+	}
 }

@@ -112,4 +112,8 @@ public class FamilyDoctorPersonnelDTO {
 	    this.isTeamCaptain = isTeamCaptain;
 	}
 
+	@Override
+	public String toString() {
+		return "家庭医生人员姓名:" + name;
+	}
 }
