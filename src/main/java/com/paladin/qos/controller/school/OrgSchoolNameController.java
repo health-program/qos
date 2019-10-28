@@ -1,35 +1,28 @@
 package com.paladin.qos.controller.school;
 
 import com.github.pagehelper.util.StringUtil;
-import com.paladin.qos.controller.school.dto.OrgSchoolNameExportCondition;
-import com.paladin.qos.model.school.OrgSchoolName;
-import com.paladin.qos.service.school.OrgSchoolNameService;
-import com.paladin.qos.service.school.dto.OrgSchoolNameQuery;
-import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
-import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.controller.school.dto.OrgSchoolNameExportCondition;
+import com.paladin.qos.model.school.OrgSchoolName;
+import com.paladin.qos.service.school.OrgSchoolNameService;
+import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
+import com.paladin.qos.service.school.dto.OrgSchoolNameQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolNameVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * < 学校管理>
@@ -80,6 +73,7 @@ public class OrgSchoolNameController extends ControllerSupport {
     }
     
     @PostMapping("/save")
+	@SysControllerLog(action = "新增学校名称")
     @ResponseBody
     public Object save(@Valid OrgSchoolNameDTO dto,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -115,6 +109,7 @@ public class OrgSchoolNameController extends ControllerSupport {
 	}
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@SysControllerLog(action = "删除学校名称")
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgSchoolNameService.removeBySchoolName(id));

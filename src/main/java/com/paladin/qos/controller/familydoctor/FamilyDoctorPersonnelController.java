@@ -1,37 +1,30 @@
 package com.paladin.qos.controller.familydoctor;
 
-import com.paladin.qos.controller.familydoctor.dto.FamilyDoctorPersonnelExportCondition;
-import com.paladin.qos.model.familydoctor.FamilyDoctorPersonnel;
-import com.paladin.qos.model.familydoctor.FamilyDoctorTeam;
-import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
-import com.paladin.qos.service.familydoctor.FamilyDoctorTeamService;
-import com.paladin.qos.service.familydoctor.dto.FamilyDoctorPersonnelQuery;
-import com.paladin.qos.service.familydoctor.dto.FamilyDoctorPersonnelDTO;
-import com.paladin.qos.service.familydoctor.vo.FamilyDoctorPersonnelVO;
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.controller.familydoctor.dto.FamilyDoctorPersonnelExportCondition;
+import com.paladin.qos.model.familydoctor.FamilyDoctorPersonnel;
+import com.paladin.qos.model.familydoctor.FamilyDoctorTeam;
+import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
+import com.paladin.qos.service.familydoctor.FamilyDoctorTeamService;
+import com.paladin.qos.service.familydoctor.dto.FamilyDoctorPersonnelDTO;
+import com.paladin.qos.service.familydoctor.dto.FamilyDoctorPersonnelQuery;
+import com.paladin.qos.service.familydoctor.vo.FamilyDoctorPersonnelVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/qos/family/doctor/personnel")
@@ -89,6 +82,7 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
     }
     
     @PostMapping("/save")
+	@SysControllerLog(action = "新增家庭医生人员")
     @ResponseBody
     public Object save(@Valid FamilyDoctorPersonnelDTO familyDoctorPersonnelDTO,@RequestParam String teamId,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -110,6 +104,7 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
     }
 
     @PostMapping("/update")
+	@SysControllerLog(action = "修改家庭医生人员")
     @ResponseBody
     public Object update(@Valid FamilyDoctorPersonnelDTO familyDoctorPersonnelDTO,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -124,6 +119,7 @@ public class FamilyDoctorPersonnelController extends ControllerSupport {
     }
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@SysControllerLog(action = "删除家庭医生人员")
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(familyDoctorPersonnelService.removeByPrimaryKey(id));

@@ -13,6 +13,8 @@ public class SysLoggerLoginVO {
 	// 登录方式
 	private Integer loginType;
 
+	private String loginAction;
+
 	// 登录账号
 	private String account;
 
@@ -81,4 +83,11 @@ public class SysLoggerLoginVO {
 		this.createTime = createTime;
 	}
 
+	public String getLoginAction() {
+		return loginAction;
+	}
+
+	public void setLoginAction(String loginAction) {
+		this.loginAction = loginAction;
+	}
 }

@@ -68,4 +68,9 @@ public class FamilyDoctorTeamDTO {
 	public void setCoordinate(String coordinate) {
 		this.coordinate = coordinate;
 	}
+
+	@Override
+	public String toString() {
+		return "家庭医生团队名称:" + teamName;
+	}
 }

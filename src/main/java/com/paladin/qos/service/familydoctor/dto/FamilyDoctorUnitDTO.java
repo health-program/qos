@@ -57,5 +57,10 @@ public class FamilyDoctorUnitDTO {
 	public void setStudioName(String studioName) {
 	    this.studioName = studioName;
 	}
+
+	@Override
+	public String toString() {
+		return "家庭医生社区名称:" + unit;
+	}
 	
 }
