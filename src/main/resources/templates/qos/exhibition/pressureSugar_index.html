@@ -97,8 +97,15 @@
             columns: [
                 [
                     { title: "辖区", field: "unitName" },
-                    { title: "高血压管理数", field: "evV30009" },
+                    { title: "高血压管理数", field: "evV30009",visible:false },
                     { title: "高血压随访数", field: "ev1V30009",visible:false },
+                    
+                    { title: "高血压管理数", field: "ev1V30004",
+                    	formatter: function(value, row, index) {
+                            if(value)
+                                return value.toFixed(0);
+                        }		
+                    },
                     { title: "管理人群血压<br>控制率", field: "evV30004"},
                     { title: "高血压患者规范<br>管理率", field: "pressureManageRate",
                     	formatter: function(value, row, index) {
@@ -109,8 +116,15 @@
                     		}
                         }	
                     },
-                    { title: "糖尿病管理数", field: "evV30010"},
+                    { title: "糖尿病管理数", field: "evV30010",visible:false},
                     { title: "糖尿病随访数", field: "ev1V30010",visible:false },
+                    
+                    { title: "糖尿病管理数", field: "ev1V30005",
+                    	formatter: function(value, row, index) {
+                            if(value)
+                                return value.toFixed(0);
+                        }
+                    },
                     { title: "管理人群血糖<br>控制率", field: "evV30005"},
                     { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate",
                     	formatter: function(value, row, index) {
@@ -153,8 +167,10 @@
                 convertCount3TableData(response, 'V30010', data);//糖尿病管理数
                 convertCount4TableData(response, 'V30010', data);//糖尿病随访数
                 convertRate1TableData(response, 'V30004', data);//管理人群血压
-                
                 convertRate2TableData(response, 'V30005', data);//管理人群糖尿病
+                
+                convertCount5TableData(response, 'V30004', data);//高血压管理数(年报内)
+                convertCount5TableData(response, 'V30005', data);//糖尿病管理数(年报内)
                 var result = []
                 for (var o in data) {
                     result.push(data[o]);
@@ -170,7 +186,35 @@
             }
         });
     }
+    function convertCount5TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev1' + eventId,
+            total = 0;
 
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = parseFloat(item.total);
+            total += parseFloat(item.total);
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
     function convertCount2TableData(originData, eventId, data) {
         var eventData = originData[eventId],
             fieldName = 'ev' + eventId,
