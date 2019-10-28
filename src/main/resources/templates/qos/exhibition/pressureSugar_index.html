@@ -70,6 +70,7 @@
         barChart2.resize();
     });
     var table, sumChart, dayChart, sumData, requestParams,result,selectUnit;
+    var charResult=[];
     $(function() {
         // var day=new Date();
         // day.setTime(day.getTime());
@@ -96,14 +97,30 @@
             columns: [
                 [
                     { title: "辖区", field: "unitName" },
-                    { title: "高血压管理数", field: "pressureNumber" },
-                    // { title: "高血压管理数", field: "pressureManageNumber" },
-                    { title: "管理人群血压<br>控制率", field: "pressureControlRate"},
-                    { title: "高血压患者规范<br>管理率", field: "pressureManageRate" },
-                    { title: "糖尿病管理数", field: "sugarNumber"},
-                    // { title: "糖尿病管理数", field: "sugarManageNumber"},
-                    { title: "管理人群血糖<br>控制率", field: "sugarControlRate"},
-                    { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate"}
+                    { title: "高血压管理数", field: "evV30009" },
+                    { title: "高血压随访数", field: "ev1V30009",visible:false },
+                    { title: "管理人群血压<br>控制率", field: "evV30004"},
+                    { title: "高血压患者规范<br>管理率", field: "pressureManageRate",
+                    	formatter: function(value, row, index) {
+                    		if(row.ev1V30009==0){
+                    			return "0%"
+                    		}else{
+                    			return (row.evV30009/row.ev1V30009*100).toFixed(2) * 1+"%";
+                    		}
+                        }	
+                    },
+                    { title: "糖尿病管理数", field: "evV30010"},
+                    { title: "糖尿病随访数", field: "ev1V30010",visible:false },
+                    { title: "管理人群血糖<br>控制率", field: "evV30005"},
+                    { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate",
+                    	formatter: function(value, row, index) {
+                    		if(row.ev1V30010==0){
+                    			return "0%"
+                    		}else{
+                    			return (row.evV30010/row.ev1V30010*100).toFixed(2) * 1+"%";
+                    		}
+                        }	
+                    }
                 ]
             ],
             url: '/qos/gongwei/pressureSugar/search/all',
@@ -125,62 +142,234 @@
                 requestParams = params;
                 return params;
             },
-            responseHandler: function(res) {
-                sumData = res || [];
-                result = []
-
-                for (var o in sumData) {
-                    result.push(sumData[o]);
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
                 }
-                var totalPressureNumber=0;
-                var totalPressureRecentReach=0;
-                var totalPressureManageNumber=0;
-                var totalPressureFollowNumber=0;
-                var totalSugarNumber=0;
-                var totalSugarRecentReach=0;
-                var totalSugarManageNumber=0;
-                var totalSugarFollowNumber=0;
-                for (var i = 0; i < sumData.length; i++) {
-                    var row = sumData[i];
-                    totalPressureNumber+=row.pressureNumber;
-                    totalPressureManageNumber+=row.pressureManageNumber;
-                    totalPressureRecentReach+=row.pressureRecentReach;
-                    totalPressureFollowNumber+=row.pressureFollowNumber;
-                    totalSugarNumber+=row.sugarNumber;
-                    totalSugarManageNumber+=row.sugarManageNumber;
-                    totalSugarRecentReach+=row.sugarRecentReach;
-                    totalSugarFollowNumber+=row.sugarFollowNumber;
-                    row.pressureControlRate = getRate(row.pressureRecentReach,row.pressureNumber);
-                    row.pressureManageRate=getRate(row.pressureManageNumber,row.pressureFollowNumber);
-                    row.sugarControlRate=getRate(row.sugarRecentReach,row.sugarNumber);
-                    row.sugarManageRate = getRate(row.sugarManageNumber,row.sugarFollowNumber);
+                var data = {};
+                convertCount2TableData(response, 'V30009', data);//高血压管理数
+                convertCount1TableData(response, 'V30009', data);//高血压随访数
+               
+                convertCount3TableData(response, 'V30010', data);//糖尿病管理数
+                convertCount4TableData(response, 'V30010', data);//糖尿病随访数
+                convertRate1TableData(response, 'V30004', data);//管理人群血压
+                
+                convertRate2TableData(response, 'V30005', data);//管理人群糖尿病
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
                 }
-                var total={
-                    "unitName" : "合计",
-                    "pressureNumber" :totalPressureNumber,
-                    "pressureManageNumber":totalPressureManageNumber,
-                    "pressureControlRate" : getRate(totalPressureRecentReach,totalPressureNumber),
-                    "pressureManageRate":getRate(totalPressureManageNumber,totalPressureFollowNumber),
-                    "sugarNumber":totalSugarNumber,
-                    "sugarManageNumber":totalSugarManageNumber,
-                    "sugarControlRate":getRate(totalSugarRecentReach,totalSugarNumber),
-                    "sugarManageRate":getRate(totalSugarManageNumber,totalSugarFollowNumber),
-                }
-                sumData.push(total);
-                 initPieChart1();
-                 initPieChart2();
-                 initPieChart3();
-                 initPieChart4();
-                 initColumnDiv1();
-                 initColumnDiv2();
-                return sumData;
+                charResult = result;
+                initPieChart1();
+                initPieChart2();
+                initPieChart3();
+                initPieChart4();
+                initColumnDiv1();
+                initColumnDiv2();
+                return result;
             }
         });
     }
 
-   
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
 
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.pressuremanagenumber;
+            total += item.pressuremanagenumber;
+        });
 
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+
+    function convertCount1TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev1' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.pressurefollownumber;
+            total += item.pressurefollownumber;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+
+    function convertCount3TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.sugarmanagenumber;
+            total += item.sugarmanagenumber;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function convertCount4TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev1' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.sugarfollownumber;
+            total += item.sugarfollownumber;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    
+    function convertRate1TableData(originData, eventId, data) {
+		var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, reachnumber = 0;
+
+		eventData && eventData.forEach(function(item) {
+			var id = item.unitId;
+			unitData = data[id];
+			if (!unitData) {
+				unitData = {
+					unitId : id,
+					unitName : item.unitName
+				};
+				data[id] = unitData;
+			}
+			unitData[fieldName] = getRate(item);
+			total += parseFloat(item.total);
+			reachnumber += item.reachnumber;
+		});
+
+		var totalData = data['total'];
+		if (!totalData) {
+			totalData = {
+				unitId : 'total',
+				unitName : '合计',
+			}
+			data['total'] = totalData;
+		}
+		totalData[fieldName] = getRate({
+			total : total,
+			reachnumber : reachnumber
+		});
+	}
+    function getRate(item, fixed) {
+		var a = parseFloat(item.total), b = item.reachnumber, c = 0;
+		if (a > 0 && b > 0)
+		if (a && b) {
+			c = b/a * 100;
+		}
+		return c.toFixed(fixed || 2) + '%';
+	}
+    
+    function convertRate2TableData(originData, eventId, data) {
+		var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, sugarnumber = 0;
+
+		eventData && eventData.forEach(function(item) {
+			var id = item.unitId;
+			unitData = data[id];
+			if (!unitData) {
+				unitData = {
+					unitId : id,
+					unitName : item.unitName
+				};
+				data[id] = unitData;
+			}
+			unitData[fieldName] = getRate1(item);
+			total += parseFloat(item.total);
+			sugarnumber += item.sugarnumber;
+		});
+
+		var totalData = data['total'];
+		if (!totalData) {
+			totalData = {
+				unitId : 'total',
+				unitName : '合计',
+			}
+			data['total'] = totalData;
+		}
+		totalData[fieldName] = getRate1({
+			total : total,
+			sugarnumber : sugarnumber
+		});
+	}
+    function getRate1(item, fixed) {
+		var a = parseFloat(item.total), b = item.sugarnumber, c = 0;
+		if (a > 0 && b > 0)
+		if (a && b) {
+			c = b/a * 100;
+		}
+		return c.toFixed(fixed || 2) + '%';
+	}
+    
     function unitSelected(row) {
         selectUnit = row.unitName;
         initPieChart1();
@@ -272,17 +461,17 @@
 
         let unitId = selectUnit || 'total';
         var total=[];
-        for (var i = 0; i < sumData.length; i++) {
+        for (var i = 0; i < charResult.length; i++) {
             if (unitId=='total'){
-                total.push(sumData[i])
+                total.push(charResult[i])
             }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
                 }
             }
         }
         var it=total[total.length - 1];
-        var rate=it.pressureManageRate;
+         var rate=(it.evV30009/it.ev1V30009*100).toFixed(2)+ '%';
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart1,pieName,rate,remainRate);
@@ -292,19 +481,19 @@
     function initPieChart2() {
         let unitId = selectUnit || 'total';
         var total=[];
-        for (var i = 0; i < sumData.length; i++) {
+        for (var i = 0; i < charResult.length; i++) {
             if (unitId=='total'){
-                total.push(sumData[i])
+                total.push(charResult[i])
             }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
                 }
             }
         }
         var pieName="血压控制率";
         var remainRate=0;
         var it=total[total.length - 1];
-        var rate=it.pressureControlRate;
+        var rate=it.evV30004;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart2,pieName,rate,remainRate);
@@ -313,19 +502,19 @@
     function initPieChart3() {
         let unitId = selectUnit || 'total';
         var total=[];
-        for (var i = 0; i < sumData.length; i++) {
+        for (var i = 0; i < charResult.length; i++) {
             if (unitId=='total'){
-                total.push(sumData[i])
+                total.push(charResult[i])
             }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
                 }
             }
         }
         var pieName="糖尿病规范管理率";
         var remainRate=0;
         var it=total[total.length - 1];
-        var rate=it.sugarManageRate;
+         var rate=(it.evV30010/it.ev1V30010*100).toFixed(2)+ '%';
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart3,pieName,rate,remainRate);
@@ -334,19 +523,19 @@
     function initPieChart4() {
         let unitId = selectUnit || 'total';
         var total=[];
-        for (var i = 0; i < sumData.length; i++) {
+        for (var i = 0; i < charResult.length; i++) {
             if (unitId=='total'){
-                total.push(sumData[i])
+                total.push(charResult[i])
             }else{
-                if (sumData[i].unitName==unitId){
-                    total.push(sumData[i]);
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
                 }
             }
         }
         var pieName="血糖控制率";
         var remainRate=0;
         var it=total[total.length - 1];
-        var rate=it.sugarControlRate;
+         var rate=it.evV30005;
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart4,pieName,rate,remainRate);
@@ -354,15 +543,15 @@
 
     function initColumnDiv(barChart,divName,managedName,
     number,manageNumber,columnName1,columnName2) {
-        if (sumData==0){
+        if (charResult==0){
             showChartInfo(barChart, '暂无数据显示');
             return false;
         }
 
         var isShowScroll = false;// 是否显示滚动条，默认false不显示
         var dataZoom_end;// 显示百分之多少的数据量，默认全部
-        if(result.length >5 ){
-            dataZoom_end = 100/(result.length/5);
+        if(charResult.length >5 ){
+            dataZoom_end = 100/(charResult.length/5);
             isShowScroll = true;
         }else{
             dataZoom_end = 100;
@@ -385,50 +574,6 @@
                 bottom: '5%',
                 containLabel: true
             },
-
-            // calculable: true,
-            // dataZoom: [   {
-            //     start:0,//默认为0
-            //     end: dataZoom_end,
-            //     type: 'slider',
-            //     show: isShowScroll,
-            //     xAxisIndex: [0],
-            //     handleSize: 8,//滑动条的 左右2个滑动条的大小
-            //     height: 10,//组件高度
-            //     left: "center", //左边的距离
-            //     bottom:15,
-            //     handleColor: '#ddd',//h滑动图标的颜色
-            //     handleStyle: {
-            //         borderColor: "#cacaca",
-            //         borderWidth: "1",
-            //         shadowBlur: 2,
-            //         background: "#ddd",
-            //         shadowColor: "#ddd",
-            //     },
-            //     fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-            //         //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-            //         //给第一个设置0，第四个设置1，就是垂直渐变
-            //         offset: 0,
-            //         color: '#1eb5e5'
-            //     }, {
-            //         offset: 1,
-            //         color: '#5ccbb1'
-            //     }]),
-            //     zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-            //     backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-            //     showDataShadow: false,//是否显示数据阴影 默认auto
-            //     showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-            //     handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-            //     filterMode: 'filter'
-            // },
-            //     //下面这个属性是里面拖到
-            //     {
-            //         type: 'inside',
-            //         show: true,
-            //         xAxisIndex: [0],
-            //         start: 0,//默认为1
-            //         end: 50
-            //     }],
 
 
             xAxis: {
@@ -463,23 +608,9 @@
 
                     data: number
                 },
-                // {
-                //     name: columnName2,
-                //     type: 'bar',
-                //     barWidth : 10,
-                //     itemStyle:{
-                //         normal:{
-                //             barBorderRadius:3,
-                //             color: '#999999'
-                //         }
-                //     },
-                //     data: manageNumber
-                // }
+                
             ],
-            // legend: {
-            //     // data: [ columnName2],
-            //     bottom:-6
-            // }
+          
         };
         barChart.setOption(option,true);
     };
@@ -489,37 +620,41 @@
         var managedName = [];
         var pressureNumberValue = [];
         var pressureManageNumberValue = [];
-
-
+        
+        var result = [];
+        result = charResult;
+        result.pop();
         result.forEach(function(item){
             var name=item.unitName;
             var strName=name.substring(0,name.length-8);
             managedName.push(strName);
-            pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
-            pressureManageNumberValue.push({name:item.unitName,value:item.pressureManageNumber});
+            //pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
+            pressureManageNumberValue.push({name:item.unitName,value:item.evV30009});
         })
         var divName="辖区高血压管理柱状图";
         var columnName1="高血压患病数";
         var columnName2="高血压管理数";
-        initColumnDiv(barChart1,divName,managedName,pressureNumberValue,pressureManageNumberValue,columnName1,columnName2);
+        initColumnDiv(barChart1,divName,managedName,pressureManageNumberValue,pressureManageNumberValue,columnName1,columnName2);
     }
     function initColumnDiv2() {
 
         var managedName = [];
         var sugarNumberValue = [];
         var sugarManageNumberValue = [];
-
+        var result = [];
+        result = charResult;
+        result.pop();
         result.forEach(function(item){
             var name=item.unitName;
             var strName=name.substring(0,name.length-8);
             managedName.push(strName);
-            sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
-            sugarManageNumberValue.push({name:item.unitName,value:item.sugarManageNumber});
+            //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
+            sugarManageNumberValue.push({name:item.unitName,value:item.evV30010});
         })
         var divName="辖区糖尿病管理排名柱状图";
         var columnName1="糖尿病患病数";
         var columnName2="糖尿病管理数";
-        initColumnDiv(barChart2,divName,managedName,sugarNumberValue,sugarManageNumberValue,columnName1,columnName2);
+        initColumnDiv(barChart2,divName,managedName,sugarManageNumberValue,sugarManageNumberValue,columnName1,columnName2);
     }
 
 

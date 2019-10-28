@@ -6,13 +6,25 @@ public class EntityGongwei {
 	
 	public String TOTAL;
 	
-	public long JDS;
+	public long JDS;//建档数
 	
-	public long PUBLICNUM;
+	public long PUBLICNUM;//档案公开数
 	
-	public long CHECKNUM;
+	public long CHECKNUM;//老年人体检数
 	
-	public long MANAGENUMBER;
+	public long MANAGENUMBER;//健康管理数
+	
+	public long PRESSUREMANAGENUMBER;
+	
+	public long PRESSUREFOLLOWNUMBER;
+	
+	public long SUGARMANAGENUMBER;
+	
+	public long SUGARFOLLOWNUMBER;
+	
+	public long REACHNUMBER;
+	
+	public long SUGARNUMBER;
 	
 	public String unitId;
 	
@@ -82,5 +94,54 @@ public class EntityGongwei {
 	public void setMANAGENUMBER(long mANAGENUMBER) {
 		MANAGENUMBER = mANAGENUMBER;
 	}
+
+	public long getPRESSUREMANAGENUMBER() {
+		return PRESSUREMANAGENUMBER;
+	}
+
+	public void setPRESSUREMANAGENUMBER(long pRESSUREMANAGENUMBER) {
+		PRESSUREMANAGENUMBER = pRESSUREMANAGENUMBER;
+	}
+
+	public long getPRESSUREFOLLOWNUMBER() {
+		return PRESSUREFOLLOWNUMBER;
+	}
+
+	public void setPRESSUREFOLLOWNUMBER(long pRESSUREFOLLOWNUMBER) {
+		PRESSUREFOLLOWNUMBER = pRESSUREFOLLOWNUMBER;
+	}
+
+	public long getSUGARMANAGENUMBER() {
+		return SUGARMANAGENUMBER;
+	}
+
+	public void setSUGARMANAGENUMBER(long sUGARMANAGENUMBER) {
+		SUGARMANAGENUMBER = sUGARMANAGENUMBER;
+	}
+
+	public long getSUGARFOLLOWNUMBER() {
+		return SUGARFOLLOWNUMBER;
+	}
+
+	public void setSUGARFOLLOWNUMBER(long sUGARFOLLOWNUMBER) {
+		SUGARFOLLOWNUMBER = sUGARFOLLOWNUMBER;
+	}
+
+	public long getREACHNUMBER() {
+		return REACHNUMBER;
+	}
+
+	public void setREACHNUMBER(long rEACHNUMBER) {
+		REACHNUMBER = rEACHNUMBER;
+	}
+
+	public long getSUGARNUMBER() {
+		return SUGARNUMBER;
+	}
+
+	public void setSUGARNUMBER(long sUGARNUMBER) {
+		SUGARNUMBER = sUGARNUMBER;
+	}
+
 	
 }
