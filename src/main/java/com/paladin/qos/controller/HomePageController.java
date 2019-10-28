@@ -1,24 +1,28 @@
 package com.paladin.qos.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.*;
-import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
+import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
 import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
 import com.paladin.qos.service.gongwei.ArchivesManagementService;
+
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 /**
@@ -30,7 +34,7 @@ import java.util.*;
 public class HomePageController {
 
     @Autowired
-    private AnalysisService registerService;
+    private AnalysisService analysisService;
 
     @Autowired
     private FamilyDoctorPersonnelService familyDoctorPersonnelService;
@@ -70,7 +74,7 @@ public class HomePageController {
     @RequestMapping(value = "/quailtydisplay/getRegisterList", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getRegisterList(String id) {
-        List<Register> registerList = registerService.findRegisterList();
+        List<Register> registerList = analysisService.findRegisterList();
         Collections.reverse(registerList);
         return CommonResponse.getSuccessResponse(registerList);
     }
@@ -82,10 +86,10 @@ public class HomePageController {
     @ResponseBody
     public Object getOutPatientNumber() {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<DataCountUnit> patientNumberList = registerService.getOutPatientNumber();//当天门诊人次
-        List<DataCountUnit> emergencyNumberList = registerService.getEmergencyNumber();//当天急诊人次
-        List<DataCountUnit> todayNumberList = registerService.getTodayNumber();//当月门诊人次
-        List<DataCountUnit> thisMonthNumberList = registerService.getThisMonthNumber();//当月急诊人次
+        List<DataCountUnit> patientNumberList = analysisService.getOutPatientNumber();//当天门诊人次
+        List<DataCountUnit> emergencyNumberList = analysisService.getEmergencyNumber();//当天急诊人次
+        List<DataCountUnit> todayNumberList = analysisService.getTodayNumber();//当月门诊人次
+        List<DataCountUnit> thisMonthNumberList = analysisService.getThisMonthNumber();//当月急诊人次
         map.put("patientNumberList", patientNumberList);
         map.put("emergencyNumberList", emergencyNumberList);
         map.put("todayNumberList", todayNumberList);
@@ -102,10 +106,10 @@ public class HomePageController {
     @ResponseBody
     public Object getHospitalOutPatientNumber() {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<DataCountUnit> patientNumberList = registerService.getHospitalOutPatientNumber();//当天门诊人次
-        List<DataCountUnit> emergencyNumberList = registerService.getHospitalEmergencyNumber();//当天急诊人次
-        List<DataCountUnit> todayNumberList = registerService.getHospitalTodayNumber();//当月门诊人次
-        List<DataCountUnit> thisMonthNumberList = registerService.getHospitalThisMonthNumber();//当月急诊人次
+        List<DataCountUnit> patientNumberList = analysisService.getHospitalOutPatientNumber();//当天门诊人次
+        List<DataCountUnit> emergencyNumberList = analysisService.getHospitalEmergencyNumber();//当天急诊人次
+        List<DataCountUnit> todayNumberList = analysisService.getHospitalTodayNumber();//当月门诊人次
+        List<DataCountUnit> thisMonthNumberList = analysisService.getHospitalThisMonthNumber();//当月急诊人次
         map.put("patientHospitalNumberList", patientNumberList);
         map.put("emergencyHospitalNumberList", emergencyNumberList);
         map.put("todayNumberHospitalList", todayNumberList);
@@ -117,14 +121,14 @@ public class HomePageController {
     @RequestMapping(value = "/population/signing", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object populationSigningNum() {
-        return CommonResponse.getSuccessResponse(registerService.populationSigningNum());
+        return CommonResponse.getSuccessResponse(analysisService.populationSigningNum());
     }
 
     //门急诊折线图社区（今年，去年）13003
     @RequestMapping(value = "/data/get/month/twoYear", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getTwoYear() {
-        return CommonResponse.getSuccessResponse(registerService.getTwoYear());
+        return CommonResponse.getSuccessResponse(analysisService.getTwoYear());
     }
 
     private int getUnitType(Event event) {
@@ -145,7 +149,7 @@ public class HomePageController {
     @ResponseBody
     public Object getSignList() {
         List<Sign> signs = new ArrayList<>();
-        List<Sign> signList = registerService.getSignInfo();
+        List<Sign> signList = analysisService.getSignInfo();
 
         if (!CollectionUtils.isEmpty(signList)) {
             for (Sign sign : signList) {
@@ -171,14 +175,14 @@ public class HomePageController {
             for (String eventId : eventIds) {
                 DataConstantContainer.Event event = DataConstantContainer.getEvent(eventId);
                 if (event != null) {
-                    long count = registerService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds);
+                    long count = analysisService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds);
                     map.put(eventId, count);
                 }
             }
             return CommonResponse.getSuccessResponse(map);
         } else {
             String eventId = request.getEventId();
-            return CommonResponse.getSuccessResponse(registerService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds));
+            return CommonResponse.getSuccessResponse(analysisService.getTotalNumOfEvent(eventId, startDate, endDate, ignoreUnitIds));
         }
     }
 
@@ -208,12 +212,12 @@ public class HomePageController {
                     int eventType = event.getEventType();
                     int unitType = getUnitType(event);
                     if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                        Object item = registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
                         if (item != null) {
                             map.put(eventId, item);
                         }
                     } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                        Object item = registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
                         if (item != null) {
                             map.put(eventId, item);
                         }
@@ -228,9 +232,9 @@ public class HomePageController {
                 int eventType = event.getEventType();
                 int unitType = getUnitType(event);
                 if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                    return CommonResponse.getSuccessResponse(registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                    return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
                 } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                    return CommonResponse.getSuccessResponse(registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                    return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
                 }
             }
         }
@@ -254,12 +258,12 @@ public class HomePageController {
                     int eventType = event.getEventType();
                     int unitType = getUnitType(event);
                     if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                        Object item = registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
                         if (item != null) {
                             map.put(eventId, item);
                         }
                     } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                        Object item = registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
                         if (item != null) {
                             map.put(eventId, item);
                         }
@@ -274,9 +278,9 @@ public class HomePageController {
                 int eventType = event.getEventType();
                 int unitType = getUnitType(event);
                 if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                    return CommonResponse.getSuccessResponse(registerService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                    return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
                 } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                    return CommonResponse.getSuccessResponse(registerService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                    return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
                 }
             }
         }
@@ -298,8 +302,8 @@ public class HomePageController {
                 Event event = DataConstantContainer.getEvent(eventId);
                 if (event != null) {
                     int unitType = getUnitType(event);
-                    Object item = byUnit ? registerService.getDataSetOfDay(eventId, unitType, startDate, endDate, ignoreUnitIds)
-                            : registerService.getAnalysisResultByDay(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                    Object item = byUnit ? analysisService.getDataSetOfDay(eventId, unitType, startDate, endDate, ignoreUnitIds)
+                            : analysisService.getAnalysisResultByDay(eventId, unitType, startDate, endDate, ignoreUnitIds);
                     if (item != null) {
                         map.put(eventId, item);
                     }
@@ -308,7 +312,7 @@ public class HomePageController {
             return CommonResponse.getSuccessResponse(map);
         } else {
             String eventId = request.getEventId();
-            return CommonResponse.getSuccessResponse(registerService.getDataSetOfDay(eventId, startDate, endDate, ignoreUnitIds));
+            return CommonResponse.getSuccessResponse(analysisService.getDataSetOfDay(eventId, startDate, endDate, ignoreUnitIds));
         }
     }
 
@@ -328,8 +332,8 @@ public class HomePageController {
                 Event event = DataConstantContainer.getEvent(eventId);
                 if (event != null) {
                     int unitType = getUnitType(event);
-                    Object item = byUnit ? registerService.getDataSetOfMonth(eventId, unitType, startDate, endDate, ignoreUnitIds)
-                            : registerService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                    Object item = byUnit ? analysisService.getDataSetOfMonth(eventId, unitType, startDate, endDate, ignoreUnitIds)
+                            : analysisService.getAnalysisResultByMonth(eventId, unitType, startDate, endDate, ignoreUnitIds);
                     if (item != null) {
                         map.put(eventId, item);
                     }
@@ -338,7 +342,7 @@ public class HomePageController {
             return CommonResponse.getSuccessResponse(map);
         } else {
             String eventId = request.getEventId();
-            return CommonResponse.getSuccessResponse(registerService.getDataSetOfMonth(eventId, startDate, endDate, ignoreUnitIds));
+            return CommonResponse.getSuccessResponse(analysisService.getDataSetOfMonth(eventId, startDate, endDate, ignoreUnitIds));
         }
     }
 
@@ -359,8 +363,8 @@ public class HomePageController {
                 Event event = DataConstantContainer.getEvent(eventId);
                 if (event != null) {
                     int unitType = getUnitType(event);
-                    Object item = byUnit ? registerService.getDataSetOfYear(eventId, unitType, startYear, endYear, ignoreUnitIds)
-                            : registerService.getAnalysisResultByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
+                    Object item = byUnit ? analysisService.getDataSetOfYear(eventId, unitType, startYear, endYear, ignoreUnitIds)
+                            : analysisService.getAnalysisResultByYear(eventId, unitType, startYear, endYear, ignoreUnitIds);
                     if (item != null) {
                         map.put(eventId, item);
                     }
@@ -369,7 +373,7 @@ public class HomePageController {
             return CommonResponse.getSuccessResponse(map);
         } else {
             String eventId = request.getEventId();
-            return CommonResponse.getSuccessResponse(registerService.getDataSetOfYear(eventId, startYear, endYear, ignoreUnitIds));
+            return CommonResponse.getSuccessResponse(analysisService.getDataSetOfYear(eventId, startYear, endYear, ignoreUnitIds));
         }
     }
 
@@ -393,7 +397,7 @@ public class HomePageController {
         if (eventIds != null && eventIds.size() > 0) {
             Map<String, Object> map = new HashMap<>();
             for (String eventId : eventIds) {
-                Object item = registerService.getTotalData(eventId);
+                Object item = analysisService.getTotalData(eventId);
                 map.put(eventId, item);
             }
             return CommonResponse.getSuccessResponse(map.toString(), unitMap);
@@ -401,6 +405,113 @@ public class HomePageController {
             return null;
     }
 
+    public static <T> List<T> toBeanList(String json, Class<T> clazz) {
+		List<T> beanList = null;
+
+		try {
+			if (json != null) {
+				beanList = JSON.parseArray(json, clazz);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return beanList;
+	}
+    
+    // 单位排序
+ 	private void orderByUnit(List<EntityGongwei> list) {
+ 		if (list != null && list.size() > 0) {
+ 			Collections.sort(list, new Comparator<EntityGongwei>() {
+ 				@Override
+ 				public int compare(EntityGongwei o1, EntityGongwei o2) {
+ 					String uid1 = o1.getUnitId();
+ 					String uid2 = o1.getUnitId();
+ 					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+ 				}
+ 			});
+ 		}
+ 	}
+    //高血压糖尿病情况报表
+    @RequestMapping(value = "/pressureAndSugar", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object searchAll(AnalysisRequest request) {
+    	Map<String, Object> map = new HashMap<>();
+    	List<Unit> units = DataConstantContainer.getCommunityList();
+    	List<EntityGongwei> pressureList1=new ArrayList<EntityGongwei>();
+    	List<EntityGongwei> sugarList1=new ArrayList<EntityGongwei>();
+    	
+    	List<EntityGongwei> managePressuerList1=new ArrayList<EntityGongwei>();
+    	List<EntityGongwei> manageSugarList1=new ArrayList<EntityGongwei>();
+    	
+    	
+    	String item = analysisService.getTotalData("V30009");//高血压管理数，高血压随访数
+    	String item1 = analysisService.getTotalData("V30010");//糖尿病管理数，糖尿病随访数
+    	
+    	String item4 = analysisService.getTotalData("V30004");//管理人群血压
+    	String item5 = analysisService.getTotalData("V30005");//管理人群糖尿病
+    	
+    	if(!StringUtils.isEmpty(item4)){
+        	List<EntityGongwei> managePressuerList = toBeanList(item4,EntityGongwei.class);
+        	for(EntityGongwei shequ:managePressuerList){
+        		
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				managePressuerList1.add(shequ);
+        			}
+        		}
+        	}
+    	}
+    	if(!StringUtils.isEmpty(item5)){
+        	List<EntityGongwei> manageSugarList = toBeanList(item5,EntityGongwei.class);
+        	for(EntityGongwei shequ:manageSugarList){
+        		
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				manageSugarList1.add(shequ);
+        			}
+        		}
+        	}
+    	}
+        if(!StringUtils.isEmpty(item)){
+        	List<EntityGongwei> pressureList = toBeanList(item,EntityGongwei.class);
+        	for(EntityGongwei shequ:pressureList){
+        		
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				pressureList1.add(shequ);
+        			}
+        		}
+        	}
+    	}
+    	
+        if(!StringUtils.isEmpty(item1)){
+        	List<EntityGongwei> sugarList = toBeanList(item1,EntityGongwei.class);
+        	for(EntityGongwei shequ:sugarList){
+        		for(Unit unit : units){
+        			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
+        				shequ.setUnitId(unit.getId());
+        				shequ.setUnitName(unit.getName());
+        				sugarList1.add(shequ);
+        			}
+        		}
+        	}
+        }
+    	
+    	orderByUnit(pressureList1);
+    	orderByUnit(sugarList1);
+    	
+    	map.put("V30009", pressureList1);
+    	map.put("V30010", sugarList1);
+    	map.put("V30004", managePressuerList1);
+    	map.put("V30005", manageSugarList1);
+    	return  CommonResponse.getSuccessResponse(map);
+    }
 
 }
 
