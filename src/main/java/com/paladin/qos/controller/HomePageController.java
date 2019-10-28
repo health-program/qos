@@ -505,6 +505,8 @@ public class HomePageController {
     	
     	orderByUnit(pressureList1);
     	orderByUnit(sugarList1);
+    	orderByUnit(managePressuerList1);
+    	orderByUnit(manageSugarList1);
     	
     	map.put("V30009", pressureList1);
     	map.put("V30010", sugarList1);
