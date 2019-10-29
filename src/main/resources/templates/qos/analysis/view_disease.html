@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+	<tt:constant enumcode="data-event-type,data-unit-type" />
+	<section class="content-header">
+    <h1>健症</h1>
+    </section>
+	<section class="content">
+        
+        
+        
+        <div class="row">
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="total" class="box-body" style="height: 400px">
+					
+					<ul>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI1 text-ff0000 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI2 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI3 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI4 text-52fff5 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI5 text-52fff5 fz14">1、上呼吸道感染</li>
+                  </ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="box box-solid">
+					<div id="hospital" class="box-body" style="height: 400px">
+					<ul>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI1 text-ff0000 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI2 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI3 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI4 text-52fff5 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI5 text-52fff5 fz14">1、上呼吸道感染</li>
+                  </ul>
+					</div>
+				</div>
+			</div>
+		</div>
+        
+    </section>
+	<div th:include="/qos/footer" />
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+	<script type="text/javascript">
+	$(function(){
+		 $.ajax({
+             url: "/home/page/qos/getTop5Disease",
+             type: "post",
+             async: false,
+             data: {
+                 'id': 'V40001',
+             },
+             success: function (r) {
+                  if (r.status == 1) {
+                	  a =  r.result;
+                 }
+             }
+         });
+	})
+    </script>
+</body>
+
+</html>

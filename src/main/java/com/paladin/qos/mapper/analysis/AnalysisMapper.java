@@ -3,6 +3,7 @@ package com.paladin.qos.mapper.analysis;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
 
@@ -129,5 +130,7 @@ public interface AnalysisMapper {
 	List<EntityGongwei> getPressureTotalDataFromLocal(String year);
 
 	List<EntityGongwei> getSugarTotalDataFromLocal(String year);
+
+	List<Disease> findNameList();
 
 }

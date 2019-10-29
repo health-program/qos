@@ -516,7 +516,6 @@ group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
 	
 	<!--获取糖尿病管理数/随访数-->
 	<select id="getSugarTotalDataFromLocal" resultType="com.paladin.qos.model.gongwei.EntityGongwei">
-		
 select t.MANAGEDCENTERCODE,t.SUGARMANAGENUMBER,m.SUGARFOLLOWNUMBER from
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as SUGARMANAGENUMBER from report_year_diabetes  where
 yeartype=1 and reportyear = #{year}
@@ -526,6 +525,9 @@ left join
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as SUGARFOLLOWNUMBER from report_year_diabetes  where
 yeartype=1 and reportyear = #{year}
 group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
-
+	</select>
+	
+	<select id="findNameList" resultType="com.paladin.qos.model.gongwei.Disease">
+	select major_code as diseasecode, disease_name as diseasecodeName from classify_code_disease
 	</select>
 </mapper>

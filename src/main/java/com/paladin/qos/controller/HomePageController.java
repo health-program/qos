@@ -7,6 +7,7 @@ import com.paladin.qos.analysis.DataConstantContainer.*;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
+import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
 import com.paladin.qos.model.register.Register;
@@ -512,6 +513,38 @@ public class HomePageController {
     	map.put("V30005", manageSugarList1);
     	return  CommonResponse.getSuccessResponse(map);
     }
+    
+    @PostMapping("/getTop5Disease")
+	@ResponseBody
+	public Object getTop5Disease(AnalysisRequest request,String id) {
+    	List<Unit> units = DataConstantContainer.getHospitalList();
+    	List<Disease> diseaseList1=new ArrayList<Disease>();
+    	String item = analysisService.getTotalData(id);//疾病top5
+    	if(!StringUtils.isEmpty(item)){
+        	List<Disease> diseaseList = toBeanList(item,Disease.class);
+        	for(Disease yiyuan:diseaseList){
+        		for(Unit unit : units){
+        			if(yiyuan.orgcode.equals(unit.getSource().getId())){
+        				yiyuan.setUnitId(unit.getId());
+        				yiyuan.setUnitName(unit.getName());
+        				diseaseList1.add(yiyuan);
+        			}
+        		}
+        	}
+    	}
+    	
+    	List<Disease> nameList = analysisService.findNameList();
+    	for(Disease yiyuan:diseaseList1){
+    		for(Disease name:nameList){
+    			if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
+    				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+    			}
+    		}
+    	}
+    	
+    	
+		return CommonResponse.getSuccessResponse(diseaseList1);
+	}
 
 }
 

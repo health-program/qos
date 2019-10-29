@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
 
@@ -770,5 +771,10 @@ public class AnalysisService {
 	public List<EntityGongwei> getSugarTotalDataFromLocal(String year) {
 
 		return analysisMapper.getSugarTotalDataFromLocal(year);
+	}
+
+	public List<Disease> findNameList() {
+
+		return analysisMapper.findNameList();
 	}
 }
