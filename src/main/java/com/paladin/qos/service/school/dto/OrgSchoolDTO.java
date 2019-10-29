@@ -1,5 +1,7 @@
 package com.paladin.qos.service.school.dto;
 
+import com.google.common.base.Strings;
+
 import java.util.List;
 
 
@@ -226,6 +228,6 @@ public class OrgSchoolDTO {
 
 	@Override
 	public String toString() {
-		return "学校ID:" + id;
+		return "学校ID:" + ( Strings.isNullOrEmpty(id) ? '无' : id);
 	}
 }

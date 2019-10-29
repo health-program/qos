@@ -1,19 +1,17 @@
 package com.paladin.qos.controller.org;
 
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
-import com.paladin.qos.model.count.CountReferral;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.org.OrgPerson;
-import com.paladin.qos.service.count.vo.CountReferralVO;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.org.OrgPersonService;
 import com.paladin.qos.service.org.dto.OrgPersonDTO;
 import com.paladin.qos.service.org.dto.OrgPersonQuery;
-import com.paladin.qos.service.org.vo.OrgPersonReport;
 import com.paladin.qos.service.org.vo.OrgPersonVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -70,6 +68,7 @@ public class OrgPersonController extends ControllerSupport {
 
 
     @RequestMapping("/save")
+    @SysControllerLog(action = "新增机构人员")
 	@ResponseBody
     public Object save(@Valid OrgPersonDTO orgPersonDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -89,6 +88,7 @@ public class OrgPersonController extends ControllerSupport {
 
 
         @PostMapping("/update")
+        @SysControllerLog(action = "修改机构人员")
         @ResponseBody
         public Object update(@Valid @RequestBody OrgPersonDTO orgPersonDTO, BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
@@ -106,6 +106,7 @@ public class OrgPersonController extends ControllerSupport {
 
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+    @SysControllerLog(action = "删除机构人员")
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(orgPersonService.removeByPrimaryKey(id));

@@ -1,6 +1,8 @@
 package com.paladin.qos.service.count.dto;
 
 
+import com.google.common.base.Strings;
+
 public class CountReferralDTO {
 
 
@@ -42,6 +44,11 @@ public class CountReferralDTO {
 
     public void setDownOutNumber(Integer downOutNumber) {
         this.downOutNumber = downOutNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "记录ID:" + ( Strings.isNullOrEmpty(id) ? '无' : id);
     }
 
 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>昆山市社区卫生服务综合展示</title>
+    <link href="../css/init.css" rel="stylesheet" type="text/css">
+    <link href="../css/comprehensive.css" rel="stylesheet" type="text/css">
+
+</head>
+<body id="compreallbg">
+    <div>
+        <ul class="headerUl">
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/archives.png"/> 健康档案</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/books.png"/>健康教育</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/inoculation.png"/>预防接种</li>
+            <li class="nochoosebg fz12"><img src="../img/comprehensive/child.png"/>0-6岁儿童</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/pregant.png"/>孕产妇</li>
+            <li class="blueactive fz16"><img src="../img/comprehensive/old.png"/>老年人</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/ill.png"/>慢性病</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/disorder.png"/>精神障碍</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/tuberculosis.png"/>结核病</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/medic.png"/>中医药</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/diseases.png"/>传染病</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/supervision.png"/>计生监督</li>
+            <li class="nochoosebg fz16"><img src="../img/comprehensive/device.png"/>避孕用具</li>
+        </ul>
+    </div>
+    <br/>
+
+
+     <header class="headerTitle">
+        <i>老年人</i>
+        <i class="line"></i>
+     </header>
+      <div style="margin: auto">
+        <div class="threebg threebg1child">
+            <p class="text-c1f3ff">老年人体检率</p>
+            <div id="rateElderly"></div>
+        </div>
+        <div class="threebg threebg2child">
+            <p class="text-c1f3ff">老年人健康管理率</p>
+            <div id="healthRate"></div>
+        </div>
+  </div>
+<script type="text/javascript" src="../js/alldisplay/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="../js/echarts.min.js"></script>
+<script type="text/javascript" src="../js/common.js"></script><!--基础js-->
+<script type="text/javascript" src="../js/comprehensive/rateElderly.js"></script><!--老年人体检率-->
+<script type="text/javascript" src="../js/comprehensive/healthRate.js"></script><!--老年人健康管理率-->
+<script>
+        window.setTimeout(function() {
+            window.location.href = "../html/chronicDisease.html";
+        },15000)
+</script>
+</body>
+</html>

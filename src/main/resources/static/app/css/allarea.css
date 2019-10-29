@@ -1,0 +1,320 @@
+#allbgarea{
+    width: 100vw;
+    height: 100vh;
+    background: url('../img/allarea/allareaBg.jpg') no-repeat center;
+    background-size:100% 100%;;
+}
+#allbgareaLeft{
+    width: 28.229vw;
+    height: 84.8148vh;
+    display: inline-block;
+    float: left;
+    margin-left: 1.875vw;
+}
+#allareaMap{
+    width: 37.4479vw;
+    height: 84.8148vh;
+    background: url('../img/allarea/allareaMap.png') no-repeat center;
+    background-size:100% 100%;
+    margin-left: 1.979vw;
+    float: left;
+}
+
+.sameallareaLeftdiv{
+    width: 28.229vw;
+    height: 28.88vh;
+    background: url('../img/allarea/allareaLeft.png') no-repeat center;
+    background-size:100% 100%;
+}
+.sameallareaLeftdiv .header{
+   line-height: 3vh;
+   color: #C1F3FF;
+   text-align: center;
+   padding-top: 3vh;
+}
+.sameallareaRightdiv .header{
+    line-height: 3vh;
+    color: #C1F3FF;
+    text-align: center;
+    padding-top: 3vh;
+}
+.sameallareaRightdiv{
+    width: 28.385vw;
+    height: 44vh;
+    background: url('../img/allarea/allareaRight.png') no-repeat center;
+    background-size:100% 100%;
+    position: relative;
+}
+
+.sameallareaBottomdiv{
+    width: 28.489vw;
+    height:40.92vh;
+    background: url('../img/allarea/allareaRightBottom.png') no-repeat center;
+    background-size:100% 100%;
+}
+.allareaRightBottom .header{
+    line-height: 3vh;
+    color: #C1F3FF;
+    text-align: center;
+    padding-top: 3vh;
+}
+#map{
+    width: 37.4479vw;
+    height: 80.8148vh;
+}
+#allareaRight{
+    width: 28.229vw;
+    height: 50vh;
+    float: left;
+    margin-left: 1vw;
+}
+.mt9907{
+    margin-top: 9.907vh;
+}
+
+#hospitalVisit,#communityVisit,#trendVisits{
+    width: 28.229vw;
+    height: 22vh;
+}
+
+#paymentComparison,#incomeClassification,#antimicrobialUse{
+    width: 28.385vw;
+    height: 16.7777vh;
+}
+#patientList{
+    width: 28.385vw;
+    height: 12.7777vh;
+}
+#paymentComparisonLeft,#paymentComparisonRight,#incomeClassificationLeft,#incomeClassificationRight{
+    width: 14vw;
+    height: 11.4814vh;
+    float: left;
+    display: inline-block;
+}
+.paymentComparisonLeft,.paymentComparisonRight,.incomeClassificationLeft,.incomeClassificationRight p{
+    width: 14vw;
+    color: #ffffff;
+    text-align: center;
+    display: inline-block;
+    float: left;
+}
+.familySocilty li{
+    float: left;
+    width: 4.7vw;
+    text-align: center;
+}
+
+#familyTable{height:32vh;overflow:hidden;position:relative;width: 29vw;margin: auto}
+#familyTableUl{position:absolute;top:0;left:0;}
+.familySocilty{
+    height: 3vh;
+    line-height: 3vh;
+}
+.ellipsis47{
+    width: 4.7vw;
+    display: inline-block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    height: 3.8vh;
+    line-height: 3.8vh;
+    border-bottom: 1px solid #138899;
+}
+.textindext1{
+    text-indent: 1vw;
+}
+.allareaRightTopLi{
+    height:6.944vh;
+    line-height: 6.944vh;
+}
+
+.appointment{
+    position: absolute;
+    top: 4vh;
+    left: 3.9vw;
+}
+.appointment2{
+    position: absolute;
+    top: 4vh;
+    left: 13.6458vw;
+    font-weight: 500;
+}
+.appointment3{
+    position: absolute;
+    top: 4vh;
+    left: 21vw;
+    font-weight: 500;
+}
+.allareaRightTopLi i{
+    display: inline-block;
+    float: left;
+}
+
+.appointment4{
+    position: absolute;
+    top: 11vh;
+    left: 3.9vw;
+}
+.appointment5{
+    position: absolute;
+    top: 11vh;
+    left: 13.6458vw;
+    font-weight: 500;
+}
+.appointment6{
+    position: absolute;
+    top: 11vh;
+    left: 21vw;
+    font-weight: 500;
+}
+
+
+.appointment7{
+    position: absolute;
+    top: 18.8vh;
+    left: 3.9vw;
+}
+.appointment8{
+    position: absolute;
+    top: 18.8vh;
+    left: 13.6458vw;
+    font-weight: 500;
+}
+.appointment9{
+    position: absolute;
+    top: 18.8vh;
+    left: 21vw;
+    font-weight: 500;
+}
+
+.appointment10{
+    position: absolute;
+    top: 26.3vh;
+    left: 3.9vw;
+}
+.appointment11{
+    position: absolute;
+    top: 26.3vh;
+    left: 13.6458vw;
+    font-weight: 500;
+}
+.appointment12{
+    position: absolute;
+    top: 26.3vh;
+    left: 21vw;
+    font-weight: 500;
+}
+
+.appointment13{
+    position: absolute;
+    top: 34.2vh;
+    left: 3.9vw;
+}
+.appointment14{
+    position: absolute;
+    top: 34.2vh;
+    left: 13.6458vw;
+    font-weight: 500;
+}
+.appointment15{
+    position: absolute;
+    top: 34.2vh;
+    left: 21vw;
+    font-weight: 500;
+}
+
+.info-wrapper{
+    width: 14.218vw;
+    height: 21.203vh;
+    background: red;
+    background: url('../img/alldisplay/maparea.png') no-repeat center;
+    background-size:100% 100%;
+    padding: 2vw;
+    position: absolute;
+    z-index: 99999999999999999999;
+}
+
+.lh3{
+    line-height: 3vh;
+    text-indent: 1vw;
+}
+.text-00ffff{
+    color:#00ffff;
+}
+.newlh3{
+    line-height: 3vh;
+    height: 3vh;
+}
+.text-ff0000{
+    color: #ff0000;
+}
+.text-ff774d{
+    color: #ff774d;
+}
+.text-52fff5{
+    color:#52fff5;
+}
+
+.sameallareaRightdivLeft,.sameallareaRightdivRight{
+    float: left;
+}
+.sameallareaRightdivLeft{
+
+}
+.sameallareaRightdivLeftLI1{
+    position: absolute;
+    top: 12.5vh;
+    left: 3vw;
+}
+.sameallareaRightdivLeftLI2{
+    position: absolute;
+    top: 18vh;
+    left: 3vw;
+}
+
+.sameallareaRightdivLeftLI3{
+    position: absolute;
+    top: 23.5vh;
+    left: 3vw;
+}
+
+.sameallareaRightdivLeftLI4{
+    position: absolute;
+    top: 29.5vh;
+    left: 3vw;
+}
+
+.sameallareaRightdivLeftLI5{
+    position: absolute;
+    top: 35vh;
+    left: 3vw;
+}
+
+.sameallareaRightdivRightLi1{
+    position: absolute;
+    top: 12.5vh;
+    left: 15.5vw;
+}
+.sameallareaRightdivRightLi2{
+    position: absolute;
+    top: 18vh;
+    left: 15.5vw;
+}
+.sameallareaRightdivRightLi3{
+    position: absolute;
+    top: 24vh;
+    left: 15.5vw;
+}
+.sameallareaRightdivRightLi4{
+    position: absolute;
+    top: 29.5vh;
+    left: 15.5vw;
+}
+.sameallareaRightdivRightLi5{
+    position: absolute;
+    top: 35vh;
+    left: 15.5vw;
+}
+.mapaddress{
+    margin-right: 0.2vw;
+}

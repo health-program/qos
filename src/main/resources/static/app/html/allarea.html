@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全区域医疗服务质量展示</title>
+    <link href="../css/init.css" rel="stylesheet" type="text/css">
+    <link href="../css/allarea.css" rel="stylesheet" type="text/css">
+
+</head>
+<body id="allbgarea">
+    <div id="allbgareaLeft" class="mt9907">
+            <div class="allareaLeftTop sameallareaLeftdiv">
+                <div class="header">医院就诊</div>
+                <div id="hospitalVisit"></div>
+            </div>
+           <div class="allareaLeftMiddle sameallareaLeftdiv">
+               <div class="header">社区就诊</div>
+               <div id="communityVisit"></div>
+           </div>
+            <div class="allareaLefBottom sameallareaLeftdiv">
+                <div class="header">就诊人次时间走势</div>
+                <div id="trendVisits"></div>
+            </div>
+    </div>
+   <div id="allareaMap" class="mt9907">
+       <div id="map">
+           <div id="popup" class="ol-popup">
+               <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+               <div id="popup-content"></div>
+           </div>
+       </div>
+   </div>
+
+    <div id="allareaRight" class="mt9907">
+        <div class="allareaRightTop sameallareaRightdiv">
+              <div class="sameallareaRightdivLeft">
+                  <ul>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI1 text-ff0000 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI2 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI3 text-ff774d fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI4 text-52fff5 fz14">1、上呼吸道感染</li>
+                      <li class="sameallareaRightdivLeftLI sameallareaRightdivLeftLI5 text-52fff5 fz14">1、上呼吸道感染</li>
+                  </ul>
+              </div>
+                <div class="sameallareaRightdivRight">
+                    <ul>
+                        <li class="sameallareaRightdivRightLi sameallareaRightdivRightLi1 text-ff0000 fz14">1、上呼吸道感染</li>
+                        <li class="sameallareaRightdivRightLi sameallareaRightdivRightLi2 text-ff774d fz14">1、上呼吸道感染</li>
+                        <li class="sameallareaRightdivRightLi sameallareaRightdivRightLi3 text-ff774d fz14">1、上呼吸道感染</li>
+                        <li class="sameallareaRightdivRightLi sameallareaRightdivRightLi4 text-52fff5 fz14">1、上呼吸道感染</li>
+                        <li class="sameallareaRightdivRightLi sameallareaRightdivRightLi5 text-52fff5 fz14">1、上呼吸道感染</li>
+                    </ul>
+                </div>
+               <!-- <ul>
+                    <li class="allareaRightTopLi">
+                        <i class="text-ffffff fz17 appointment">预约人次数:</i>
+                        <i class="text-6cedff fz40 appointment2" id="appointmentPeople">9856</i>
+                        <i class="text-6cedff fz12 appointment3">次</i>
+                    </li>
+
+                    <li class="allareaRightTopLi">
+                        <i class="text-ffffff fz17 appointment4">诊疗人次数:</i>
+                        <i class="text-6cedff fz40 appointment5" id="patientsPeople">9856</i>
+                        <i class="text-6cedff fz12 appointment6">次</i>
+                    </li>
+
+                    <li class="allareaRightTopLi">
+                        <i class="text-ffffff fz17 appointment7">检查人次数:</i>
+                        <i class="text-6cedff fz40 appointment8" id="inspectorsPeople">9856</i>
+                        <i class="text-6cedff fz12 appointment9">次</i>
+                    </li>
+
+                    <li class="allareaRightTopLi">
+                        <i class="text-ffffff fz17 appointment10">检验人次数:</i>
+                        <i class="text-6cedff fz40 appointment11" id="newinspectorsPeople">9856</i>
+                        <i class="text-6cedff fz12 appointment12">次</i>
+                    </li>
+                    <li class="allareaRightTopLi">
+                        <i class="text-ffffff fz17 appointment13">医院平均住院日:</i>
+                        <i class="text-6cedff fz40 appointment14" id="averageHospitalStay">9856</i>
+                        <i class="text-6cedff fz12 appointment15">次</i>
+                    </li>
+                </ul>-->
+        </div>
+        <div class="allareaRightBottom sameallareaBottomdiv">
+            <div class="header">患者列表</div>
+                    <ul class="familySocilty">
+                        <li class="fz14 text-00FFFF">就诊机构</li>
+                        <li class="fz14 text-00FFFF">就诊科室</li>
+                        <li class="fz14 text-00FFFF">患者姓名</li>
+                        <li class="fz14 text-00FFFF">患者性别</li>
+                        <li class="fz14 text-00FFFF">就诊日期</li>
+                        <li class="fz14 text-00FFFF">结算类别</li>
+                    </ul>
+                    <div id="familyTable">
+                        <ul id="familyTableUl">
+
+                          </ul>
+                    </div>
+          </div>
+    </div>
+<script type="text/javascript" src="../js/alldisplay/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="../js/echarts.min.js"></script>
+<script type="text/javascript" src="../js/echarts-liquidfill.min.js"></script>
+<script type="text/javascript" src="../js/map/ol.js"></script><!--地图js-->
+<script type="text/javascript" src="../js/common.js"></script><!--基础js-->
+<script type="text/javascript" src="../js/map/init.js"></script><!--地图js-->
+<script type="text/javascript" src="../js/allarea/hospitalVisit.js"></script><!--医院就诊-->
+<script type="text/javascript" src="../js/allarea/communityVisit.js"></script><!--社区就诊-->
+<script type="text/javascript" src="../js/allarea/trendVisits.js"></script><!--就诊人次时间走势-->
+<script type="text/javascript" src="../js/allarea/paymentComparisonLeft.js"></script><!--支付方式医院-->
+<script type="text/javascript" src="../js/allarea/paymentComparisonRight.js"></script><!--支付方式社区-->
+<script type="text/javascript" src="../js/allarea/incomeClassificationLeft.js"></script><!--收入分类医院-->
+<script type="text/javascript" src="../js/allarea/incomeClassificationRight.js"></script><!--收入分类社区-->
+<script type="text/javascript" src="../js/family/roll.js"></script><!--列表网上平移js-->
+<script type="text/javascript" src="../js/allarea/patientList.js"></script><!--患者列表-->
+</body>
+</html>

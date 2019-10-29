@@ -1,28 +1,23 @@
 package com.paladin.qos.controller.report;
 
-import javax.validation.Valid;
-
-import com.paladin.qos.model.data.DataUnit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.report.ReportData;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.report.ReportDataService;
 import com.paladin.qos.service.report.dto.ReportDataDTO;
 import com.paladin.qos.service.report.dto.ReportDataQueryDTO;
 import com.paladin.qos.service.report.vo.ReportDataVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +51,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
     }
 
     @PostMapping("/save")
+	@SysControllerLog(action = "新增围产期心脏病筛查人数")
     @ResponseBody
     public Object save(@Valid ReportDataDTO dto,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -92,6 +88,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
     }
 
     @PostMapping("/update")
+	@SysControllerLog(action = "修改围产期心脏病筛查人数")
     @ResponseBody
     public Object update(@Valid ReportDataDTO dto, BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -109,6 +106,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
 
 
     @RequestMapping("/delete")
+	@SysControllerLog(action = "修改围产期心脏病筛查人数")
     @ResponseBody
     public Object delete(@RequestParam String id) {
 	return CommonResponse.getSuccessResponse(reportDataService.removeByPrimaryKey(id));

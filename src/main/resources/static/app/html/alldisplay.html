@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>昆山市医疗综合质量展示</title>
+    <link href="../css/init.css" rel="stylesheet" type="text/css">
+    <link href="../css/alldisplay.css" rel="stylesheet" type="text/css">
+
+</head>
+<body id="allbg">
+    <div id="alldisplayLeft">
+            <div class="alldisplayTop">
+                <p class="header">健康档案建档率</p>
+                <div id="healthRecords"></div>
+            </div>
+            <div class="alldisplayBottom">
+                <p class="header">门急诊人次数</p>
+                <div id="emergencyPatients"></div>
+            </div>
+    </div>
+   <div id="alldisplayMiddle">
+       <div id="map">
+           <div id="popup" class="ol-popup">
+               <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+               <div id="popup-content"></div>
+           </div>
+       </div>
+   </div>
+
+   <div id="alldisplayRight" class="alldisplayRight">
+        <div class="alldisplayRightTop">
+            <p class="headers">人口签约数</p>
+            <div id="populationContracts"></div>
+        </div>
+       <div class="alldisplayRightMiddle">
+           <div id="healthPersonnel"></div>
+           <div>
+               <p class="headers">卫计人员情况</p>
+               <div class="text-FEFEFE fz16 mb02592"><span id="health"></span></div>
+               <div class="text-FEFEFE fz16"><span id="nonHealth"></span></div>
+           </div>
+       </div>
+       <div class="alldisplayRightBottom">
+           <p class="headers">实际签约数据表</p>
+           <div id="dataSheet">
+
+                   <ul>
+                       <li class="text-00FFFF ellipsis276">签约机构</li>
+                       <li class="text-00FFFF ellipsis28">签约姓名</li>
+                       <li class="text-00FFFF ellipsis28">签约性别</li>
+                       <li class="text-00FFFF ellipsis290">签约日期</li>
+                       <li class="text-00FFFF ellipsis276">签约团队</li>
+                       <li class="text-00FFFF ellipsis276">签约类型</li>
+
+                   </ul>
+
+               <div id="scroll">
+                   <div class="content">
+                      <ul id="dataList">
+
+                       </ul>
+
+                  </div>
+               </div>
+
+           </div>
+       </div>
+   </div>
+
+<script type="text/javascript" src="../js/alldisplay/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="../js/echarts.min.js"></script>
+<script type="text/javascript" src="../js/echarts-liquidfill.min.js"></script>
+<script type="text/javascript" src="../js/map/ol.js"></script><!--地图js-->
+<script type="text/javascript" src="../js/common.js"></script><!--基础js-->
+<script type="text/javascript" src="../js/alldisplay/healthRecords.js"></script><!--健康档案建档率-->
+<script type="text/javascript" src="../js/alldisplay/emergencyPatients.js"></script><!--急诊人次数-->
+<script type="text/javascript" src="../js/alldisplay/healthPersonnel.js"></script><!--卫计人员情况-->
+<script type="text/javascript" src="../js/alldisplay/populationContracts.js"></script><!--人口签约数-->
+<script type="text/javascript" src="../js/alldisplay/dataSheet.js"></script><!--实际签约数据表-->
+<script type="text/javascript" src="../js/map/initalldisplay.js"></script><!--地图js-->
+</body>
+</html>

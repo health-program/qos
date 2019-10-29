@@ -1,5 +1,6 @@
 package com.paladin.qos.controller.count;
 
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
@@ -52,6 +53,7 @@ public class CountReferralController extends ControllerSupport {
     }
 
     @PostMapping("/save")
+    @SysControllerLog(action = "新增双向转诊统计")
     @ResponseBody
     public Object save(@Valid CountReferralDTO dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -78,6 +80,7 @@ public class CountReferralController extends ControllerSupport {
 
 
     @PostMapping("/update")
+    @SysControllerLog(action = "修改双向转诊统计")
     @ResponseBody
     public Object update(@Valid @RequestBody CountReferralDTO countReferralDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -96,6 +99,7 @@ public class CountReferralController extends ControllerSupport {
     }
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+    @SysControllerLog(action = "删除双向转诊统计")
     @ResponseBody
     public Object delete(@RequestParam String id) {
         return CommonResponse.getResponse(countReferralService.removeByPrimaryKey(id));

@@ -1,5 +1,8 @@
 package com.paladin.qos.service.report.dto;
-/**   
+
+import com.google.common.base.Strings;
+
+/**
  * @author MyKite
  * @version 2019年8月23日 下午4:24:42 
  */
@@ -34,6 +37,9 @@ public class ReportDataDTO {
     public void setUnitId(String unitId) {
         this.unitId = unitId;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "记录ID:" + ( Strings.isNullOrEmpty(id) ? '无' : id) + ",数据：" + data;
+    }
 }

@@ -1,0 +1,182 @@
+#contraceptionEcharts{
+    width: 94.354vw;
+    height: 39.629vh;
+    margin: auto;
+}
+#compreallbg{
+    width: 100vw;
+    height: 83vh;
+    background: url('../img/comprehensive/comprehensiveBg.jpg') no-repeat center;
+    background-size:100% 100%;;
+}
+.blueactive{
+    width: 6.61458vw;
+    height: 6.2037vh;
+    line-height:6.2037vh;
+    background: #62a8fb;
+    position: relative;
+    text-indent: 2.5vw;
+}
+.blueactive img{
+    width: 1.666vw;
+    left:0.8vw;
+    top:0.6vw;
+    right: 0.2vw;
+    position: absolute;
+}
+.nochoosebg{
+    width: 6.61458vw;
+    height: 6.2037vh;
+    line-height:6.2037vh;
+    background: url('../img/comprehensive/nochoosebg.png') no-repeat center;
+    background-size:100% 100%;
+    position: relative;
+    text-indent: 2.9vw;
+}
+.nochoosebg img{
+    width: 1.666vw;
+   left:0.7vw;
+    top:0.6vw;
+    right: 0.1vw;
+    position: absolute;
+}
+.headerUl{
+    margin-top: 16.3518vh;
+    margin-left: 3.604vw;
+    overflow: hidden;
+}
+.headerUl li{
+    float: left;
+    color: #ffffff;
+    margin-right: 0.5729vw;
+}
+
+.headerUl li:last-child{
+    margin-right: 0px;
+}
+.threebg{
+    width: 28.229vw;
+    height: 38.425vh;
+    background: url('../img/comprehensive/threebg.png') no-repeat center;
+    background-size:100% 100%;
+    position: absolute;
+    display: inline-block;
+    float: left;
+}
+
+.threebg1{
+    top:36.685vh;
+    left: 1.875vw;
+}
+
+
+.threebg1child{
+    top:36.685vh;
+    left: 20vw;
+}
+.onebigbg{
+    top:36.685vh;
+    left:2vw;
+}
+.threebg2child{
+    top:36.685vh;
+    left: 51vw;
+}
+.threebg2{
+    top:36.685vh;
+    left: 36.5104vw;
+}
+.threebg3{
+    top:36.685vh;
+    left: 70.72975vw;
+}
+.threebg p{
+    width: 28.229vw;
+    text-align: center;
+    line-height: 9vh;
+    height: 9vh;
+}
+#healthRecords,#rateRecords,#useRecords{
+    width: 28.229vw;
+    height: 25.425vh;
+}
+.headerTitle{
+    width: 100vw;
+    height: 5vh;
+    line-height: 5vh;
+    font-size: 35px;
+    color: #00f5f6;
+    text-align: center;
+    background: url('../img/comprehensive/line.png') no-repeat bottom;
+    padding-bottom: 1vh;
+    margin-top: 2vh;
+}
+.headerTitle i{
+    display: inline-block;
+}
+/*
+.line{
+    background: url('../img/comprehensive/line.png') no-repeat center;
+    height: 0.277vh;
+    width: 13.125vw;
+    display: inline-block;
+    margin-top: 1vh;
+}*/
+
+
+
+.onebg{
+    width: 96.354vw;
+    height: 49.629vh;
+    background: url('../img/comprehensive/bigbg.png') no-repeat center;
+    background-size:100% 100%;
+    position: absolute;
+    display: inline-block;
+    float: left;
+}
+#healthServicesElderly{
+    width: 90vw;
+    height: 35vh;
+}
+#chronicDisease{
+    width: 96vw;
+    height: 35vh;
+}
+.text-center{
+    text-align: center;
+}
+
+.contraceptionTitle{
+    height: 5vh;
+    line-height: 5vh;
+    margin-top: 3vh;
+}
+#neonatal,#childHealth,#rateElderly,#healthRate{
+    width: 26vw;
+    height: 20vh;
+    margin: auto;
+}
+#earlyPregnancy,#afterMaternity{
+    width: 26vw;
+    height: 30vh;
+    margin: auto;
+}
+.bg0976a7{
+    background: #0976a7;
+}
+.text-00f5f6{
+    color: #00f5f6;
+}
+.hei8333{
+    height: 8.333333vh;
+}
+.hei8{
+    height:2.6vh;
+    line-height:2.7vh;
+    text-align: center;
+    color: #ffffff;
+    border-bottom:1px solid #2e82a2;
+}
+.hei8 td{
+    border-right:1px solid #2e82a2;
+}

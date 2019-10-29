@@ -1,5 +1,6 @@
 package com.paladin.qos.service.countantibiotics.dto;
 
+import com.google.common.base.Strings;
 import com.paladin.framework.common.OffsetPage;
 
 public class CountAntibioticsDTO extends OffsetPage {
@@ -57,6 +58,11 @@ public class CountAntibioticsDTO extends OffsetPage {
 
     public void setUnitId(String unitId) {
 	this.unitId = unitId;
+    }
+
+    @Override
+    public String toString() {
+        return "记录ID:" + ( Strings.isNullOrEmpty(id) ? '无' : id);
     }
 
 }

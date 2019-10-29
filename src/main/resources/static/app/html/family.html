@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>昆山市社区卫生服务综合展示</title>
+    <link href="../css/init.css" rel="stylesheet" type="text/css">
+    <link href="../css/family.css" rel="stylesheet" type="text/css">
+    <link href="../css/swiper.min.css" rel="stylesheet" type="text/css">
+</head>
+<body id="familybg">
+    <div id="familyLeft" class="ml1875 mt10">
+        <div class="familysame porealiteve">
+            <div class="fz16 keyGroupsHeader">
+                <span class="keyGroups">重点人群签约率</span>
+                <select id="selection">
+                    <option value="CJRS">残疾人签约率</option>
+                    <option value="GXYS">高血压患者签约率</option>
+                    <option value="TNBS">糖尿病患者签约率</option>
+                    <option value="YCFS">孕产妇签约率</option>
+                    <option value="ETQYS">0-6周岁儿童签约率</option>
+                    <option value="LNRS">65周岁及以上老年人签约率</option>
+                    <option value="FJHS">严重肺结核患者签约率</option>
+                    <option value="JSZAS">重精神障碍患者签约率</option>
+                    <option value="JBSCS">疾病筛查高危人员签约率</option>
+                </select>
+            </div>
+            <div id="keyGroups"></div>
+        </div>
+        <div class="familysame">
+            <header class="fz16">综合健康管理服务包签约率</header>
+            <div id="managementService"></div>
+        </div>
+        <div class="familysame">
+            <header class="fz16">个性化服务率</header>
+            <div id="individualization"></div>
+        </div>
+    </div>
+
+    <div id="familyMiddle" class="mt10">
+            <div id="familyMiddleTop" class="mt10">
+
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <div class="one">
+                                <ul>
+                                    <li class="onebg">
+                                        <span class="fz14">慢病签约人员管理数</span>
+                                        <span class="fz17" id="eventIds21005"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">慢病签约人员随访数</span>
+                                        <span class="fz17" id="eventIds21006"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">签约人员双向转诊数</span>
+                                        <span class="fz17">111</span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">家庭病床建床数</span>
+                                        <span class="fz17">111</span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">专病小区专科诊疗数</span>
+                                        <span class="fz17" >111</span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">上门服务人次数</span>
+                                        <span class="fz17" id="eventIds21007"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">营养指导人次数</span>
+                                        <span class="fz17"  id="eventIds21008"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">康复指导人次数</span>
+                                        <span class="fz17" id="eventIds21009"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="two">
+                                <ul>
+                                    <li class="onebg">
+                                        <span class="fz14">用药指导人次数</span>
+                                        <span id="eventIds21010"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">慢病长处方服务数</span>
+                                        <span id="eventIds21011"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">签约居民体检人数</span>
+                                        <span id="eventIds21012"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">心脑血管高危人群筛查人数</span>
+                                        <span id="eventIds21013"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">肿瘤高危人群筛查数</span>
+                                        <span id="eventIds21014"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">骨质疏松高危人群筛查数</span>
+                                        <span id="eventIds21015"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">COPD高危人群筛查数</span>
+                                        <span id="eventIds21016"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span class="fz14">儿童哮喘筛查数</span>
+                                        <span id="eventIds21017"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="swiper-slide">
+                            <div class="three">
+                                <ul>
+                                    <li class="onebg">
+                                        <span class="fz14">健康自助监测评估数</span>
+                                        <span >111</span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span  class="fz14">CDSS心脑血管风险评估数</span>
+                                        <span id="eventIds21019"></span>
+                                    </li>
+                                    <li class="onebg">
+                                        <span  class="fz14">个性化健康信息精准推送数</span>
+                                        <span id="eventIds21020"></span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                   <!-- 如果需要分页器 -->
+                    <div  class="swiper-pagination">
+                    </div>
+                </div>
+            </div>
+            <div id="familyMiddleBottom">
+                <ul class="familySocilty">
+                    <li class="fz14">社区名称</li>
+                    <li class="fz14">团队名称</li>
+                    <li class="fz14">姓名</li>
+                    <li class="fz14">年龄</li>
+                    <li class="fz14">职称</li>
+                    <li class="fz14">工作岗位</li>
+                    <li class="doctor_isTeamCaptain">是否团队长</li>
+                </ul>
+                <div id="familyTable">
+                    <ul id="familyTableUl">
+
+
+                    </ul>
+                </div>
+            </div>
+    </div>
+
+<div id="familyRight" class="mt10">
+        <div class="familysame">
+            <header class="fz16">年度服务有效履约率</header>
+            <div id="performance"></div>
+        </div>
+        <div class="familysame">
+            <header class="fz16">签约机构门诊就诊率</header>
+            <div id="comprehensiveHealth"></div>
+        </div>
+        <div class="familysame">
+            <header class="fz16">签约医生门诊就诊率</header>
+            <div id="contractDoctor"></div>
+        </div>
+    </div>
+<script type="text/javascript" src="../js/alldisplay/jquery-2.2.3.min.js"></script>
+<script type="text/javascript" src="../js/echarts.min.js"></script>
+<script type="text/javascript" src="../js/common.js"></script><!--基础js-->
+<script type="text/javascript" src="../js/family/roll.js"></script><!--列表网上平移js-->
+<script type="text/javascript" src="../js/family/sociologyName.js"></script><!--社区名称-->
+<script type="text/javascript" src="../js/family/familydoctorAssessment.js"></script><!--轮播多个数据展示-->
+<script type="text/javascript" src="../js/swiper.min.js"> </script>
+<script type="text/javascript" src="../js/community/keyGroup.js"></script><!--重点人群签约率-->
+<script type="text/javascript" src="../js/community/comprehensiveHealth.js"></script><!--签约机构门诊就诊率-->
+<script type="text/javascript" src="../js/community/performance.js"></script><!--年度服务有效履约率-->
+<script type="text/javascript" src="../js/community/contractDoctor.js"></script><!--签约医生门诊就诊率-->
+<script type="text/javascript" src="../js/community/individualization.js"></script><!--个性化服务率-->
+<script type="text/javascript" src="../js/community/managementService.js"></script><!--综合健康管理服务包签约率-->
+</body>
+</html>

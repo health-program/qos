@@ -1,6 +1,9 @@
 package com.paladin.qos.service.org.dto;
 
 
+import com.google.common.base.Strings;
+import com.paladin.qos.analysis.DataConstantContainer;
+
 public class OrgPersonDTO {
 
 		private String id;
@@ -443,6 +446,9 @@ public class OrgPersonDTO {
 			this.zQitaPerson = zQitaPerson;
 		}
 
-
+	@Override
+	public String toString() {
+		return "机构名称:" + DataConstantContainer.getUnitName(unitId) +",机构人员ID: " + ( Strings.isNullOrEmpty(id) ? '无' : id);
+	}
 
 }

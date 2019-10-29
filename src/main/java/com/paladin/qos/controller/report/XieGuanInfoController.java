@@ -1,16 +1,6 @@
 package com.paladin.qos.controller.report;
 
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
@@ -19,6 +9,12 @@ import com.paladin.qos.service.report.ReportDataService;
 import com.paladin.qos.service.report.dto.ReportDataDTO;
 import com.paladin.qos.service.report.dto.ReportDataQueryDTO;
 import com.paladin.qos.service.report.vo.ReportDataVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**   
  * @author MyKite
@@ -44,6 +40,7 @@ public class XieGuanInfoController extends ControllerSupport{
     }
     
     @PostMapping("/save")
+    @SysControllerLog(action = "新增卫计计生监督协管信息上报率")
     @ResponseBody
     public Object save(@Valid ReportDataDTO dto,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -62,6 +59,7 @@ public class XieGuanInfoController extends ControllerSupport{
     }
     
     @RequestMapping("/delete")
+    @SysControllerLog(action = "删除卫计计生监督协管信息上报率")
     @ResponseBody
     public Object delete(@RequestParam String id) {
 	return CommonResponse.getSuccessResponse(reportDataService.removeByPrimaryKey(id));
