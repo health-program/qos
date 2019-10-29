@@ -411,7 +411,7 @@
 	
 	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register"> 
 		 SELECT regid,orgname,deptname,patientname,sexcode,regdate as seedate,paykindname 
-		 FROM jcyl_opr_register
+		 FROM j_opr_register
 		 WHERE regstatus = '0'
 	     ORDER BY regdate desc 
 	     LIMIT 100
