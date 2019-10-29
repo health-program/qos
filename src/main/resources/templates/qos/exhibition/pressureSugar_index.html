@@ -9,7 +9,27 @@
     <h1>高血压糖尿病情况报表</h1>
 </section>
 <section class="content">
-    
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="year" id="year" placeholder="请输入年度" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1" ></div>
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
     <div class="row">
         <div class="col-md-3">
             <div class="box box-solid">
@@ -71,6 +91,16 @@
     });
     var table, sumChart, dayChart, sumData, requestParams,result,selectUnit;
     var charResult=[];
+    
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+    
     $(function() {
         // var day=new Date();
         // day.setTime(day.getTime());
@@ -97,38 +127,24 @@
             columns: [
                 [
                     { title: "辖区", field: "unitName" },
-                    { title: "高血压管理数", field: "evV30009",visible:false },
+                    { title: "高血压管理数", field: "evV30009"},
                     { title: "高血压随访数", field: "ev1V30009",visible:false },
-                    
-                    { title: "高血压管理数", field: "ev1V30004",
-                    	formatter: function(value, row, index) {
-                            if(value)
-                                return value.toFixed(0);
-                        }		
-                    },
-                    { title: "管理人群血压<br>控制率", field: "evV30004"},
+                    { title: "管理人群血压<br>控制率（总）", field: "evV30004",},
                     { title: "高血压患者规范<br>管理率", field: "pressureManageRate",
                     	formatter: function(value, row, index) {
-                    		if(row.ev1V30009==0){
+                    		if(row.ev1V30009==0||row.ev1V30009==null){
                     			return "0%"
                     		}else{
                     			return (row.evV30009/row.ev1V30009*100).toFixed(2) * 1+"%";
                     		}
                         }	
                     },
-                    { title: "糖尿病管理数", field: "evV30010",visible:false},
+                    { title: "糖尿病管理数", field: "evV30010"},
                     { title: "糖尿病随访数", field: "ev1V30010",visible:false },
-                    
-                    { title: "糖尿病管理数", field: "ev1V30005",
-                    	formatter: function(value, row, index) {
-                            if(value)
-                                return value.toFixed(0);
-                        }
-                    },
-                    { title: "管理人群血糖<br>控制率", field: "evV30005"},
+                    { title: "管理人群血糖<br>控制率（总）", field: "evV30005"},
                     { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate",
                     	formatter: function(value, row, index) {
-                    		if(row.ev1V30010==0){
+                    		if(row.ev1V30010==0||row.ev1V30010==null){
                     			return "0%"
                     		}else{
                     			return (row.evV30010/row.ev1V30010*100).toFixed(2) * 1+"%";
@@ -153,6 +169,12 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
+            	if($("#year").val()==""||$("#year").val()==null){
+            		 var myDate = new Date();
+            		 var tYear = myDate.getFullYear();
+            		 $("#year").val(tYear-1);
+            		params.year = tYear-1;
+            	}
                 requestParams = params;
                 return params;
             },
@@ -169,8 +191,6 @@
                 convertRate1TableData(response, 'V30004', data);//管理人群血压
                 convertRate2TableData(response, 'V30005', data);//管理人群糖尿病
                 
-                convertCount5TableData(response, 'V30004', data);//高血压管理数(年报内)
-                convertCount5TableData(response, 'V30005', data);//糖尿病管理数(年报内)
                 var result = []
                 for (var o in data) {
                     result.push(data[o]);
@@ -664,17 +684,15 @@
         var managedName = [];
         var pressureNumberValue = [];
         var pressureManageNumberValue = [];
-        
-        var result = [];
-        result = charResult;
-        result.pop();
-        result.forEach(function(item){
-            var name=item.unitName;
+       
+        for(var i=0;i<charResult.length-1;i++){
+        	var name=charResult[i].unitName;
             var strName=name.substring(0,name.length-8);
             managedName.push(strName);
             //pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
-            pressureManageNumberValue.push({name:item.unitName,value:item.evV30009});
-        })
+            pressureManageNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30009});
+        }
+        
         var divName="辖区高血压管理柱状图";
         var columnName1="高血压患病数";
         var columnName2="高血压管理数";
@@ -685,16 +703,23 @@
         var managedName = [];
         var sugarNumberValue = [];
         var sugarManageNumberValue = [];
-        var result = [];
-        result = charResult;
-        result.pop();
-        result.forEach(function(item){
+      
+      /*   charResult.forEach(function(item){
             var name=item.unitName;
             var strName=name.substring(0,name.length-8);
             managedName.push(strName);
             //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
             sugarManageNumberValue.push({name:item.unitName,value:item.evV30010});
-        })
+        }) */
+        
+        for(var i=0;i<charResult.length-1;i++){
+        	var name=charResult[i].unitName;
+            var strName=name.substring(0,name.length-8);
+            managedName.push(strName);
+            //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
+            sugarManageNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30010});
+        }
+        
         var divName="辖区糖尿病管理排名柱状图";
         var columnName1="糖尿病患病数";
         var columnName2="糖尿病管理数";

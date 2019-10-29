@@ -53,17 +53,10 @@
         sumChart.resize();
     });
 
-    var table, sumChart, dayChart, sumData, requestParams,result,selectUnit,dataVal;
+    var table, sumChart, dayChart, sumData, requestParams,selectUnit,dataVal;
     var charResult=[];
     $(function() {
-        // var day=new Date();
-        // day.setTime(day.getTime());
-        // var month = day.getFullYear()+"-" + (day.getMonth()+1);
-        // laydate.render({
-        //     elem: '#dateInput',
-        //     type: 'month',
-        //     value:month
-        // });
+    	
         initTable();
     });
 
@@ -428,22 +421,30 @@
     	var oldPeopleNumberValue = [];
     	var physicalNumberValue = [];
     	var completePhysicalNumberValue = [];
-    	var result = [];
-        result = charResult;
-        result.pop();
-        result.forEach(function(item){
+    	
+        /* charResult.pop();
+        charResult.forEach(function(item){
             var name=item.unitName;
           
             managedName.push(name);
             oldPeopleNumberValue.push({name:item.unitName,value:item.evV30003});
             physicalNumberValue.push({name:item.unitName,value:item.ev1V30003});
             completePhysicalNumberValue.push({name:item.unitName,value:item.evV30008});
-        })
+        }) */
+        
+        for(var i=0;i<charResult.length-1;i++){
+        	 var name=charResult[i].unitName;
+             
+             managedName.push(name);
+             oldPeopleNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30003});
+             physicalNumberValue.push({name:charResult[i].unitName,value:charResult[i].ev1V30003});
+             completePhysicalNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30008});
+        }
 
         var isShowScroll = false;// 是否显示滚动条，默认false不显示
         var dataZoom_end;// 显示百分之多少的数据量，默认全部
-        if(result.length >10 ){
-            dataZoom_end = 100/(result.length/10);
+        if(charResult.length >10 ){
+            dataZoom_end = 100/(charResult.length/10);
             isShowScroll = true;
         }else{
             dataZoom_end = 100;

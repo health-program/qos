@@ -6,7 +6,9 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -758,5 +760,15 @@ public class AnalysisService {
 	//获得数据的总方法
 	public  String getTotalData(String id){
 		return  analysisMapper.getTotalData(id);
+	}
+
+	public List<EntityGongwei> getPressureTotalDataFromLocal(String year) {
+
+		return analysisMapper.getPressureTotalDataFromLocal(year);
+	}
+
+	public List<EntityGongwei> getSugarTotalDataFromLocal(String year) {
+
+		return analysisMapper.getSugarTotalDataFromLocal(year);
 	}
 }

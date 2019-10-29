@@ -3,7 +3,9 @@ package com.paladin.qos.mapper.analysis;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.home.Sign;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.paladin.qos.model.register.Register;
@@ -123,5 +125,9 @@ public interface AnalysisMapper {
 	Long getArchivesNumber(@Param("month") Date month);
 
 	String getTotalData(@Param("id") String id);
+
+	List<EntityGongwei> getPressureTotalDataFromLocal(String year);
+
+	List<EntityGongwei> getSugarTotalDataFromLocal(String year);
 
 }

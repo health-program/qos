@@ -500,4 +500,32 @@
 		select data from data_view_store where id=#{id};
 	</select>
 
+
+    <!--获取高血压管理数/随访数-->
+	<select id="getPressureTotalDataFromLocal" resultType="com.paladin.qos.model.gongwei.EntityGongwei">
+		select t.MANAGEDCENTERCODE,t.PRESSUREMANAGENUMBER,m.PRESSUREFOLLOWNUMBER from
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as PRESSUREMANAGENUMBER from report_year_blood  where
+yeartype=1 and reportyear = #{year}
+group by porgcode) t
+
+left join
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as PRESSUREFOLLOWNUMBER from report_year_blood where
+yeartype=1 and reportyear = #{year}
+group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
+	</select>
+	
+	<!--获取糖尿病管理数/随访数-->
+	<select id="getSugarTotalDataFromLocal" resultType="com.paladin.qos.model.gongwei.EntityGongwei">
+		
+select t.MANAGEDCENTERCODE,t.SUGARMANAGENUMBER,m.SUGARFOLLOWNUMBER from
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as SUGARMANAGENUMBER from report_year_diabetes  where
+yeartype=1 and reportyear = #{year}
+group by porgcode) t
+
+left join
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as SUGARFOLLOWNUMBER from report_year_diabetes  where
+yeartype=1 and reportyear = #{year}
+group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
+
+	</select>
 </mapper>

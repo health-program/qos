@@ -93,7 +93,7 @@ public class PressureSugarManagementController {
     
     @RequestMapping(value = "/search/all", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
-    public Object searchAll(AnalysisRequest request) {
+    public Object searchAll(AnalysisRequest request,String year) {
     	Map<String, Object> map = new HashMap<>();
     	List<Unit> units = DataConstantContainer.getCommunityList();
     	List<EntityGongwei> pressureList1=new ArrayList<EntityGongwei>();
@@ -103,8 +103,8 @@ public class PressureSugarManagementController {
     	List<EntityGongwei> manageSugarList1=new ArrayList<EntityGongwei>();
     	
     	
-    	String item = analysisService.getTotalData("V30009");//高血压管理数，高血压随访数
-    	String item1 = analysisService.getTotalData("V30010");//糖尿病管理数，糖尿病随访数
+    	List<EntityGongwei> pressureList = analysisService.getPressureTotalDataFromLocal(year);//高血压管理数，高血压随访数
+    	List<EntityGongwei> sugarList = analysisService.getSugarTotalDataFromLocal(year);//糖尿病管理数，糖尿病随访数
     	
     	String item4 = analysisService.getTotalData("V30004");//管理人群血压
     	String item5 = analysisService.getTotalData("V30005");//管理人群糖尿病
@@ -135,8 +135,7 @@ public class PressureSugarManagementController {
         		}
         	}
     	}
-        if(!StringUtils.isEmpty(item)){
-        	List<EntityGongwei> pressureList = toBeanList(item,EntityGongwei.class);
+        if(pressureList!=null){
         	for(EntityGongwei shequ:pressureList){
         		
         		for(Unit unit : units){
@@ -149,8 +148,7 @@ public class PressureSugarManagementController {
         	}
     	}
     	
-        if(!StringUtils.isEmpty(item1)){
-        	List<EntityGongwei> sugarList = toBeanList(item1,EntityGongwei.class);
+        if(sugarList!=null){
         	for(EntityGongwei shequ:sugarList){
         		for(Unit unit : units){
         			if(shequ.MANAGEDCENTERCODE.equals(unit.getSource().getGongweiCode())){
@@ -164,6 +162,8 @@ public class PressureSugarManagementController {
     	
     	orderByUnit(pressureList1);
     	orderByUnit(sugarList1);
+    	orderByUnit(managePressuerList1);
+    	orderByUnit(manageSugarList1);
     	
     	map.put("V30009", pressureList1);
     	map.put("V30010", sugarList1);
