@@ -2,7 +2,16 @@ package com.paladin.qos.model.gongwei;
 
 public class EntityGongweiFamily {
 
-	public String count;
+	private String month;
+	private String count;
+
+	public String getMonth() {
+		return month;
+	}
+
+	public void setMonth(String month) {
+		this.month = month;
+	}
 
 	public String getCount() {
 		return count;

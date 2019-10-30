@@ -150,16 +150,9 @@ public class HomePageController {
     @RequestMapping(value = "/quailtydisplay/getSignList", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getSignList() {
-        List<Sign> signs = new ArrayList<>();
-        List<Sign> signList = analysisService.getSignInfo();
-
-        if (!CollectionUtils.isEmpty(signList)) {
-            for (Sign sign : signList) {
-
-            }
-        }
-
-        return CommonResponse.getSuccessResponse(signList);
+        String item = analysisService.getTotalData("V70000");
+        List<Sign> signs=toBeanList(item,Sign.class);
+        return CommonResponse.getSuccessResponse(signs);
     }
 
     //根据event获取数据
@@ -431,7 +424,7 @@ public class HomePageController {
                 String item = analysisService.getTotalData(eventId);
                 List<EntityGongweiFamily> list = toBeanList(item,EntityGongweiFamily.class);
                 if (!CollectionUtils.isEmpty(list)){
-                    map.put(eventId,list.get(0).count);
+                    map.put(eventId,list.get(0).getCount());
                 }else{
                     map.put(eventId,0);
                 }
