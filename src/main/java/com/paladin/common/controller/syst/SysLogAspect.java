@@ -50,7 +50,7 @@ public class SysLogAspect {
 
     @AfterReturning(value = "controllerAspect()",returning = "result")
     public void  doAfterReturning(JoinPoint joinPoint, Object result){
-        LOGGER.info("==============日志前置通知开始==============");
+        LOGGER.info("==============日志后置返回通知开始==============");
         CommonResponse response = new CommonResponse();
 
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(result,response);
@@ -81,10 +81,10 @@ public class SysLogAspect {
                 model.setCreateTime(new Date());
                 sysLoggerLoginService.save(model);
             } catch (Exception e) {
-                LOGGER.error("===========前置通知异常==============>>"+e.getMessage());
+                LOGGER.error("===========后置返回通知异常==============>>"+e.getMessage());
             }
         }
-        LOGGER.info("==============日志前置通知结束==============");
+        LOGGER.info("==============日志后置返回通知结束==============");
     }
 
 

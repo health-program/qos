@@ -106,7 +106,7 @@ public class PerinatalCardiopathyController extends ControllerSupport{
 
 
     @RequestMapping("/delete")
-	@SysControllerLog(action = "修改围产期心脏病筛查人数")
+	@SysControllerLog(action = "删除围产期心脏病筛查人数")
     @ResponseBody
     public Object delete(@RequestParam String id) {
 	return CommonResponse.getSuccessResponse(reportDataService.removeByPrimaryKey(id));
