@@ -9,6 +9,7 @@ import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
+import com.paladin.qos.model.gongwei.EntityGongweiFamily;
 import com.paladin.qos.model.home.Sign;
 import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
@@ -418,7 +419,31 @@ public class HomePageController {
 		}
 		return beanList;
 	}
-    
+
+    @RequestMapping(value = "/get/family/data", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getFamilyData(AnalysisRequest request) {
+        List<String> eventIds = request.getEventIds();
+        Map<String, Object> map = new HashMap<>();
+        if (eventIds != null && eventIds.size() > 0) {
+            List<String> items=new ArrayList<>();
+            for (String eventId : eventIds) {
+                String item = analysisService.getTotalData(eventId);
+                List<EntityGongweiFamily> list = toBeanList(item,EntityGongweiFamily.class);
+                if (!CollectionUtils.isEmpty(list)){
+                    map.put(eventId,list.get(0).count);
+                }else{
+                    map.put(eventId,0);
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else
+            return null;
+    }
+
+
+
+
     // 单位排序
  	private void orderByUnit(List<EntityGongwei> list) {
  		if (list != null && list.size() > 0) {
