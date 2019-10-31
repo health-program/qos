@@ -169,12 +169,12 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
-            	if($("#year").val()==""||$("#year").val()==null){
+            	/* if($("#year").val()==""||$("#year").val()==null){
             		 var myDate = new Date();
             		 var tYear = myDate.getFullYear();
             		 $("#year").val(tYear-1);
             		params.year = tYear-1;
-            	}
+            	} */
                 requestParams = params;
                 return params;
             },

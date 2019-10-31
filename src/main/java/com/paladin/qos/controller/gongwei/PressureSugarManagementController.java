@@ -84,7 +84,7 @@ public class PressureSugarManagementController {
  				@Override
  				public int compare(EntityGongwei o1, EntityGongwei o2) {
  					String uid1 = o1.getUnitId();
- 					String uid2 = o1.getUnitId();
+ 					String uid2 = o2.getUnitId();
  					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
  				}
  			});
