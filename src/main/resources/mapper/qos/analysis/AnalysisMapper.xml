@@ -506,7 +506,7 @@
 		select t.MANAGEDCENTERCODE,t.PRESSUREMANAGENUMBER,m.PRESSUREFOLLOWNUMBER from
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as PRESSUREMANAGENUMBER from report_year_blood  where
 yeartype=1 
-<if test="reportyear != null">
+<if test="year != null">
 		 and reportyear = #{year}
  </if>
 group by porgcode) t
@@ -514,7 +514,7 @@ group by porgcode) t
 left join
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as PRESSUREFOLLOWNUMBER from report_year_blood where
 yeartype=1 
-<if test="reportyear != null">
+<if test="year != null">
 		 and reportyear = #{year}
  </if>
 group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
@@ -525,7 +525,7 @@ group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
 select t.MANAGEDCENTERCODE,t.SUGARMANAGENUMBER,m.SUGARFOLLOWNUMBER from
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as SUGARMANAGENUMBER from report_year_diabetes  where
 yeartype=1 
-<if test="reportyear != null">
+<if test="year != null">
 		 and reportyear = #{year}
  </if>
 group by porgcode) t
@@ -533,7 +533,7 @@ group by porgcode) t
 left join
 (select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as SUGARFOLLOWNUMBER from report_year_diabetes  where
 yeartype=1 
-<if test="reportyear != null">
+<if test="year != null">
 		 and reportyear = #{year}
  </if>
 group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE

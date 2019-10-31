@@ -127,9 +127,9 @@ public interface AnalysisMapper {
 
 	String getTotalData(@Param("id") String id);
 
-	List<EntityGongwei> getPressureTotalDataFromLocal(String year);
+	List<EntityGongwei> getPressureTotalDataFromLocal(@Param("year") String year);
 
-	List<EntityGongwei> getSugarTotalDataFromLocal(String year);
+	List<EntityGongwei> getSugarTotalDataFromLocal(@Param("year") String year);
 
 	List<Disease> findNameList();
 
