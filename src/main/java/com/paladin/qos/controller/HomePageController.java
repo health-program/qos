@@ -7,6 +7,7 @@ import com.paladin.qos.analysis.DataConstantContainer.*;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
+import com.paladin.qos.model.gongwei.AddressEntity;
 import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.gongwei.EntityGongweiFamily;
@@ -444,7 +445,7 @@ public class HomePageController {
  				@Override
  				public int compare(EntityGongwei o1, EntityGongwei o2) {
  					String uid1 = o1.getUnitId();
- 					String uid2 = o1.getUnitId();
+ 					String uid2 = o2.getUnitId();
  					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
  				}
  			});
@@ -532,38 +533,91 @@ public class HomePageController {
     	return  CommonResponse.getSuccessResponse(map);
     }
     
-    @PostMapping("/getTop5Disease")
+    @RequestMapping(value = "/getTop5Disease", method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
-	public Object getTop5Disease(AnalysisRequest request,String id) {
+	public Object getTop5Disease(AnalysisRequest request) {
     	List<Unit> units = DataConstantContainer.getHospitalList();
-    	List<Disease> diseaseList1=new ArrayList<Disease>();
-    	String item = analysisService.getTotalData(id);//疾病top5
-    	if(!StringUtils.isEmpty(item)){
-        	List<Disease> diseaseList = toBeanList(item,Disease.class);
-        	for(Disease yiyuan:diseaseList){
-        		for(Unit unit : units){
-        			if(yiyuan.orgcode.equals(unit.getSource().getId())){
-        				yiyuan.setUnitId(unit.getId());
-        				yiyuan.setUnitName(unit.getName());
-        				diseaseList1.add(yiyuan);
+    	
+    	
+    	List<String> eventIds = request.getEventIds();
+    	Map<String, Object> map = new HashMap<>();
+    	for(String eventId : eventIds){
+    		List<Disease> diseaseList1=new ArrayList<Disease>();
+    		String item = analysisService.getTotalData(eventId);//疾病top5
+        	if(!StringUtils.isEmpty(item)){
+            	List<Disease> diseaseList = toBeanList(item,Disease.class);
+            	for(Disease yiyuan:diseaseList){
+            		for(Unit unit : units){
+            			if(yiyuan.orgcode.equals(unit.getSource().getId())){
+            				yiyuan.setUnitId(unit.getId());
+            				yiyuan.setUnitName(unit.getName());
+            				diseaseList1.add(yiyuan);
+            			}
+            		}
+            	}
+        	}
+        	
+        	List<Disease> nameList = analysisService.findNameList();
+        	for(Disease yiyuan:diseaseList1){
+        		for(Disease name:nameList){
+        			if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
+        				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
         			}
         		}
         	}
-    	}
-    	
-    	List<Disease> nameList = analysisService.findNameList();
-    	for(Disease yiyuan:diseaseList1){
-    		for(Disease name:nameList){
-    			if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
-    				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
-    			}
-    		}
+        	map.put(eventId, diseaseList1);
     	}
     	
     	
-		return CommonResponse.getSuccessResponse(diseaseList1);
+    	
+    	
+		return CommonResponse.getSuccessResponse(map);
 	}
 
+    
+    //todo居住地址统计
+    @RequestMapping(value="/getAddressCount", method = { RequestMethod.GET, RequestMethod.POST })
+   	@ResponseBody
+   	public Object getAddressCount(AnalysisRequest request) {
+    	List<String> eventIds = new ArrayList<String>();
+    	eventIds.add("V80001");eventIds.add("V80002");eventIds.add("V80003");eventIds.add("V80004");eventIds.add("V80005");eventIds.add("V80006");
+    	eventIds.add("V80007");eventIds.add("V80008");eventIds.add("V80009");eventIds.add("V80010");eventIds.add("V80011");eventIds.add("V80012");
+    	eventIds.add("V80013");
+    	
+    	List<String> total = new ArrayList<String>();
+        long yushan = 0;long bacheng = 0;long huaqiao = 0;long zhoushi = 0;long qiandeng = 0;
+        long lujia = 0;long zhangpu = 0;long zhouzhuang = 0;long jinxi = 0;long dianshanhu = 0;
+		for (String eventId : eventIds) {
+					String item = analysisService.getTotalData(eventId);
+					List<AddressEntity> addressList = toBeanList(item,AddressEntity.class);
+					for(AddressEntity address:addressList){
+						if("001".equals(address.getCode())){
+							yushan+=address.getCount();
+						}else if("002".equals(address.getCode())){
+							bacheng+=address.getCount();
+						}else if("003".equals(address.getCode())){
+							huaqiao+=address.getCount();
+						}else if("004".equals(address.getCode())){
+							zhoushi+=address.getCount();
+						}else if("005".equals(address.getCode())){
+							qiandeng+=address.getCount();
+						}else if("006".equals(address.getCode())){
+							lujia+=address.getCount();
+						}else if("007".equals(address.getCode())){
+							zhangpu+=address.getCount();
+						}else if("008".equals(address.getCode())){
+							zhouzhuang+=address.getCount();
+						}else if("009".equals(address.getCode())){
+							jinxi+=address.getCount();
+						}else if("010".equals(address.getCode())){
+							dianshanhu+=address.getCount();
+						}
+					}
+		}
+		
+		
+		return CommonResponse.getSuccessResponse();
+    }
 }
 
 
