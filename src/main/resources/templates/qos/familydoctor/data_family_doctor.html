@@ -47,7 +47,7 @@ margin-top: 16px;
 											<span>慢病签约人员管理数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21005">0</span>
+											<span class="number" id="V60001">0</span>
 										</div>
 									</div>
 								</div>
@@ -70,7 +70,7 @@ margin-top: 16px;
 											<span>慢病签约人员随访数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21006">0</span>
+											<span class="number" id="V60002"></span>
 										</div>
 									</div>
 								</div>
@@ -93,7 +93,7 @@ margin-top: 16px;
 											<span>个性化健康信息精准推送数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number"   id="21020">0</span>
+											<span class="number"   id="V60016"></span>
 										</div>
 									</div>
 								</div>
@@ -164,7 +164,7 @@ margin-top: 16px;
 											<span>上门服务人次数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21007">0</span>
+											<span class="number" id="V60003"></span>
 										</div>
 									</div>
 								</div>
@@ -187,7 +187,7 @@ margin-top: 16px;
 											<span>营养指导人次数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21008">0</span>
+											<span class="number" id="V60004"></span>
 										</div>
 									</div>
 								</div>
@@ -210,7 +210,7 @@ margin-top: 16px;
 											<span>康复指导人次数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21009">0</span>
+											<span class="number" id="V60005"></span>
 										</div>
 									</div>
 								</div>
@@ -235,7 +235,7 @@ margin-top: 16px;
 												<span>用药指导人次数</span>
 											</div>
 											<div class="col-md-12 typeface1">
-												<span class="number" id="21010">0</span>
+												<span class="number" id="V60006"></span>
 											</div>
 										</div>
 									</div>
@@ -281,7 +281,7 @@ margin-top: 16px;
 											<span>签约居民体检人数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21012">0</span>
+											<span class="number" id="V60008"></span>
 										</div>
 									</div>
 								</div>
@@ -304,7 +304,7 @@ margin-top: 16px;
 											<span>心脑血管高危人群筛查人数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21013">0</span>
+											<span class="number" id="V60009"></span>
 										</div>
 									</div>
 								</div>
@@ -329,7 +329,7 @@ margin-top: 16px;
 											<span>肿瘤高危人群筛查数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21014">0</span>
+											<span class="number" id="V60010"></span>
 										</div>
 									</div>
 								</div>
@@ -352,7 +352,7 @@ margin-top: 16px;
 											<span>骨质疏松高危人群筛查数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21015">0</span>
+											<span class="number" id="V60011"></span>
 										</div>
 									</div>
 								</div>
@@ -375,7 +375,7 @@ margin-top: 16px;
 											<span>COPD高危人群筛查数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21016">0</span>
+											<span class="number" id="V60012"></span>
 										</div>
 									</div>
 								</div>
@@ -398,7 +398,7 @@ margin-top: 16px;
 											<span>儿童哮喘筛查数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21017">0</span>
+											<span class="number" id="V60013"></span>
 										</div>
 									</div>
 								</div>
@@ -423,7 +423,7 @@ margin-top: 16px;
 											<span>健康自助监测评估数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21018">0</span>
+											<span class="number" id="V60014"></span>
 										</div>
 									</div>
 								</div>
@@ -446,7 +446,7 @@ margin-top: 16px;
 											<span>CDSS心脑血管风险评估数</span>
 										</div>
 										<div class="col-md-12 typeface1">
-											<span class="number" id="21019">0</span>
+											<span class="number" id="V60015"></span>
 										</div>
 									</div>
 								</div>
@@ -485,9 +485,9 @@ margin-top: 16px;
 		$(function () {
 			initData();
 		});
-		var eventIds = '21005,21006,21007,21008,21009,21010,21011,21012,21013,21014,21015,21016,21017,21018,21019,21020';
+		var eventIds = 'V60001,V60002,V60003,V60004,V60005,V60006,V60007,V60008,V60009,V60010,V60011,V60012,V60013,V60014,V60015,V60016';
 		function initData() {
-			$.postAjax('/qos/analysis/data/get/total',{'eventIds':eventIds},function (response) {
+			$.postAjax('/home/page/qos/get/family/data',{'eventIds':eventIds},function (response) {
 
 				let ids = eventIds.split(",");
 

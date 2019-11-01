@@ -14,12 +14,9 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="year" id="year" placeholder="请输入年度" value="2018" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1" ></div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -84,7 +81,7 @@
 	});
     
     
-	 var table, monthChart, unitChart, requestParam, selectUnit,responseData;
+	 var table, monthChart, unitChart, requestParam, selectUnit,responseData,sumData;
 	    $(function() {
 	        refresh();
 	    });
@@ -109,16 +106,49 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "应签居民数", field: "total21001"},
-                    { title: "健康管理服<br/>务包签约数", field: "event21001" },
-                    { title: "综合健康管理服务包<br/>签约率(免费)", field: "reat21001"},
-                    { title: "综合健康管理服务包<br/>签约率(收费)", field: "reat21001"},
-                    { title: "个性化服<br/>务签约数", field: "event21002"},
-                    { title: "签约总数", field: "total21002"},
-                    { title: "个性化服务<br/>签约率(收费)", field: "reat21002"}
+                    { title: "应签居民数", field: "totalV90001"},
+                    { title: "健康管理服<br/>务包签约数", field: "number",
+                        formatter: function(value, row, index) {
+                         if (row.totalV90002 && row.totalV90003)
+                                return row.totalV90003 + row.totalV90002;
+                         else if(!row.totalV90002 && row.totalV90003)
+                               return  row.totalV90003
+                         else
+                             return row.totalV90002
+                        }
+                    },
+                    { title: "综合健康管理服务包<br/>签约率(免费)", field: "healthSignRateFree",
+                        formatter: function(value, row, index) {
+                            if(row.totalV90001==0){
+                                return "0%"
+                            }else{
+                                return (row.totalV90003/row.totalV90001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "综合健康管理服务包<br/>签约率(收费)", field: "getHealthSignRate",
+                        formatter: function(value, row, index) {
+                            if(!row.totalV90002 || row.totalV90001==0){
+                                return "0%"
+                            }else{
+                                return (row.totalV90002/row.totalV90001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "个性化服<br/>务签约数", field: "totalV90004"},
+                    { title: "签约总数", field: "totalV90005"},
+                    { title: "个性化服务<br/>签约率(收费)", field: "personalSignRate",
+                        formatter: function(value, row, index) {
+                            if(row.totalV90004==0){
+                                return "0%"
+                            }else{
+                                return (row.totalV90004/row.totalV90005*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    }
                 ]
             ],
-            url: '/qos/analysis/data/get/unit',
+            url: '/qos/sign/get/manage/data',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
@@ -129,8 +159,7 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
-            	params.eventIds = '21001,21002';
-            	params.ignoreUnitIds = '320583810343'
+            	params.eventIds = 'V90001,V90002,V90003,V90004,V90005';
                 requestParams = params;
                 return params;
             },
@@ -141,42 +170,45 @@
 
             	 var data = {};
 
-                 convertCountTableData(response, '21001', data);
-                 convertCountTableData(response, '21002', data);
+                 convertCountTableData(response, 'V90001', data);
+                 convertCountTableData(response, 'V90002', data);
+                 convertCountTableData(response, 'V90003', data);
+                 convertCountTableData(response, 'V90004', data);
+                 convertCountTableData(response, 'V90005', data);
+                sumData = []
+                var  number,totalV90001,totalV9002,totalV9003
+                for (var o in data) {
+                    sumData.push(data[o]);
+                    if (data[o].V90002 && data[o].V90003){
+                        number+=(data[o].totalV90002+data[o].totalV90003);
+                        totalV9002+=data[o].totalV9002;
+                    }else if(!data[o].totalV90002 && data[o].totalV90003){
+                        number=data[o].totalV90003;
+                        totalV9002=0;
+                    }else{
+                        number=data[o].totalV90002;
+                        totalV9003=0;
+                    }
+                    totalV90001+=data[o].totalV90001;
+                }
 
-                 var result = [];
-                   var event21001=0,total21001=0,reat21001=0,
-         	    	total21002=0,event21002=0,reat21002=0;  
-                 for (var o in data) {
-                	 event21001+=data[o].event21001;
-                	 total21001+=data[o].total21001;
-                	 event21002+=data[o].event21002;
-                	 total21002+=data[o].total21002;  
-                	 result.push(data[o]);
-                     if(o=='total'){
-                		 var a = 0;
-                		 data[o].event21001 = event21001;
-                		 data[o].total21001 = total21001;
-     	               	if(event21001 && total21001){
-     	               		a = event21001/total21001*100
-     	               	}
-     	              	data[o].reat21001 = a.toFixed(2)+'%';
-     	               	var b = 0;
-     	               	data[o].event21002 = event21002;
-     	              	data[o].total21002 = total21002;
-     	               	if(event21002 && total21002){
-     	               		b = event21002/total21002*100
-     	               	}
-     	               	data[o].reat21002 = b.toFixed(2)+'%'; 
-                	 }
-                 }
-                 jkglfwbqysChart1(response);
-                 qygxhfwsChart1(response);
-                 responseData =response;
-                 debugger;
-                 jkglqylChart1(responseData);
-                 gxhfwqylChart1(responseData);
-                 return result;
+                // var total={
+                //     "unitName" : "合计",
+                //     "totalV90001":totalV90001,
+                //     "number" :number,
+                //     "healthSignRateFree":openBedNumber,
+                //     "getHealthSignRate" :userBedNumber,
+                //     "totalV90004":getTotalRate(openBedNumber,userBedNumber),
+                //     "totalV90005":getTotalRate(openBedNumber,userBedNumber),
+                //     "personalSignRate":getTotalRate(openBedNumber,userBedNumber),
+                // }
+
+                 jkglfwbqysChart1(sumData);
+                 qygxhfwsChart1(sumData);
+                 // responseData =response;
+                 // jkglqylChart1(responseData);
+                 // gxhfwqylChart1(responseData);
+                 return sumData;
             }
         });
     }
@@ -193,27 +225,9 @@
                 };
                 data[id] = unitData;
             }
-             if(eventId == '21001'){
-            	 unitData['event21001'] = item.eventNum;
-            	 unitData['total21001'] = item.totalNum;
-            	 unitData['reat21001'] = getRate(item); 
-            }
-			if(eventId == '21002'){
-				unitData['event21002'] = item.eventNum;
-				unitData['total21002'] = item.totalNum;
-           		unitData['reat21002'] = getRate(item); 
-            } 
+            unitData['total'+eventId]=item.count;
         });
-         var totalData = data['total'];
-            totalData = {
-                unitId: 'total',
-                unitName: '合计'
-            }
-            data['total'] = totalData;
-            totalData['event21001'] = 0;
-            totalData['total21001'] = 0;
-            totalData['event21002'] = 0;
-          	totalData['total21002'] = 0;
+
     }
     
     function getRate(item, fixed) {
@@ -226,29 +240,22 @@
         return c.toFixed(fixed || 2) + '%';
     }
      
-     function convertUnitChartData(data, eventId, isRate) {
-         var edata = data[eventId],
-             max = 0,
-             unit = [],
-             values = [];
-         edata.sort(compare('eventNum'));
-         edata && edata.forEach(function(item) {
-             var r = isRate ? item.eventNum : 0;
-             max = Math.max(r, max);
-             values.push(r);
-             unit.push(intercept(item.unitName));
-         });
-         return {
-             max: max,
-             unit: unit,
-             values: values
-         };
-     }
 
-    
     var jkglfwbqysChart = echarts.init(document.getElementById('jkglfwbqysChart'));
-    function jkglfwbqysChart1(response){
-    	 var ev21001= convertUnitChartData(response, '21001', true);
+    function jkglfwbqysChart1(data){
+        var xLabel=[];
+        var yData=[];
+    	 for(var i=0;i<data.length;i++){
+
+             if (data[i].totalV90002 && data[i].totalV90003)
+                 yData.push(data[i].totalV90003 + data[i].totalV90002);
+             else if(!data[i].totalV90002 && data[i].totalV90003)
+                 yData.push(data[i].totalV90003);
+             else
+                 yData.push(data[i].totalV90002);
+             xLabel.push(data[i].unitName.substring(0,data[i].unitName.length-8));
+
+         }
     	 var labelOption = {
 		            normal: {
 		                show: true,
@@ -290,7 +297,7 @@
     		                interval:0,
     		                rotate:40//角度顺时针计算的
     		                } ,
-    		            data: ev21001.unit,
+    		            data: xLabel,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -307,7 +314,7 @@
     		            type:'bar',
     		            barWidth: '60%',
     		            label: labelOption,
-    		            data:ev21001.values
+    		            data:yData
     		        }
     		    ]
     		};
@@ -316,8 +323,13 @@
     
     
     var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
-    function qygxhfwsChart1(response){
-    	var ev21002= convertUnitChartData(response, '21002', true);
+    function qygxhfwsChart1(data){
+        var xLabel=[];
+        var yData=[];
+        for(var i=0;i<data.length;i++){
+            xLabel.push(data[i].unitName.substring(0,data[i].unitName.length-8));
+            yData.push(data[i].totalV90004)
+        }
     	var labelOption = {
 	            normal: {
 	                show: true,
@@ -359,7 +371,7 @@
     		                interval:0,
     		                rotate:40//角度顺时针计算的
     		                } ,
-    		            data: ev21002.unit,
+    		            data: xLabel,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -376,7 +388,7 @@
     		            type:'bar',
     		            barWidth: '60%',
     		            label: labelOption,
-    		            data:ev21002.values
+    		            data:yData
     		        }
     		    ]
     		};
@@ -435,6 +447,8 @@
     var jkglqylChart = echarts.init(document.getElementById('jkglqylChart'));
     function jkglqylChart1(responseData){
     	var unitId = selectUnit || 'total';
+
+
     	var res=convertChartData(responseData, '21001', true);
     	var option = {
                 tooltip: {
