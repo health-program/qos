@@ -248,7 +248,54 @@ public class HomePageController {
         } 
         return CommonResponse.getErrorResponse();
     }
-    
+
+
+    //大数据页面 按机构
+    @RequestMapping(value = "/data/display/unit", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getDataByUnit(AnalysisRequest request) {
+        Date startDate = request.getStartTime();
+        Date endDate = request.getEndTime();
+        List<String> ignoreUnitIds = request.getIgnoreUnitIds();
+
+        List<String> eventIds = request.getEventIds();
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int eventType = event.getEventType();
+                    int unitType = getUnitType(event);
+                    if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                        Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        if (item != null) {
+                            map.put(eventId, item);
+                        }
+                    } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                        Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                        if (item != null) {
+                            map.put(eventId, item);
+                        }
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            Event event = DataConstantContainer.getEvent(eventId);
+            if (event != null) {
+                int eventType = event.getEventType();
+                int unitType = getUnitType(event);
+                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                    return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                    return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
+                }
+            }
+        }
+        return CommonResponse.getErrorResponse();
+    }
+
     //医院平均住院日41005 取前31天
     @RequestMapping(value = "/data/get/unit/hospital", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
