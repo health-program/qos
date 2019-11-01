@@ -195,45 +195,57 @@ public class HomePageController {
     @RequestMapping(value = "/data/get/unit", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public Object getProcessedDataByUnit(AnalysisRequest request) {
-        Date startDate = TimeUtil.FirstDayOfThisMonth();
-        Date endDate = new Date();
+        
         List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
         List<String> eventIds = request.getEventIds();
         if (eventIds != null && eventIds.size() > 0) {
             Map<String, Object> map = new HashMap<>();
             for (String eventId : eventIds) {
-                Event event = DataConstantContainer.getEvent(eventId);
-                if (event != null) {
-                    int eventType = event.getEventType();
-                    int unitType = getUnitType(event);
-                    if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                        Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
-                        if (item != null) {
-                            map.put(eventId, item);
-                        }
-                    } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                        Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
-                        if (item != null) {
-                            map.put(eventId, item);
+            	if(eventId.equals("41005")){
+            		Date startDate = TimeUtil.ThirtyOneBefore();
+                    Date endDate = new Date();
+            		 Event event = DataConstantContainer.getEvent(eventId);
+                     if (event != null) {
+                         int eventType = event.getEventType();
+                         int unitType = getUnitType(event);
+                         if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                             Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                             if (item != null) {
+                                 map.put(eventId, item);
+                             }
+                         } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                             Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                             if (item != null) {
+                                 map.put(eventId, item);
+                             }
+                         }
+                     }
+            	}else{
+            		Date startDate = TimeUtil.FirstDayOfThisMonth();
+                    Date endDate = new Date();
+            		Event event = DataConstantContainer.getEvent(eventId);
+                    if (event != null) {
+                        int eventType = event.getEventType();
+                        int unitType = getUnitType(event);
+                        if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                            Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                            if (item != null) {
+                                map.put(eventId, item);
+                            }
+                        } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                            Object item = analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+                            if (item != null) {
+                                map.put(eventId, item);
+                            }
                         }
                     }
-                }
+            	}
+            	
+                
             }
             return CommonResponse.getSuccessResponse(map);
-        } else {
-            String eventId = request.getEventId();
-            Event event = DataConstantContainer.getEvent(eventId);
-            if (event != null) {
-                int eventType = event.getEventType();
-                int unitType = getUnitType(event);
-                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                    return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
-                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                    return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
-                }
-            }
-        }
+        } 
         return CommonResponse.getErrorResponse();
     }
     
