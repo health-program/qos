@@ -81,7 +81,7 @@
 	});
     
     
-	 var table, monthChart, unitChart, requestParam, selectUnit,responseData,sumData;
+	 var table, monthChart, unitChart, requestParam, selectUnit,responseData,sumData,result;
 	    $(function() {
 	        refresh();
 	    });
@@ -93,12 +93,9 @@
 
 	    function unitSelected(row) {
 	        selectUnit = row.unitId;
-	        jkglqylChart1(responseData);
-	        gxhfwqylChart1(responseData)
+	        jkglqylChart1(sumData);
+	        gxhfwqylChart1(sumData)
 	    }
-	   
- 
-    var currentElement;
 
     function initTable() {
         table = $.createTable("#dataGrid", {
@@ -175,39 +172,52 @@
                  convertCountTableData(response, 'V90003', data);
                  convertCountTableData(response, 'V90004', data);
                  convertCountTableData(response, 'V90005', data);
-                sumData = []
-                var  number,totalV90001,totalV9002,totalV9003
+                sumData = [];
+                result=[];
+                var number=0;
+                var totalV90001=0;
+                var totalV90002=0;
+                var totalV90003=0;
+                var totalV90004=0;
+                var totalV90005=0;
                 for (var o in data) {
                     sumData.push(data[o]);
-                    if (data[o].V90002 && data[o].V90003){
+                    result.push(data[o]);
+                    if (data[o].totalV90002 && data[o].totalV90002){
                         number+=(data[o].totalV90002+data[o].totalV90003);
-                        totalV9002+=data[o].totalV9002;
+                        totalV90002+=data[o].totalV90002;
+                        totalV90003+=data[o].totalV90003;
                     }else if(!data[o].totalV90002 && data[o].totalV90003){
-                        number=data[o].totalV90003;
-                        totalV9002=0;
+                        number+=data[o].totalV90003;
+                        totalV90002=0;
+                        totalV90003+=data[o].totalV90003;
                     }else{
-                        number=data[o].totalV90002;
-                        totalV9003=0;
+                        number+=data[o].totalV90002;
+                        totalV90003=0;
+                        totalV90002+=data[o].totalV90002;
                     }
                     totalV90001+=data[o].totalV90001;
+                    totalV90004+=data[o].totalV90004;
+                    totalV90005+=data[o].totalV90005;
                 }
 
-                // var total={
-                //     "unitName" : "合计",
-                //     "totalV90001":totalV90001,
-                //     "number" :number,
-                //     "healthSignRateFree":openBedNumber,
-                //     "getHealthSignRate" :userBedNumber,
-                //     "totalV90004":getTotalRate(openBedNumber,userBedNumber),
-                //     "totalV90005":getTotalRate(openBedNumber,userBedNumber),
-                //     "personalSignRate":getTotalRate(openBedNumber,userBedNumber),
-                // }
+                var total={
+                    "unitId" : "total",
+                    "unitName" : "合计",
+                    "totalV90001" :totalV90001,
+                    "totalV90002":totalV90002,
+                    "totalV90003" :totalV90003,
+                    "totalV90004":totalV90004,
+                    "totalV90005":totalV90005
+                }
 
-                 jkglfwbqysChart1(sumData);
-                 qygxhfwsChart1(sumData);
-                 // responseData =response;
-                 // jkglqylChart1(responseData);
-                 // gxhfwqylChart1(responseData);
+                sumData.push(total);
+                 jkglfwbqysChart1(result);
+                 qygxhfwsChart1(result);
+
+                 jkglqylChart1(sumData);
+                 gxhfwqylChart1(sumData);
+
                  return sumData;
             }
         });
@@ -230,14 +240,12 @@
 
     }
     
-    function getRate(item, fixed) {
-        var a = item.eventNum,
-            b = item.totalNum,
-            c = 0;
+    function getRate(a, b) {
+        var   c = 0;
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed || 2) + '%';
+        return c.toFixed(2) + '%';
     }
      
 
@@ -395,61 +403,29 @@
     	qygxhfwsChart.setOption(option,true);
     }
     
-    
-    function convertChartData(data, eventId, isRate) {
-        var eventData = data[eventId],
-            unitPoints = eventData.unitPoints,
-            valuesMap = {};
-        	var first = true;
-        	var total1 = 0,total2 = 0;
-        eventData && eventData.forEach(function(unitPoint) {
-            var unitId = unitPoint.unitId;
-            var values = valuesMap[unitId];
-            var eventNum=unitPoint.eventNum,
-            	totalNum=unitPoint.totalNum;
-            var rate=0;
-            if(eventNum && totalNum){
-            	rate=(eventNum/totalNum*100).toFixed(2);
-            }
-            if (!values) {
-              values = {
-              		eventNum:eventNum,
-                  	totalNum:totalNum,
-                  	rate:rate,
-                  	total:eventNum+totalNum
-              };
-              valuesMap[unitId] = values;
-            }
-            total1 += unitPoint.eventNum;
-            total2 += unitPoint.totalNum;
-            first = false;
-        });
-        var totalData = valuesMap['total'];
-        if (!totalData) {
-        	 var rate=0;
-        	if(total1 && total2){
-        		rate=(total1/total2*100).toFixed(2);
-        	}
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-                eventNum:total1,
-                totalNum:total2,
-                rate:rate
-            }
-            valuesMap['total'] = totalData;
-        }
-	return valuesMap;
-        
-    }
-    
-   
+
     var jkglqylChart = echarts.init(document.getElementById('jkglqylChart'));
-    function jkglqylChart1(responseData){
+    function jkglqylChart1(data){
     	var unitId = selectUnit || 'total';
-
-
-    	var res=convertChartData(responseData, '21001', true);
+        var total=[];
+        for (var i = 0; i < data.length; i++) {
+            if (unitId=='total'){
+                total.push(data[i]);
+            }else{
+                if (data[i].unitId==unitId){
+                    total.push(data[i]);
+                }
+            }
+        }
+    	var dataObject=total[total.length-1];
+        var sum=0;
+        if (dataObject.totalV90002 && dataObject.totalV90003)
+            sum= dataObject.totalV90003 + dataObject.totalV90002;
+        else if(!dataObject.totalV90002 && dataObject.totalV90003)
+            sum=dataObject.totalV90003;
+        else
+            sum=dataObject.totalV90002;
+        var rate=(sum/dataObject.totalV90001).toFixed(4);
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -461,7 +437,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'健康管理服务包签约率',
+                        text: (rate*100).toFixed(2)+'%\n'+'健康管理服务包签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -490,11 +466,11 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
-                                name:'健康管理服务包签约率'
+                                value:rate,
+                                name:''
                             },
                             {
-                                value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
+                                value:1-rate,
                                 name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{
@@ -509,9 +485,23 @@
     }
     
     var gxhfwqylChart = echarts.init(document.getElementById('gxhfwqylChart'));
-    function gxhfwqylChart1(){
+    function gxhfwqylChart1(data){
     	var unitId = selectUnit || 'total';
-    	var res=convertChartData(responseData, '21002', true);
+
+        var unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < data.length; i++) {
+            if (unitId=='total'){
+                total.push(data[i]);
+            }else{
+                if (data[i].unitId==unitId){
+                    total.push(data[i]);
+                }
+            }
+        }
+        var dataObject=total[total.length-1];
+        var rate=(dataObject.totalV90004/dataObject.totalV90005).toFixed(4);
+
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -523,7 +513,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'个性化服务签约率(收费)',
+                        text: (rate*100).toFixed(2)+'%\n'+'个性化服务签约率(收费)',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -552,11 +542,11 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
+                                value:rate,
                                 name:'个性化服务签约率(收费)'
                             },
                             {
-                                value:res[unitId].totalNum-res[unitId].eventNum,
+                                value:1-rate,
                                 name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{
