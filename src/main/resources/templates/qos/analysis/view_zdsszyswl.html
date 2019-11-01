@@ -19,7 +19,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" ></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -113,6 +113,15 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
+            	 if($("#startTime").val()==""||$("#startTime").val()==null){
+					 var date = new Date()
+					  var year = date .getFullYear(); 
+					 var month = date .getMonth()+1;
+					 var day = date .getDate();
+					 var time = year+"-"+month+"-"+day
+        		 $("#startTime").val(time);
+        		params.startTime = time;
+        	     } 
                 params.eventIds = '12100,12101,12102,12103,12104';
                 requestParam = params;
                 return params;
