@@ -1,5 +1,8 @@
 package com.paladin.qos.controller.familydoctor;
 
+import com.paladin.qos.analysis.DataConstantContainer;
+import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
+import com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorTeamVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.service.familydoctor.FamilyDoctorTeamService;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author MyKite
@@ -49,9 +56,24 @@ public class DataFamilyDoctorController extends ControllerSupport {
 	@RequestMapping("/unit/find")
 	@ResponseBody
 	public Object teamNumInfo() {
-		return CommonResponse.getSuccessResponse(familyDoctorTeamService.teamNum());
+		List<DataFamilyDoctorTeamVo> list=familyDoctorTeamService.teamNum();
+		orderByUnit(list);
+		return CommonResponse.getSuccessResponse(list);
 	}
-	
+
+	private void orderByUnit(List<DataFamilyDoctorTeamVo> list) {
+		if (list != null && list.size() > 0) {
+			Collections.sort(list, new Comparator<DataFamilyDoctorTeamVo>() {
+				@Override
+				public int compare(DataFamilyDoctorTeamVo o1, DataFamilyDoctorTeamVo o2) {
+					String uid1 = o1.getUnitId();
+					String uid2 = o2.getUnitId();
+					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+				}
+			});
+		}
+	}
+
 	@RequestMapping("/data/count")
 	@ResponseBody
 	public Object teamCount() {

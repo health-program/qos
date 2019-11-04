@@ -83,7 +83,7 @@ public class SignController {
                 @Override
                 public int compare(EntitySign o1, EntitySign o2) {
                     String uid1 = o1.getUnitId();
-                    String uid2 = o1.getUnitId();
+                    String uid2 = o2.getUnitId();
                     return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
                 }
             });

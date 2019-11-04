@@ -8,8 +8,10 @@ import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.controller.familydoctor.dto.FamilyDoctorUnitExportCondition;
 import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
+import com.paladin.qos.model.org.OrgPerson;
 import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
 import com.paladin.qos.service.familydoctor.dto.FamilyDoctorUnitDTO;
 import com.paladin.qos.service.familydoctor.dto.FamilyDoctorUnitQuery;
@@ -22,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 @Controller
 @RequestMapping("/qos/family/doctor/unit")
@@ -40,13 +45,31 @@ public class FamilyDoctorUnitController extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = FamilyDoctorUnitQuery.class, paramIndex = 0)
     public Object findPage(FamilyDoctorUnitQuery query) {
-        return CommonResponse.getSuccessResponse(familyDoctorUnitService.searchPage(query));
+		List<FamilyDoctorUnit> list=familyDoctorUnitService.searchPage(query).getData();
+		orderByUnit(list);
+        return CommonResponse.getSuccessResponse(list);
     }
-    
-    @RequestMapping(value = "/find/all", method = { RequestMethod.GET, RequestMethod.POST })
+
+	private void orderByUnit(List<FamilyDoctorUnit> list) {
+		if (list != null && list.size() > 0) {
+			Collections.sort(list, new Comparator<FamilyDoctorUnit>() {
+				@Override
+				public int compare(FamilyDoctorUnit o1, FamilyDoctorUnit o2) {
+					String uid1 = o1.getId();
+					String uid2 = o2.getId();
+					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+				}
+			});
+		}
+	}
+
+
+	@RequestMapping(value = "/find/all", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object findPage() {
-        return CommonResponse.getSuccessResponse(familyDoctorUnitService.findAll());
+		List<FamilyDoctorUnit> list=familyDoctorUnitService.findAll();
+		orderByUnit(list);
+    	return CommonResponse.getSuccessResponse(list);
     }
     
     @GetMapping("/get")

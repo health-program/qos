@@ -1,12 +1,14 @@
 package com.paladin.qos.controller.org;
 
 import com.paladin.common.controller.syst.SysControllerLog;
+import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.model.familydoctor.EntitySign;
 import com.paladin.qos.model.org.OrgPerson;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.org.OrgPersonService;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -45,9 +49,24 @@ public class OrgPersonController extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = OrgPersonQuery.class, paramIndex = 0)
     public Object findPage(OrgPersonQuery query) {
-        return CommonResponse.getSuccessResponse(orgPersonService.searchPage(query));
+        List<OrgPerson> list=orgPersonService.searchPage(query).getData();
+        orderByUnit(list);
+        return CommonResponse.getSuccessResponse(list);
     }
-    
+
+    private void orderByUnit(List<OrgPerson> list) {
+        if (list != null && list.size() > 0) {
+            Collections.sort(list, new Comparator<OrgPerson>() {
+                @Override
+                public int compare(OrgPerson o1, OrgPerson o2) {
+                    String uid1 = o1.getUnitId();
+                    String uid2 = o2.getUnitId();
+                    return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+                }
+            });
+        }
+    }
+
     @RequestMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id, Model model) {
