@@ -88,7 +88,7 @@ public class SysLogAspect {
     }
 
 
-    public String getControllerMethodDescription(JoinPoint joinPoint) throws Exception {
+    private String getControllerMethodDescription(JoinPoint joinPoint) throws Exception {
         String targetName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
         Object[] arguments = joinPoint.getArgs();
