@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" ></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -197,6 +197,15 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
+            	if($("#startTime").val()==""||$("#startTime").val()==null){
+					 var date = new Date()
+					  var year = date .getFullYear(); 
+					 var month = date .getMonth()+1;
+					 var day = date .getDate();
+					 var time = year+"-"+month+"-"+"01"
+       		 $("#startTime").val(time);
+       		params.startTime = time;
+       	     } 
             	params.eventIds = '16001,16002,16003,16004,16005,16006,16007,16008,16009,16010,16011,16012,16013,16014';
             	params.ignoreUnitIds = '320583810343'
                 requestParam = params;
@@ -567,11 +576,17 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
+        if(result[15]!=null){
+        	occupyRate=result[15].ev16011;
+        	pieMessage=result[15].ev16011 ;
+        }else{
+        	occupyRate = '0%';
+        	pieMessage = '0%';
+        }
         
-        occupyRate=result[15].ev16011;
         var stroccupyRate = occupyRate.replace('%','');
         remainRate=(100-stroccupyRate).toFixed(2);
-        pieMessage=result[15].ev16011 ;
+        
         
         var option = {
 
@@ -649,11 +664,17 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
+        if(result[15]!=null){
+        	occupyRate=result[15].ev16009;
+        	pieMessage=result[15].ev16009 ;
+        }else{
+        	occupyRate = '0%';
+        	pieMessage = '0%';
+        }
         
-        occupyRate=result[15].ev16009;
         var stroccupyRate = occupyRate.replace('%','');
         remainRate=(100-stroccupyRate).toFixed(2);
-        pieMessage=result[15].ev16009 ;
+        
         
         var option = {
 
@@ -731,11 +752,15 @@
         var occupyRate=0;
         var remainRate=0;
         var pieMessage;
-        
-        occupyRate=result[15].ev16010;
+        if(result[15]!=null){
+        	occupyRate=result[15].ev16010;
+        	pieMessage=result[15].ev16010 ;
+        }else{
+        	occupyRate = '0%';
+        	pieMessage = '0%';
+        }
         var stroccupyRate = occupyRate.replace('%','');
         remainRate=(100-stroccupyRate).toFixed(2);
-        pieMessage=result[15].ev16010 ;
         
         var option = {
 
@@ -813,13 +838,18 @@
          var threeRate;
          console.log(result);
          
-      
+         if(result[15]!=null){
+        	
+        	 oneRate=result[15].ev16012
+             twoRate=result[15].ev16013
+             threeRate=result[15].ev16014
+             pieMessage=result[15].ev16012 ;
+         }else{
+        	 
+             pieMessage='0%';
+         }
          
          
-         oneRate=result[15].ev16012
-         twoRate=result[15].ev16013
-         threeRate=result[15].ev16014
-         pieMessage=result[15].ev16012 ;
     	if (!dashChart) {
         	dashChart = echarts.init(document.getElementById('dashChartDiv'));
         }
@@ -878,7 +908,7 @@
     		            },
     		            detail : {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		                formatter: result[15].ev16012,
+    		                formatter: oneRate,
     		                fontWeight: 'bolder',
     		                borderRadius: 3,
     		                backgroundColor: '#444',
@@ -935,7 +965,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[15].ev16013
+    		            	formatter:twoRate
     		            },
     		            data:[{value: twoRate, name: '二联抗生素使用率'}]
     		        },
@@ -974,7 +1004,7 @@
     		            },
     		            detail: {
     		                // 其余属性默认使用全局文本样式，详见TEXTSTYLE
-    		            	formatter:result[15].ev16014
+    		            	formatter:threeRate
     		            },
     		            data:[{value: threeRate, name: '三联抗生素使用率'}]
     		        }
