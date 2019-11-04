@@ -1107,7 +1107,7 @@
          createFormValidater: function(config) {
              // 创建表单验证器
              var validater = this.validate(config);
-             this.find("input[type='text']:enabled,input[type='password']:enabled,input[type='hidden']:enabled,select:enabled,textarea:enabled").createElementValidater(config);
+             this.find("input[type='text']:enabled,input[type='number']:enabled,input[type='password']:enabled,input[type='hidden']:enabled,select:enabled,textarea:enabled").createElementValidater(config);
              this.data("validater", validater);
              return validater;
          },
