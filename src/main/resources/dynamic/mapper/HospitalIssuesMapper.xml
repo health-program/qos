@@ -2,11 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.dynamic.mapper.HospitalIssuesMapper">
 
+
+
+
 	<!-- 住院病人医嘱表结构 -->
 	<select id="findZYBRYZB" resultType="map">
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'病案号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -18,7 +21,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'病人姓名是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -30,7 +33,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'出院时间是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -42,7 +45,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'患者卡证号码是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -54,7 +57,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'患者卡证类型是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -66,7 +69,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'开嘱科室编码是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -78,7 +81,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'开嘱科室名称是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -90,7 +93,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'开嘱医生身份证号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -102,7 +105,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'开嘱医生姓名是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -114,7 +117,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'没有记录患者出生日期' as khnr,
 	OUT_H_DATE
 	FROM
@@ -126,7 +129,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'是否药品是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -138,7 +141,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'停止执行医生身份证号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -150,7 +153,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'停止执行医生姓名是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -162,7 +165,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'性别代码是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -174,7 +177,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'药品使用途径说明是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -186,7 +189,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医疗机构编码是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -198,7 +201,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医疗机构名称是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -210,7 +213,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱备注说明是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -222,7 +225,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱编号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -234,7 +237,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱开始执行时间是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -246,7 +249,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱类别是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -258,7 +261,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱明细编码是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -270,7 +273,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱明细名称是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -282,7 +285,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱停止执行时间是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -294,7 +297,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱唯一ID号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -306,7 +309,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱下达时间是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -318,7 +321,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱组号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -330,7 +333,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'执行护士姓名是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -342,7 +345,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'住院号是否填写' as khnr,
 	OUT_H_DATE
 	FROM
@@ -354,7 +357,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'出生日期是否晚于系统日期' as khnr,
 	OUT_H_DATE
 	FROM
@@ -366,7 +369,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'出生日期是否早于1900年01月01日' as khnr,
 	OUT_H_DATE
 	FROM
@@ -378,7 +381,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'卡证类型代码是否符合值域' as khnr,
 	OUT_H_DATE
 	FROM
@@ -390,7 +393,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'是否药品填写是否符合值域' as khnr,
 	OUT_H_DATE
 	FROM
@@ -402,7 +405,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医疗机构编码是否符合值域' as khnr,
 	OUT_H_DATE
 	FROM
@@ -414,7 +417,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医院记录患者性别是否符合值域' as khnr,
 	OUT_H_DATE
 	FROM
@@ -426,7 +429,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱开始执行时间是否晚于系统日期' as khnr,
 	OUT_H_DATE
 	FROM
@@ -438,7 +441,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱开始执行时间是否早于1950年01月01日' as khnr,
 	OUT_H_DATE
 	FROM
@@ -450,7 +453,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱类别填写是否符合值域' as khnr,
 	OUT_H_DATE
 	FROM
@@ -462,7 +465,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱停止执行时间是否晚于系统日期' as khnr,
 	OUT_H_DATE
 	FROM
@@ -474,7 +477,7 @@
 	union all
 	SELECT
 	ORGAN_NAME,
-	HP_S_NO，
+	HP_S_NO,
 	'医嘱停止执行时间是否早于1950年01月01日' as khnr,
 	OUT_H_DATE
 	FROM
@@ -507,6 +510,460 @@
 		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
 		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
 		AND ODRISU_DT&lt;=TO_DATE('1950-01-01', 'yyyy-mm-dd')
+	</select>
+
+	<!-- 住院患者病程记录表结构 -->
+	<select id="findBCJL" resultType="map">
+		SELECT
+		ORGAN_NAME ,
+		HP_S_NO ,
+		'病案号是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND MR_NO IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录的详细描述是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND HOS_COURSE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录日期是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_DATE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录唯一ID号是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_ID IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病人姓名是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND NAME IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'归档日期时间是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND POF_DT IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'患者就诊卡证号码是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND CARDNO IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'患者就诊卡证类型是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND CARDTYPE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'没有记录患者出生日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND BIRTHDAY IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否不明原因肺炎病例是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_UN_PNEU IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否传染病或疑似病例是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_INF_CASE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否危重病例是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_CRI_CASE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否疑难病例是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_DIF_CASE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'首次/日常病程记录标识是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_MARK IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'性别代码是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND SEX IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医疗机构编码填写是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND ORGAN_CODE !='320583467170265'
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医疗机构名称是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND ORGAN_NAME IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医生身份证号码是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND DOC_IDCARD IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医生姓名是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND NAME IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医嘱内容的详细描述是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND DOC_CONT IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'主要诊断疾病代码是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND MDIS_CODE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'住院号是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND HP_S_NO IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'住院科室编码是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND DPT_CODE IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'住院科室名称是否填写' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND DPT_NAME IS NULL
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录日期是否晚于系统日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_DATE>=sysdate
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录日期是否早于1950年01月01日' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_DATE <![CDATA[<= ]]> TO_DATE('1950-01-01', 'yyyy-mm-dd')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录日期是否早于出生日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_DATE <![CDATA[<= ]]> BIRTHDAY
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'出生日期是否晚于系统日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND BIRTHDAY>=sysdate
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'出生日期是否早于1900年01月01日' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND BIRTHDAY <![CDATA[<= ]]> TO_DATE('1900-01-01', 'yyyy-mm-dd')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'病程记录日期是否早于出生日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_DATE <![CDATA[ <= ]]> BIRTHDAY
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'出生日期是否晚于系统日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND BIRTHDAY>=sysdate
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'出生日期是否早于1900年01月01日' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND BIRTHDAY &lt;=  TO_DATE('1900-01-01', 'yyyy-mm-dd')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'归档日期是否晚于系统日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND POF_DT>=sysdate
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'归档日期是否早于出生日期' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND POF_DT  &lt;=  BIRTHDAY
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'卡证类型代码是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND CARDTYPE not in ('01','02','03','04','05','06','07','99')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否不明原因肺炎病例填写是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_UN_PNEU not in ('0','1')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否传染病或疑似病例填写是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_INF_CASE not in ('0','1')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否危重病例填写是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_CRI_CASE not in ('0','1')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'是否疑难病例填写是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND IF_DIF_CASE not in ('0','1')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'首次或者日常病程记录标识是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND PROGRESS_MARK not in ('1','2')
+		union all
+		SELECT
+		ORGAN_NAME,
+		HP_S_NO ,
+		'医院记录患者性别是否符合值域' AS khnr, POF_DT
+		FROM
+		CourseRecord
+		WHERE
+		POF_DT >= to_date(#{startTime},'yyyy-mm-dd')
+		AND POF_DT <![CDATA[< ]]>  to_date(#{endTime},'yyyy-mm-dd')
+		AND SEX not in ('1','2')
 	</select>
 
 

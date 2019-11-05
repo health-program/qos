@@ -14,12 +14,66 @@
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
                         <div class="col-md-2">
-                            <input name="bgTime"  id="bgTime" placeholder="请输入开始时间" autocomplete="off" type="text"  class="form-control tonto-datepicker-date">
+                            <input name="bgTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text"  class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-2">
                             <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                         </div>
-	                    <div class="col-md-8">
+                        <div class="col-md-2">
+                            <select name="dataSource" class="form-control">
+                                <option value="yiyuan-dyrmyy">昆山市第一人民医院</option>
+                                <option value="yiyuan-zyyy">昆山市中医医院</option>
+                                <option value="yiyuan-dsrmyy">昆山市第三人民医院</option>
+                                <option value="yiyuan-jxrmyy">昆山市锦溪人民医院</option>
+                                <option value="yiyuan-qdrmyy">昆山市千灯人民医院</option>
+                                <option value="yiyuan-jswszx">昆山市精神卫生中心</option>
+                                <option value="yiyuan-ljrmyy">昆山市陆家人民医院</option>
+                                <option value="yiyuan-zsrmyy">昆山市周市人民医院</option>
+                                <option value="yiyuan-zxyjhyy">昆山市中西医结合医院</option>
+                                <option value="yiyuan-dshrmyy">昆山市淀山湖人民医院</option>
+                                <option value="yiyuan-zprmyy">昆山市张浦人民医院</option>
+                                <option value="yiyuan-zzrmyy">昆山市周庄人民医院</option>
+                                <option value="yiyuan-dermyy">昆山市第二人民医院</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="issuesType" class="form-control">
+                                <option value="BCJL">病程记录</option>
+                                <option value="CYJL">出院记录</option>
+                                <option value="FYCB">费用从表</option>
+                                <option value="FYZB">费用主表</option>
+                                <option value="HCSY">高值耗材使用</option>
+                                <option value="GH">挂号</option>
+                                <option value="HCCK">耗材出库</option>
+                                <option value="HCRK">耗材入库</option>
+                                <option value="HZXX">患者信息</option>
+                                <option value="JCBG">检查报告</option>
+                                <option value="JCSQ">检查申请</option>
+                                <option value="JYBG">检验报告</option>
+                                <option value="JYMX">检验明细</option>
+                                <option value="JYSQ">检验申请</option>
+                                <option value="JZJL">就诊记录</option>
+                                <option value="ZYSF">门诊住院收费统计</option>
+                                <option value="RYCY">入院出院患者统计</option>
+                                <option value="RYJL">入院记录</option>
+                                <option value="SSCZ">手术操作</option>
+                                <option value="SXJL">输血记录</option>
+                                <option value="SXSQ">输血申请</option>
+                                <option value="XYCFCB">西药处方从表</option>
+                                <option value="XYCFZB">西药处方主表</option>
+                                <option value="XYBA">西医病案首页</option>
+                                <option value="XYBACB">西医病案首页手术从表</option>
+                                <option value="YPCK">药品出库</option>
+                                <option value="YPRK">药品入库</option>
+                                <option value="ZLCZ">治疗处置</option>
+                                <option value="ZYCFCB">中药处方从表</option>
+                                <option value="ZYCFZB">中药处方主表</option>
+                                <option value="ZYBA">中医病案首页表</option>
+                                <option value="ZYBASS">中医病案首页中手术记录</option>
+                                <option value="BRYZ">住院病人医嘱表</option>
+                            </select>
+                        </div>
+	                    <div class="col-md-4">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
