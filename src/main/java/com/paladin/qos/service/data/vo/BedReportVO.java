@@ -4,6 +4,8 @@ import com.paladin.qos.analysis.DataConstantContainer;
 
 public class BedReportVO {
 
+    private String unitId;
+
     private String unitName;
 
     private Integer bedNumber;
@@ -14,6 +16,13 @@ public class BedReportVO {
 
     private Double userBedRate;
 
+    public String getUnitId() {
+        return unitId;
+    }
+
+    public void setUnitId(String unitId) {
+        this.unitId = unitId;
+    }
 
     public String getUnitName() {
         return DataConstantContainer.getUnitName(unitName);

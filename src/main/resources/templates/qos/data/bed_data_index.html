@@ -23,10 +23,10 @@
                         <!--<input name="date" id="dateInput" placeholder="请选择月份" autocomplete="off" type="text" class="form-control">-->
                     <!--</div>-->
                     <div class="col-md-2">
-                        <input name="startDate"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text"  class="form-control tonto-datepicker-date">
+                        <input name="startTime"  id="startDate" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
-                        <input name="endDate" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        <input name="endTime" id="endDate" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-8">
                         <div class="pull-right">
@@ -134,15 +134,6 @@
             //     console.log(row);
             // },
             queryParams: function(params) {
-            	 /* if($("#startDate").val()==""||$("#startDate").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
-					 var time = year+"-"+month+"-"+day
-        		 $("#startDate").val(time);
-        		params.startTime = time;
-        	     }  */
                 requestParams = params;
                 return params;
             },
