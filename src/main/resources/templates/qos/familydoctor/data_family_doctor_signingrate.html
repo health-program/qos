@@ -16,12 +16,9 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="year" id="year" placeholder="请输入年度" value="2018" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1" ></div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -136,6 +133,7 @@
     
     
     var table, selectUnit, requestParams,dataVal;
+    var charResult=[];
     $(function() {
         initTable(); 
     });
@@ -152,19 +150,99 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName"},
-                    { title: "残疾人群<br/>签约率", field: "ev21021" },
-                    { title: "高血压患<br/>者签约率", field: "ev21022" },
-                    { title: "糖尿病患<br/>者签约率", field: "ev21023"},
-                    { title: "孕产妇<br/>签约率", field: "ev21024" },
-                    { title: "0-6周岁儿<br/>童签约率", field: "ev21025" },
-                    { title: "65周岁及<br/>以上老年<br/>人签约率", field: "ev21026" },
-                    { title: "严重精神<br/>障碍患者<br/>签约率", field: "ev21027" },
-                    { title: "肺结核<br/>患者<br/>签约率", field: "ev21028" },
-                    { title: "疾病筛查<br/>高危人员<br/>签约率", field: "ev21029" },
-                    { title: "离休干部<br/>签约率", field: "ev21030" }
+                    { title: "残疾人群<br/>签约率", field: "evV21002",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21002==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21002/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "高血压患<br/>者签约率", field: "evV21003",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21003==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21003/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "糖尿病患<br/>者签约率", field: "evV21004",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21004==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21004/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "孕产妇<br/>签约率", field: "evV21005" ,
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21005==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21005/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "0-6周岁儿<br/>童签约率", field: "evV21006" ,
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21006==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21006/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "65周岁及<br/>以上老年<br/>人签约率", field: "evV21007",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21007==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21007/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "严重精神<br/>障碍患者<br/>签约率", field: "evV21008",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21008==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21008/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "肺结核<br/>患者<br/>签约率", field: "evV21009",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21009==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21009/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "疾病筛查<br/>高危人员<br/>签约率", field: "evV21010",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21010==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21010/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "离休干部<br/>签约率", field: "evV21011",
+                        formatter: function(value, row, index) {
+                            if(row.evV21001==0||row.evV21011==null){
+                                return "0%"
+                            }else{
+                                return (row.evV21011/row.evV21001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    }
                 ]
             ],
-			url: '/qos/analysis/data/get/unit',
+			url: '/qos/sign/get/group/data',
             pagination: false,
 			height : 685,
 			//fixedColumns: true,
@@ -177,37 +255,40 @@
 				unitSelected(row);
 			},
 			queryParams: function(params) {
-				params.eventIds = '21021,21022,21023,21024,21025,21026,21027,21028,21029,21030';
-				params.ignoreUnitIds = '320583810343'
-				requestParam = params;
-				return params;
+				params.eventIds = 'V21001,V21002,V21003,V21004,V21005,V21006,V21007,V21008,V21009,V21010,V21011';
+                requestParams = params;
+                return params;
 			},
 			responseHandler: function(response) {
+				debugger
 				if (!response) {
 					return null;
 				}
 
 				var data = {};
 
-				convertRate2TableData(response, '21021', data);
-				convertRate2TableData(response, '21022', data);
-				convertRate2TableData(response, '21023', data);
-				convertRate2TableData(response, '21024', data);
-				convertRate2TableData(response, '21025', data);
-				convertRate2TableData(response, '21026', data);
-				convertRate2TableData(response, '21027', data);
-				convertRate2TableData(response, '21028', data);
-				convertRate2TableData(response, '21029', data);
-				convertRate2TableData(response, '21030', data);
+				convertCount2TableData(response, 'V21001', data);
+				convertCount2TableData(response, 'V21002', data);
+				convertCount2TableData(response, 'V21003', data);
+				convertCount2TableData(response, 'V21004', data);
+				convertCount2TableData(response, 'V21005', data);
+				convertCount2TableData(response, 'V21006', data);
+				convertCount2TableData(response, 'V21007', data);
+                convertCount2TableData(response, 'V21008', data);
+                convertCount2TableData(response, 'V21009', data);
+                convertCount2TableData(response, 'V21010', data);
+                convertCount2TableData(response, 'V21011', data);
+                
 				var result = [];
 				for (var o in data) {
 					result.push(data[o]);
 				}
+				charResult = result;
 				qylChartMethod(response);
 
-				dataVal = data|| [];
+				 //dataVal = data|| [];
 				cjrqqylChartMethod();
-				gxyhzqylChartMethod();
+				 gxyhzqylChartMethod();
 				tnbhzqylChartMethod();
 				ycfqylChartMethod();
 				zsetqylChartMethod();
@@ -215,7 +296,7 @@
 				yzjszahzqylChartMethod();
 				fjhhzqylChartMethod();
 				jbscgwryqylChartMethod();
-				lxgbqylChartMethod();
+				lxgbqylChartMethod(); 
 				return result;
 			}
         });
@@ -234,41 +315,51 @@
 		jbscgwryqylChartMethod();
 		lxgbqylChartMethod();
 	}
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
 
-	function convertRate2TableData(originData, eventId, data) {
-		var eventData = originData[eventId],
-				fieldName = 'ev' + eventId,
-				total = 0,
-				event = 0;
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
 
-		eventData && eventData.forEach(function(item) {
-			var id = item.unitId;
-			unitData = data[id];
-			if (!unitData) {
-				unitData = {
-					unitId: id,
-					unitName: item.unitName
-				};
-				data[id] = unitData;
-			}
-			unitData[fieldName] = getRate(item);
-			total += item.totalNum;
-			event += item.eventNum;
-		});
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function convertCountTableData(originData, eventId, data) {
+        var eventData = originData[eventId];
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName,
+                };
+                data[id] = unitData;
+            }
+            unitData['total'+eventId]=item.count;
+        });
 
-		var totalData = data['total'];
-		if (!totalData) {
-			totalData = {
-				unitId: 'total',
-				unitName: '合计',
-			}
-			data['total'] = totalData;
-		}
-		totalData[fieldName] = getRate({
-			totalNum: total,
-			eventNum: event
-		});
-	}
+    }
 
 	function getRate(item, fixed) {
 		var a = item.eventNum,
@@ -290,16 +381,42 @@
 		return c.toFixed(fixed);
 	}
 
-	function convertUnitChartData(data, eventId, isRate) {
+	function convertUnit1ChartData(data, eventId, isRate) {
 		var edata = data[eventId],
 				max = 0,
 				unit = [],
 				values = [];
 		edata && edata.forEach(function(item) {
-			var r = isRate ? getRateNum(item) : item.totalNum;
-			max = Math.max(r, max);
-			values.push(r);
-			unit.push(item.unitName);
+					var r =  item.count;
+					max = Math.max(r, max);
+					values.push(r);
+					unit.push(item.unitName);
+			
+		});
+		return {
+			max: max,
+			unit: unit,
+			values: values
+		}
+	}
+	function convertUnitChartData(data, eventId, isRate) {
+		var total = data['V21001'];
+		var edata = data[eventId],
+				max = 0,
+				unit = [],
+				values = [];
+		edata && edata.forEach(function(item) {
+			for(o in total){
+				if(total[o].unit == item.unit){
+					var r =  (item.count/total[o].count*100).toFixed(2);
+					max = Math.max(r, max);
+					values.push(r);
+					unit.push(item.unitName);	
+				}
+				
+			}
+					
+			
 		});
 		return {
 			max: max,
@@ -308,24 +425,24 @@
 		}
 	}
 
-
 	var dataLegend = ['残疾人群签约率', '高血压患者签约率','糖尿病患者签约率', '孕产妇签约率','0-6周岁儿童签约率', '65周岁及以上老年人签约率', '严重精神障碍患者签约率', '肺结核患者签约率','疾病筛查高危人员签约率','离休干部签约率'];
     
     var qylChart= echarts.init(document.getElementById('qylChart'));
     function qylChartMethod(data){
 
-		var ev21021 = convertUnitChartData(data, '21021', true);
-		var ev21022 = convertUnitChartData(data, '21022', true);
-		var ev21023 = convertUnitChartData(data, '21023', true);
-		var ev21024 = convertUnitChartData(data, '21024', true);
-		var ev21025 = convertUnitChartData(data, '21025', true);
-		var ev21026 = convertUnitChartData(data, '21026', true);
-		var ev21027 = convertUnitChartData(data, '21027', true);
-		var ev21028 = convertUnitChartData(data, '21028', true);
-		var ev21029 = convertUnitChartData(data, '21029', true);
-		var ev21030 = convertUnitChartData(data, '21030', true);
+		var ev21001 = convertUnit1ChartData(data, 'V21001', true);
+		var ev21002 = convertUnitChartData(data, 'V21002', true);
+		var ev21003 = convertUnitChartData(data, 'V21003', true);
+		var ev21004 = convertUnitChartData(data, 'V21004', true);
+		var ev21005 = convertUnitChartData(data, 'V21005', true);
+		var ev21006 = convertUnitChartData(data, 'V21006', true);
+		var ev21007 = convertUnitChartData(data, 'V21007', true);
+		var ev21008 = convertUnitChartData(data, 'V21008', true);
+		var ev21009 = convertUnitChartData(data, 'V21009', true);
+		var ev21010 = convertUnitChartData(data, 'V21010', true);
+		var ev21011 = convertUnitChartData(data, 'V21011', true);
 
-		let orgData = ev21021.unit;
+		let orgData = ev21001.unit;
 
     		    var	option = {
    				    tooltip: {
@@ -386,7 +503,7 @@
 							color: '#4a72c9'
 					       }
 					    },
-					    data: ev21021.values
+					    data: ev21002.values
 					},
 					{
 					    name: '高血压患者签约率',
@@ -397,7 +514,7 @@
 							color: '#6071c6'
 					       }
 					    },
-					    data: ev21022.values
+					    data: ev21003.values
 					},
 					{
 					    name: '糖尿病患者签约率',
@@ -408,7 +525,7 @@
 							color: '#78a9f2'
 					       }
 					    },
-					    data: ev21023.values
+					    data: ev21004.values
 					},
 					{
 					    name: '孕产妇签约率',
@@ -419,7 +536,7 @@
 							color: '#a3ccf8'
 					       }
 					    },
-					    data: ev21024.values
+					    data: ev21005.values
 					},
 					{
 					    name: '0-6周岁儿童签约率',
@@ -430,7 +547,7 @@
 							color: '#47b8e2'
 					       }
 					    },
-					    data: ev21025.values
+					    data: ev21006.values
 					},
 					{
 					    name: '65周岁及以上老年人签约率',
@@ -441,7 +558,7 @@
 							color: '#6087bf'
 					       }
 					    },
-					    data: ev21026.values
+					    data: ev21007.values
 					},
 					{
 					    name: '严重精神障碍患者签约率',
@@ -452,7 +569,7 @@
 							color: '#4a72c9'
 					       }
 					    },
-					    data: ev21027.values
+					    data: ev21008.values
 					},
 					{
 					    name: '肺结核患者签约率',
@@ -463,7 +580,7 @@
 							color: '#6071c6'
 					       }
 					    },
-					    data: ev21028.values
+					    data: ev21009.values
 					},
 					{
 					    name: '疾病筛查高危人员签约率',
@@ -474,7 +591,7 @@
 							color: '#4b87e0'
 					       }
 					    },
-					    data: ev21029.values
+					    data: ev21010.values
 					},
 					{
 					    name: '离休干部签约率',
@@ -485,7 +602,7 @@
 							color: '#8eb4ec'
 					       }
 					    },
-					    data: ev21030.values
+					    data: ev21011.values
 					}
     		    ]
     		};
@@ -495,10 +612,29 @@
     var cjrqqylChart = echarts.init(document.getElementById('cjrqqylChart'));
     function cjrqqylChartMethod(){
 		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-    	let ev21021 = total.ev21021;
-		let index = ev21021.indexOf('%');
-		let data = ev21021.substr(0,index);
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21002!=null&&it.evV21001!=0){
+        	var rate=(it.evV21002/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -506,7 +642,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21021+'\n'+'残疾人群签约率',
+                        text: pieMessage+'\n'+'残疾人群签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -536,7 +672,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -544,7 +680,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'残疾人群签约率'
                             }
                         ]
@@ -556,11 +692,30 @@
 
     var gxyhzqylChart = echarts.init(document.getElementById('gxyhzqylChart'));
     function gxyhzqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21022 = total.ev21022;
-		let index = ev21022.indexOf('%');
-		let data = ev21022.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21003!=null&&it.evV21001!=0){
+        	var rate=(it.evV21003/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -568,7 +723,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21022 +'\n'+'高血压患者签约率',
+                        text: pieMessage +'\n'+'高血压患者签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -598,7 +753,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -606,7 +761,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'高血压患者签约率'
                             }
                         ]
@@ -618,11 +773,30 @@
  
     var tnbhzqylChart = echarts.init(document.getElementById('tnbhzqylChart'));
     function tnbhzqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21023 = total.ev21023;
-		let index = ev21023.indexOf('%');
-		let data = ev21023.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21004!=null&&it.evV21001!=0){
+        	var rate=(it.evV21004/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -630,7 +804,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21023 +'\n'+'糖尿病患者签约率',
+                        text: pieMessage +'\n'+'糖尿病患者签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -660,7 +834,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -668,7 +842,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'糖尿病患者签约率'
                             }
                         ]
@@ -680,11 +854,30 @@
     
     var ycfqylChart = echarts.init(document.getElementById('ycfqylChart'));
     function ycfqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21024 = total.ev21024;
-		let index = ev21024.indexOf('%');
-		let data = ev21024.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21005!=null&&it.evV21001!=0){
+        	var rate=(it.evV21005/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -692,7 +885,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21024+'\n'+'孕产妇签约率',
+                        text: pieMessage+'\n'+'孕产妇签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -722,7 +915,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -730,7 +923,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'孕产妇签约率'
                             }
                         ]
@@ -742,11 +935,30 @@
     
     var zsetqylChart = echarts.init(document.getElementById('zsetqylChart'));
     function zsetqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21025 = total.ev21025;
-		let index = ev21025.indexOf('%');
-		let data = ev21025.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21006!=null&&it.evV21001!=0){
+        	var rate=(it.evV21006/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -754,7 +966,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21025+'\n'+'0~6周岁儿童签约率',
+                        text: pieMessage+'\n'+'0~6周岁儿童签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -784,7 +996,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -792,7 +1004,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'0~6周岁儿童签约率'
                             }
                         ]
@@ -804,11 +1016,30 @@
     
     var lnrqylChart = echarts.init(document.getElementById('lnrqylChart'));
     function lnrqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21026 = total.ev21026;
-		let index = ev21026.indexOf('%');
-		let data = ev21026.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21007!=null&&it.evV21001!=0){
+        	var rate=(it.evV21007/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -820,7 +1051,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21026+'\n'+'65周岁及以上老年人签约率',
+                        text: pieMessage+'\n'+'65周岁及以上老年人签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -850,7 +1081,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -858,7 +1089,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'65周岁及以上老年人签约率'
                             }
                         ]
@@ -870,11 +1101,30 @@
     
     var yzjszahzqylChart = echarts.init(document.getElementById('yzjszahzqylChart'));
     function yzjszahzqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21027 = total.ev21027;
-		let index = ev21027.indexOf('%');
-		let data = ev21027.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21008!=null&&it.evV21001!=0){
+        	var rate=(it.evV21008/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -886,7 +1136,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21027+'\n'+'严重精神障碍患者签约率',
+                        text: pieMessage+'\n'+'严重精神障碍患者签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -916,7 +1166,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -924,7 +1174,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'严重精神障碍患者签约率'
                             }
                         ]
@@ -936,11 +1186,30 @@
 
     var fjhhzqylChart = echarts.init(document.getElementById('fjhhzqylChart'));
     function fjhhzqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21028 = total.ev21028;
-		let index = ev21028.indexOf('%');
-		let data = ev21028.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21009!=null&&it.evV21001!=0){
+        	var rate=(it.evV21009/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -952,7 +1221,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21028+'\n'+'肺结核患者签约率',
+                        text: pieMessage+'\n'+'肺结核患者签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -982,7 +1251,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -990,7 +1259,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'肺结核患者签约率'
                             }
                         ]
@@ -1002,11 +1271,30 @@
     
     var jbscgwryqylChart = echarts.init(document.getElementById('jbscgwryqylChart'));
     function jbscgwryqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21029 = total.ev21029;
-		let index = ev21029.indexOf('%');
-		let data = ev21029.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21010!=null&&it.evV21001!=0){
+        	var rate=(it.evV21010/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
 				color: ['#999999','#3398DB'],
                 graphic: [{ //环形图中间添加文字
@@ -1014,7 +1302,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21029+'\n'+'疾病筛查高危人员签约率',
+                        text: pieMessage+'\n'+'疾病筛查高危人员签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -1044,7 +1332,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -1052,7 +1340,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'疾病筛查高危人员签约率'
                             }
                         ]
@@ -1064,11 +1352,30 @@
     
     var lxgbqylChart = echarts.init(document.getElementById('lxgbqylChart'));
     function lxgbqylChartMethod(){
-		let unitId = selectUnit || 'total';
-		let total = dataVal[unitId];
-		let ev21030 = total.ev21030;
-		let index = ev21030.indexOf('%');
-		let data = ev21030.substr(0,index);
+    	let unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < charResult.length; i++) {
+            if (unitId=='total'){
+                total.push(charResult[i])
+            }else{
+                if (charResult[i].unitName==unitId){
+                    total.push(charResult[i]);
+                }
+            }
+        }
+        var it=total[total.length - 1];
+        if(it.evV21011!=null&&it.evV21001!=0){
+        	var rate=(it.evV21011/it.evV21001*100).toFixed(2)+ '%';
+            
+        }else{
+        	var rate = "0%";
+        }
+         
+        rate=rate.replace("%","")*1;
+        remainRate=(100-rate).toFixed(2);
+        
+        var pieMessage;
+        pieMessage=rate+"%";
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -1080,7 +1387,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: ev21030+'\n'+'离休干部签约率',
+                        text: pieMessage+'\n'+'离休干部签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -1110,7 +1417,7 @@
                         },
                         data:[
 							{
-								value:100-data,
+								value:remainRate,
 								name:'',
 								hoverAnimation:false,
 								tooltip:{
@@ -1118,7 +1425,7 @@
 								},
 							},
 							{
-                                value:data,
+                                value:rate,
                                 name:'离休干部签约率'
                             }
                         ]

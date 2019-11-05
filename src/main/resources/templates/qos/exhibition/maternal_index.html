@@ -13,7 +13,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2015-01-01" class="form-control tonto-datepicker-date">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -207,7 +207,7 @@
                         <div class="box-header with-border">
                             <h3 class="box-title" style="letter-spacing: 3px">孕产妇体检</h3>
                         </div>
-                        <div class="box-body" style="height: 240px;overflow: auto">
+                        <div class="box-body cftj" style="height: 240px;overflow: auto">
                             <table id="ycftjDataGrid"></table>
                         </div>
                     </div>
@@ -234,6 +234,7 @@
     /*<![CDATA[*/
     var data, ycfTable,wcqTable;
     $(function () {
+        initStartDateTime();
         initMaternalLeftData();
         initMaternalRightUpData();
         initMaternalRightDownData();
@@ -244,6 +245,16 @@
         initYcftjDataGrid();
         initWcqDataGrid();
     });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+        }
+    }
 
     function searchData() {
         let startTime = $("#startTime").val();
@@ -269,7 +280,6 @@
         generatorFnscChartChart(fnscChart);
         ycfTable.refresh();
         wcqTable.refresh();
-
     }
     //图表自适应大小
     window.addEventListener("resize", function () {
@@ -841,7 +851,7 @@
             ],
             url: '/qos/exhibition/maternal/search/yftj',
             showFooter:true,
-            height:220,
+            onLoadSuccess:tableCftjHeight,
             pagination: false,
             responseHandler: function (res) {
                 res = res || [];
@@ -896,15 +906,34 @@
     }
 
     function tableHeight(data) {
-        if ($(".wcq .fixed-table-body table").height() < $(".wcq .fixed-table-container").height()) {
-            $(".wcq .fixed-table-container").css({
+        let $table = $(".wcq .fixed-table-body table");
+        let $container = $(".wcq .fixed-table-container");
+        console.log($(".wcq").height())
+        if ($table.height()< $container.height()) {
+            $container.css({
                 "padding-bottom": 0,
-                "height": $(".wcq .fixed-table-body table").height() + 45
+                "height": $table.height() + 45
             });
             // 是当内容少时，使用搜索功能高度保持不变
-            wcqTable.resetView({height: "auto"});
+            wcqTable.resetView({"height": "auto"});
         } else {
-            $(".wcq .fixed-table-container").css({height: 220});
+            $container.css({"height": $table.height()+ 46});
+        }
+    }
+
+
+    function tableCftjHeight(data) {
+        let $table = $(".cftj .fixed-table-body table");
+        let $container = $(".cftj .fixed-table-container");
+        if ($table.height()< $container.height()) {
+            $container.css({
+                "padding-bottom": 0,
+                "height": $table.height() + 45
+            });
+            // 是当内容少时，使用搜索功能高度保持不变
+            ycfTable.resetView({"height": "auto"});
+        } else {
+            $container.css({"height": $table.height()+ 46});
         }
     }
 

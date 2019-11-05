@@ -61,6 +61,44 @@ public class SignController {
         return  CommonResponse.getSuccessResponse(map);
     }
 
+    
+    
+    @RequestMapping(value = "/get/group/data", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getGroupData(AnalysisRequest request,String year) {
+        Map<String, Object> map = new HashMap<>();
+        List<DataConstantContainer.Unit> units = DataConstantContainer.getCommunityList();
+        List<String> eventIds=request.getEventIds();
+        for (String eventId:eventIds){
+            String item = analysisService.getTotalData(eventId);
+            if(!StringUtils.isEmpty(item)){
+                List<EntitySign> danganList = toBeanList(item,EntitySign.class);
+                List<EntitySign> newSignList=new ArrayList<>();
+                if (!StringUtils.isEmpty(year)&& !eventId.equals("V21001")){
+                    for (EntitySign entitySign:danganList){
+                        if (!StringUtils.isEmpty(entitySign.getYear())&&entitySign.getYear().equals(year)){
+                            newSignList.add(entitySign);
+                        }
+                    }
+                }else{
+                    newSignList.addAll(danganList);
+                }
+                List<EntitySign> list=new ArrayList<>();
+                for(EntitySign shequ:newSignList){
+                    for(DataConstantContainer.Unit unit : units){
+                        if(!StringUtils.isEmpty(shequ.getUnit())&&shequ.getUnit().equals(unit.getSource().getGongweiCode())){
+                            shequ.setUnitId(unit.getId());
+                            shequ.setUnitName(unit.getName());
+                            list.add(shequ);
+                        }
+                    }
+                }
+                orderByUnit(list);
+                map.put(eventId,list);
+            }
+        }
+        return  CommonResponse.getSuccessResponse(map);
+    }
 
 
 

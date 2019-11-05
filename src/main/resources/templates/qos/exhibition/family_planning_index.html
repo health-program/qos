@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" value="2015-01-01" type="text" class="form-control tonto-datepicker-date">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off"  type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -82,11 +82,22 @@
 <script type="text/javascript">
     /*<![CDATA[*/
     $(function () {
+        initStartDateTime();
         generatorBycsChart(bycsChart);
         generatorYwlcChart(ywlcChart);
         generatorGnjyChart(gnjyChart);
         generatorFyxgChart(fyxgChart);
     });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+        }
+    }
     //图表自适应大小
     window.addEventListener("resize", function () {
         ywlcChart.resize();
@@ -149,8 +160,8 @@
                 byyValue = month13104.valuesMap['total'];
                 bytValue = month13103.valuesMap['total'];
                 time = month13104.month;
-                byyValueTotal = byyValue.reduce((previousValue, currentValue) => previousValue + currentValue );
-                bytValueTotal = bytValue.reduce((previousValue, currentValue) => previousValue + currentValue );
+                byyValueTotal = byyValue.reduce((previousValue, currentValue) =>{return   previousValue + currentValue;},0 );
+                bytValueTotal = bytValue.reduce((previousValue, currentValue) => {return   previousValue + currentValue;},0 );
             }
             $("#byt").text(bytValueTotal);
             $("#byy").text(byyValueTotal);
@@ -344,7 +355,7 @@
                 let month13101 = convertMonthChartData(res, '13101', false);
                 datas = month13101.valuesMap['total'];
                 time = month13101.month;
-                total = datas.reduce((previousValue, currentValue) => previousValue + currentValue )
+                total = datas.reduce((previousValue, currentValue) => {return   previousValue + currentValue;},0  )
             }
             $("#ywlc").text(total+"人");
             if ( total === 0) {
