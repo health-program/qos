@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.hospitalData.HospitalDataMapper">
+	
+	<select id="findHospitalDataLog" parameterType="com.paladin.qos.model.hospitalData.HospitalDataLog" resultType="com.paladin.qos.model.hospitalData.HospitalDataLog">
+		select organ_code as organCode,organ_name as organName,table_code as tableCode,table_name as tableName,
+		cnt_all as cntAll,update_time as updateTime,create_time as createTime
+		from hospital_data_log
+		where 1=1
+		<if test="organCode !='' and  organCode!=null">
+		  AND organ_code=#{organCode}
+        </if>
+	</select>
+	
+	<select id="findHospitalDataCheck" parameterType="com.paladin.qos.model.hospitalData.HospitalDataCheck" resultType="com.paladin.qos.model.hospitalData.HospitalDataCheck">
+		select orgcode,orgname,name,perc1,perc2,num1,num2
+		from hospital_data_check
+		where 1=1
+		and orgcode is not null
+		<if test="orgcode !='' and  orgcode!=null">
+		  AND orgcode=#{orgcode}
+        </if>
+	</select>
+	
+	<select id="selectCheckType" resultType = "String">
+	 select distinct(name) from hospital_data_check where 1=1
+		and orgcode is not null
+	</select>
+	
+</mapper>
