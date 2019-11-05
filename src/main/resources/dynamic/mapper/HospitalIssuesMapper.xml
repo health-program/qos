@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.HospitalIssuesMapper">
+
+	<!-- 住院病人医嘱表结构 -->
+	<select id="findZYBRYZB" resultType="map">
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'病案号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND MR_NO IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'病人姓名是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'出院时间是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'患者卡证号码是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND CARDNO IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'患者卡证类型是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND CARDTYPE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'开嘱科室编码是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND DPT_CODE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'开嘱科室名称是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND DPT_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'开嘱医生身份证号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND DOC_IDCARD IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'开嘱医生姓名是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND DOC_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'没有记录患者出生日期' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BIRTHDAY IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'是否药品是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND IF_DRUG IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'停止执行医生身份证号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND STPDOC_IDCARD IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'停止执行医生姓名是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND STPDOC_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'性别代码是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND SEX IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'药品使用途径说明是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND USEWAY_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医疗机构编码是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ORGAN_CODE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医疗机构名称是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ORGAN_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱备注说明是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_NOTE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱编号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_NO IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱开始执行时间是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BEGIN_TIME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱类别是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_TYPE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱明细编码是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_CODE IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱明细名称是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱停止执行时间是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND STOP_DT IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱唯一ID号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ID IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱下达时间是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODRISU_DT IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱组号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_GN IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'执行护士姓名是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND NURSE_NAME IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'住院号是否填写' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND HP_S_NO IS NULL
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'出生日期是否晚于系统日期' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BIRTHDAY&gt;=sysdate
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'出生日期是否早于1900年01月01日' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BIRTHDAY&lt;=TO_DATE('1900-01-01', 'yyyy-mm-dd')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'卡证类型代码是否符合值域' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND CARDTYPE not in ('01','02','03','04','05','06','07','99')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'是否药品填写是否符合值域' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND IF_DRUG not in ('1','2')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医疗机构编码是否符合值域' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ORGAN_CODE !='320583467170265'
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医院记录患者性别是否符合值域' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND SEX not in ('1','2')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱开始执行时间是否晚于系统日期' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BEGIN_TIME&gt;=sysdate
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱开始执行时间是否早于1950年01月01日' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND BEGIN_TIME&lt;=TO_DATE('1950-01-01', 'yyyy-mm-dd')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱类别填写是否符合值域' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODR_TYPE not in ('1','2','9')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱停止执行时间是否晚于系统日期' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND STOP_DT&gt;=sysdate
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO，
+	'医嘱停止执行时间是否早于1950年01月01日' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND STOP_DT&lt;=TO_DATE('1950-01-01', 'yyyy-mm-dd')
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO,
+	'医嘱下达时间是否晚于系统日期' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODRISU_DT&gt;=sysdate
+	union all
+	SELECT
+	ORGAN_NAME,
+	HP_S_NO,
+	'医嘱下达时间是否早于1950年01月01日' as khnr,
+	OUT_H_DATE
+	FROM
+		DoctorAdviceRecord
+	WHERE
+		OUT_H_DATE &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+		AND OUT_H_DATE &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+		AND ODRISU_DT&lt;=TO_DATE('1950-01-01', 'yyyy-mm-dd')
+	</select>
+
+
+</mapper>
