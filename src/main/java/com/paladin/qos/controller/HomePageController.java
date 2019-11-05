@@ -619,9 +619,16 @@ public class HomePageController {
         	List<Disease> nameList = analysisService.findNameList();
         	for(Disease yiyuan:diseaseList1){
         		for(Disease name:nameList){
-        			if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
-        				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+        			if((yiyuan.getDiseasecode()).contains(".")){
+        				if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
+            				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+            			}
+        			}else{
+        				if((yiyuan.getDiseasecode()+"0").equals(name.getDiseasecode())){
+            				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+            			}
         			}
+        			
         		}
         	}
         	map.put(eventId, diseaseList1);
