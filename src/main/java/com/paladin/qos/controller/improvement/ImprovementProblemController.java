@@ -1,11 +1,10 @@
 package com.paladin.qos.controller.improvement;
 
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.query.QueryInputMethod;
-import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.service.hospital.HospitalDataService;
+import com.paladin.qos.service.hospital.dto.HospitalDataQuery;
 import com.paladin.qos.service.improvement.ImprovementProblemService;
-import com.paladin.qos.service.improvement.dto.ImprovementProblemQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,17 +19,18 @@ public class ImprovementProblemController extends ControllerSupport {
     @Autowired
     private ImprovementProblemService improvementProblemService;
 
+    @Autowired
+    private HospitalDataService hospitalDataService;
+
     @GetMapping("/index")
-    @QueryInputMethod(queryClass = ImprovementProblemQuery.class)
     public String index() {
         return "/qos/improvement/improvement_problem_index";
     }
 
     @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
-    @QueryOutputMethod(queryClass = ImprovementProblemQuery.class, paramIndex = 0)
-    public Object findPage(ImprovementProblemQuery query) {
-        return CommonResponse.getSuccessResponse(improvementProblemService.searchPage(query));
+    public Object findPage(HospitalDataQuery query) {
+        return CommonResponse.getSuccessResponse(hospitalDataService.findIssues(query));
     }
     
 /*    @GetMapping("/get")
