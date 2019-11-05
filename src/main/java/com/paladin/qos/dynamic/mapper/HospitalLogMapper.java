@@ -1,4 +1,4 @@
-package com.paladin.qos.mapper.hospitalData;
+package com.paladin.qos.dynamic.mapper;
 
 import java.util.List;
 
@@ -8,12 +8,10 @@ import com.paladin.qos.model.hospitalData.HospitalDataCheck;
 import com.paladin.qos.model.hospitalData.HospitalDataLog;
 
 @Mapper
-public interface HospitalDataMapper {
+public interface HospitalLogMapper {
 
 	List<HospitalDataLog> findHospitalDataLog(HospitalDataLog query);
 
 	List<HospitalDataCheck> findHospitalDataCheck(HospitalDataCheck query);
-
-	List<String> selectCheckType();
 
 }
