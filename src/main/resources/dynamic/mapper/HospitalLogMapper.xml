@@ -6,11 +6,23 @@
 		select organ_code as organCode,organ_name as organName,table_code as tableCode,table_name as tableName,
 		cnt_all as cntAll,update_time as updateTime,create_time as createTime
 		from table_count
-		where 1=1
+		where organ_code is not null
 		<if test="organCode !='' and  organCode!=null">
-		  AND organ_code=#{organCode}
-        </if>
+			AND organ_code=#{organCode}
+		</if>
+		ORDER BY organ_code
+		offset #{offset} rows
+		fetch next #{limit} rows only
 	</select>
+
+	<select id="countHospitalDataLog" parameterType="com.paladin.qos.model.hospitalData.HospitalDataLog" resultType="int">
+		select count(1) from table_count
+		where organ_code is not null
+		<if test="organCode !='' and  organCode!=null">
+			AND organ_code=#{organCode}
+		</if>
+	</select>
+
 	
 	<select id="findHospitalDataCheck" parameterType="com.paladin.qos.model.hospitalData.HospitalDataCheck" resultType="com.paladin.qos.model.hospitalData.HospitalDataCheck">
 		select orgcode,orgname,name,perc1,perc2,num1,num2
@@ -18,9 +30,21 @@
 		where 1=1
 		and orgcode is not null
 		<if test="orgcode !='' and  orgcode!=null">
-		  AND orgcode=#{orgcode}
-        </if>
+			AND orgcode=#{orgcode}
+		</if>
+		ORDER BY orgcode
+		offset #{offset} rows
+		fetch next #{limit} rows only
 	</select>
 
+	<select id="countHospitalDataCheck" parameterType="com.paladin.qos.model.hospitalData.HospitalDataCheck" resultType="int">
+		select count(1)
+		from dzjk
+		where 1=1
+		and orgcode is not null
+		<if test="orgcode !='' and  orgcode!=null">
+			AND orgcode=#{orgcode}
+		</if>
+	</select>
 	
 </mapper>
