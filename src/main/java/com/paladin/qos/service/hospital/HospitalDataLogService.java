@@ -14,6 +14,8 @@ import com.paladin.qos.model.count.CountReferral;
 import com.paladin.qos.model.hospitalData.HospitalDataCheck;
 import com.paladin.qos.model.hospitalData.HospitalDataLog;
 
+import java.util.List;
+
 
 @Service
 public class HospitalDataLogService extends ServiceSupport<CountReferral> {
@@ -24,17 +26,39 @@ public class HospitalDataLogService extends ServiceSupport<CountReferral> {
 	public PageResult<HospitalDataLog> searchFindPage(HospitalDataLog query) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_AADATA);
 		HospitalLogMapper mapper = sqlSessionContainer.getSqlSessionTemplate().getMapper(HospitalLogMapper.class);
-		Page<HospitalDataLog> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
-		mapper.findHospitalDataLog(query);
-		return new PageResult<>(page);
+		int count = mapper.countHospitalDataLog(query);
+		if(count == 0) {
+			return getEmptyPageResult(query);
+		}
+		List<HospitalDataLog> list = mapper.findHospitalDataLog(query);
+		PageResult<HospitalDataLog> result = new PageResult<>();
+		int limit = query.getLimit();
+		int offset = query.getOffset();
+		int page = offset%limit == 0? offset/limit : offset/limit + 1;
+		result.setLimit(limit);
+		result.setPage(page);
+		result.setTotal(count);
+		result.setData(list);
+		return result;
 	}
 
 	public PageResult<HospitalDataCheck> searchFindCheckPage(HospitalDataCheck query) {
 		sqlSessionContainer.setCurrentDataSource(DSConstant.DS_CHECK);
 		HospitalLogMapper mapper = sqlSessionContainer.getSqlSessionTemplate().getMapper(HospitalLogMapper.class);
-		Page<HospitalDataCheck> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
-		mapper.findHospitalDataCheck(query);
-		return new PageResult<>(page);
+		int count = mapper.countHospitalDataCheck(query);
+		if(count == 0) {
+			return getEmptyPageResult(query);
+		}
+		List<HospitalDataCheck> list = mapper.findHospitalDataCheck(query);
+		PageResult<HospitalDataCheck> result = new PageResult<>();
+		int limit = query.getLimit();
+		int offset = query.getOffset();
+		int page = offset%limit == 0? offset/limit : offset/limit + 1;
+		result.setLimit(limit);
+		result.setPage(page);
+		result.setTotal(count);
+		result.setData(list);
+		return result;
 	}
 
 }
