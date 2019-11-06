@@ -4,7 +4,6 @@
 <head th:include="/qos/header" />
 
 <body>
-    
     <section class="content-header">
         <h1>问题溯源 </h1>
     </section>
@@ -12,9 +11,9 @@
         <div class="box box-solid">
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
-                	<div class="form-group">
+                    <div class="form-group">
                         <div class="col-md-2">
-                            <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2019-11-01"  class="form-control tonto-datepicker-date">
+                            <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2019-11-01" class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-2">
                             <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" value="2019-11-06" class="form-control tonto-datepicker-date">
@@ -73,13 +72,13 @@
                                 <option value="BRYZ">住院病人医嘱表</option>
                             </select>
                         </div>
-	                    <div class="col-md-4">
-		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
-		                    </div>
-		                </div>
-	                </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
                     <input type="text" style="display:none">
                 </form>
@@ -90,7 +89,7 @@
         <div class="box box-solid" style="margin-top:20px">
             <div id="result" class="box-body">
                 <table id="dataGrid"></table>
-          <!--      <div id="toolbar">
+                <!--      <div id="toolbar">
                     <div class="btn-group">
                         <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
                     </div>
@@ -109,49 +108,44 @@
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
-                [
-                    { title: "医院名称", field: "orgName" ,formatter : function formatter(value, row, index) {
-                        return row.ORGAN_NAME || row.UPDATE_ORGANNAME || row.CHK_ORGAN_NAME || row.APP_ORGAN_NAME || row.TEST_ORGAN_NAME ||  " ";
-                    } },
-                    { title: "业务编码", field: "businessNo",formatter : function formatter(value, row, index) {
-                        return  row.HP_S_NO || row.OP_EM_HP_NO || row.op_em_no || row.OUTSTORE_CODE || row.INSTORE_CODE || row.CARDNO || row.OP_EM_HP_EX_NO ||  " ";
-                    } },
-                    { title: "原因", field: "khnr" },
-                    {title : "记录时间" , field : "createTime",formatter : function formatter(value, row, index) {
-                            return  row.POF_DT || row.RCD_DT || row.REC_DT || row.OUTSTORE_DATE || row.UPDATE_DATE || row.RPT_DT || row.APPLY_DT
-                                || row.OUT_H_DATE || row.INSTORE_DATE || row.STAT_DATE || row.SEE_DOC_DT || row.VISIT_DATE || " ";
-                        } }
+                [{
+                        title: "医院名称",
+                        formatter: function formatter(value, row, index) {
+                            return row.ORGAN_NAME || row.UPDATE_ORGANNAME || row.CHK_ORGAN_NAME || row.APP_ORGAN_NAME || row.TEST_ORGAN_NAME || " ";
+                        }
+                    },
+                    {
+                        title: "业务编码",
+                        formatter: function formatter(value, row, index) {
+                            return row.HP_S_NO || row.OP_EM_HP_NO || row.OP_EM_NO || row.OUTSTORE_CODE || row.INSTORE_CODE || row.CARDNO || row.OP_EM_HP_EX_NO || " ";
+                        }
+                    },
+                    { title: "原因", field: "KHNR" },
+                    {
+                        title: "记录时间",
+                        formatter: function formatter(value, row, index) {
+                            var value = row.POF_DT || row.RCD_DT || row.REC_DT || row.OUTSTORE_DATE || row.UPDATE_DATE || row.RPT_DT || row.APPLY_DT ||
+                                row.OUT_H_DATE || row.INSTORE_DATE || row.STAT_DATE || row.SEE_DOC_DT || row.VISIT_DATE || "";
+                            if(!isNaN(value)) {
+                                return $.formatDate(new Date(value), "yyyy-MM-dd");
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
                 ]
             ],
             url: '/qos/improvement/problem/find/page',
             searchbar: '#searchbar',
-          /*  exportUrl: '/qos/improvement/problem/export',
-            showExport: true,
-            showColumns: true,*/
+            /*  exportUrl: '/qos/improvement/problem/export',
+              showExport: true,
+              showColumns: true,*/
             pagination: true,
             toolbar: "#toolbar"
             /*showRefresh: true*/
         });
     }
 
-    function add() {
-        window.location = '/qos/improvement/problem/add';
-    }
-
-    function detail(row) {
-        window.location = '/qos/improvement/problem/detail' + (row ? ('?id=' + row.id) : '');
-    }
-
-    function remove(row) {
-        if (row) {
-            layer.confirm('确定删除吗?', function() {
-                $.getAjax('/qos/improvement/problem/delete?id=' + row.id, function() {
-                    $.successMessage("删除成功");
-                    table.refresh();
-                });
-            });
-        }
-    }
     </script>
 </body>
 
