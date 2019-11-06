@@ -14,10 +14,10 @@
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
                         <div class="col-md-2">
-                            <input name="bgTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text"  class="form-control tonto-datepicker-date">
+                            <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2019-11-01"  class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-2">
-                            <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                            <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" value="2019-11-06" class="form-control tonto-datepicker-date">
                         </div>
                         <div class="col-md-2">
                             <select name="dataSource" class="form-control">
@@ -110,28 +110,17 @@
             idField: "id",
             columns: [
                 [
-                    { title: "医院名称", field: "orgName" },
-                    { title: "业务编码", field: "businessNo",formatter : function formatter(value, row, index) { return value ? value : '无' } },
-                    { title: "原因", field: "reason" },
-                    {title : "记录时间" , field : "createTime",formatter : "datetime"},
-                    /*{
-                        title: "操作",
-                        align: "center",
-                        width: "200px",
-                        events: {
-                            'click .detail': function(e, value, row, index) {
-                                detail(row);
-                            },
-                            'click .remove': function(e, value, row, index) {
-                                remove(row);
-                            }
-                        },
-                        formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
-                        }
-                    }*/
+                    { title: "医院名称", field: "orgName" ,formatter : function formatter(value, row, index) {
+                        return row.ORGAN_NAME || row.UPDATE_ORGANNAME || row.CHK_ORGAN_NAME || row.APP_ORGAN_NAME || row.TEST_ORGAN_NAME ||  " ";
+                    } },
+                    { title: "业务编码", field: "businessNo",formatter : function formatter(value, row, index) {
+                        return  row.HP_S_NO || row.OP_EM_HP_NO || row.op_em_no || row.OUTSTORE_CODE || row.INSTORE_CODE || row.CARDNO || row.OP_EM_HP_EX_NO ||  " ";
+                    } },
+                    { title: "原因", field: "khnr" },
+                    {title : "记录时间" , field : "createTime",formatter : function formatter(value, row, index) {
+                            return  row.POF_DT || row.RCD_DT || row.REC_DT || row.OUTSTORE_DATE || row.UPDATE_DATE || row.RPT_DT || row.APPLY_DT
+                                || row.OUT_H_DATE || row.INSTORE_DATE || row.STAT_DATE || row.SEE_DOC_DT || row.VISIT_DATE || " ";
+                        } }
                 ]
             ],
             url: '/qos/improvement/problem/find/page',

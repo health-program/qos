@@ -1,19 +1,19 @@
 package com.paladin.qos.service.hospital;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.paladin.data.dynamic.SqlSessionContainer;
 import com.paladin.framework.common.PageResult;
 import com.paladin.qos.dynamic.mapper.HospitalIssuesMapper;
 import com.paladin.qos.service.hospital.dto.HospitalDataQuery;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @Service
 public class HospitalDataService {
@@ -21,31 +21,32 @@ public class HospitalDataService {
 	@Autowired
 	private SqlSessionContainer sqlSessionContainer;
 
-	private static Date DEFAULT_START_TIME;
-	private static Date DEFAULT_END_TIME;
-
-	static {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			DEFAULT_START_TIME = format.parse("2010-01-01");
-			DEFAULT_END_TIME = format.parse("2099-01-01");
-		} catch (ParseException e) {
-		}
-	}
+	private static String DEFAULT_START_TIME = "2010-01-01";
+	private static String DEFAULT_END_TIME = "2099-01-01";
 
 	public Object findIssues(HospitalDataQuery query) {
 
 		sqlSessionContainer.setCurrentDataSource(query.getDataSource());
 		HospitalIssuesMapper mapper = sqlSessionContainer.getSqlSessionTemplate().getMapper(HospitalIssuesMapper.class);
+		
 		Date startTime = query.getStartTime();
 		Date endTime = query.getEndTime();
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		
+		String startDate = null;
+		String endDate = null;
 
 		if (startTime == null) {
-			startTime = DEFAULT_START_TIME;
+			startDate = DEFAULT_START_TIME;
+		} else {
+			startDate = format.format(startTime);
 		}
 
 		if (endTime == null) {
-			endTime = DEFAULT_END_TIME;
+			endDate = DEFAULT_END_TIME;
+		} else {
+			endDate = format.format(endTime);
 		}
 
 		String issuesType = query.getIssuesType();
@@ -54,71 +55,71 @@ public class HospitalDataService {
 		List<Map<String, Object>> result = null;
 		try {
 			if ( "BCJL".equals(issuesType)){
-				result = mapper.findBCJL(startTime, endTime);
+				result = mapper.findBCJL(startDate, endDate);
 			}else if ("CYJL".equals(issuesType)){
-				result = mapper.findCYJL(startTime, endTime);
+				result = mapper.findCYJL(startDate, endDate);
 			}  else if ("FYCB".equals(issuesType)){
-				result = mapper.findFYCB(startTime, endTime);
+				result = mapper.findFYCB(startDate, endDate);
 			} else if ("FYZB".equals(issuesType)){
-				result = mapper.findFYZB(startTime, endTime);
+				result = mapper.findFYZB(startDate, endDate);
 			} else if ("HCSY".equals(issuesType)){
-				result = mapper.findHCSY(startTime, endTime);
+				result = mapper.findHCSY(startDate, endDate);
 			} else if ("GH".equals(issuesType)){
-				result = mapper.findGH(startTime, endTime);
+				result = mapper.findGH(startDate, endDate);
 			} else if ("HCCK".equals(issuesType)){
-				result = mapper.findHCCK(startTime, endTime);
+				result = mapper.findHCCK(startDate, endDate);
 			} else if ("HCRK".equals(issuesType)){
-				result = mapper.findHCRK(startTime, endTime);
+				result = mapper.findHCRK(startDate, endDate);
 			} else if ("HZXX".equals(issuesType)){
-				result = mapper.findHZXX(startTime, endTime);
+				result = mapper.findHZXX(startDate, endDate);
 			} else if ("JCBG".equals(issuesType)){
-				result = mapper.findJCBG(startTime, endTime);
+				result = mapper.findJCBG(startDate, endDate);
 			} else if ("JCSQ".equals(issuesType)){
-				result = mapper.findJCSQ(startTime, endTime);
+				result = mapper.findJCSQ(startDate, endDate);
 			} else if ("JYBG".equals(issuesType)){
-				result = mapper.findJYBG(startTime, endTime);
+				result = mapper.findJYBG(startDate, endDate);
 			} else if ("JYMX".equals(issuesType)){
-				result = mapper.findJYMX(startTime, endTime);
+				result = mapper.findJYMX(startDate, endDate);
 			} else if ("JYSQ".equals(issuesType)){
-				result = mapper.findJYSQ(startTime, endTime);
+				result = mapper.findJYSQ(startDate, endDate);
 			} else if ("JZJL".equals(issuesType)){
-				result = mapper.findJZJL(startTime, endTime);
+				result = mapper.findJZJL(startDate, endDate);
 			} else if ("ZYSF".equals(issuesType)){
-				result = mapper.findZYSF(startTime, endTime);
+				result = mapper.findZYSF(startDate, endDate);
 			} else if ("RYCY".equals(issuesType)){
-				result = mapper.findRYCY(startTime, endTime);
+				result = mapper.findRYCY(startDate, endDate);
 			} else if ("RYJL".equals(issuesType)){
-				result = mapper.findRYJL(startTime, endTime);
+				result = mapper.findRYJL(startDate, endDate);
 			} else if ("SSCZ".equals(issuesType)){
-				result = mapper.findSSCZ(startTime, endTime);
+				result = mapper.findSSCZ(startDate, endDate);
 			} else if ("SXJL".equals(issuesType)){
-				result = mapper.findSXJL(startTime, endTime);
+				result = mapper.findSXJL(startDate, endDate);
 			} else if ("SXSQ".equals(issuesType)){
-				result = mapper.findSXSQ(startTime, endTime);
+				result = mapper.findSXSQ(startDate, endDate);
 			} else if ("XYCFCB".equals(issuesType)){
-				result = mapper.findXYCFCB(startTime, endTime);
+				result = mapper.findXYCFCB(startDate, endDate);
 			} else if ("XYCFZB".equals(issuesType)){
-				result = mapper.findXYCFZB(startTime, endTime);
+				result = mapper.findXYCFZB(startDate, endDate);
 			} else if ("XYBA".equals(issuesType)){
-				result = mapper.findXYBA(startTime, endTime);
+				result = mapper.findXYBA(startDate, endDate);
 			} else if ("XYBACB".equals(issuesType)){
-				result = mapper.findXYBACB(startTime, endTime);
+				result = mapper.findXYBACB(startDate, endDate);
 			} else if ("YPCK".equals(issuesType)){
-				result = mapper.findYPCK(startTime, endTime);
+				result = mapper.findYPCK(startDate, endDate);
 			} else if ("YPRK".equals(issuesType)){
-				result = mapper.findYPRK(startTime, endTime);
+				result = mapper.findYPRK(startDate, endDate);
 			} else if ("ZLCZ".equals(issuesType)){
-				result = mapper.findZLCZ(startTime, endTime);
+				result = mapper.findZLCZ(startDate, endDate);
 			} else if ("ZYCFCB".equals(issuesType)){
-				result = mapper.findZYCFCB(startTime, endTime);
+				result = mapper.findZYCFCB(startDate, endDate);
 			} else if ("ZYCFZB".equals(issuesType)){
-				result = mapper.findZYCFZB(startTime, endTime);
+				result = mapper.findZYCFZB(startDate, endDate);
 			} else if ("ZYBA".equals(issuesType)){
-				result = mapper.findZYBA(startTime, endTime);
+				result = mapper.findZYBA(startDate, endDate);
 			} else if ("ZYBASS".equals(issuesType)){
-				result = mapper.findZYBASS(startTime, endTime);
+				result = mapper.findZYBASS(startDate, endDate);
 			} else if ("BRYZ".equals(issuesType)){
-				result = mapper.findZYBRYZB(startTime, endTime);
+				result = mapper.findZYBRYZB(startDate, endDate);
 			}
 			if (result == null || result.size() == 0) {
 				page.setTotal(0L);
