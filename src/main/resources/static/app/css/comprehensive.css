@@ -127,7 +127,7 @@
 
 .onebg{
     width: 96.354vw;
-    height: 49.629vh;
+    height: 61.629vh;
     background: url('../img/comprehensive/bigbg.png') no-repeat center;
     background-size:100% 100%;
     position: absolute;
@@ -162,7 +162,7 @@
     margin: auto;
 }
 .bg0976a7{
-    background: #0976a7;
+    background: #0976a74f;
 }
 .text-00f5f6{
     color: #00f5f6;
@@ -180,3 +180,7 @@
 .hei8 td{
     border-right:1px solid #2e82a2;
 }
+
+table{border-collapse: collapse;}
+
+table tr{border-bottom:solid 1px #2e82a2;}

@@ -1,16 +1,35 @@
 $(function(){
-    var dataLength;
+    var dataLength=[];
+
+    function sortKey(array, key) {
+        return array.sort(function(a, b) {
+            var x = a[key];
+            var y = b[key];
+            return x < y ? -1 : x > y ? 1 : 0;
+        });
+    }
 
     var arr = {
-        eventIds:'21001'
+        eventIds:'V40000'
     }
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/data/get/month/instalments",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/get/total/data",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-             var  month21001Data=convertMonthChartData(rawData.result, '21001', true); // valuesMap
-             dataLength=month21001Data.month;
+             var result=eval(rawData.message);
+             result=sortKey(result,"MONTH");
+             var xLabel=[];
+             var yData=[];
+             for(var i=0;i<result.length;i++){
+                 var date = new Date();
+                 var year = date.getFullYear();
+                 if (year==result[i].MONTH.substring(0,4)){
+                     xLabel.push(result[i].MONTH);
+                     dataLength.push(result[i].MONTH);
+                     yData.push((result[i].ZHQYS/result[i].TOTAL*100).toFixed(2))
+                 }
+             }
              var managementServiceOption = {
                 color: ['#21ebdd'],
                 tooltip: {
@@ -60,7 +79,7 @@ $(function(){
                             color: '#50a2c1'
                         }
                     },
-                    data: month21001Data.month
+                    data: xLabel
                 }],
                 yAxis: [{
                     type: 'value',
@@ -92,7 +111,7 @@ $(function(){
                             width: 3
                         }
                     },
-                    data:month21001Data.valuesMap['total']
+                    data:yData
                 }]
             };
             var managementServiceID = echarts.init(document.getElementById('managementService'));

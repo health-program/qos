@@ -4,7 +4,7 @@ $(function(){
     }
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/get/total/data",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/get/total/data",//请求的 URL地址
         async: false,
         data:arr,
         success: function (res){
@@ -18,7 +18,7 @@ $(function(){
             var rawData = eval(rawData.message);
             var lv=[]
             for(var i=0;i<rawData.length;i++){
-                lv.push((rawData[i].TOTAL/rawData[i].MANAGEDCENTERCODE).toFixed(2))
+                lv.push(((rawData[i].GUIDENUMBER/rawData[i].TOTAL)*100).toFixed(2))
             }
 
             var healthServicesElderlyOption = {
@@ -103,7 +103,7 @@ $(function(){
                         }
                     },
                     barWidth : 10,
-                    name: '健康档案建档率',
+                    name: '老年人中医药健康服务覆盖率',
                     data: lv,
                     type: 'bar'
                 }]

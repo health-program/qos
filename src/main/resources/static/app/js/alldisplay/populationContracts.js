@@ -2,29 +2,62 @@
  var populationContractsID = echarts.init(document.getElementById('populationContracts'));
 
 $(function(){
+    var dataLength=[];
+
     var xLabel=[];
-$.post('http://10.9.1.41:18081/home/page/qos/population/signing',function(data){
-	var result = data.result;
-	var seriesData = [],xAxisData = [];
-	var data = monthDate();
-	if(result.length > 0){
-		for(var i=0;i<data.length;i++){	
-			b = false;
-			for(var j=0;j<result.length;j++){
-				if(data[i] == result[j].month){
-					xAxisData.push(data[i]);
-                    xLabel.push(data[i]);
-					seriesData.push({name:data[i],value:result[j].count});
-					b = true;
-				}				
-			}
-			if(!b){
-					xAxisData.push(data[i]);
-                    xLabel.push(data[i]);
-					seriesData.push({name:data[i],value:0});
-			}
-		}
-		 var populationContractsOption = {
+    var arr = {
+        eventIds:'V40000'
+    }
+
+    function sortKey(array, key) {
+        return array.sort(function(a, b) {
+            var x = a[key];
+            var y = b[key];
+            return x < y ? -1 : x > y ? 1 : 0;
+        });
+    }
+    $.ajax({
+        type : "post",    //请求类型
+        url : URLPATH+"/home/page/qos/get/total/data",//请求的 URL地址
+        data:arr,
+        success: function (rawData) {
+            var result=eval(rawData.message);
+            result=sortKey(result,"MONTH");
+            // var xLabel=[];
+            // var yData=[];
+            // for(var i=0;i<result.length;i++){
+            //     var date = new Date();
+            //     var year = date.getFullYear();
+            //     if (year==result[i].MONTH.substring(0,4)){
+            //         xLabel.push(result[i].MONTH);
+            //         dataLength.push(result[i].MONTH);
+            //         yData.push(result[i].ZHQYS);
+            //     }
+            // }
+
+
+
+                var seriesData = [],xAxisData = [];
+                var data = monthDate();
+                var b;
+                if(result.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        b = false;
+                        for (var j = 0; j < result.length; j++) {
+                            if (data[i] == result[j].MONTH) {
+                                xAxisData.push(data[i]);
+                                seriesData.push({name: data[i], value: result[j].ZHQYS});
+                                b = true;
+                            }
+                        }
+                        if (!b) {
+                            xAxisData.push(data[i]);
+                            seriesData.push({name: data[i], value: 0});
+                        }
+                    }
+                }
+
+                    var populationContractsOption = {
         tooltip: {
             trigger: 'axis',
             axisPointer: {

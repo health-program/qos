@@ -15,7 +15,7 @@ $(function(){
     var values = [];
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/get/total/data",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/get/total/data",//请求的 URL地址
         data:arr,
         success: function (res){
             name  = res.result;
@@ -46,7 +46,13 @@ $(function(){
                     var unitName=name[nameArray[i]];
                     unitName=unitName.substring(0,unitName.length-8);
                     unit.push(unitName);
-                    var rate=totalData[j].value*100/ totalData[j].total;
+                    var rate;
+                    if (totalData[j].total==0){
+                        rate=0;
+                    }else{
+                        rate=totalData[j].value*100/ totalData[j].total;
+                    }
+
                     value.push(rate);
                 }
             }
@@ -199,7 +205,4 @@ $(function(){
             keyGroupsID.resize();
         });
     }
-
-
-
 })

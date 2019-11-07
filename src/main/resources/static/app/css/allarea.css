@@ -1,7 +1,7 @@
 #allbgarea{
     width: 100vw;
     height: 100vh;
-    background: url('../img/allarea/allareaBg.jpg') no-repeat center;
+    background: url('../img/allarea/allareaBgnew.jpg') no-repeat center;
     background-size:100% 100%;;
 }
 #allbgareaLeft{
@@ -14,7 +14,7 @@
 #allareaMap{
     width: 37.4479vw;
     height: 84.8148vh;
-    background: url('../img/allarea/allareaMap.png') no-repeat center;
+  /*  background: url('../img/allarea/allareaMap.png') no-repeat center;*/
     background-size:100% 100%;
     margin-left: 1.979vw;
     float: left;
@@ -40,7 +40,7 @@
 }
 .sameallareaRightdiv{
     width: 28.385vw;
-    height: 44vh;
+    height: 55vh;
     background: url('../img/allarea/allareaRight.png') no-repeat center;
     background-size:100% 100%;
     position: relative;
@@ -48,7 +48,7 @@
 
 .sameallareaBottomdiv{
     width: 28.489vw;
-    height:40.92vh;
+    height:30vh;
     background: url('../img/allarea/allareaRightBottom.png') no-repeat center;
     background-size:100% 100%;
 }
@@ -104,7 +104,7 @@
     text-align: center;
 }
 
-#familyTable{height:32vh;overflow:hidden;position:relative;width: 29vw;margin: auto}
+#familyTable{height:20vh;overflow:hidden;position:relative;width: 29vw;margin: auto}
 #familyTableUl{position:absolute;top:0;left:0;}
 .familySocilty{
     height: 3vh;
@@ -290,31 +290,208 @@
     left: 3vw;
 }
 
-.sameallareaRightdivRightLi1{
-    position: absolute;
-    top: 12.5vh;
-    left: 15.5vw;
+
+.sameallareaRightdivRightLi{
+    width: 11.5vw;
+    height: 3.9vh;
+    line-height: 3.9vh;
+    background: url('../img/allarea/border_botton.png') no-repeat bottom;
+    text-indent: 2vw;
 }
-.sameallareaRightdivRightLi2{
-    position: absolute;
-    top: 18vh;
-    left: 15.5vw;
+
+
+.sameallareaRightdivLeftLI{
+    width: 11.5vw;
+    height: 3.9vh;
+    line-height: 3.9vh;
+    background: url('../img/allarea/border_botton.png') no-repeat bottom;
+    text-indent: 2vw;
 }
-.sameallareaRightdivRightLi3{
-    position: absolute;
-    top: 24vh;
-    left: 15.5vw;
+
+.sameallareaRightdivRightLi:nth-child(4n){
+    color: #ff774d;
 }
-.sameallareaRightdivRightLi4{
-    position: absolute;
-    top: 29.5vh;
-    left: 15.5vw;
+
+.sameallareaRightdivRightLi:nth-child(5n){
+    color: #ff774d;
 }
-.sameallareaRightdivRightLi5{
-    position: absolute;
-    top: 35vh;
-    left: 15.5vw;
+
+.sameallareaRightdivRightLi:nth-child(6n){
+    color: #ff774d;
+}
+
+.sameallareaRightdivRightLi:nth-child(7n){
+    color: #00ffff;
+}
+.sameallareaRightdivRightLi:nth-child(8n){
+    color: #00ffff;
+}
+
+.sameallareaRightdivRightLi:nth-child(9n){
+    color: #00ffff;
+}
+.sameallareaRightdivRightLi:nth-child(10n){
+    color: #00ffff;
 }
 .mapaddress{
     margin-right: 0.2vw;
+}
+.allareaRightTop{
+    position: relative;
+}
+
+.wholecity{
+    position: absolute;
+    top: 5.9vh;
+    left:3.9065vw;
+    color: #00ffff;
+}
+.hospitalName{
+    position: absolute;
+    top: 5.9vh;
+    left:16.6065vw;
+    color: #00ffff;
+}
+
+#sameallareaRightdivRightUL{
+  position: absolute;
+  left:15vw;
+  top:0vh;
+  height:43vh;
+  width: 11.5vw;
+ }
+
+#sameallareaRightdivRight{
+    overflow:hidden;
+    position:relative;
+    width: 28.29vw;
+    margin: auto;
+    height:43vh;
+    top: 10vh;
+}
+
+
+
+#sameallareaLeftdivRightUL{
+    position: absolute;
+    left:3vw;
+    top:0vh;
+    height:43vh;
+    width: 11.5vw;
+}
+
+#sameallarealeftdivRight{
+    overflow:hidden;
+    position:relative;
+    width: 14.29vw;
+    margin: auto;
+    height:43vh;
+    top: 10vh;
+}
+
+
+
+
+.sameallareaRightdivLeftLI:nth-child(4n){
+    color: #ff774d;
+}
+
+.sameallareaRightdivLeftLI:nth-child(5n){
+    color: #ff774d;
+}
+
+.sameallareaRightdivLeftLI:nth-child(6n){
+    color: #ff774d;
+}
+
+.sameallareaRightdivLeftLI:nth-child(7n){
+    color: #00ffff;
+}
+.sameallareaRightdivLeftLI:nth-child(8n){
+    color: #00ffff;
+}
+
+.sameallareaRightdivLeftLI:nth-child(9n){
+    color: #00ffff;
+}
+.sameallareaRightdivLeftLI:nth-child(10n){
+    color: #00ffff;
+}
+
+
+.newmap{
+    position: relative;
+    width: 685px
+}
+
+.st0{fill:#0A233D;}
+.st1{stroke:#040000;stroke-width:9;stroke-miterlimit:10;}
+.st2{fill:#2476B4;stroke:#2670A9;stroke-width:5;stroke-miterlimit:10;}
+.st3{fill:#3AA7D8;}
+.st4{fill:#0C416D;}
+.st5{fill:#248DC5;}
+.st6{fill:#83C7E8;}
+.st7{fill:#64B4DC;}
+.st8{fill:#287DB6;}
+.st9{fill:#1869A6;}
+.st10{fill:#19538A;}
+.st11{fill:#85C7E8;}
+.st3_highlight{fill:#3AA7D8;}
+.st4_highlight{fill:#0C416D;}
+.st5_highlight{fill:#248DC5;}
+.st6_highlight{fill:#83C7E8;}
+.st7_highlight{fill:#FFFFFF;}
+.st8_highlight{fill:#64B4DC;}
+.st9_highlight{fill:#287DB6;}
+.st10_highlight{fill:#1869A6;}
+.st11_highlight{fill:#19538A;}
+.st12_highlight{fill:#FDFDFE;}
+.st13{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;}
+.st14{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9277,3.9277;}
+.st15{fill:#F5B517;}
+.st16{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9341,3.9341;}
+.st17{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.0897,4.0897;}
+.st18{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.0809,4.0809;}
+.st19{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.6258,4.6258;}
+.st20{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9716,3.9716;}
+.st21{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9637,3.9637;}
+.st22{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.864,3.864;}
+.st23{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.0561,4.0561;}
+.st24{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.6465,3.6465;}
+.st25{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9713,3.9713;}
+.st26{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.0484,4.0484;}
+.st27{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9766,3.9766;}
+.st28{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9088,3.9088;}
+.st29{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.9678,3.9678;}
+.st30{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.2343,4.2343;}
+.st31{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:4.0187,4.0187;}
+.st32{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.6669,3.6669;}
+.st33{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.966,3.966;}
+.st34{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.7872,3.7872;}
+.st35{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.996,3.996;}
+.st36{fill:none;stroke:#F5B517;stroke-width:1.5;stroke-miterlimit:10;stroke-dasharray:3.7876,3.7876;}
+.K106_Legend{
+    color: #ffffff;
+    text-align:center;
+    margin-top:1vh;
+
+}
+.C106_rightSide{
+    position: absolute;
+    width: 10vw;
+    height: 30vh;
+    background: url(../img/allarea/T106_info.png) no-repeat;
+    background-size: 100% 100%;
+    padding: 0.5em 1em;
+    left: 57.3vw;
+    top: 15vh;
+    z-index: -8;
+}
+.st8{
+    fill: #287DB6;
+}
+#bailu{
+    z-index: 999999999999;
+    position: absolute;
+    top: 6vw;
 }
