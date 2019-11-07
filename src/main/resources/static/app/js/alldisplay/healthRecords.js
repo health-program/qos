@@ -3,7 +3,7 @@ $(function(){
     var indexLable=[];
     $.ajax({
         type: "post",    //请求类型
-        url: "http://10.9.1.41:18081/data/display/get/month/archives/rate",//请求的 URL地址
+        url:URLPATH+"/data/display/get/month/archives/rate",//请求的 URL地址
         success: function (data) {
             var result=data.result;
             var xData=[];
@@ -11,7 +11,7 @@ $(function(){
             for (var i=0;i<result.length;i++){
                 xData.push(result[i].month);
                 indexLable.push(result[i].month);
-                value.push(result[i].rate.toFixed(9)*1000000);
+                value.push(result[i].rate.toFixed(5)*100);
             }
             var healthRecords = {
                 tooltip: {

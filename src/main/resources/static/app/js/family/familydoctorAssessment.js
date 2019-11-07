@@ -4,30 +4,31 @@ $(function(){
     //指定图标的配置和数据
     // 21001 综合健康管理服务包签约率（收费）
        var arr = {
-           eventIds:'21005,21006,21007,21008,21009,21010,21011,21012,21013,21014,21015,21016,21017,21019,21020'
+           eventIds:'V60001,V60002,V60003,V60004,V60005,V60006,V60007,V60008,V60009,V60010,V60011,V60012,V60013,V60014,V60015,V60016'
        }
 
       $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/data/get/total",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/get/family/data",//请求的 URL地址
         data:arr,
         success: function (res) {
-
-             $("#eventIds21005").text(res.result['21005'])
-             $("#eventIds21006").text(res.result['21006'])
-             $("#eventIds21007").text(res.result['21007'])
-             $("#eventIds21008").text(res.result['21008'])
-             $("#eventIds21009").text(res.result['21009'])
-             $("#eventIds21010").text(res.result['21010'])
-             $("#eventIds21011").text(res.result['21011'])
-             $("#eventIds21012").text(res.result['21012'])
-             $("#eventIds21013").text(res.result['21013'])
-             $("#eventIds21014").text(res.result['21014'])
-             $("#eventIds21015").text(res.result['21015'])
-             $("#eventIds21016").text(res.result['21016'])
-             $("#eventIds21017").text(res.result['21017'])
-             $("#eventIds21019").text(res.result['21019'])
-             $("#eventIds21020").text(res.result['21020'])
+            var rawData = res.result;
+             $("#eventIdsV60001").text(rawData.V60001)
+             $("#eventIdsV60002").text(rawData.V60002)
+             $("#eventIdsV60003").text(rawData.V60003)
+             $("#eventIdsV60004").text(rawData.V60004)
+             $("#eventIdsV60005").text(rawData.V60005)
+             $("#eventIdsV60006").text(rawData.V60006)
+             $("#eventIdsV60007").text(rawData.V60007)
+             $("#eventIdsV60008").text(rawData.V60008)
+             $("#eventIdsV60009").text(rawData.V60009)
+             $("#eventIdsV60010").text(rawData.V60010)
+             $("#eventIdsV60011").text(rawData.V60011)
+             $("#eventIdsV60012").text(rawData.V60012)
+             $("#eventIdsV60013").text(rawData.V60013)
+             $("#eventIdsV60014").text(rawData.V60014)
+             $("#eventIdsV60015").text(rawData.V60015)
+             $("#eventIdsV60016").text(rawData.V60016)
 
 
             var mySwiper = new Swiper ('.swiper-container', {

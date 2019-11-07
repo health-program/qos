@@ -14,8 +14,8 @@ var map = new ol.Map({
         //设置地图加载时的初始中心点121, 31.3
         center: mapViewCenter,
         //缩放级别
-        zoom: 11,
-        minZoom: 11,
+        zoom:8,
+        minZoom: 8,
         maxZoom: 20
     }),
 });
@@ -206,6 +206,7 @@ $(function() {
 
             var res = JSON.parse(res)
             console.log(res);
+            debugger
             newRes = res.result;
 
             for (var item = 0, resLen = newRes.length; item < resLen; item++) {
@@ -284,7 +285,7 @@ function showPopup() {
          if(currentRes.orgType==1){
             var unitId = currentRes.unitId
             var arr={
-                eventIds: '41001,41002,41003,41004,41005',
+                eventIds: '41001,41002,41003,41004',
                 unitId:currentRes.unitId
             }
            $.ajax({
@@ -327,26 +328,14 @@ function showPopup() {
                          }
                      }
 
-
-
-                     var res41005 = rawData.result['41005'];
-                     var account41005;
-                     for(var i=0;i<res41005.length;i++){
-                         if(unitId == res41005[i].unitId){
-                             account41005=(res41005[i].totalNum/res41005[i].eventNum).toFixed(2)
-                         }
-                     }
-
-
                      $("#appointmentPeople").text(account41001)
                      $("#patientsPeople").text(account41002)
                      $("#inspectorsPeople").text(account41003)
                      $("#newinspectorsPeople").text(account41004)
-                     $("#averageHospitalStay").text(account41005)
+                     $("#averageHospitalStay").text()
                   }
               })
             var coordinate = [currentRes.orgLon, currentRes.orgLat];
-
             content.innerHTML = getFeatrueInfo(currentRes);
             popupOverlay.setPosition(coordinate);
         }
@@ -357,8 +346,8 @@ function showPopup() {
 
 
 setInterval(function() {
-    showPopup();
-},1000);
+  showPopup();
+},10000);
 
 
 
@@ -369,12 +358,13 @@ function getFeatrueInfo(info) {
     if(info.orgType==1){
         var unitId = info.unitId
         var arr={
-            eventIds: '41001,41002,41003,41004,41005',
+            eventIds: '41001,41002,41003,41004',
             unitId:info.unitId
         }
+        console.log('ceshi'+unitId)
         $.ajax({
             type : "post",    //请求类型
-            url : "http://localhost:8011/home/page/qos/data/get/unit",//请求的 URL地址
+            url : "http://10.9.1.41:18081/home/page/qos/data/get/unit",//请求的 URL地址
             data:arr,
             success: function (rawData){
                 var res41001 = rawData.result['41001'];
@@ -385,6 +375,7 @@ function getFeatrueInfo(info) {
                     }
                 }
 
+
                 var res41002 = rawData.result['41002'];
                 var account41002;
                 for(var i=0;i<res41002.length;i++){
@@ -392,6 +383,8 @@ function getFeatrueInfo(info) {
                         account41002=res41002[i].count
                     }
                 }
+
+
                 var res41003 = rawData.result['41003'];
                 var account41003;
                 for(var i=0;i<res41003.length;i++){
@@ -399,6 +392,8 @@ function getFeatrueInfo(info) {
                         account41003=res41001[i].count
                     }
                 }
+
+
                 var res41004 = rawData.result['41004'];
                 var account41004;
                 for(var i=0;i<res41004.length;i++){
@@ -406,19 +401,12 @@ function getFeatrueInfo(info) {
                         account41004=res41004[i].count
                     }
                 }
-                var res41005 = rawData.result['41005'];
-                var account41005;
-                for(var i=0;i<res41005.length;i++){
-                    if(unitId == res41005[i].unitId){
-                        account41005=(res41005[i].totalNum/res41005[i].eventNum).toFixed(2)
-                    }
-                }
 
                 $("#appointmentPeople").text(account41001)
                 $("#patientsPeople").text(account41002)
                 $("#inspectorsPeople").text(account41003)
                 $("#newinspectorsPeople").text(account41004)
-                $("#averageHospitalStay").text(account41005)
+                $("#averageHospitalStay").text()
             }
         })
 

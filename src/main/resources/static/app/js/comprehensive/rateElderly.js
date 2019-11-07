@@ -1,23 +1,20 @@
 $(function(){
+    var xLabel=[];
+    var yData=[];
     var arr={
         eventIds:'V30003'
     }
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/get/total/data",//请求的 URL地址
+        url : URLPATH+"/data/display/search/all",//请求的 URL地址
         async: false,
         data:arr,
         success: function (res){
-            var name  = res.result;
-            var nameArray=[]
-            for(var i in name){
-                nameArray.push(name[i])
-            }
-            var rawData = res;
-            var rawData = eval(rawData.message);
-            var lv=[]
-            for(var i=0;i<rawData.length;i++){
-                lv.push((rawData[i].TOTAL/rawData[i].MANAGEDCENTERCODE).toFixed(2))
+            var name  = res.result.V30003;
+
+            for(var i=0;i<name.length;i++){
+                xLabel.push(name[i].unitName);
+                yData.push((name[i].checknum*100/name[i].total).toFixed(2))
             }
 
             var rateElderlyOption = {
@@ -43,7 +40,7 @@ $(function(){
                 },
                 xAxis: {
                     type: 'category',
-                    data: nameArray,
+                    data: xLabel,
                     axisLabel: {
                         interval: 0,
                         rotate: 20, //角度顺时针计算的
@@ -102,8 +99,8 @@ $(function(){
                         }
                     },
                     barWidth : 10,
-                    name: '健康档案建档率',
-                    data: lv,
+                    name: '老年人体检率',
+                    data: yData,
                     type: 'bar'
                 }]
             };
@@ -119,7 +116,7 @@ $(function(){
                     dataIndex: index
                 });
                 index++;
-                if(index > nameArray.length) {
+                if(index > xLabel.length) {
                     index = 0;
                 }
             }, 5000)

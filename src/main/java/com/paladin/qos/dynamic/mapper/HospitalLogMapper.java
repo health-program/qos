@@ -14,7 +14,4 @@ public interface HospitalLogMapper {
 
 	List<HospitalDataCheck> findHospitalDataCheck(HospitalDataCheck query);
 
-	int countHospitalDataLog(HospitalDataLog query);
-
-	int countHospitalDataCheck(HospitalDataCheck query);
 }

@@ -4,18 +4,18 @@ $(function(){
     var indexLable=[];
     $.ajax({
         type: "post",    //请求类型
-        url: "http://10.9.1.41:18081/home/page/qos/data/get/month/twoYear",//请求的 URL地址
+        url: URLPATH+"/home/page/qos/data/get/month/twoYear",//请求的 URL地址
         success: function (data) {
             var result = data.result;
             var lastDate = new Date();
             lastDate.setFullYear(lastDate.getFullYear() - 1);
-            var lastMonthAttr = monthDate(lastDate);
+            var lastMonthAttr = monthAndDate(lastDate);
             var thisDate = new Date();
-            var thisMonthAttr = monthDate(thisDate);
+            var thisMonthAttr = monthAndDate(thisDate);
             indexLable = monthDate(thisDate);
             var xDate = [];
             for (var i = 0; i < thisMonthAttr.length; i++) {
-                xDate.push(thisMonthAttr[i].slice(5));
+                xDate.push(thisMonthAttr[i].slice(5)+'月份');
             }
 
             var thisYearData = [];
@@ -68,7 +68,7 @@ $(function(){
                 },
                 grid: {
                     top: 35,
-                    left: 30,
+                    left: '10%',
                     right: '3%',
                     bottom: 35,
                 },
@@ -166,7 +166,7 @@ $(function(){
 
 })
 
-function monthDate(data){
+function monthAndDate(data){
     var dataArr = [];
     var year = data.getFullYear();
     data.setMonth(data.getMonth()+1, 1)//获取到当前月份,设置月份

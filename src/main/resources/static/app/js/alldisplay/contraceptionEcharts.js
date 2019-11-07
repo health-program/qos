@@ -9,7 +9,7 @@ function generatorBycsChart(chart) {
 
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/data/get/month/instalments",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/data/get/month/instalments",//请求的 URL地址
         data:{
             'eventIds':eventIds
         },

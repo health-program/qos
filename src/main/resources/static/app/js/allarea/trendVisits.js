@@ -57,7 +57,7 @@ $(function(){
     function getData(){
         $.ajax({
             type : "post",    //请求类型
-            url : "http://10.9.1.41:18081/home/page/qos/data/get/day/instalments",//请求的 URL地址
+            url : URLPATH+"/home/page/qos/data/get/day/instalments",//请求的 URL地址
             data:arr,
             success: function (rawData) {
                 // 13002急诊人次数  14001住院人次数   13001门诊人次数
@@ -77,7 +77,7 @@ $(function(){
                 if(isNum1==1){
                     $.ajax({
                         type : "post",    //请求类型
-                        url : "http://10.9.1.41:18081/home/page/qos/data/get/day/instalments",//请求的 URL地址
+                        url : URLPATH+"/home/page/qos/data/get/day/instalments",//请求的 URL地址
                         data:arr1,
                         success: function (rawData) {
                             isNum2=2

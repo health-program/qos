@@ -8,7 +8,7 @@ var hospitalLen;
 function gethospitelNumbers(){
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/hospital/getOutPatientNumber",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/hospital/getOutPatientNumber",//请求的 URL地址
         success: function (rawData) {
             var patientNumberList = rawData.result.patientHospitalNumberList;
             var emergencyNumberList = rawData.result.emergencyHospitalNumberList;

@@ -1,7 +1,7 @@
 window.onload = function(){
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/quailtydisplay/getSignList",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/quailtydisplay/getSignList",//请求的 URL地址
         success: function (res) {
             var data = res.result;
             var html = "";
@@ -9,12 +9,12 @@ window.onload = function(){
                 var type=convert(item.signType);
                 var date=formatDate(item.signDate);
                 html += '<li>';
-                html += '<span class="text-c1f3ff ellipsis256 d-inline-block">'+item.signOrg+'</span>';
-                html += '<span class="text-c1f3ff ellipsis28 d-inline-block">'+item.signName+'</span>';
-                html += '<span class="text-c1f3ff ellipsis28 d-inline-block">'+item.signGender+'</span>';
-                html += '<span class="text-c1f3ff ellipsis290 d-inline-block">'+date+'</span>';
-                html += '<span class="text-c1f3ff ellipsis256 d-inline-block">'+item.signTeam+'</span>';
-                html += '<span class="text-c1f3ff ellipsis256 d-inline-block" id="isNew">'+type+'</span>';
+                html += '<span class="text-c1f3ff ellipsis256 d-inline-block">'+isNull(item.signOrg)+'</span>';
+                html += '<span class="text-c1f3ff ellipsis28 d-inline-block">'+isNull(item.signName)+'</span>';
+                html += '<span class="text-c1f3ff ellipsis28 d-inline-block">'+isNull(item.signGender)+'</span>';
+                html += '<span class="text-c1f3ff ellipsis290 d-inline-block">'+isNull(date)+'</span>';
+                html += '<span class="text-c1f3ff ellipsis256 d-inline-block">'+isNull(item.signTeam)+'</span>';
+                html += '<span class="text-c1f3ff ellipsis256 d-inline-block" id="isNew">'+isNull(type)+'</span>';
                 html += '</li>';
             });
             $("#dataList").append(html);
@@ -70,3 +70,11 @@ window.onload = function(){
         },30);
     };
 };
+
+
+function isNull(a) {
+    if(a == "" || a == null || a == undefined){
+        return '未知'
+    }
+    return a;
+}
