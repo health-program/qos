@@ -7,6 +7,7 @@ import com.paladin.qos.analysis.DataConstantContainer.*;
 import com.paladin.qos.analysis.TimeUtil;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
 import com.paladin.qos.model.data.DataEvent;
+import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
 import com.paladin.qos.model.gongwei.AddressEntity;
 import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
@@ -16,6 +17,7 @@ import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.AnalysisService;
 import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.familydoctor.FamilyDoctorPersonnelService;
+import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
 import com.paladin.qos.service.gongwei.ArchivesManagementService;
 
 import org.apache.shiro.util.CollectionUtils;
@@ -42,6 +44,9 @@ public class HomePageController {
     @Autowired
     private FamilyDoctorPersonnelService familyDoctorPersonnelService;
 
+    @Autowired
+    private FamilyDoctorUnitService familyDoctorUnitService;
+    
     @Autowired
     private ArchivesManagementService archivesManagementService;
 
@@ -651,14 +656,15 @@ public class HomePageController {
     	eventIds.add("V80013");
     	
     	List<String> total = new ArrayList<String>();
-        long yushan = 0;long bacheng = 0;long huaqiao = 0;long zhoushi = 0;long qiandeng = 0;
+        long gaoxinqu = 0;long bacheng = 0;long huaqiao = 0;long zhoushi = 0;long qiandeng = 0;
         long lujia = 0;long zhangpu = 0;long zhouzhuang = 0;long jinxi = 0;long dianshanhu = 0;
+        long kaifaqu = 0;
 		for (String eventId : eventIds) {
 					String item = analysisService.getTotalData(eventId);
 					List<AddressEntity> addressList = toBeanList(item,AddressEntity.class);
 					for(AddressEntity address:addressList){
 						if("001".equals(address.getCode())){
-							yushan+=address.getCount();
+							gaoxinqu+=address.getCount();
 						}else if("002".equals(address.getCode())){
 							bacheng+=address.getCount();
 						}else if("003".equals(address.getCode())){
@@ -677,12 +683,79 @@ public class HomePageController {
 							jinxi+=address.getCount();
 						}else if("010".equals(address.getCode())){
 							dianshanhu+=address.getCount();
+						}else if("011".equals(address.getCode())){
+							kaifaqu+=address.getCount();
 						}
 					}
 		}
+		//社区总人口数
+		List<FamilyDoctorUnit> list=familyDoctorUnitService.findAll();
+		long gaoxinquTotal = 0;long bachengTotal = 0;long huaqiaoTotal = 0;long zhoushiTotal = 0;long qiandengTotal = 0;
+        long lujiaTotal = 0;long zhangpuTotal = 0;long zhouzhuangTotal = 0;long jinxiTotal = 0;long dianshanhuTotal = 0;
+        long kaifaquTotal = 0;
+		for(FamilyDoctorUnit familyDoctorUnit:list){
+			if(familyDoctorUnit.getId().equals("320583100467170433")){//蓬朗
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				kaifaquTotal+=(f*10000);            
+			}else if(familyDoctorUnit.getId().equals("320583100PDY002111")){//震川
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				kaifaquTotal+=(f*10000/2);
+				gaoxinquTotal+=(f*10000/2);          
+			}else if(familyDoctorUnit.getId().equals("320583100PDY00212X")){//江浦
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				gaoxinquTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583100PDY002138")){//亭林
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				gaoxinquTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583101467170396")){//巴城
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				bachengTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583102467170409")){//周市
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				zhoushiTotal+=(f*10000);         
+			}else if(familyDoctorUnit.getId().equals("320583102PDY203693")){ //柏庐
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				gaoxinquTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583103PDY004045")){//陆家
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				lujiaTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583104PDY000765")){//花桥
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				huaqiaoTotal+=(f*10000);         
+			}else if(familyDoctorUnit.getId().equals("320583105467170400")){//淀山湖
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				dianshanhuTotal+=(f*10000);         
+			}else if(familyDoctorUnit.getId().equals("320583106PDY111254")){//张浦
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				zhangpuTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("320583107467170500")){//周庄
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				zhouzhuangTotal+=(f*10000);          
+			}else if(familyDoctorUnit.getId().equals("32058310846717045X")){//千灯
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				qiandengTotal+=(f*10000);         
+			}else if(familyDoctorUnit.getId().equals("320583109467170300")){//锦溪
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				jinxiTotal+=(f*10000);         
+			}else if(familyDoctorUnit.getId().equals("320583400PDY036125")){//青阳
+				Float f = Float.parseFloat(familyDoctorUnit.getPopulation());
+				kaifaquTotal+=(f*10000);
+			}
+		}
 		
-		
-		return CommonResponse.getSuccessResponse();
+		Map<String, Float> map = new HashMap<>();
+		map.put("高新区", (float)gaoxinqu/gaoxinquTotal);
+		map.put("开发区", (float)kaifaqu/kaifaquTotal);
+		map.put("周市", (float)zhoushi/zhoushiTotal);
+		map.put("千灯", (float)qiandeng/qiandengTotal);
+		map.put("张浦", (float)zhangpu/zhangpuTotal);
+		map.put("巴城", (float)bacheng/bachengTotal);
+		map.put("花桥", (float)huaqiao/huaqiaoTotal);
+		map.put("陆家", (float)lujia/lujiaTotal);
+		map.put("淀山湖", (float)dianshanhu/dianshanhuTotal);
+		map.put("锦溪", (float)jinxi/jinxiTotal);
+		map.put("周庄", (float)zhouzhuang/zhouzhuangTotal);
+		return CommonResponse.getSuccessResponse(map);
     }
 }
 
