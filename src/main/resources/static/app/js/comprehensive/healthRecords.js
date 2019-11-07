@@ -1,34 +1,27 @@
 $(function(){
-
-    function compareBigToSmall(property){
-        return function(a,b){
-            var value1 = a[property];
-            var value2 = b[property];
-            return  value2 - value1;
-        }
-    };
+    var xLabel=[];
+    var yData=[];
    var arr={
-        eventIds:'V30001'
+        eventIds:'V30002,V30001'
     }
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/get/total/data",//请求的 URL地址
+        url : URLPATH+"/data/display/search/all",//请求的 URL地址
         async: false,
         data:arr,
         success: function (res){
-            var name  = res.result;
-            var nameArray=[]
-            for(var i in name){
-                nameArray.push(name[i])
-            }
-            var rawData = res;
-            var rawData = eval(rawData.message);
-            var lv=[]
-            for(var i=0;i<rawData.length;i++){
-                lv.push((rawData[i].total*10000/rawData[i].jds).toFixed(2))
-            }
 
-
+            var rawData=res.result;
+            var number=rawData.V30001;
+            var archives=rawData.V30002
+            for(var i=0;i<number.length;i++){
+                for (var j=0;j<archives.length;j++){
+                     if (number[i].unitId==archives[j].unitId){
+                         xLabel.push(number[i].unitName);
+                         yData.push((archives[j].total/(number[i].total*100)).toFixed(2))
+                     }
+                }
+            }
 
             var healthRecordsOption = {
                 tooltip: {
@@ -53,7 +46,7 @@ $(function(){
                 },
                 xAxis: {
                     type: 'category',
-                    data: nameArray,
+                    data: xLabel,
                     axisLabel: {
                         interval: 0,
                         rotate: 20, //角度顺时针计算的
@@ -113,7 +106,7 @@ $(function(){
                     },
                     barWidth : 10,
                     name: '健康档案建档率',
-                    data: lv,
+                    data: yData,
                     type: 'bar'
                 }]
             };
@@ -129,7 +122,7 @@ $(function(){
                     dataIndex: index
                 });
                 index++;
-                if(index > nameArray.length) {
+                if(index > xLabel.length) {
                     index = 0;
                 }
             }, 5000)

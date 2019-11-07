@@ -25,9 +25,9 @@ var map = new ol.Map({
  */
 var mlayer = new ol.layer.Tile({
     source: new ol.source.TileWMS({
-        url: 'http://10.1.55.14:8080/geoserver/kunst/wms',
+        url: 'http://10.1.55.14:8080/geoserver/kunshan/wms',   //  公司环境kunst   服务环境kunshan
         params: {
-            'LAYERS': 'kunst:kunst_oms_group_wd',
+            'LAYERS': 'kunshan:kunshan_oms_group_wd', //  公司环境kunst   服务环境kunshan
             'FORMAT': 'image/png',
             'SRC': 'EPSG:4326'
         }

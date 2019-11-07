@@ -1,7 +1,7 @@
 $(function(){
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/org/person/select/data",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/org/person/select/data",//请求的 URL地址
          success: function (rawData) {
            var sumData=rawData.result;
             //数值大小

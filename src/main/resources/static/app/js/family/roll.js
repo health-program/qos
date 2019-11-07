@@ -1,6 +1,6 @@
 window.onload = function(){
     var oDiv = document.getElementById('familyTable');
-     var oUl = document.getElementById('familyTableUl');
+    var oUl = document.getElementById('familyTableUl');
     var timer = null;
     var speed = -1;
     oUl.innerHTML += oUl.innerHTML;

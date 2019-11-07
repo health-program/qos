@@ -1,19 +1,36 @@
 $(function(){
 
-    var data21002Length;
-    var arr = {
-        eventIds:'21002'
-    }
+    var dataLength=[];
 
-    var data = ['工作', '操作', '抢修', '用电', '设备', '现场', '到岗']
+    function sortKey(array, key) {
+        return array.sort(function(a, b) {
+            var x = a[key];
+            var y = b[key];
+            return x < y ? -1 : x > y ? 1 : 0;
+        });
+    }
+    var arr = {
+        eventIds:'V50000'
+    }
 
     $.ajax({
         type : "post",    //请求类型
-        url : "http://10.9.1.41:18081/home/page/qos/data/get/month/instalments",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/get/total/data",//请求的 URL地址
         data:arr,
         success: function (rawData) {
-            var  month21002Data=convertMonthChartData(rawData.result, '21002', true); //
-            data21002Length=month21002Data.month;
+            var result=eval(rawData.message);
+            result=sortKey(result,"MONTH");
+            var xLabel=[];
+            var yData=[];
+            for(var i=0;i<result.length;i++){
+                var date = new Date();
+                var year = date.getFullYear();
+                if (year==result[i].MONTH.substring(0,4)){
+                    xLabel.push(result[i].MONTH);
+                    dataLength.push(result[i].MONTH);
+                    yData.push((result[i].GXHQYS/result[i].TOTAL*100).toFixed(2))
+                }
+            }
             var individualizationOption = {
                 color: ['#FFF100'],
                 tooltip: {
@@ -62,7 +79,7 @@ $(function(){
                             color: '#50a2c1'
                         }
                     },
-                    data: month21002Data.month,
+                    data: xLabel
                 }],
                 yAxis: [{
                     type: 'value',
@@ -94,7 +111,7 @@ $(function(){
                             width: 3
                         }
                     },
-                    data: month21002Data.valuesMap['total'],
+                    data: yData
                 }]
             };
             var individualizationID = echarts.init(document.getElementById('individualization'));
@@ -107,10 +124,10 @@ $(function(){
                     dataIndex: index
                 });
                 index++;
-                if(index > data21002Length.length) {
+                if(index > dataLength.length) {
                     index = 0;
                 }
-            }, 5000)
+            }, 1000)
             window.addEventListener("resize", function () {
                 individualizationID.resize();
             });
