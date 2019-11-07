@@ -52,7 +52,7 @@
                     </div>
                     <div class="box box-solid" style="margin-bottom: 5px">
                         <div class="box-header with-border" style="padding: 2px 0 2px 5px;">
-                            <h3 class="box-title" style="letter-spacing: 3px">产后访视人次数</h3>
+                            <h3 class="box-title" style="letter-spacing: 3px">访视人次数</h3>
                         </div>
                         <div class="box-body no-padding" style="height: 35px">
                             <p style="text-align: center;font-size: 25px;color: #44b7d3;font-weight: bold" id="chfs">
@@ -90,7 +90,7 @@
                 <div class="col-md-12">
                     <div class="box box-solid" style="margin-bottom: 10px">
                         <div class="box-header with-border" style="padding-top: 5px">
-                            <h3 class="box-title" style="letter-spacing: 3px">产妇筛查数</h3>
+                            <h3 class="box-title" style="letter-spacing: 3px">唐氏筛查数</h3>
                             <p class="box-title" style="padding-left: 300px;color: #44b7d3;font-weight: bold;font-size: 25px" id="yfscTotal">
                         </div>
                         <div id="yfscChartDiv" class="box-body no-padding" style="height: 240px">
@@ -175,7 +175,7 @@
                                     </div>
                                     <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0;padding-left: 0">艾滋病检测数:</label>
                                     <div class="col-sm-2 no-padding">
-                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold">0
+                                        <p  class="form-control-static  description" style="font-size: 15px;color: #44b7d3;font-weight: bold" id="azjc">
                                     </div>
                                     <label class="col-sm-2 control-label" style="font-size: 15px;text-align: left;padding-right: 0">乙肝检测数:</label>
                                     <div class="col-sm-2 no-padding">
@@ -326,12 +326,13 @@
     function initMaternalRightDownData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        var eventIds = '13309,13310,13311,13312';
+        var eventIds = '13310,13311,13312';
         $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
-            $("#mdjc").text(res['13309']);
+            $("#mdjc").text(res['13311']);
             $("#mdgr").text(res['13310']);
             $("#ygjc").text(res['13311']);
             $("#yggr").text(res['13312']);
+            $("#azjc").text(res['13311']);
         })
     }
 
@@ -845,7 +846,7 @@
                             return result;
                         }},
                     {title: "初检人数", field: "firstExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "周期检查人数", field: "cycleExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "产前复查人数", field: "cycleExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
