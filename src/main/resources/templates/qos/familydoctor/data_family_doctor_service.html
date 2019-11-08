@@ -139,7 +139,13 @@
                             if(row.totalV90004==0){
                                 return "0%"
                             }else{
-                                return (row.totalV90004/row.totalV90005*100).toFixed(2) * 1+"%";
+                                var rate=row.totalV90004/row.totalV90005;
+                                if(rate>1){
+                                    return 1*100+"%";
+                                }else{
+                                    return (row.totalV90004/row.totalV90005*100).toFixed(2) * 1+"%";
+                                }
+
                             }
                         }
                     }
@@ -500,7 +506,13 @@
             }
         }
         var dataObject=total[total.length-1];
-        var rate=(dataObject.totalV90004/dataObject.totalV90005).toFixed(4);
+        var rate=dataObject.totalV90004/dataObject.totalV90005;
+        if (rate>1){
+            rate=1;
+        }else{
+            rate=rate.toFixed(4);
+        }
+
 
     	var option = {
                 tooltip: {
