@@ -901,34 +901,17 @@
             url: '/qos/exhibition/maternal/search/wcq',
             showFooter:true,
             pagination: false,
-            onLoadSuccess:tableHeight,
             searchbar: '#searchbar'
         });
     }
 
-    function tableHeight(data) {
-        let $table = $(".wcq .fixed-table-body table");
-        let $container = $(".wcq .fixed-table-container");
-        if ($table.height()< $container.height()) {
-            $container.css({
-                "padding-bottom": 0,
-                "height": $table.height() + 45
-            });
-            // 是当内容少时，使用搜索功能高度保持不变
-            wcqTable.resetView({"height": "auto"});
-        } else {
-            $container.css({"height": $table.height()+ 46});
-        }
-    }
-
-
     function tableCftjHeight(data) {
-        let $table = $(".cftj .fixed-table-body table");
+        let $table = $(".cftj .fixed-table-body .table");
         let $container = $(".cftj .fixed-table-container");
         if ($table.height()< $container.height()) {
             $container.css({
                 "padding-bottom": 0,
-                "height": $table.height() + 45
+                "height": 220
             });
             // 是当内容少时，使用搜索功能高度保持不变
             ycfTable.resetView({"height": "auto"});
