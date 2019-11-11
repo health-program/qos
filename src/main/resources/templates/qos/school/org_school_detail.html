@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type"/>
+    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type,business-region-type"/>
     <input th:value="${id}" id="id" type="hidden" />
     <section class="content-header">
         <h1>学校信息详情</h1>
@@ -32,7 +32,8 @@
 					{ title: "学年", name: "schoolYear", inputType: "DATE",attr:{class: "form-control tonto-datepicker-year"} },
 					{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 					{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
-					{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
+					{ title: "行政区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
+					{ title: "业务管理区域", name: "businessDistrict",enum:"business-region-type",required: "required", inputType: "SELECT" },
 					{ title: "主要领导姓名", name: "mainLeaderName", inputType: "TEXT" },
 					{ title: "主要领导电话", name: "mainLeaderCellphone", inputType: "TEXT" },
 					{ title: "分管领导姓名", name: "chargeLeaderName", inputType: "TEXT" },

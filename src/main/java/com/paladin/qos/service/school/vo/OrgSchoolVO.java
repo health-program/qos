@@ -21,6 +21,9 @@ public class OrgSchoolVO {
 
 	// 区域
 	private String district;
+	
+	// 业务管理区域
+	private String businessDistrict;
 
 	// 性质
 	private Integer nature;
@@ -279,6 +282,14 @@ public class OrgSchoolVO {
 
 	public void setSchoolYear(String schoolYear) {
 	    this.schoolYear = schoolYear;
+	}
+
+	public String getBusinessDistrict() {
+	    return businessDistrict;
+	}
+
+	public void setBusinessDistrict(String businessDistrict) {
+	    this.businessDistrict = businessDistrict;
 	}
 
 }

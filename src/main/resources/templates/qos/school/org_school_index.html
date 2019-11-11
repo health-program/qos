@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="nature-type,subordination-type,region-type"/>
+    <tt:constant enumcode="nature-type,subordination-type,region-type,business-region-type"/>
     <section class="content-header">
         <h1>学校信息录入列表</h1>
     </section>
@@ -18,7 +18,12 @@
                         </div>
                         <div class="col-md-2">
 							 <select name="district" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.district}" enumcode="region-type">
-                                 <option value="">请选择区域</option>
+                                 <option value="">请选择行政区域</option>
+                             </select>
+						</div>
+						<div class="col-md-2">
+							 <select name="businessDistrict" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.businessDistrict}" enumcode="business-region-type">
+                                 <option value="">请选择业务管理区域</option>
                              </select>
 						</div>
 						<div class="col-md-2">
@@ -31,7 +36,7 @@
 								<option value="">请选择性质</option>
 							</select>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-2">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -72,7 +77,8 @@
                 [
                     { title: "学校名称", field: "parentSchoolId" },
                     { title: "学年", field: "schoolYear" },
-                    { title: "区域", field: "district",enumcode: "region-type"},
+                    { title: "行政区域", field: "district",enumcode: "region-type"},
+                    { title: "业务管理区域", field: "businessDistrict",enumcode: "business-region-type"},
 					{ title: "性质", field: "nature", enumcode: "nature-type" },
 					{ title: "隶属关系", field: "affiliation",enumcode: "subordination-type" },
 					{ title: "创建时间", field: "createTime",formatter: "datetime"},

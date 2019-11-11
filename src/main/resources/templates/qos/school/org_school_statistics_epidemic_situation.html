@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="nature-type,subordination-type,region-type,sickness-type"/>
+<tt:constant enumcode="nature-type,subordination-type,region-type,sickness-type,business-region-type"/>
 <section class="content-header">
     <h1>全市疫情分析</h1>
 </section>
@@ -18,9 +18,14 @@
 	                    </div>
 						<div class="col-md-2">
 							<select id="district" name="district" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
-								<option value="">请选择区域</option>
+								<option value="">请选择行政区域</option>
 							</select>
 						</div>
+						<!-- <div class="col-md-2">
+							 <select name="businessDistrict" id="businessDistrict" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.businessDistrict}" enumcode="business-region-type">
+                                 <option value="">请选择业务管理区域</option>
+                             </select>
+						</div> -->
 						<div class="col-md-2">
 							<select id="sicknessClassify" name="sicknessClassify" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.sicknessType}" enumcode="sickness-type">
 								<option value="">请选择疾病名称</option>
