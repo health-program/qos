@@ -142,6 +142,8 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
+                var s ='2000-01-01';
+                params.startTime=s;
             	params.eventIds = '21003,21004';
             	params.ignoreUnitIds = '320583810343'
                 requestParams = params;
