@@ -2,275 +2,286 @@ package com.paladin.qos.service.school.dto;
 
 import com.paladin.framework.excel.read.ReadProperty;
 
-/**   
+/**
  * @author MyKite
- * @version 2019年8月15日 下午2:32:14 
+ * @version 2019年8月15日 下午2:32:14
  */
 public class ExcelOrgSchool {
 
-    	@ReadProperty(cellIndex = 0)
- 	private String parentSchoolName;// 学校名称
-    	
-    	@ReadProperty(cellIndex = 1)
-    private String schoolYear;
-    	
-    	@ReadProperty(cellIndex = 2,enumType="nature-type")
- 	private Integer nature;// 性质
+    @ReadProperty(cellIndex = 0)
+    private String parentSchoolName;// 学校名称
 
-    	@ReadProperty(cellIndex = 3,enumType="subordination-type")
- 	private Integer affiliation;// 隶属关系
- 	
-    	@ReadProperty(cellIndex = 4,enumType="region-type")
- 	private String district;// 区域
- 	
-    	@ReadProperty(cellIndex = 5)
- 	private String mainLeaderName;// 主要领导姓名
- 	
-    	@ReadProperty(cellIndex = 6)
- 	private String mainLeaderCellphone;// 主要领导电话
- 	
-    	@ReadProperty(cellIndex = 7)
- 	private String chargeLeaderName;// 分管领导姓名
- 	
-    	@ReadProperty(cellIndex = 8)
- 	private String chargeLeaderCellphone;// 分管领导电话
- 	
-    	@ReadProperty(cellIndex = 9)
- 	private String specificChargeLeaderName;// 具体负责人姓名
+    @ReadProperty(cellIndex = 1)
+    private String schoolYear;//学年
 
-    	@ReadProperty(cellIndex = 10)
- 	private String specificChargeLeaderCellphone;// 具体负责人电话
- 	
-    	@ReadProperty(cellIndex = 11)
- 	private Integer schoolDoctorFull;// 校医(专职)人数
-    	
-    	@ReadProperty(cellIndex = 12)
- 	private Integer schoolDoctorPart;// 校医(兼职)人数
- 	
-    	@ReadProperty(cellIndex = 13)
- 	private Integer healthTeacherFull;// 保健老师(专职)人数
-    	
-    	@ReadProperty(cellIndex = 14)
- 	private Integer healthTeacherPart;// 保健老师(兼职)人数
-    	
-    	@ReadProperty(cellIndex = 15)
- 	private Integer logistics;// 后勤保障人数
- 	
-    	//@ReadProperty(cellIndex = 15)
- 	private Integer total;//学生总人数
-    	
-    	@ReadProperty(cellIndex = 16)
- 	private String address;// 地址
- 	
-    	@ReadProperty(cellIndex = 17,enumType="school-section-type")
- 	private Integer schoolSection;// 学段
- 	
-    	@ReadProperty(cellIndex = 18,enumType="grade-type")
- 	private Integer grade;// 年级
+    @ReadProperty(cellIndex = 2, enumType = "nature-type")
+    private Integer nature;// 性质
 
-    	@ReadProperty(cellIndex = 19)
-    private String klass;// 班级	
+    @ReadProperty(cellIndex = 3, enumType = "subordination-type")
+    private Integer affiliation;// 隶属关系
+
+    @ReadProperty(cellIndex = 4, enumType = "region-type")
+    private String district;// 区域
+
+    @ReadProperty(cellIndex = 5,enumType = "business-region-type")
+    private String businessDistrict;// 业务管理区域
     
-    	@ReadProperty(cellIndex = 20)
- 	private Integer gradeTotal;// 年级学生人数
+    @ReadProperty(cellIndex = 6)
+    private String mainLeaderName;// 主要领导姓名
 
-    	@ReadProperty(cellIndex = 21)
- 	private Integer boarders;// 寄宿生人数
+    @ReadProperty(cellIndex = 7)
+    private String mainLeaderCellphone;// 主要领导电话
 
-    	@ReadProperty(cellIndex = 22)
- 	private Integer teaching;// 教职员工人数
+    @ReadProperty(cellIndex = 8)
+    private String chargeLeaderName;// 分管领导姓名
 
-	public String getParentSchoolName() {
-	    return parentSchoolName;
-	}
+    @ReadProperty(cellIndex = 9)
+    private String chargeLeaderCellphone;// 分管领导电话
 
-	public void setParentSchoolName(String parentSchoolName) {
-	    this.parentSchoolName = parentSchoolName;
-	}
+    @ReadProperty(cellIndex = 10)
+    private String specificChargeLeaderName;// 具体负责人姓名
 
-	public String getAddress() {
-	    return address;
-	}
+    @ReadProperty(cellIndex = 11)
+    private String specificChargeLeaderCellphone;// 具体负责人电话
 
-	public void setAddress(String address) {
-	    this.address = address;
-	}
+    @ReadProperty(cellIndex = 12)
+    private Integer schoolDoctorFull;// 校医(专职)人数
 
-	public Integer getAffiliation() {
-	    return affiliation;
-	}
+    @ReadProperty(cellIndex = 13)
+    private Integer schoolDoctorPart;// 校医(兼职)人数
 
-	public void setAffiliation(Integer affiliation) {
-	    this.affiliation = affiliation;
-	}
+    @ReadProperty(cellIndex = 14)
+    private Integer healthTeacherFull;// 保健老师(专职)人数
 
-	public String getDistrict() {
-	    return district;
-	}
+    @ReadProperty(cellIndex = 15)
+    private Integer healthTeacherPart;// 保健老师(兼职)人数
 
-	public void setDistrict(String district) {
-	    this.district = district;
-	}
+    @ReadProperty(cellIndex = 16)
+    private Integer logistics;// 后勤保障人数
 
-	public Integer getNature() {
-	    return nature;
-	}
+    // @ReadProperty(cellIndex = 17)
+    private Integer total;// 学生总人数
 
-	public void setNature(Integer nature) {
-	    this.nature = nature;
-	}
+    @ReadProperty(cellIndex = 17)
+    private String address;// 地址
 
-	public String getMainLeaderName() {
-	    return mainLeaderName;
-	}
+    @ReadProperty(cellIndex = 18, enumType = "school-section-type")
+    private Integer schoolSection;// 学段
 
-	public void setMainLeaderName(String mainLeaderName) {
-	    this.mainLeaderName = mainLeaderName;
-	}
+    @ReadProperty(cellIndex = 19, enumType = "grade-type")
+    private Integer grade;// 年级
 
-	public String getMainLeaderCellphone() {
-	    return mainLeaderCellphone;
-	}
+    @ReadProperty(cellIndex = 20)
+    private String klass;// 班级
 
-	public void setMainLeaderCellphone(String mainLeaderCellphone) {
-	    this.mainLeaderCellphone = mainLeaderCellphone;
-	}
+    @ReadProperty(cellIndex = 21)
+    private Integer gradeTotal;// 年级学生人数
 
-	public String getChargeLeaderName() {
-	    return chargeLeaderName;
-	}
+    @ReadProperty(cellIndex = 22)
+    private Integer boarders;// 寄宿生人数
 
-	public void setChargeLeaderName(String chargeLeaderName) {
-	    this.chargeLeaderName = chargeLeaderName;
-	}
+    @ReadProperty(cellIndex = 23)
+    private Integer teaching;// 教职员工人数
 
-	public String getChargeLeaderCellphone() {
-	    return chargeLeaderCellphone;
-	}
+    public String getParentSchoolName() {
+	return parentSchoolName;
+    }
 
-	public void setChargeLeaderCellphone(String chargeLeaderCellphone) {
-	    this.chargeLeaderCellphone = chargeLeaderCellphone;
-	}
+    public void setParentSchoolName(String parentSchoolName) {
+	this.parentSchoolName = parentSchoolName;
+    }
 
-	public String getSpecificChargeLeaderName() {
-	    return specificChargeLeaderName;
-	}
+    public String getAddress() {
+	return address;
+    }
 
-	public void setSpecificChargeLeaderName(String specificChargeLeaderName) {
-	    this.specificChargeLeaderName = specificChargeLeaderName;
-	}
+    public void setAddress(String address) {
+	this.address = address;
+    }
 
-	public String getSpecificChargeLeaderCellphone() {
-	    return specificChargeLeaderCellphone;
-	}
+    public Integer getAffiliation() {
+	return affiliation;
+    }
 
-	public void setSpecificChargeLeaderCellphone(
-		String specificChargeLeaderCellphone) {
-	    this.specificChargeLeaderCellphone = specificChargeLeaderCellphone;
-	}
+    public void setAffiliation(Integer affiliation) {
+	this.affiliation = affiliation;
+    }
 
-	public Integer getLogistics() {
-	    return logistics;
-	}
+    public String getDistrict() {
+	return district;
+    }
 
-	public void setLogistics(Integer logistics) {
-	    this.logistics = logistics;
-	}
+    public void setDistrict(String district) {
+	this.district = district;
+    }
 
-	public Integer getSchoolDoctorPart() {
-	    return schoolDoctorPart;
-	}
+    public Integer getNature() {
+	return nature;
+    }
 
-	public void setSchoolDoctorPart(Integer schoolDoctorPart) {
-	    this.schoolDoctorPart = schoolDoctorPart;
-	}
+    public void setNature(Integer nature) {
+	this.nature = nature;
+    }
 
-	public Integer getHealthTeacherPart() {
-	    return healthTeacherPart;
-	}
+    public String getMainLeaderName() {
+	return mainLeaderName;
+    }
 
-	public void setHealthTeacherPart(Integer healthTeacherPart) {
-	    this.healthTeacherPart = healthTeacherPart;
-	}
+    public void setMainLeaderName(String mainLeaderName) {
+	this.mainLeaderName = mainLeaderName;
+    }
 
-	public Integer getSchoolDoctorFull() {
-	    return schoolDoctorFull;
-	}
+    public String getMainLeaderCellphone() {
+	return mainLeaderCellphone;
+    }
 
-	public void setSchoolDoctorFull(Integer schoolDoctorFull) {
-	    this.schoolDoctorFull = schoolDoctorFull;
-	}
+    public void setMainLeaderCellphone(String mainLeaderCellphone) {
+	this.mainLeaderCellphone = mainLeaderCellphone;
+    }
 
-	public Integer getHealthTeacherFull() {
-	    return healthTeacherFull;
-	}
+    public String getChargeLeaderName() {
+	return chargeLeaderName;
+    }
 
-	public void setHealthTeacherFull(Integer healthTeacherFull) {
-	    this.healthTeacherFull = healthTeacherFull;
-	}
+    public void setChargeLeaderName(String chargeLeaderName) {
+	this.chargeLeaderName = chargeLeaderName;
+    }
 
-	public Integer getTotal() {
-	    return total;
-	}
+    public String getChargeLeaderCellphone() {
+	return chargeLeaderCellphone;
+    }
 
-	public void setTotal(Integer total) {
-	    this.total = total;
-	}
+    public void setChargeLeaderCellphone(String chargeLeaderCellphone) {
+	this.chargeLeaderCellphone = chargeLeaderCellphone;
+    }
 
-	public Integer getSchoolSection() {
-	    return schoolSection;
-	}
+    public String getSpecificChargeLeaderName() {
+	return specificChargeLeaderName;
+    }
 
-	public void setSchoolSection(Integer schoolSection) {
-	    this.schoolSection = schoolSection;
-	}
+    public void setSpecificChargeLeaderName(String specificChargeLeaderName) {
+	this.specificChargeLeaderName = specificChargeLeaderName;
+    }
 
-	public Integer getGrade() {
-	    return grade;
-	}
+    public String getSpecificChargeLeaderCellphone() {
+	return specificChargeLeaderCellphone;
+    }
 
-	public void setGrade(Integer grade) {
-	    this.grade = grade;
-	}
+    public void setSpecificChargeLeaderCellphone(
+	    String specificChargeLeaderCellphone) {
+	this.specificChargeLeaderCellphone = specificChargeLeaderCellphone;
+    }
 
-	public Integer getGradeTotal() {
-	    return gradeTotal;
-	}
+    public Integer getLogistics() {
+	return logistics;
+    }
 
-	public void setGradeTotal(Integer gradeTotal) {
-	    this.gradeTotal = gradeTotal;
-	}
+    public void setLogistics(Integer logistics) {
+	this.logistics = logistics;
+    }
 
-	public Integer getBoarders() {
-	    return boarders;
-	}
+    public Integer getSchoolDoctorPart() {
+	return schoolDoctorPart;
+    }
 
-	public void setBoarders(Integer boarders) {
-	    this.boarders = boarders;
-	}
+    public void setSchoolDoctorPart(Integer schoolDoctorPart) {
+	this.schoolDoctorPart = schoolDoctorPart;
+    }
 
-	public Integer getTeaching() {
-	    return teaching;
-	}
+    public Integer getHealthTeacherPart() {
+	return healthTeacherPart;
+    }
 
-	public void setTeaching(Integer teaching) {
-	    this.teaching = teaching;
-	}
+    public void setHealthTeacherPart(Integer healthTeacherPart) {
+	this.healthTeacherPart = healthTeacherPart;
+    }
 
-	public String getSchoolYear() {
-		return schoolYear;
-	}
+    public Integer getSchoolDoctorFull() {
+	return schoolDoctorFull;
+    }
 
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
-	}
+    public void setSchoolDoctorFull(Integer schoolDoctorFull) {
+	this.schoolDoctorFull = schoolDoctorFull;
+    }
 
-	public String getKlass() {
-		return klass;
-	}
+    public Integer getHealthTeacherFull() {
+	return healthTeacherFull;
+    }
 
-	public void setKlass(String klass) {
-		this.klass = klass;
-	}
-    
+    public void setHealthTeacherFull(Integer healthTeacherFull) {
+	this.healthTeacherFull = healthTeacherFull;
+    }
+
+    public Integer getTotal() {
+	return total;
+    }
+
+    public void setTotal(Integer total) {
+	this.total = total;
+    }
+
+    public Integer getSchoolSection() {
+	return schoolSection;
+    }
+
+    public void setSchoolSection(Integer schoolSection) {
+	this.schoolSection = schoolSection;
+    }
+
+    public Integer getGrade() {
+	return grade;
+    }
+
+    public void setGrade(Integer grade) {
+	this.grade = grade;
+    }
+
+    public Integer getGradeTotal() {
+	return gradeTotal;
+    }
+
+    public void setGradeTotal(Integer gradeTotal) {
+	this.gradeTotal = gradeTotal;
+    }
+
+    public Integer getBoarders() {
+	return boarders;
+    }
+
+    public void setBoarders(Integer boarders) {
+	this.boarders = boarders;
+    }
+
+    public Integer getTeaching() {
+	return teaching;
+    }
+
+    public void setTeaching(Integer teaching) {
+	this.teaching = teaching;
+    }
+
+    public String getSchoolYear() {
+	return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+	this.schoolYear = schoolYear;
+    }
+
+    public String getKlass() {
+	return klass;
+    }
+
+    public void setKlass(String klass) {
+	this.klass = klass;
+    }
+
+    public String getBusinessDistrict() {
+        return businessDistrict;
+    }
+
+    public void setBusinessDistrict(String businessDistrict) {
+        this.businessDistrict = businessDistrict;
+    }
+
 }

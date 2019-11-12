@@ -277,19 +277,7 @@ function showPopup() {
         }
         var currentRes = newRes[currentIndex++];
         var unitId = currentRes.unitId
-        //
-        /* $.ajax({
-             type : "post",    //请求类型
-             url : "http://10.9.1.41:18081/home/page/qos/data/get/month/instalments",//请求的 URL地址
-             data:arr,
-             success: function (rawData){
-                 $("#appointmentPeople").text()
-                 $("#patientsPeople").text()
-                 $("#inspectorsPeople").text()
-                 $("#newinspectorsPeople").text()
-                 $("#averageHospitalStay").text()
-              }
-          })*/
+
         var coordinate = [currentRes.orgLon, currentRes.orgLat];
         content.innerHTML = getFeatrueInfo(currentRes);
         popupOverlay.setPosition(coordinate);

@@ -46,8 +46,6 @@
             { title: "病种分类", name: "sicknessClassify", required: "required", inputType: "SELECT", enum: "sickness-type" },
             { title: "区域", name: "region", required: "required", inputType: "SELECT", enum: "region-type" },
             { title: "发病人数(首周)", name: "firstWeek", required: "required", inputType: "NUMBER" },
-            //{ title: "班级", name: "grade", inputType: "TEXT" },
-
             { title: "发病人数(累计)", name: "total", required: "required", inputType: "NUMBER" },
             { title: "停课班级数", name: "suspendGradeNumber", inputType: "NUMBER" },
             { title: "应急接种班级数", name: "vaccinationGradeNumber", inputType: "NUMBER" },
@@ -126,11 +124,11 @@
 
         schoolPeople.forEach(function(sp) {
             var id = sp.schoolId,
-                spId = sp.schoolSection + '-' + sp.grade;
+            spId = id + '-' + sp.schoolSection + '-' + sp.grade;
 
             var yearSchoolNode = yearSchoolNodeMap[id];
             if (yearSchoolNode) {
-                var schoolPeopleNode = schoolPeopleNodeMap[id];
+            	 var schoolPeopleNode = schoolPeopleNodeMap[spId];
                 if (!schoolPeopleNode) {
                     schoolPeopleNode = {
                         name: $.getConstantEnumValue('school-section-type', sp.schoolSection) + '-' + $.getConstantEnumValue('grade-type', sp.grade),
@@ -139,7 +137,7 @@
                     }
 
                     yearSchoolNode.children.push(schoolPeopleNode);
-                    schoolPeopleNodeMap[id] = schoolPeopleNode;
+                    schoolPeopleNodeMap[spId] = schoolPeopleNode;
                 }
 
                 schoolPeopleNode.children.push({
