@@ -14,8 +14,8 @@ var map = new ol.Map({
         //设置地图加载时的初始中心点121, 31.3
         center: mapViewCenter,
         //缩放级别
-        zoom:8,
-        minZoom: 8,
+        zoom: 11,
+        minZoom: 11,
         maxZoom: 20
     }),
 });
@@ -26,10 +26,10 @@ var map = new ol.Map({
 var mlayer = new ol.layer.Tile({
     source: new ol.source.TileWMS({
         url: 'http://172.16.0.157:8080/geoserver/kunst/wms', // 公司
-       // url: 'http://10.1.55.14:8080/geoserver/kunshan/wms', //  服务环境
+        // url: 'http://10.1.55.14:8080/geoserver/kunshan/wms', //  服务环境
         params: {
-           // 'LAYERS': 'kunshan:kunshan_oms_group_wd', //  服务环境kunshan
-           'LAYERS': 'kunst:kunst_oms_group_wd', // 公司
+            // 'LAYERS': 'kunshan:kunshan_oms_group_wd', //  服务环境kunshan
+            'LAYERS': 'kunst:kunst_oms_group_wd', // 公司
             'FORMAT': 'image/png',
             'SRC': 'EPSG:4326'
         }
@@ -42,14 +42,14 @@ var mlayer = new ol.layer.Tile({
 map.addLayer(mlayer);
 
 var areaLatLng = [{
-        lng: '120.951942',
-        lat: '31.40863',
-        name: '玉山镇',
-        source: {},
-        feature: {},
-        style: {},
-        layer: {}
-    },
+    lng: '120.951942',
+    lat: '31.40863',
+    name: '玉山镇',
+    source: {},
+    feature: {},
+    style: {},
+    layer: {}
+},
     {
         lng: '121.089119',
         lat: '31.301611',
@@ -206,7 +206,6 @@ $(function() {
 
             var res = JSON.parse(res)
             console.log(res);
-            debugger
             newRes = res.result;
 
             for (var item = 0, resLen = newRes.length; item < resLen; item++) {
@@ -264,10 +263,10 @@ $(function() {
                 map.addLayer(hmLayer);
             }
 
-               map.addOverlay(popupOverlay);
+            map.addOverlay(popupOverlay);
 
 
-         }
+        }
     })
 });
 
@@ -275,67 +274,79 @@ $(function() {
 
 
 function showPopup() {
-     if (newRes && newRes.length > 0) {
+    if (newRes && newRes.length > 0) {
         if (currentIndex == newRes.length) {
             currentIndex = 0;
         }
 
 
-         var currentRes = newRes[currentIndex++];
-         if(currentRes.orgType==1){
+        var currentRes = newRes[currentIndex++];
+        if(currentRes.orgType==1){
             var unitId = currentRes.unitId
             var arr={
-                eventIds: '41001,41002,41003,41004',
+                eventIds: '41001,41002,41003,41004,41005',
                 unitId:currentRes.unitId
             }
-           $.ajax({
-                 type : "post",    //请求类型
-                 url : "http://10.9.1.41:18081/home/page/qos/data/get/unit",//请求的 URL地址
-                 data:arr,
-                 success: function (rawData){
-                     var res41001 = rawData.result['41001'];
-                     var account41001;
-                     for(var i=0;i<res41001.length;i++){
+            $.ajax({
+                type : "post",    //请求类型
+                url : "http://10.9.1.41:18081/home/page/qos/data/get/unit",//请求的 URL地址
+                data:arr,
+                success: function (rawData){
+                    var res41001 = rawData.result['41001'];
+                    var account41001;
+                    for(var i=0;i<res41001.length;i++){
                         if(unitId == res41001[i].unitId){
                             account41001=res41001[i].count
-                         }
-                     }
+                        }
+                    }
 
 
-                     var res41002 = rawData.result['41002'];
-                     var account41002;
-                     for(var i=0;i<res41002.length;i++){
-                         if(unitId == res41002[i].unitId){
-                             account41002=res41002[i].count
-                         }
-                     }
+                    var res41002 = rawData.result['41002'];
+                    var account41002;
+                    for(var i=0;i<res41002.length;i++){
+                        if(unitId == res41002[i].unitId){
+                            account41002=res41002[i].count
+                        }
+                    }
 
 
-                     var res41003 = rawData.result['41003'];
-                     var account41003;
-                     for(var i=0;i<res41003.length;i++){
-                         if(unitId == res41003[i].unitId){
-                             account41003=res41001[i].count
-                         }
-                     }
+                    var res41003 = rawData.result['41003'];
+                    var account41003;
+                    for(var i=0;i<res41003.length;i++){
+                        if(unitId == res41003[i].unitId){
+                            account41003=res41001[i].count
+                        }
+                    }
 
 
-                     var res41004 = rawData.result['41004'];
-                     var account41004;
-                     for(var i=0;i<res41004.length;i++){
-                         if(unitId == res41004[i].unitId){
-                             account41004=res41004[i].count
-                         }
-                     }
+                    var res41004 = rawData.result['41004'];
+                    var account41004;
+                    for(var i=0;i<res41004.length;i++){
+                        if(unitId == res41004[i].unitId){
+                            account41004=res41004[i].count
+                        }
+                    }
 
-                     $("#appointmentPeople").text(account41001)
-                     $("#patientsPeople").text(account41002)
-                     $("#inspectorsPeople").text(account41003)
-                     $("#newinspectorsPeople").text(account41004)
-                     $("#averageHospitalStay").text()
-                  }
-              })
+
+
+                    var res41005 = rawData.result['41005'];
+                    var account41005;
+                    for(var i=0;i<res41005.length;i++){
+                        if(unitId == res41005[i].unitId){
+                            account41005=(res41005[i].totalNum/res41005[i].eventNum).toFixed(2)
+                        }
+                    }
+
+
+                    $("#appointmentPeople").text(account41001)
+                    $("#patientsPeople").text(account41002)
+                    $("#inspectorsPeople").text(account41003)
+                    $("#newinspectorsPeople").text(account41004)
+                    $("#averageHospitalStay").text(account41005)
+                }
+            })
             var coordinate = [currentRes.orgLon, currentRes.orgLat];
+
             content.innerHTML = getFeatrueInfo(currentRes);
             popupOverlay.setPosition(coordinate);
         }
@@ -346,8 +357,8 @@ function showPopup() {
 
 
 setInterval(function() {
-  showPopup();
-},10000);
+    showPopup();
+},1000);
 
 
 
@@ -358,13 +369,12 @@ function getFeatrueInfo(info) {
     if(info.orgType==1){
         var unitId = info.unitId
         var arr={
-            eventIds: '41001,41002,41003,41004',
+            eventIds: '41001,41002,41003,41004,41005',
             unitId:info.unitId
         }
-        console.log('ceshi'+unitId)
         $.ajax({
             type : "post",    //请求类型
-            url : "http://10.9.1.41:18081/home/page/qos/data/get/unit",//请求的 URL地址
+            url : "http://localhost:8011/home/page/qos/data/get/unit",//请求的 URL地址
             data:arr,
             success: function (rawData){
                 var res41001 = rawData.result['41001'];
@@ -375,7 +385,6 @@ function getFeatrueInfo(info) {
                     }
                 }
 
-
                 var res41002 = rawData.result['41002'];
                 var account41002;
                 for(var i=0;i<res41002.length;i++){
@@ -383,8 +392,6 @@ function getFeatrueInfo(info) {
                         account41002=res41002[i].count
                     }
                 }
-
-
                 var res41003 = rawData.result['41003'];
                 var account41003;
                 for(var i=0;i<res41003.length;i++){
@@ -392,8 +399,6 @@ function getFeatrueInfo(info) {
                         account41003=res41001[i].count
                     }
                 }
-
-
                 var res41004 = rawData.result['41004'];
                 var account41004;
                 for(var i=0;i<res41004.length;i++){
@@ -401,19 +406,26 @@ function getFeatrueInfo(info) {
                         account41004=res41004[i].count
                     }
                 }
+                var res41005 = rawData.result['41005'];
+                var account41005;
+                for(var i=0;i<res41005.length;i++){
+                    if(unitId == res41005[i].unitId){
+                        account41005=(res41005[i].totalNum/res41005[i].eventNum).toFixed(2)
+                    }
+                }
 
                 $("#appointmentPeople").text(account41001)
                 $("#patientsPeople").text(account41002)
                 $("#inspectorsPeople").text(account41003)
                 $("#newinspectorsPeople").text(account41004)
-                $("#averageHospitalStay").text()
+                $("#averageHospitalStay").text(account41005)
             }
         })
 
     }
-  //  console.log(info.orgType)
-     if (info.orgType == 1) {
-          return "<div class='info-wrapper'>" +
+    //  console.log(info.orgType)
+    if (info.orgType == 1) {
+        return "<div class='info-wrapper'>" +
             "<p>" +
             "<div class='newlh3'><img src='../img/alldisplay/representative.png'/><span class='text-00ffff'>"+info.orgName+"</span></div>"+
             "<div><img src='../img/alldisplay/address.png' class='mapaddress'/><span class='text-00ffff'>"+info.orgAddress+"</span></div>"+
@@ -424,10 +436,10 @@ function getFeatrueInfo(info) {
             "<span class='text-ffffff' id='patientsPeople'></span></p>" +
             "<p class='newlh3'>" + "<span class='fz14 text-ffffff'>检查人次数：</span>" +
             "<span class='fz14 text-ffffff' id='inspectorsPeople'></span></p>" +
-             "<p class='newlh3'>" + "<span class='fz14 text-ffffff'>检验人次数：</span>" +
-             "<span class='fz14 text-ffffff' id='newinspectorsPeople'></span></p>" +
-             "<p>" + "<span class='fz14 text-ffffff'>医院平均住院日：</span>" +
-             "<span class='fz14 text-ffffff' id='averageHospitalStay'></span></p>" +
+            "<p class='newlh3'>" + "<span class='fz14 text-ffffff'>检验人次数：</span>" +
+            "<span class='fz14 text-ffffff' id='newinspectorsPeople'></span></p>" +
+            "<p>" + "<span class='fz14 text-ffffff'>医院平均住院日：</span>" +
+            "<span class='fz14 text-ffffff' id='averageHospitalStay'></span></p>" +
             "</div>";
     }
 }

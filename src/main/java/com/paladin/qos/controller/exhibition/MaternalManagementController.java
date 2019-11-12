@@ -43,6 +43,14 @@ public class MaternalManagementController {
 		return "/qos/exhibition/maternal_org_index";
 	}
 
+
+	@PostMapping("/search/gwycf")
+	@ResponseBody
+	public Object searchGwycf(AnalysisRequest request) {
+		return CommonResponse.getSuccessResponse(maternalManagementService.getHighriskMaternalData(request));
+	}
+
+
 	@PostMapping("/search/left")
 	@ResponseBody
 	public Object searchLeft(AnalysisRequest request) {

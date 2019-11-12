@@ -10,7 +10,6 @@ $(function(){
         async: false,
         data:arr,
         success: function (res){
-
             var rawData=res.result;
             var number=rawData.V30001;
             var archives=rawData.V30002

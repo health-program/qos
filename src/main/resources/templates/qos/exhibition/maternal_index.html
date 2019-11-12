@@ -235,6 +235,7 @@
     var data, ycfTable,wcqTable;
     $(function () {
         initStartDateTime();
+        initHighriskMaternalData();
         initMaternalLeftData();
         initMaternalRightUpData();
         initMaternalRightDownData();
@@ -271,6 +272,7 @@
                 $.errorMessage("请输入正确的时间区间");
             }
         }
+        initHighriskMaternalData();
         initMaternalLeftData();
         initMaternalRightUpData();
         initMaternalRightDownData();
@@ -297,12 +299,20 @@
 
     var fnscChart = echarts.init(document.getElementById('fnscChartDiv'));
 
+    function initHighriskMaternalData() {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax("/qos/exhibition/maternal/search/gwycf",{startTime : startTime, endTime : endTime},function (res) {
+            $("#gwycf").text(res);
+        })
+    }
+
     function initMaternalLeftData() {
         let startTime = $("#startTime").val();
         let endTime = $("#endTime").val();
-        var eventIds = '13305,13303,13314,13321,13306';
+        var eventIds = '13303,13314,13321,13306';
         $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,'eventIds':eventIds},function (res) {
-            $("#gwycf").text(res['13305']);
+            //$("#gwycf").text(res['13305']);
             $("#yqjc").text(res['13303']);
             $("#yfsw").text(res['13306']);
             $("#chfs").text(res['13314'] + res['13321']);
