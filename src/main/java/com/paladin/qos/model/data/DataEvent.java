@@ -8,6 +8,9 @@ public class DataEvent {
 
 	public static final int EVENT_TYPE_RATE = 1;
 	public static final int EVENT_TYPE_COUNT = 2;
+	public static final int EVENT_TYPE_MAX = 3;
+	public static final int EVENT_TYPE_MIN = 4;
+	
 
 	public static final int TARGET_TYPE_ALL = 1;
 	public static final int TARGET_TYPE_HOSPITAL = 2;

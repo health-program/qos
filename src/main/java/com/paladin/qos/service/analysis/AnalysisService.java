@@ -376,6 +376,38 @@ public class AnalysisService {
 		orderByUnit(result);
 		return result;
 	}
+	
+	/**
+	 * 获取时间段内某类型单位某事件的最大值
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countMaxNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.countMaxNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+	}
+	
+	/**
+	 * 获取时间段内某类型单位某事件的最小值
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countMinNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.countMinNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+	}
 
 	/**
 	 * 获取时间段内所有单位某事件的事件总数

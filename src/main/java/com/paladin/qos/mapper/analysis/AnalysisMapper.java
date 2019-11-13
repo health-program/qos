@@ -65,6 +65,12 @@ public interface AnalysisMapper {
 
 	List<DataCountUnit> countTotalNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start, @Param("end") int end,
 											@Param("ignoreUnitIds") List<String> ignoreUnitIds);
+	
+	List<DataCountUnit> countMaxNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start, @Param("end") int end,
+			@Param("ignoreUnitIds") List<String> ignoreUnitIds);
+	
+	List<DataCountUnit> countMinNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start, @Param("end") int end,
+			@Param("ignoreUnitIds") List<String> ignoreUnitIds);
 
 	List<DataCountUnit> countEventNumByUnit(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start, @Param("end") int end,
 											@Param("ignoreUnitIds") List<String> ignoreUnitIds);

@@ -209,6 +209,44 @@
 		GROUP BY unit_id
 	</select>
 	
+	<select id="countMaxNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       IFNULL(max(total_num),0) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>        
+		GROUP BY unit_id
+	</select>
+	
+	<select id="countMinNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       IFNULL(min(total_num),0) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>        
+		GROUP BY unit_id
+	</select>
+	
 	<select id="countEventNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id AS unitId,
 		       IFNULL(sum(event_num),0) AS count
