@@ -4,7 +4,7 @@
 <head th:include="/qos/header"/>
 
 <body>
-<tt:constant enumcode="nature-type,subordination-type,region-type"/>
+<tt:constant enumcode="nature-type,subordination-type,region-type,boolean-type"/>
 <section class="content-header">
     <h1>双向转诊统计</h1>
 </section>
@@ -62,6 +62,7 @@
                     { title: "单位", field: "unitName",align: "left"},
                     {title: "本医疗机构向上级医疗机构转出人数", field: "upOutNumber"},
                     {title: "本医疗机构向下级医疗机构转出人数", field: "downOutNumber"},
+                    {title: "是否为签约人员", field: "isSigning",enumcode:"boolean-type"},
                     {title: "创建时间", field: "createTime",formatter: "datetime"},
                    /*  {title: "创建人", field: "createUserId"}, */
                     {

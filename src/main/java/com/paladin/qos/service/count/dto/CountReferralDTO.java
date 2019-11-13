@@ -10,6 +10,8 @@ public class CountReferralDTO {
 
     private Integer upOutNumber;
 
+    private Integer isSigning;
+
     private Integer downOutNumber;
 
     private String  unitId;
@@ -44,6 +46,14 @@ public class CountReferralDTO {
 
     public void setDownOutNumber(Integer downOutNumber) {
         this.downOutNumber = downOutNumber;
+    }
+
+    public Integer getIsSigning() {
+        return isSigning;
+    }
+
+    public void setIsSigning(Integer isSigning) {
+        this.isSigning = isSigning;
     }
 
     @Override

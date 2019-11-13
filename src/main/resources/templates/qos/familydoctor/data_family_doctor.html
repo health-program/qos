@@ -478,12 +478,36 @@ margin-top: 16px;
 					</div>
 				</div>
 			</div>
+			<div class="col-md-3"  >
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box box-solid">
+							<div class="row">
+								<div class="col-md-3 icon">
+									<span class="iconfont icon-yiyuan"></span>
+								</div>
+								<div class="col-md-9">
+									<div class="row">
+										<div class="col-md-12 typeface">
+											<span>签约人员双向转诊数</span>
+										</div>
+										<div class="col-md-12 typeface1">
+											<span class="number" id="sxzz">52234</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</section>
     <div th:include="/qos/footer" />
     <script type="text/javascript">
 		$(function () {
 			initData();
+			initSxzzData();
 		});
 		var eventIds = 'V60001,V60002,V60003,V60004,V60005,V60006,V60007,V60008,V60009,V60010,V60011,V60012,V60013,V60014,V60015,V60016';
 		function initData() {
@@ -496,6 +520,12 @@ margin-top: 16px;
 					$(s).text(response[id]);
 				})
 
+			})
+		}
+
+		function initSxzzData() {
+			$.getAjax('/qos/count/referral/find/signing',function (data) {
+				$("#sxzz").text(data);
 			})
 		}
 

@@ -1,11 +1,12 @@
 package com.paladin.qos.model.count;
 
 import com.paladin.framework.common.BaseModel;
-import com.paladin.qos.analysis.DataConstantContainer;
 
 import javax.persistence.Id;
 
 public class CountReferral extends BaseModel {
+
+    public static final String COLUMN_IS_SIGNING = "isSigning";
 
     @Id
     private String id;
@@ -13,6 +14,8 @@ public class CountReferral extends BaseModel {
     private Integer upOutNumber;
 
     private Integer downOutNumber;
+
+    private Integer isSigning;
 
     private String  unitId;
 
@@ -48,4 +51,11 @@ public class CountReferral extends BaseModel {
         this.downOutNumber = downOutNumber;
     }
 
+    public Integer getIsSigning() {
+        return isSigning;
+    }
+
+    public void setIsSigning(Integer isSigning) {
+        this.isSigning = isSigning;
+    }
 }

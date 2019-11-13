@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type"/>
+    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type,boolean-type"/>
     <input th:value="${id}" id="id" type="hidden" />
     <section class="content-header">
         <h1>双向转诊统计详情</h1>
@@ -35,7 +35,8 @@
 					{title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",required: "required",inputType : "NUMBER",attr:{
 		            	'data-type':'naturalNumber'
 		            }},
-                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"}
+                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
+                { title: "是否为签约人员", field: "isSigning",name: "isSigning", inputType: "RADIO",required: "required", enum: "boolean-type"}
 				     ]
 					}
 					var model, itemId;

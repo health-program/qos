@@ -9,14 +9,12 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.count.dto.CountReferralExportCondition;
-import com.paladin.qos.controller.countAntibiotics.dto.CountAntibioticsExportCondition;
 import com.paladin.qos.model.count.CountReferral;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.service.count.CountReferralService;
 import com.paladin.qos.service.count.dto.CountReferralDTO;
 import com.paladin.qos.service.count.dto.CountReferralQuery;
 import com.paladin.qos.service.count.vo.CountReferralVO;
-import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.data.DataUnitService;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +54,12 @@ public class CountReferralController extends ControllerSupport {
         return CommonResponse.getSuccessResponse(countReferralService.searchFindPage(query));
     }
 
+    @RequestMapping(value = "/find/signing", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object findSigning() {
+        return CommonResponse.getSuccessResponse(countReferralService.searchIsSigningNumber());
+    }
+
     @PostMapping("/save")
     @SysControllerLog(action = "新增双向转诊统计")
     @ResponseBody
@@ -89,10 +93,6 @@ public class CountReferralController extends ControllerSupport {
     public Object update(@Valid @RequestBody CountReferralDTO countReferralDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return validErrorHandler(bindingResult);
-        }
-        int b = countReferralService.judge(countReferralDTO.getUnitId());
-        if (b > 0) {
-            return CommonResponse.getErrorResponse("添加记录未满一个月");
         }
         String id = countReferralDTO.getId();
         CountReferral model = beanCopy(countReferralDTO, countReferralService.get(id));

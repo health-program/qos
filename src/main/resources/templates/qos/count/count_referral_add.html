@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type"/>
+<tt:constant enumcode="nature-type,subordination-type,region-type,school-section-type,grade-type,boolean-type"/>
 <section class="content-header">
     <h1>双向转诊统计添加</h1>
     <ol class="breadcrumb">
@@ -37,6 +37,7 @@
             	'data-type':'naturalNumber'
             }},
             { title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
+            { title: "是否为签约人员", field: "isSigning",name: "isSigning", inputType: "RADIO",required: "required", enum: "boolean-type"}
         ]
     }
 

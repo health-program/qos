@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="com.paladin.qos.model.count.CountReferral">
         <id column="id" jdbcType="VARCHAR" property="id" />
         <result column="up_out_number" jdbcType="INTEGER" property="upOutNumber" />
+        <result column="is_signing" jdbcType="INTEGER" property="isSigning" />
         <result column="down_out_number" jdbcType="INTEGER" property="downOutNumber" />
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
         <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
@@ -15,6 +16,7 @@
     <sql id="Base_Column_List">
         id,
         up_out_number,
+        is_signing,
         down_out_number,
         create_time,
         create_user_id,
@@ -23,7 +25,7 @@
     </sql>
 
     <select id="findReferralRecord" resultType="com.paladin.qos.service.count.vo.CountReferralVO">
-        SELECT c.id,c.`up_out_number` AS upOutNumber,c.`down_out_number` AS downOutNumber,c.`create_time` as createTime,c.unit_id as unitId, s.account AS createUserId
+        SELECT c.id,c.`up_out_number` AS upOutNumber,c.`down_out_number` AS downOutNumber,c.`create_time` as createTime,c.unit_id as unitId, s.account AS createUserId,c.is_signing AS isSigning
         FROM
         count_referral as c
         LEFT JOIN sys_user s ON c.create_user_id=s.id
