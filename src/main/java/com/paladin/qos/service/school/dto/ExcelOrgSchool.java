@@ -45,42 +45,36 @@ public class ExcelOrgSchool {
     private String specificChargeLeaderCellphone;// 具体负责人电话
 
     @ReadProperty(cellIndex = 12)
-    private Integer schoolDoctorFull;// 校医(专职)人数
+    private Integer schoolDoctorFull;// 校医人数
 
     @ReadProperty(cellIndex = 13)
-    private Integer schoolDoctorPart;// 校医(兼职)人数
-
-    @ReadProperty(cellIndex = 14)
     private Integer healthTeacherFull;// 保健老师(专职)人数
 
-    @ReadProperty(cellIndex = 15)
+    @ReadProperty(cellIndex = 14)
     private Integer healthTeacherPart;// 保健老师(兼职)人数
 
-    @ReadProperty(cellIndex = 16)
+    @ReadProperty(cellIndex = 15)
     private Integer logistics;// 后勤保障人数
 
-    // @ReadProperty(cellIndex = 17)
-    private Integer total;// 学生总人数
-
-    @ReadProperty(cellIndex = 17)
+    @ReadProperty(cellIndex = 16)
     private String address;// 地址
 
-    @ReadProperty(cellIndex = 18, enumType = "school-section-type")
+    @ReadProperty(cellIndex = 17, enumType = "school-section-type")
     private Integer schoolSection;// 学段
 
-    @ReadProperty(cellIndex = 19, enumType = "grade-type")
+    @ReadProperty(cellIndex = 18, enumType = "grade-type")
     private Integer grade;// 年级
 
-    @ReadProperty(cellIndex = 20)
+    @ReadProperty(cellIndex = 19)
     private String klass;// 班级
 
-    @ReadProperty(cellIndex = 21)
+    @ReadProperty(cellIndex = 20)
     private Integer gradeTotal;// 年级学生人数
 
-    @ReadProperty(cellIndex = 22)
+    @ReadProperty(cellIndex = 21)
     private Integer boarders;// 寄宿生人数
 
-    @ReadProperty(cellIndex = 23)
+    @ReadProperty(cellIndex = 22)
     private Integer teaching;// 教职员工人数
 
     public String getParentSchoolName() {
@@ -180,14 +174,6 @@ public class ExcelOrgSchool {
 	this.logistics = logistics;
     }
 
-    public Integer getSchoolDoctorPart() {
-	return schoolDoctorPart;
-    }
-
-    public void setSchoolDoctorPart(Integer schoolDoctorPart) {
-	this.schoolDoctorPart = schoolDoctorPart;
-    }
-
     public Integer getHealthTeacherPart() {
 	return healthTeacherPart;
     }
@@ -210,14 +196,6 @@ public class ExcelOrgSchool {
 
     public void setHealthTeacherFull(Integer healthTeacherFull) {
 	this.healthTeacherFull = healthTeacherFull;
-    }
-
-    public Integer getTotal() {
-	return total;
-    }
-
-    public void setTotal(Integer total) {
-	this.total = total;
     }
 
     public Integer getSchoolSection() {

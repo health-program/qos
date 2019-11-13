@@ -11,57 +11,67 @@ import com.paladin.framework.excel.read.ReadProperty;
 public class ExcelEpidemicSituation {
     
     @ReadProperty(cellIndex = 0)
-    private String incidentUnit;//事发单位名称
+    private String schoolYear;//学年
+    
+    @ReadProperty(cellIndex = 1)
+    private String incidentUnit;//事发学校名称
+    
+    @ReadProperty(cellIndex = 2,enumType="school-section-type")
+    private String schoolSection;//学段
+    
+    @ReadProperty(cellIndex = 3,enumType="grade-type")
+    private String grade;//年级
+    
+    @ReadProperty(cellIndex = 4)
+    private String klass;//班级
 
-    @ReadProperty(cellIndex = 1,enumType="report-unit-type")
+    @ReadProperty(cellIndex = 5,enumType="report-unit-type")
     private String reportUnit;//报告单位（医疗机构为1，事发学校为2，家长为3，其他为4）
 
-    @ReadProperty(cellIndex = 2,enumType="sickness-type")
+    @ReadProperty(cellIndex = 6,enumType="sickness-type")
     private String sicknessClassify;//病种分类
 
-    @ReadProperty(cellIndex = 4)
-    private String grade;//班级
-
-    @ReadProperty(cellIndex = 3,enumType="region-type")
+    @ReadProperty(cellIndex = 7,enumType="region-type")
     private String region;//区域
-
+    
     @ReadProperty(cellIndex = 8)
-    private Integer firstWeek;//发病人数（首周）
-
-    @ReadProperty(cellIndex = 9)
-    private Integer total;//发病人数（累计）
-
-    @ReadProperty(cellIndex = 10)
-    private Integer vaccinationGradeNumber;//应急接种班级数
-
-    @ReadProperty(cellIndex = 11)
-    private Integer vaccinationPeopleNumber;//应急接种人数
-
-    @ReadProperty(cellIndex = 5)
     private Integer suspendGradeNumber;//停课班级数
     
-    @ReadProperty(cellIndex = 6)
+    @ReadProperty(cellIndex = 9)
     private Integer suspendPeopleNumber;//停课人数
     
-    @ReadProperty(cellIndex = 7)
+    @ReadProperty(cellIndex = 10)
     private Date suspendData;//停课时间
     
+
+    @ReadProperty(cellIndex = 11)
+    private Integer firstWeek;//发病人数（首周）
+
     @ReadProperty(cellIndex = 12)
+    private Integer total;//发病人数（累计）
+
+    @ReadProperty(cellIndex = 13)
+    private Integer vaccinationGradeNumber;//应急接种班级数
+
+    @ReadProperty(cellIndex = 14)
+    private Integer vaccinationPeopleNumber;//应急接种人数
+    
+    @ReadProperty(cellIndex = 15)
     private Integer municipalLeveNumber;//出动人次数(市级专业部门)
     
-    @ReadProperty(cellIndex = 13)
+    @ReadProperty(cellIndex = 16)
     private Integer districtTownNumber;//出动人次数(区镇级专业部门)
     
-    @ReadProperty(cellIndex = 16,enumType="boolean-type")
+    @ReadProperty(cellIndex = 17,enumType="boolean-type")
     private Integer isEarlyWarningValue;//是否预警值(是为1，否为2)
     
-    @ReadProperty(cellIndex = 14,enumType="boolean-type")
+    @ReadProperty(cellIndex = 18,enumType="boolean-type")
     private Integer isReasonTraceability;//是否原因溯源(是为1，否为2)
     
-    @ReadProperty(cellIndex = 15,enumType="boolean-type")
+    @ReadProperty(cellIndex = 19,enumType="boolean-type")
     private Integer isTraceabilityClear;//溯源是否清楚(是为1，否为2)
     
-    @ReadProperty(cellIndex = 17)
+    @ReadProperty(cellIndex = 20)
     private String remarks;//备注
 
     public String getIncidentUnit() {
@@ -94,14 +104,6 @@ public class ExcelEpidemicSituation {
 
     public void setGrade(String grade) {
         this.grade = grade;
-    }
-
-    public String getRegion() {
-        return region;
-    }
-
-    public void setRegion(String region) {
-        this.region = region;
     }
 
     public Integer getFirstWeek() {
@@ -206,6 +208,38 @@ public class ExcelEpidemicSituation {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getSchoolYear() {
+        return schoolYear;
+    }
+
+    public void setSchoolYear(String schoolYear) {
+        this.schoolYear = schoolYear;
+    }
+
+    public String getSchoolSection() {
+        return schoolSection;
+    }
+
+    public void setSchoolSection(String schoolSection) {
+        this.schoolSection = schoolSection;
+    }
+
+    public String getKlass() {
+        return klass;
+    }
+
+    public void setKlass(String klass) {
+        this.klass = klass;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
     
     

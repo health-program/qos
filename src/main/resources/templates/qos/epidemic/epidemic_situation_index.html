@@ -237,12 +237,14 @@
         return row;
     }
     
+  
     function importEpidemic() {
-        $.openPageLayer(importContent, {
+    	  $.openPageLayer(importContent, {
             width: 600,
             height: 200,
             title: '导入疫情',
             success: function(layero, index) {
+            	
             }
         });
     }
@@ -265,7 +267,6 @@
     
     function importSubmit() {
 	
-    //var	teamId=$("#teamId").val();
     
     var filename = $("#file").val();
     if (!filename) {

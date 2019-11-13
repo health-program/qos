@@ -15,7 +15,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.container.ConstantsContainer;
+import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.ExcelImportResult;
+import com.paladin.framework.common.QueryType;
 import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
@@ -38,6 +40,7 @@ import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.dto.ExcelEpidemicSituation;
 import com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.OrgSchoolPeopleService;
 import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
@@ -54,13 +57,14 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 
     @Autowired
     private EpidemicSituationMapper epidemicSituationMapper;
-
     @Autowired
     private OrgSchoolNameMapper orgSchoolNameMapper;
     @Autowired
     private OrgSchoolPeopleService orgSchoolPeopleService;
     @Autowired
     private OrgSchoolService orgSchoolService;
+    @Autowired
+    private OrgSchoolNameService orgSchoolNameService;
 
     public PageResult<EpidemicSituationVO> searchFindPage(
 	    EpidemicSituationQueryDTO query) {
@@ -141,7 +145,7 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 
 	ExcelReader<ExcelEpidemicSituation> reader = new ExcelReader<>(
 		ExcelEpidemicSituation.class, epidemicImportColumns,
-		new DefaultSheet(workbook.getSheetAt(0)), 1);
+		new DefaultSheet(workbook.getSheetAt(0)), 2);
 	List<ExcelImportError> errors = new ArrayList<>();
 
 	int i = 0;
@@ -164,7 +168,7 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 	    String incidentUnit = excelEpidemicSituation.getIncidentUnit();
 
 	    if (StringUtil.isEmpty(incidentUnit)) {
-		errors.add(new ExcelImportError(i, "事发单位名称不能为空"));
+		errors.add(new ExcelImportError(i, "事发学校名称不能为空"));
 		continue;
 	    }
 
@@ -175,10 +179,32 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 			+ "学校名称不存在"));
 		continue;
 	    }
+	    
+	    OrgSchool orgSchool = orgSchoolService.searchOne(new Condition[] {
+			new Condition(OrgSchool.PARENT_SCHOOL_ID, QueryType.EQUAL, name.getId()),
+			new Condition(OrgSchool.SCHOOL_YEAR, QueryType.EQUAL, excelEpidemicSituation.getSchoolYear())});
+	    
+	    if (orgSchool == null) {
+		errors.add(new ExcelImportError(i, "事发学校不存在"));
+		continue;
+	    }
+	    
+	    
+	    OrgSchoolPeople people = orgSchoolPeopleService.searchOne(new Condition[] {
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID, QueryType.EQUAL, orgSchool.getId()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_SECTION, QueryType.EQUAL, excelEpidemicSituation.getSchoolSection()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_GRADE, QueryType.EQUAL, excelEpidemicSituation.getGrade()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_KLASS, QueryType.EQUAL, excelEpidemicSituation.getKlass())});
+	    
+	    if (people == null) {
+		errors.add(new ExcelImportError(i, "事发学校班级不存在"));
+		continue;
+	    }
 
 	    String id = UUIDUtil.createUUID();
 	    situation.setId(id);
 	    situation.setIncidentUnit(name.getId());
+	    situation.setGrade(people.getId());
 	    try {
 		save(situation);
 	    } catch (BusinessException e) {
