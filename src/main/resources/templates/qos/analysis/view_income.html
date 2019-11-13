@@ -145,18 +145,25 @@
                     		}
                             
                        }  
-                    }, 
-                    { 
-                    	title: "其他收入", 
-                    	field: "ev15004",
-                    	formatter: function(value, row, index) {
-                    		if(row.ev15004==null){
-                    			return 0;
-                    		}else{
-                    			return value/100;
-                    		}
-                    		
-                       }  
+                    },
+                    {
+                        title: "其他收入",
+                        field: "ev15004",
+                        formatter: function(value, row, index) {
+                            if(row.ev15004==null){
+                                return 0;
+                            }else{
+                                return value/100;
+                            }
+
+                        }
+                    },
+                    {
+                        title: "合计总收入",
+                        field: "totalMoney",
+                        formatter: function(value, row, index) {
+                            return (row.ev15001/100 + row.ev15002/100 + row.ev15003/100 + row.ev15004/100).toFixed(2);
+                        }
                     }
                 ]
             ],
@@ -200,7 +207,6 @@
                 for (var o in data) {
                     result.push(data[o]);
                 }
-
                 initUnitChart(response);
                 ringChartDiv(response);
                 pieChartDiv(response);
