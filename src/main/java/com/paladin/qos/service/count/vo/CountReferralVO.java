@@ -22,6 +22,12 @@ public class CountReferralVO {
 
     private String  unitId;
 
+    private String unitName;
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     public String getUnitId() {
         return unitId;
     }

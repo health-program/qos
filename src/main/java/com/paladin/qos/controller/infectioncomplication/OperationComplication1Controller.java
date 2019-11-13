@@ -6,13 +6,16 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.operationComplicationExportCondition;
+import com.paladin.qos.model.count.CountReferral;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.infectioncomplication.OperationComplication;
+import com.paladin.qos.service.count.vo.CountReferralVO;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.OperationComplicationService;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationDTO;
 import com.paladin.qos.service.infectioncomplication.dto.OperationComplicationQueryDTO;
 import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -121,17 +124,31 @@ public class OperationComplication1Controller extends ControllerSupport {
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
+					List<OperationComplication> operationComplications=operationComplicationService.searchAll(query);
 					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition,
-							operationComplicationService.searchAll(query), OperationComplication.class));
+							getExportData(operationComplications), OperationComplicationVO.class));
 				} else if (condition.isExportPage()) {
+					List<OperationComplication> operationComplications=operationComplicationService.searchPage(query).getData();
 					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition,
-							operationComplicationService.searchPage(query).getData(), OperationComplication.class));
+							getExportData(operationComplications), OperationComplicationVO.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
 		} catch (IOException | ExcelWriteException e) {
 			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
 		}
+	}
+
+	private List<OperationComplicationVO> getExportData(List<OperationComplication> operationComplications) {
+		List<OperationComplicationVO> operationComplicationVOS = new ArrayList<>();
+		for (OperationComplication operationComplication : operationComplications) {
+			OperationComplicationVO operationComplicationVO = new OperationComplicationVO();
+			beanCopy(operationComplication, operationComplicationVO);
+			operationComplicationVOS.add(operationComplicationVO);
+		}
+		if (!CollectionUtils.isEmpty(operationComplicationVOS))
+			return operationComplicationVOS;
+		return null;
 	}
 
 	@GetMapping("/charts/index")

@@ -10,11 +10,14 @@ import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.infectioncomplication.dto.InfectionExportCondition;
 import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.infectioncomplication.Infection;
+import com.paladin.qos.model.infectioncomplication.OperationComplication;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.infectioncomplication.InfectionService;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionDTO;
 import com.paladin.qos.service.infectioncomplication.dto.InfectionQuery;
 import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
+import com.paladin.qos.service.infectioncomplication.vo.OperationComplicationVO;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -138,9 +141,11 @@ public class InfectionController extends ControllerSupport {
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, infectionService.searchAll(query),Infection.class));
+					List<Infection> infections=infectionService.searchAll(query);
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, getExportData(infections),InfectionVO.class));
 				} else if (condition.isExportPage()) {
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, infectionService.searchPage(query).getData(), Infection.class));
+					List<Infection> infections=infectionService.searchPage(query).getData();
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, getExportData(infections), InfectionVO.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
@@ -149,6 +154,17 @@ public class InfectionController extends ControllerSupport {
 		}
 	}
 
+	private List<InfectionVO> getExportData(List<Infection> infections) {
+		List<InfectionVO> infectionVOS = new ArrayList<>();
+		for (Infection infection : infections) {
+			InfectionVO infectionVO = new InfectionVO();
+			beanCopy(infection, infectionVO);
+			infectionVOS.add(infectionVO);
+		}
+		if (!CollectionUtils.isEmpty(infectionVOS))
+			return infectionVOS;
+		return null;
+	}
 }
 
 

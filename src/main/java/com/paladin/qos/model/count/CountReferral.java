@@ -1,6 +1,7 @@
 package com.paladin.qos.model.count;
 
 import com.paladin.framework.common.BaseModel;
+import com.paladin.qos.analysis.DataConstantContainer;
 
 import javax.persistence.Id;
 

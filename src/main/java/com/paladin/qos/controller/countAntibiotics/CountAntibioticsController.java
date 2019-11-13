@@ -9,11 +9,14 @@ import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.countAntibiotics.dto.CountAntibioticsExportCondition;
 import com.paladin.qos.model.countantibiotics.CountAntibiotics;
 import com.paladin.qos.model.data.DataUnit;
+import com.paladin.qos.model.infectioncomplication.Infection;
 import com.paladin.qos.service.countantibiotics.CountAntibioticsService;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsDTO;
 import com.paladin.qos.service.countantibiotics.dto.CountAntibioticsQuery;
 import com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO;
 import com.paladin.qos.service.data.DataUnitService;
+import com.paladin.qos.service.infectioncomplication.vo.InfectionVO;
+import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -166,17 +169,31 @@ public class CountAntibioticsController extends ControllerSupport {
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
+					List<CountAntibiotics> countAntibioticsList=countAntibioticsService.searchAll(query);
 					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition,
-							countAntibioticsService.searchAll(query), CountAntibiotics.class));
+							getExportData(countAntibioticsList), CountAntibioticsVO.class));
 				} else if (condition.isExportPage()) {
+					List<CountAntibiotics> countAntibioticsList=countAntibioticsService.searchPage(query).getData();
 					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition,
-							countAntibioticsService.searchPage(query).getData(), CountAntibiotics.class));
+							getExportData(countAntibioticsList), CountAntibioticsVO.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
 		} catch (IOException | ExcelWriteException e) {
 			return CommonResponse.getFailResponse("导出数据失败：" + e.getMessage());
 		}
+	}
+
+	private List<CountAntibioticsVO> getExportData(List<CountAntibiotics> countAntibioticsList) {
+		List<CountAntibioticsVO> countAntibioticsVOS = new ArrayList<>();
+		for (CountAntibiotics countAntibiotics : countAntibioticsList) {
+			CountAntibioticsVO countAntibioticsVO = new CountAntibioticsVO();
+			beanCopy(countAntibiotics, countAntibioticsVO);
+			countAntibioticsVOS.add(countAntibioticsVO);
+		}
+		if (!CollectionUtils.isEmpty(countAntibioticsVOS))
+			return countAntibioticsVOS;
+		return null;
 	}
 
 }

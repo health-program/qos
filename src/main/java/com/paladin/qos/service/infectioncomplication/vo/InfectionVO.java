@@ -47,6 +47,12 @@ public class InfectionVO {
     
     private String date;
 
+    private String unitName;
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     public String getDate() {
         return date;
     }

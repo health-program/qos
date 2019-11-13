@@ -12,11 +12,16 @@ public class CountAntibioticsVO {
     private Double userRate;
     private Double rateOfTotal;
     private String unitId;
+    private String unitName;
     private Date createTime;
     private String createUserId;
     private Date updateTime;
     private String updateUserId;
-    
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
+
     public String getUnitName() {
 	return DataConstantContainer.getUnitName(unitId);
 }
