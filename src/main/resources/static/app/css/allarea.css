@@ -563,3 +563,24 @@
 .blue11 {
     fill: #093d68;
 }
+.solimap{
+    position: absolute;
+    bottom: 10vh;
+    left: 64vw;
+}
+.solimap div{
+    color: #ffffff;
+}
+.solimap img{
+    width: 0.7vw;
+}
+.sq{
+    width: 0.9vw!important;
+    margin-right: 0.1vw;
+}
+.mb10{
+    margin-bottom: 1vh;
+}
+.hosp{
+    margin-top: 5px;
+}

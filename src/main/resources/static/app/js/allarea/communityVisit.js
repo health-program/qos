@@ -44,9 +44,8 @@ function getNumbers(){
 
             var communityVisitOption={
                 color: ['#388BFF', '#05C3FA', '#F6931C', '#FFD52E'],
-                tooltip : {
-                    show: true,
-                    trigger: 'item'   //  这里的item换成
+                tooltip: {
+                    trigger: 'axis',
                 },
                 legend: {
                     top: '8%',
@@ -54,7 +53,8 @@ function getNumbers(){
                         fontSize: 10,
                         color: '#fff'
                     },
-                    data: ['当天门诊人次', '当天急诊人次', '当月门诊人次', '当月急诊人次'],
+                   // data: ['当天门诊人次', '当天急诊人次', '当月门诊人次', '当月急诊人次'],
+                    data: [ '当月门诊人次', '当月急诊人次','当天门诊人次', '当天急诊人次'],
                 },
                 grid: { //图表的位置
                     top: '20%',
@@ -130,21 +130,7 @@ function getNumbers(){
                     }
 
                 }],
-                series: [{
-                    name: '当天门诊人次',
-                    type: 'bar',
-                    stack: 'sum',
-                    barWidth: '5px',
-                    data: data1
-                 },
-                    {
-                        name: '当天急诊人次',
-                        type: 'bar',
-                        barWidth: '5px',
-                        stack: 'sum',
-                        data: data2,
-
-                    },
+                series: [
                     {
                         name: '当月门诊人次',
                         type: 'bar',
@@ -162,7 +148,22 @@ function getNumbers(){
                         barWidth: '5px',
                         data: data4
 
-                    },
+                    },{
+                    name: '当天门诊人次',
+                    type: 'bar',
+                    stack: 'sum',
+                    barWidth: '5px',
+                    data: data1
+                 },
+                    {
+                        name: '当天急诊人次',
+                        type: 'bar',
+                        barWidth: '5px',
+                        stack: 'sum',
+                        data: data2,
+
+                    }
+
                 ]
             };
 
