@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="region-type"/>
+    <section class="content-header">
+        <h1>疾控队伍新增</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/cdc/team/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <!-- <div class="col-sm-2 col-sm-offset-5 btn-back">
+    	<a href="/qos/cdc/team/index" class="btn btn-primary btn-block">返回</a>
+    </div> -->
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        name: "新增",
+        server: false,
+        cancelBtn: false,
+        editFormClass: false,
+        formButtonBar:[{
+            id:  'reply_btn',
+            type: 'button',
+            name:  '返回',
+            class: 'btn btn-default btn-block',
+            order: 2
+        }],
+        url:"/qos/cdc/team/save",
+        columns: [
+				{ title: "疾控队伍名称", name: "name", inputType: "TEXT" },
+				{ title: "区域", name: "region",enum:"region-type",required: "required", inputType: "SELECT" },
+				{ title: "人均管理面积(KM2)", name: "manageArea", inputType: "TEXT" },
+				{ title: "人均管理学校数", name: "manageSchoolAmount", inputType: "TEXT" },
+				{ title: "人均处置疫情量", name: "epidemicAmount", inputType: "TEXT" },
+				{ title: "人居处置预警疫情量", name: "warningEpidemicAmount", inputType: "TEXT" }
+				]
+    }
+
+    $(function() {       
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $("#reply_btn").click(function () {
+            window.location = "/qos/cdc/team/index";
+        });
+       	$.initComponment($(".content"));
+        
+        var model = new tonto.Model("model", options.columns, {
+            pattern:"edit",
+            successCallback:function(){
+                $.successAlert("保存成功",function(){
+                    window.location = "/qos/cdc/team/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>
