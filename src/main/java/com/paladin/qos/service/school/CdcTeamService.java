@@ -29,7 +29,7 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 @Service
 public class CdcTeamService extends ServiceSupport<CdcTeam> {
     
-    private static final List<ReadColumn> schoolImportColumns = DefaultReadColumn.createReadColumn(ExcelCdcTeam.class, new EnumContainer(){
+    private static final List<ReadColumn> cdcTeamImportColumns = DefaultReadColumn.createReadColumn(ExcelCdcTeam.class, new EnumContainer(){
  	
  	@Override
 	public String getEnumName(String type, String key) {
@@ -58,7 +58,7 @@ public class CdcTeamService extends ServiceSupport<CdcTeam> {
         throw new BusinessException("导入异常");
     }
     
-    ExcelReader<ExcelCdcTeam> reader = new ExcelReader<>(ExcelCdcTeam.class, schoolImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 1);
+    ExcelReader<ExcelCdcTeam> reader = new ExcelReader<>(ExcelCdcTeam.class, cdcTeamImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 1);
     List<ExcelImportError> errors = new ArrayList<>();
     
     int i = 0;
