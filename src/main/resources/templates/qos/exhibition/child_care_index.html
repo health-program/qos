@@ -238,9 +238,8 @@
             if (newbornChildTotal !== 0) {
                 generatorXsetlChart(xsetlChart);
             }else {
-
-                    showChartInfo(xsetlChart,'暂无数据')
-
+                showChartInfo(xsetlChart,'暂无数据');
+                return false;
             }
             var labelOption = {
                 normal: {
@@ -304,21 +303,21 @@
             title: {
                 text: ['{name|筛查率}'].join('\n'),
                 subtext: percentage,
-                top: '25%',
+                top: '30%',
                 left:'50%',
                 textAlign: 'center',
                 textStyle: {
                     rich: {
                         name: {
                             color: '#67E0E3',
-                            lineHeight: 50,
+                            lineHeight: 60,
                             fontWeight: 'bold',
-                            fontSize: '50'
+                            fontSize: '60'
                         }
                     }
                 },
                 subtextStyle: {
-                    fontSize: '40',
+                    fontSize: '45',
                     fontWeight: 'bold',
                     lineHeight: 35,
                     color: '#67E0E3',
@@ -329,7 +328,6 @@
                 formatter: "{b} : {c}个 ({d}%)"
             },
             legend: {
-                orient: 'vertical',
                 top: 'bottom',
                 selectedMode: false,
                 bottom : 5 ,
@@ -341,15 +339,15 @@
                         }
 
                     }
-                    return name + ' ' + target + '个';
+                    return name + ':' + target;
                 }
             },
             series: [
                 {
                     name:'新生儿听力筛查',
                     type:'pie', //环形图的type和饼图相同
-                    radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
-                    center: ['50%', '40%'],
+                    radius: ['70%', '90%'],//饼图的半径，第一个为内半径，第二个为外半径
+                    center: ['50%', '48%'],
                     avoidLabelOverlap: false,
                     color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
                     hoverAnimation : false,

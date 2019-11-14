@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * <儿童保健管理>
@@ -89,7 +86,9 @@ public class ChildCareManagementController {
 	@RequestMapping(value = "/search/yesl", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object searchYesl(AnalysisRequest request) {
-		return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit("13210", request.getStartTime(), request.getEndTime(),null));
+		List<DataCountUnit> units = analysisService.countTotalNumByUnit("13210", request.getStartTime(), request.getEndTime(), null);
+		Collections.reverse(units);
+		return CommonResponse.getSuccessResponse(units);
 	}
 
 	@RequestMapping(value = "/search/org", method = { RequestMethod.GET, RequestMethod.POST })

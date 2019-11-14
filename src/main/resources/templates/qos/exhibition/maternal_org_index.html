@@ -217,14 +217,14 @@
         };
         option = {
             title: {
-                text: '孕妇产后访视数',
+                text: '孕妇产后访视人次数',
                 subtext: yffs,
                 x: 'center',
                 y: '38%',
                 textStyle : {
                     color : '#44B7D3',
                     fontFamily : '微软雅黑',
-                    fontSize : 25,
+                    fontSize : 20,
                     fontWeight : 'bolder'
                 },
                 subtextStyle: {
@@ -239,7 +239,7 @@
             },
             series : [
                 {
-                    name:'孕妇产后访视数',
+                    name:'孕妇产后访视人次数',
                     type:'pie',
                     color: [ '#44B7D3'], //环形图每块的颜色
                     clockWise:false,
@@ -248,7 +248,7 @@
                     data:[
                         {
                             value:yffs,
-                            name:'孕妇产后访视数'
+                            name:'孕妇产后访视人次数'
                         },
                         {
                             value: total === 0 ? yffs * 0.3 : (total -yffs) * 0.05,
@@ -328,7 +328,7 @@
                 },
                 legend: {
                     top: 'bottom',
-                    data:[ '早孕建卡数', '孕妇建卡数','孕妇产后访视数']
+                    data:[ '早孕建卡数', '孕妇建卡数','孕妇产后访视人次数']
                 },
                 calculable: true,
                 dataZoom: [   {
@@ -405,7 +405,7 @@
                         barGap: 0,
                         data: data1
                     },{
-                        name: '孕妇产后访视数',
+                        name: '孕妇产后访视人次数',
                         type: 'bar',
                         label: labelOption,
                         barGap: 0,
@@ -427,7 +427,7 @@
                         }},
                     {title: "早孕建卡数", field: "zyjk", align: "center",footerFormatter: sumTotalFormatterModal},
                     {title: "孕妇建卡数", field: "yfjk", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "孕妇产后访视数", field: "yffs", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "孕妇产后访视人次数", field: "yffs", align: "center",footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],

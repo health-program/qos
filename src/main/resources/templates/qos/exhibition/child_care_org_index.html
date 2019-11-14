@@ -216,14 +216,14 @@
         };
         option = {
             title: {
-                text: '新生儿访视数',
+                text: '新生儿访视人次数',
                 subtext: fss,
                 x: 'center',
                 y: '38%',
                 textStyle: {
                     color: '#44B7D3',
                     fontFamily: '微软雅黑',
-                    fontSize: 30,
+                    fontSize: 23,
                     fontWeight: 'bolder'
                 },
                 subtextStyle: {
@@ -238,7 +238,7 @@
             },
             series: [
                 {
-                    name: '新生儿访视数',
+                    name: '新生儿访视人次数',
                     type: 'pie',
                     color: ['#44B7D3'], //环形图每块的颜色
                     clockWise: false,
@@ -247,7 +247,7 @@
                     data: [
                         {
                             value: fss,
-                            name: '新生儿访视数'
+                            name: '新生儿访视人次数'
                         },
                         {
                             value: total === 0 ? fss * 0.3 : (total -fss) * 0.03,
@@ -327,7 +327,7 @@
                 },
                 legend: {
                     top: 'bottom',
-                    data:[ '新生儿访视数', '新生儿数','儿童建卡数']
+                    data:[ '新生儿访视人次数', '新生儿数','儿童建卡数']
                 },
                 calculable: true,
                 dataZoom: [   {
@@ -392,7 +392,7 @@
                 ],
                 series: [
                     {
-                        name: '新生儿访视数',
+                        name: '新生儿访视人次数',
                         type: 'bar',
                         label: labelOption,
                         barGap: 0,
@@ -424,7 +424,7 @@
                     {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "新生儿访视数", field: "fss", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "新生儿访视人次数", field: "fss", align: "center",footerFormatter: sumTotalFormatterModal},
                     {title: "新生儿数", field: "xses", align: "center",footerFormatter: sumTotalFormatterModal},
                     {title: "儿童建卡数", field: "jks", align: "center",footerFormatter: sumTotalFormatterModal},
 
