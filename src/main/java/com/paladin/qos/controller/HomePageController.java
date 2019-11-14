@@ -641,7 +641,7 @@ public class HomePageController {
         	}
         	
         	if(diseaseList2.size()>10){
-        		map.put(eventId, diseaseList2);
+        		map.put(eventId, diseaseList2.subList(0, 10));
         	}else{
         		map.put(eventId, diseaseList1);
         	}
