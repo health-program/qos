@@ -52,7 +52,8 @@ function gethospitelNumbers(){
                         fontSize: 10,
                         color: '#FFFFFF'
                     },
-                    data: ['当日门诊人次', '当日急诊人次', '当月门诊人次', '当月急诊人次'],
+                    //data: ['当日门诊人次', '当日急诊人次', '当月门诊人次', '当月急诊人次'],
+                    data: ['当月门诊人次', '当月急诊人次', '当日门诊人次', '当日急诊人次'],
                 },
                 grid: { //图表的位置
                     top: '20%',
@@ -128,21 +129,7 @@ function gethospitelNumbers(){
                         show:false
                     },
                 }],
-                series: [{
-                    name: '当日门诊人次',
-                    type: 'bar',
-                    stack: 'sum',
-                    barWidth: '5px',
-                    data: data1
-                },
-                    {
-                        name: '当日急诊人次',
-                        type: 'bar',
-                        barWidth: '5px',
-                        stack: 'sum',
-                        data: data2,
-
-                    },
+                series: [
                     {
                         name: '当月门诊人次',
                         type: 'bar',
@@ -160,7 +147,22 @@ function gethospitelNumbers(){
                         barWidth: '5px',
                         data: data4
 
-                    },
+                    },{
+                    name: '当日门诊人次',
+                    type: 'bar',
+                    stack: 'sum',
+                    barWidth: '5px',
+                    data: data1
+                },
+                    {
+                        name: '当日急诊人次',
+                        type: 'bar',
+                        barWidth: '5px',
+                        stack: 'sum',
+                        data: data2,
+
+                    }
+
                 ]
             };
 

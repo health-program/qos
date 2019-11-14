@@ -2,7 +2,7 @@ var hospitalDataMap={},currentShowIndex= 0, eventIds =['V40001','V40002','V40003
 function getData(){
        $.ajax({
             type : "post",    //请求类型
-            url : URLPATH+"/home/page/qos/getTop5Disease",//请求的 URL地址
+            url : URLPATH+"/home/page/qos/getTop10Disease",//请求的 URL地址
             data:{
                 eventIds:'V40001,V40002,V40003,V40004,V40005,V40006,V40007,V40008,V40009,V40010,V40011,V40012,V40013'
             },
@@ -40,7 +40,7 @@ var arrs={
 
       $.ajax({
           type: "post",    //请求类型
-          url: URLPATH+"/home/page/qos/getTop5Disease",//请求的 URL地址
+          url: URLPATH+"/home/page/qos/getTop10Disease",//请求的 URL地址
           data: arrs,
           success: function (res) {
               var resData = res.result;
@@ -52,7 +52,7 @@ var arrs={
           }
       })
 
-  getData()
+
   getFirst() //  获取第一人民医院数据并且写死
 
 /**
@@ -66,7 +66,7 @@ function getFirst(){
     }
     $.ajax({
         type : "post",    //请求类型
-        url : URLPATH+"/home/page/qos/getTop5Disease",//请求的 URL地址
+        url : URLPATH+"/home/page/qos/getTop10Disease",//请求的 URL地址
         data:arrsOne,
         success: function (res) {
             var resData =res.result;

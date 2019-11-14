@@ -264,7 +264,7 @@ public class HomePageController {
         List<String> ignoreUnitIds = request.getIgnoreUnitIds();
 
         List<String> eventIds = request.getEventIds();
-        if (eventIds != null && eventIds.size() > 0) {
+
             Map<String, Object> map = new HashMap<>();
             for (String eventId : eventIds) {
                 Event event = DataConstantContainer.getEvent(eventId);
@@ -285,20 +285,6 @@ public class HomePageController {
                 }
             }
             return CommonResponse.getSuccessResponse(map);
-        } else {
-            String eventId = request.getEventId();
-            Event event = DataConstantContainer.getEvent(eventId);
-            if (event != null) {
-                int eventType = event.getEventType();
-                int unitType = getUnitType(event);
-                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                    return CommonResponse.getSuccessResponse(analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
-                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                    return CommonResponse.getSuccessResponse(analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds));
-                }
-            }
-        }
-        return CommonResponse.getErrorResponse();
     }
 
     //医院平均住院日41005 取前31天
