@@ -597,7 +597,7 @@ public class HomePageController {
     	return  CommonResponse.getSuccessResponse(map);
     }
     
-    @RequestMapping(value = "/getTop5Disease", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/getTop10Disease", method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public Object getTop5Disease(AnalysisRequest request) {
     	List<Unit> units = DataConstantContainer.getHospitalList();
@@ -622,25 +622,31 @@ public class HomePageController {
         	}
         	
         	List<Disease> nameList = analysisService.findNameList();
+        	List<Disease> diseaseList2=new ArrayList<Disease>();
         	for(Disease yiyuan:diseaseList1){
         		for(Disease name:nameList){
         			if((yiyuan.getDiseasecode()).contains(".")){
         				if((yiyuan.getDiseasecode()+"00").equals(name.getDiseasecode())){
             				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+            				diseaseList2.add(yiyuan);
             			}
         			}else{
         				if((yiyuan.getDiseasecode()+"0").equals(name.getDiseasecode())){
             				yiyuan.setDiseasecodeName(name.getDiseasecodeName());
+            				diseaseList2.add(yiyuan);
             			}
         			}
         			
         		}
         	}
-        	map.put(eventId, diseaseList1);
+        	
+        	if(diseaseList2.size()>10){
+        		map.put(eventId, diseaseList2);
+        	}else{
+        		map.put(eventId, diseaseList1);
+        	}
+        	
     	}
-    	
-    	
-    	
     	
 		return CommonResponse.getSuccessResponse(map);
 	}
