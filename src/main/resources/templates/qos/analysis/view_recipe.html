@@ -416,7 +416,7 @@
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 0, //角度顺时针计算的
+                    rotate: 55, //角度顺时针计算的
                     formatter: function(value) {
                         var reg = new RegExp('社区卫生服务中心', "g");
                     	return value.replace(reg, '');
@@ -502,7 +502,7 @@
                 type: 'category',
                 axisLabel: {
                     interval: 0,
-                    rotate: 40, //角度顺时针计算的
+                    rotate: 55, //角度顺时针计算的
                     formatter: function(value) {
                         var reg = new RegExp('社区卫生服务中心', "g");
                     	return value.replace(reg, '');
@@ -821,8 +821,106 @@
         ring3Chart.setOption(option, true);
     }
     
-    
     function dashChartDiv(response){
+    	var ev16012 = convertUnitChartData(response, '16012', true);
+        var ev16013 = convertUnitChartData(response, '16013', true);
+        var ev16014 = convertUnitChartData(response, '16014', true);
+
+        if (!dashChart) {
+        	dashChart = echarts.init(document.getElementById('dashChartDiv'));
+        }
+		
+        var option ={        //加载数据图表
+	    	//color:['#1e90ff','#f0ffff'],
+	        title: {
+	            text: ''
+	        },
+	        tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value + '%';
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+	        
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+	        legend: {
+	        	type:"scroll",
+	        	data: ['一联抗生素使用率', '二联抗生素使用率','三联抗生素使用率'],
+	            bottom:0
+	        },
+	        xAxis: {
+	        	type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 55, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                    }
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev16012.unit
+            },
+            yAxis: {
+                axisLabel: {
+                    formatter: function(val) {
+                        return val + '%';
+                    }
+                },
+                type: 'value',
+                
+            },
+	        
+	        series: [
+	        	 {  type: 'line',
+	        		 barWidth : 5,
+	                 itemStyle:{
+	                     normal:{
+	                         barBorderRadius:2,
+	                     }
+	                 },
+	            name: '一联抗生素使用率',
+	            data: ev16012.values},
+	        	 {  type: 'line',
+	            	 barWidth : 5,
+	                 itemStyle:{
+	                     normal:{
+	                         barBorderRadius:3,
+	                     }
+	                 },
+	               name: '二联抗生素使用率',
+	               data: ev16013.values},
+	        	 {  type: 'line',
+	          	   barWidth : 5,
+	                 itemStyle:{
+	                     normal:{
+	                         barBorderRadius:3,
+	                     }
+	                 },
+	                 name: '三联抗生素使用率',
+	                 data: ev16014.values}
+	                 
+	       ]
+	    };
+		
+        dashChart.setOption(option, true);
+    }
+    /* function dashChartDiv(response){
     	var data = {};
     	 convertRate2TableData(response, '16012', data);
     	 convertRate2TableData(response, '16013', data);
@@ -1011,7 +1109,7 @@
     		    ]
     		};
     	dashChart.setOption(option, true);
-    }
+    } */
     </script>
 </body>
 
