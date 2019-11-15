@@ -37,8 +37,8 @@ public class OrgSchoolPeople extends BaseModel {
 	// 寄宿生人数
 	private Integer boarders;
 
-	// 教职员工人数
-	private Integer teaching;
+	// 卫生保健人员
+	private String hygieneHealth;
 
 	public String getId() {
 		return id;
@@ -88,20 +88,20 @@ public class OrgSchoolPeople extends BaseModel {
 	    this.boarders = boarders;
 	}
 
-	public Integer getTeaching() {
-	    return teaching;
-	}
-
-	public void setTeaching(Integer teaching) {
-	    this.teaching = teaching;
-	}
-
 	public String getKlass() {
 		return klass;
 	}
 
 	public void setKlass(String klass) {
 		this.klass = klass;
+	}
+
+	public String getHygieneHealth() {
+	    return hygieneHealth;
+	}
+
+	public void setHygieneHealth(String hygieneHealth) {
+	    this.hygieneHealth = hygieneHealth;
 	}
 	
 }

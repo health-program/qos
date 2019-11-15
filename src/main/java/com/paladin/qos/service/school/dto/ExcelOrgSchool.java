@@ -55,27 +55,30 @@ public class ExcelOrgSchool {
 
     @ReadProperty(cellIndex = 15)
     private Integer logistics;// 后勤保障人数
-
+    
     @ReadProperty(cellIndex = 16)
+    private Integer teaching;// 教职员工人数
+
+    @ReadProperty(cellIndex = 17)
     private String address;// 地址
 
-    @ReadProperty(cellIndex = 17, enumType = "school-section-type")
+    @ReadProperty(cellIndex = 18, enumType = "school-section-type")
     private Integer schoolSection;// 学段
 
-    @ReadProperty(cellIndex = 18, enumType = "grade-type")
+    @ReadProperty(cellIndex = 19, enumType = "grade-type")
     private Integer grade;// 年级
 
-    @ReadProperty(cellIndex = 19)
+    @ReadProperty(cellIndex = 20)
     private String klass;// 班级
 
-    @ReadProperty(cellIndex = 20)
+    @ReadProperty(cellIndex = 21)
     private Integer gradeTotal;// 年级学生人数
 
-    @ReadProperty(cellIndex = 21)
+    @ReadProperty(cellIndex = 22)
     private Integer boarders;// 寄宿生人数
 
-    @ReadProperty(cellIndex = 22)
-    private Integer teaching;// 教职员工人数
+    @ReadProperty(cellIndex = 23)
+    private String hygieneHealth;// 卫生保健人员
 
     public String getParentSchoolName() {
 	return parentSchoolName;
@@ -260,6 +263,14 @@ public class ExcelOrgSchool {
 
     public void setBusinessDistrict(String businessDistrict) {
         this.businessDistrict = businessDistrict;
+    }
+
+    public String getHygieneHealth() {
+        return hygieneHealth;
+    }
+
+    public void setHygieneHealth(String hygieneHealth) {
+        this.hygieneHealth = hygieneHealth;
     }
 
 }
