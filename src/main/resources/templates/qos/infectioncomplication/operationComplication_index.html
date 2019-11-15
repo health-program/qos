@@ -72,30 +72,29 @@
 							{
 								idField : "id",
 								columns : [ [
-										{ title: "单位",
-											field: "unitName",
-											align: "left"
+										{ title: "&emsp;&emsp;&emsp;&emsp;单位&emsp;&emsp;&emsp;&emsp;",
+											field: "unitName"
 										},
 										{
-											title : "手术患者并发症发生率",
+											title : "手术患者并</br>发症发生率",
 											align : "center",
 											field : "embolism",
 											formatter : getRate
 										},
 										{
-											title : "手术患者手术后肺栓塞发生率",
+											title : "手术患者手术后</br>肺栓塞发生率",
 											align : "center",
 											field : "pulmonaryEmbolism",
 											formatter : getRate
 										},
 										{
-											title : "手术患者手术后深静脉血栓发生率",
+											title : "手术患者手术后</br>深静脉血栓发生率",
 											align : "center",
 											field : "venousThrombosis",
 											formatter : getRate
 										},
 										{
-											title : "手术患者手术后出血或血肿发生率",
+											title : "手术患者手术后</br>出血或血肿发生率",
 											align : "center",
 											field : "hematoma",
 											formatter : getRate
@@ -105,6 +104,7 @@
 										{
 											title : "创建时间",
 											align : "center",
+											idth : "200px",
 											field : "createTime",
 											formatter : "datetime"
 										},

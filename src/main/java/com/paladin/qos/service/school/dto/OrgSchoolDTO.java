@@ -48,6 +48,9 @@ public class OrgSchoolDTO {
 	
 	// 后勤保障人数
 	private Integer logistics;
+	
+	//教职员工人数
+	private Integer teaching;
 			
 	// 校医(兼职)人数
 	private Integer schoolDoctorPart;
@@ -235,6 +238,14 @@ public class OrgSchoolDTO {
 
 	public void setBusinessDistrict(String businessDistrict) {
 	    this.businessDistrict = businessDistrict;
+	}
+
+	public Integer getTeaching() {
+	    return teaching;
+	}
+
+	public void setTeaching(Integer teaching) {
+	    this.teaching = teaching;
 	}
 
 	@Override
