@@ -537,7 +537,12 @@
             }
         }
         var it=total[total.length - 1];
-         var rate=(it.evV30009/it.ev1V30009*100).toFixed(2)+ '%';
+        var rate=0;
+        if ("undefined"==typeof (it.evV30009) || "undefined"==typeof (it.ev1V30009)){
+            rate=0+ '%'
+        }else{
+            rate=(it.evV30009/it.ev1V30009*100).toFixed(2)+ '%';
+        }
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart1,pieName,rate,remainRate);
@@ -580,7 +585,12 @@
         var pieName="糖尿病规范管理率";
         var remainRate=0;
         var it=total[total.length - 1];
-         var rate=(it.evV30010/it.ev1V30010*100).toFixed(2)+ '%';
+        var rate=0;
+        if ("undefined"==typeof (it.evV30010) || "undefined"==typeof (it.ev1V30010)){
+            rate=0+ '%'
+        }else{
+            rate=(it.evV30010/it.ev1V30010*100).toFixed(2)+ '%';
+        }
         rate=rate.replace("%","")*1;
         remainRate=(100-rate).toFixed(2);
         initPieChart(pieChart3,pieName,rate,remainRate);
