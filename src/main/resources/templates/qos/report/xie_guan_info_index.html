@@ -68,7 +68,7 @@
 	    var content = '<form id="transfers" class="form-horizontal" style="margin-top: 20px;">' +
 	    '    <label for="name" class="col-xs-4 control-label">卫计计生监督协管信息上报率</label>' +
 	    '    <div class="col-xs-7">' +
-	    '        <input type="text" class="form-control" id="data" name="data" required="required" placeholder="疫情处置及时率"></input>' +
+	    '        <input type="number" min="0" class="form-control" id="data" name="data" required="required" placeholder="疫情处置及时率"></input>' +
 	    '    </div>' +
 	    '    <div class="col-sm-5 col-sm-offset-4" style="margin-top: 20px;">' +
 	    '        <a onclick="submit()" type="button" class="btn btn-primary btn-block">确定</a>' +
@@ -95,8 +95,10 @@
 	         $.errorMessage("卫计计生监督协管信息上报率不能为空");
 	         return;
 	     }
-		
-		var data = {
+		 var ex = /^\d+$/;
+		 if (ex.test(data)) {
+		    // 则为整数
+		    var data = {
 			data:data,
 			type:3
 		}
@@ -105,6 +107,11 @@
 	        table.refresh();
 	        layer.close(index);
 	    })
+		 }else{
+			 $.errorMessage("输入的值不能少于0"); 
+		 }
+		 
+		
 	}
     
     function getRate(value, row, index){

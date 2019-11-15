@@ -30,7 +30,7 @@
         }],
         columns: [
 			{ title: "单位",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
-            { title: "围产期心脏病筛查人数", name: "data", inputType: "NUMBER", required:"required" },
+            { title: "围产期心脏病筛查人数", name: "data", inputType: "NUMBER", required:"required",attr:{'min':0} },
         ]
     }
 
