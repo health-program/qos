@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+    <h1>门急诊人次统计</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" ></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="payType" id="payType" class="form-control">
+                                <option value="">请选择付费方式</option>
+                                <option value="3001">医保</option>
+                                <option value="1001">自费</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="monthChartDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="unitChartDiv" class="box-body" style="height: 450px">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
+    var table, monthChart, unitChart, requestParam, selectUnit;
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initTable();
+        initMonthChart();
+    }
+
+    function unitSelected(row) {
+        selectUnit = row.unitId;
+        drawMonthChart();
+    }
+
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                   
+                    {
+                        title: "医疗机构",
+                        field: "unitName"
+                    },
+                    { 
+                    	title: "住院次数", 
+                    	field: "ev14001"
+                    },
+                    { 
+                    	title: "出院人次数", 
+                    	field: "ev14002"
+
+                    }
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                unitSelected(row);
+            },
+            onCheck: unitSelected,
+            queryParams: function(params) {
+            	if($("#startTime").val()==""||$("#startTime").val()==null){
+					 var date = new Date()
+					  var year = date .getFullYear(); 
+					 var month = date .getMonth()+1;
+					 var day = date .getDate();
+					 var time = year+"-"+month+"-"+"01"
+      		   $("#startTime").val(time);
+      		   params.startTime = time;
+      	     } 
+            	
+            	
+            	//14001
+            	if($("#payType").find("option:selected").val()==""){
+            		params.eventIds = '14001,14002';
+            	}
+            	if($("#payType").find("option:selected").val()=="3001"){
+            		params.eventIds = '1400101,1400201';
+            	}
+            	if($("#payType").find("option:selected").val()=="1001"){
+            		params.eventIds = '1400102,1400202';
+            	}
+                params.ignoreUnitIds = '320583810343'
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+            	console.log(response);
+                var data = {};
+                
+                if($("#payType").find("option:selected").val()==""){
+                	convertCount2TableData(response, '14001', data);
+                    convertCount3TableData(response, '14002', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="3001"){
+            		convertCount2TableData(response, '1400101', data);
+                    convertCount3TableData(response, '1400201', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="1001"){
+            		convertCount2TableData(response, '1400102', data);
+                    convertCount3TableData(response, '1400202', data);
+            	}
+                
+                
+
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+
+                initUnitChart(response);
+                console.log(result);
+                return result;
+            }
+        });
+    }
+    
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + '14001',
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    function convertCount3TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + '14002',
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed|| 2);
+    }
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+
+    function initUnitChart(data){
+    	var ev13001 = convertUnitChartData(data, '13001', false);
+    	var ev13002 = convertUnitChartData(data, '13002', false);
+    	var ev13003 = convertUnitChartData(data, '13003', false);
+    	var ev13004 = convertUnitChartData(data, '13004', false);
+    	var ev13005 = convertUnitChartData(data, '13005', false);
+        if (!unitChart) {
+            unitChart = echarts.init(document.getElementById('unitChartDiv'));
+        }
+    	
+    	var option = {        //加载数据图表
+        	//color:['#1e90ff','#f0ffff'],
+            title: {
+                text: ''
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: function(params, ticket, callback) {
+                    var html = params[0].axisValueLabel + '：';
+                    for (var i = 0; i < params.length; i++) {
+                        var param = params[i];
+                        html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+                    }
+                    return html;
+                },
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            
+            grid: {
+                left: 45,
+                right: 20,
+                bottom: 50,
+                containLabel: true
+            },
+            legend: {
+            	type:"scroll",
+            	data: ['门诊人次数', '急诊人次数','门急诊总人数','出诊医生数','医生平均门诊量','康复服务数'],
+                bottom:0
+            },
+            xAxis: {
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                    	return value.replace(reg, '');
+                    }
+                },
+                axisTick: {
+                    alignWithLabel: true
+                },
+                data: ev13001.unit,
+            },
+            yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+            series: [
+            	 {  type: 'bar',
+            		 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:2,
+                         }
+                     },
+                name: '门诊人次数',
+                data: ev13001.values},
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                   name: '急诊人次数',
+                   data: ev13002.values},
+            	 {  type: 'bar',
+              	   barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     name: '门急诊总人数',
+                     data: ev13003.values},
+            	 {  type: 'bar',
+                  	 barWidth : 5,
+                       itemStyle:{
+                           normal:{
+                               barBorderRadius:3,
+                           }
+                       },
+                     name: '出诊医生数',
+                     data: ev13004.values},
+            	 {  type: 'bar',
+                    	 barWidth : 5,
+                         itemStyle:{
+                             normal:{
+                                 barBorderRadius:3,
+                             }
+                         },
+                     name: '医生平均门急诊量',
+                     data: ev13005.values}/* ,
+            	 {  type: 'bar',
+                	 barWidth : 5,
+                     itemStyle:{
+                         normal:{
+                             barBorderRadius:3,
+                         }
+                     },
+                     	name: '康复服务数',
+                     data: recoveryNumber} */
+                     
+           ]
+        };
+    	unitChart.setOption(option, true);
+    }
+    
+    function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+    var month13001, month13002, month13003, month13004, month13005; 
+    
+    
+    
+    function initMonthChart(response) {
+        if (!response) {
+            $.postAjax('/qos/analysis/data/get/month/instalments', requestParam, initMonthChart);
+            return;
+        }
+
+        month13001 = convertMonthChartData(response, '13001', false);
+        month13002 = convertMonthChartData(response, '13002', false);
+        month13003 = convertMonthChartData(response, '13003', false);
+        month13004 = convertMonthChartData(response, '13004', false);
+        //month13005 = convertMonthChartData(response, '13005', false);
+
+        drawMonthChart('total');
+    }
+    
+    function drawMonthChart() {
+    	 var unitId = selectUnit || 'total';
+
+         if (!monthChart) {
+             monthChart = echarts.init(document.getElementById('monthChartDiv'));
+         }
+    	var option = {        //加载数据图表
+           	//color:['#1e90ff','#f0ffff'],
+               title: {
+                   text: ''
+               },
+               tooltip: {
+                   trigger: 'axis',
+                   formatter: function(params, ticket, callback) {
+                       var html = params[0].axisValueLabel + '：';
+                       for (var i = 0; i < params.length; i++) {
+                           var param = params[i];
+                           html += '<br/>' + param.marker + param.seriesName + '：' + param.value ;
+                       }
+                       return html;
+                   },
+                   axisPointer: {
+                       type: 'shadow'
+                   }
+               },
+               legend: {
+            	type:"scroll",
+               	data: ['门诊人次数', '急诊人次数','门急诊总人数','出诊医生数','医生平均门急诊量','康复服务数'],
+                   bottom:0
+               },
+               xAxis: {
+                   type: 'category',
+                   boundaryGap: false,
+                   axisLabel: {
+                       interval: 0,
+                       rotate: 40 //角度顺时针计算的
+                   },
+                   data: month13001.month
+               },
+               yAxis: {type: 'value'},
+               series: [
+               	 {  type: 'line',
+               		barWidth : 4,
+		            smooth:0.3,
+               		areaStyle: {},
+                   label:{
+                   	normal:{
+                   	show:true,            //显示数字
+                   	position: 'top'        //这里可以自己选择位置
+                   	}
+                   	},
+                   name: '门诊人次数',
+                   data: month13001.valuesMap[unitId]},
+               	 {  type: 'line',
+                	   barWidth : 4,
+			            smooth:0.3,
+                	   areaStyle: {},
+                        label:{
+                        	normal:{
+                        	show:true,            //显示数字
+                        	position: 'top'        //这里可以自己选择位置
+                        	}
+                        	},
+                      name: '急诊人次数',
+                      data: month13002.valuesMap[unitId]},
+               	 {  type: 'line',
+                    	  barWidth : 4,
+				            smooth:0.3,
+                    	  areaStyle: {},
+                        label:{
+                        	normal:{
+                        	show:true,            //显示数字
+                        	position: 'top'        //这里可以自己选择位置
+                        	}
+                        	},
+                        name: '门急诊总人数',
+                        data: month13003.valuesMap[unitId]},
+               	 {  type: 'line',
+                        	barWidth : 4,
+				            smooth:0.3,
+                        	areaStyle: {},
+                        label:{
+                        	normal:{
+                        	show:true,            //显示数字
+                        	position: 'top'        //这里可以自己选择位置
+                        	}
+                        	},
+                        name: '出诊医生数',
+                        data: month13004.valuesMap[unitId]}/* ,
+               	 {  type: 'line',
+                        	barWidth : 4,
+				            smooth:0.3,
+                        	areaStyle: {},
+                        label:{
+                        	normal:{
+                        	show:true,            //显示数字
+                        	position: 'top'        //这里可以自己选择位置
+                        	}
+                        	},
+                        name: '医生平均门急诊量',
+                        data: month13005.valuesMap[unitId]} */
+              ]
+           };
+    	monthChart.setOption(option, true);
+    };  
+    </script>
+</body>
+
+</html>
