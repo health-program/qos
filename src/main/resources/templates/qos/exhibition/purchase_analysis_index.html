@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>药品采购分析</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="year" id="year" placeholder="请输入查询年份" autocomplete="off" type="text" value="2019" class="form-control tonto-datepicker-year">
+                    </div>
+                    <div class="col-md-2">
+                        <select name="dataSource" id="dataSource" class="form-control">
+                            <option value="yiyuan-zyyy">昆山市中医医院</option>
+                            <option value="yiyuan-dyrmyy">昆山市第一人民医院</option>
+                            <option value="yiyuan-dsrmyy">昆山市第三人民医院</option>
+                            <option value="yiyuan-jxrmyy">昆山市锦溪人民医院</option>
+                            <option value="yiyuan-qdrmyy">昆山市千灯人民医院</option>
+                            <option value="yiyuan-jswszx">昆山市精神卫生中心</option>
+                            <option value="yiyuan-ljrmyy">昆山市陆家人民医院</option>
+                            <option value="yiyuan-zsrmyy">昆山市周市人民医院</option>
+                            <option value="yiyuan-zxyjhyy">昆山市中西医结合医院</option>
+                            <option value="yiyuan-dshrmyy">昆山市淀山湖人民医院</option>
+                            <option value="yiyuan-zprmyy">昆山市张浦人民医院</option>
+                            <option value="yiyuan-zzrmyy">昆山市周庄人民医院</option>
+                            <option value="yiyuan-dermyy">昆山市第二人民医院</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="searchData()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="box box-solid" style="margin-bottom: 7px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">药品采购金额情况</h3>
+                </div>
+                <div class="box-body cftj" style="height: 370px;overflow: auto">
+                    <table id="money"></table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">全市药品采购金额趋势</h3>
+                </div>
+                <div id="jeqsChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid" style="margin-bottom: 7px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">药品采购数量排名</h3>
+                </div>
+                <div class="box-body cftj" style="height: 370px;overflow: auto">
+                    <table id="quantity"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var data,moneyTable,quantityTable;
+    $(function () {
+        data = getTableDatas();
+        initMoneyDataGrid();
+        initQuantityDataGrid();
+        generatorJeqsChart(jeqsChart);
+    });
+
+
+    function searchData() {
+        generatorJeqsChart(jeqsChart);
+        moneyTable.refresh();
+        quantityTable.refresh();
+    }
+
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        jeqsChart.resize();
+    });
+
+
+    var jeqsChart = echarts.init(document.getElementById('jeqsChartDiv'));
+
+
+    function generatorJeqsChart(chart) {
+
+        let year = $("#year").val();
+
+        let dataSource = $("#dataSource").val();
+
+        var colors = ['#5793f3', '#d14a61', '#675bba'];
+
+        $.postAjax("/qos/drug/purchase/analysis/find/moneys",{ year : year, dataSource : dataSource},function (res) {
+
+            chart.showLoading({
+                text: '数据正在努力加载...',
+                textStyle: { fontSize : 30 , color: '#444' },
+                effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+            });
+
+
+
+            let up = [];
+            let down = [];
+
+            let upData = [];
+            let downData = [];
+
+            let count = 0;
+
+            let count1 = 0;
+
+            if (res && res.length  === 0 ) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
+
+            res.forEach(d => {
+                up.push(year + '年' + d.YEARS);
+                down.push((year - 1) + '年' + d.YEARS);
+
+                d.SUM1 != null  ? upData.push(d.SUM1) : count++;
+                d.SUM2 != null  ? downData.push(d.SUM2) : count1++;
+            });
+
+
+            if (count === 12 || count1 === 12 ) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
+
+            chart.hideLoading();
+
+            option = {
+                color: colors,
+
+                tooltip: {
+                    trigger: 'none',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                grid: {
+                    left: '2%',
+                    right: '1%',
+                    top: '5%',
+                    containLabel: true
+                },
+                calculable: true,
+                legend: {
+                    data:[ year + '采购金额', (year - 1) + '采购金额'],
+                    bottom:5
+
+                },
+
+                xAxis: [
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[1]
+                            }
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: function (params) {
+                                    return '采购金额  ' + params.value
+                                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                }
+                            }
+                        },
+                        data: down
+                    },
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[0]
+                            }
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: function (params) {
+                                    return '采购金额  ' + params.value
+                                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                }
+                            }
+                        },
+                        data: up
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name:year + '采购金额',
+                        type:'line',
+                        xAxisIndex: 1,
+                        smooth: true,
+                        data: upData
+                    },
+                    {
+                        name:(year - 1) + '采购金额',
+                        type:'line',
+                        smooth: true,
+                        data: downData
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+
+        });
+
+    }
+
+    function initMoneyDataGrid() {
+        moneyTable = $.createTable("#money", {
+            columns: [
+                [   {title: "月份", field: "MONTH"},
+                    {title: "采购金额（万元）", field: "MONEY"}
+                ]
+            ],
+            url: '/qos/drug/purchase/analysis/find/money',
+            searchbar: '#searchbar',
+            pagination: false
+        });
+    }
+
+    function initQuantityDataGrid() {
+        quantityTable = $.createTable("#quantity", {
+            columns: [
+                [   {title: "药品名称", field: "DRUG_NAME"},
+                    {title: "药品代码", field: "CN_CODE"},
+                    {title: "规格", field: "DRUG_SPEC"},
+                    {title: "包装", field: "DRUG_UNIT"},
+                    {title: "生产厂家", field: "PROD_ENTER_NAME"},
+                    {title: "采购数量", field: "INSTORE_NUMB"},
+                    {title: "采购金额（万元）", field: "INSTORE_MONEY"},
+                    {title: "配送单位名称", field: "TP_ENTER_NAME"}
+                ]
+            ],
+            url: '/qos/drug/purchase/analysis/find/quantity',
+            searchbar: '#searchbar',
+            pagination: true
+        });
+    }
+
+    function getTableDatas() {
+        let data = [];
+        let row = {};
+        row["money"] = 136;
+        row["month"] = '01';
+        data.push(row);
+        let row1 = {};
+        row1["money"] = 136;
+        row1["month"] = '01';
+        data.push(row1);
+        let row2 = {};
+        row2["money"] = 136;
+        row2["month"] = '01';
+        data.push(row2);
+        let row3 = {};
+        row3["money"] = 136;
+        row3["month"] = '01';
+        data.push(row3);
+        let row4 = {};
+        row4["money"] = 136;
+        row4["month"] = '01';
+        data.push(row4);
+        let row5 = {};
+        row5["money"] = 136;
+        row5["month"] = '01';
+        data.push(row5);
+        return data;
+    }
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.DrugPurchaseAnalysisMapper">
+
+    <select id="findMoneyData" resultType="map">
+        SELECT
+            *
+        FROM
+            (
+                SELECT
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '01', INSTORE_MONEY, 0 ) ) 一月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '02', INSTORE_MONEY, 0 ) ) 二月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '03', INSTORE_MONEY, 0 ) ) 三月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '04', INSTORE_MONEY, 0 ) ) 四月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '05', INSTORE_MONEY, 0 ) ) 五月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '06', INSTORE_MONEY, 0 ) ) 六月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '07', INSTORE_MONEY, 0 ) ) 七月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '08', INSTORE_MONEY, 0 ) ) 八月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '09', INSTORE_MONEY, 0 ) ) 九月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '10', INSTORE_MONEY, 0 ) ) 十月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '11', INSTORE_MONEY, 0 ) ) 十一月,
+                    sum( decode( to_char ( INSTORE_DATE, 'mm' ), '12', INSTORE_MONEY, 0 ) ) 十二月
+                FROM
+                    Drug_In_Store_Infor_Record
+                WHERE 1 = 1
+                    <if test="year != null and year != ''">
+                        AND   to_char ( INSTORE_DATE, 'yyyy' ) = #{year}
+                    </if>
+            ) unpivot (
+                     MONEY   FOR  MONTH IN ( 一月,二月,三月,四月,五月,六月,七月,八月, 九月,十月,十一月,十二月 )
+                )
+    </select>
+    <select id="findQuantityData" resultType="map">
+        select  drug_in_store_infor_record.drug_name, CN_CODE, drug_spec, drug_unit, prod_enter_name, instore_numb, instore_money, tp_enter_name
+        from Drug_In_Store_Infor_Record    WHERE 1 = 1
+        <if test="year != null and year != ''">
+            AND   to_char ( INSTORE_DATE, 'yyyy' ) = #{year}
+        </if>
+        order by  instore_numb desc ,instore_money desc
+    </select>
+
+
+    <select id="findMoneysData" resultType="map">
+        select A.years,A.SUM1,B.SUM2 from
+            (select * from (
+                               select sum(decode(to_char(INSTORE_DATE,'mm'),'01',INSTORE_MONEY,0)) 一月,sum(decode(to_char(INSTORE_DATE,'mm'),'02',INSTORE_MONEY,0)) 二月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'03',INSTORE_MONEY,0)) 三月,sum(decode(to_char(INSTORE_DATE,'mm'),'04',INSTORE_MONEY,0)) 四月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'05',INSTORE_MONEY,0)) 五月,sum(decode(to_char(INSTORE_DATE,'mm'),'06',INSTORE_MONEY,0)) 六月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'07',INSTORE_MONEY,0)) 七月,sum(decode(to_char(INSTORE_DATE,'mm'),'08',INSTORE_MONEY,0)) 八月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'09',INSTORE_MONEY,0)) 九月,sum(decode(to_char(INSTORE_DATE,'mm'),'10',INSTORE_MONEY,0)) 十月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'11',INSTORE_MONEY,0)) 十一月,sum(decode(to_char(INSTORE_DATE,'mm'),'12',INSTORE_MONEY,0)) 十二月
+                               from Drug_In_Store_Infor_Record
+                               where 1 = 1
+        <if test="year != null and year != ''">
+            AND   to_char ( INSTORE_DATE, 'yyyy' ) = #{year}
+        </if>
+                           ) unpivot (SUM1 for years in (一月,二月,三月,四月,五月,六月,七月,八月, 九月,十月,十一月,十二月) )) A
+                left join
+            (select * from (
+                               select sum(decode(to_char(INSTORE_DATE,'mm'),'01',INSTORE_MONEY,0)) 一月,sum(decode(to_char(INSTORE_DATE,'mm'),'02',INSTORE_MONEY,0)) 二月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'03',INSTORE_MONEY,0)) 三月,sum(decode(to_char(INSTORE_DATE,'mm'),'04',INSTORE_MONEY,0)) 四月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'05',INSTORE_MONEY,0)) 五月,sum(decode(to_char(INSTORE_DATE,'mm'),'06',INSTORE_MONEY,0)) 六月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'07',INSTORE_MONEY,0)) 七月,sum(decode(to_char(INSTORE_DATE,'mm'),'08',INSTORE_MONEY,0)) 八月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'09',INSTORE_MONEY,0)) 九月,sum(decode(to_char(INSTORE_DATE,'mm'),'10',INSTORE_MONEY,0)) 十月,
+                                      sum(decode(to_char(INSTORE_DATE,'mm'),'11',INSTORE_MONEY,0)) 十一月,sum(decode(to_char(INSTORE_DATE,'mm'),'12',INSTORE_MONEY,0)) 十二月
+                               from Drug_In_Store_Infor_Record
+                               where 1 = 1
+        <if test="year != null and year != ''">
+            AND   to_char ( INSTORE_DATE, 'yyyy' ) = #{year} - 1
+        </if>
+                           ) unpivot (sum2 for years in (一月,二月,三月,四月,五月,六月,七月,八月, 九月,十月,十一月,十二月) )) B
+            on A.years = B.years
+    </select>
+</mapper>
