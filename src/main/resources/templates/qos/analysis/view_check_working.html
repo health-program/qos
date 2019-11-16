@@ -88,7 +88,7 @@
                     },
                     { 
                     	title: "检查人次数", 
-                    	field: "ev17001"
+                    	field: "ev14007"
                     },
                     { 
                     	title: "检验人次数", 
@@ -344,7 +344,7 @@
                              barBorderRadius:2,
                          }
                      },
-                name: '门诊人次数',
+                name: '检查人次数',
                 data: ev13001.values},
             	 {  type: 'bar',
                 	 barWidth : 5,
@@ -353,7 +353,7 @@
                              barBorderRadius:3,
                          }
                      },
-                   name: '急诊人次数',
+                   name: '检验人次数',
                    data: ev13002.values}
                      
            ]
@@ -472,7 +472,7 @@
                },
                legend: {
             	type:"scroll",
-               	data: ['门诊人次数', '急诊人次数'],
+               	data: ['检查人次数', '检验人次数'],
                    bottom:0
                },
                xAxis: {
@@ -496,7 +496,7 @@
                    	position: 'top'        //这里可以自己选择位置
                    	}
                    	},
-                   name: '门诊人次数',
+                   name: '检查人次数',
                    data: month13001.valuesMap[unitId]},
                	 {  type: 'line',
                 	   barWidth : 4,
@@ -508,7 +508,7 @@
                         	position: 'top'        //这里可以自己选择位置
                         	}
                         	},
-                      name: '急诊人次数',
+                      name: '检验人次数',
                       data: month13002.valuesMap[unitId]}
               ]
            };

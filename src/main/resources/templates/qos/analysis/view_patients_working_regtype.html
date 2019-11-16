@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <section class="content-header">
-    <h1>住院工作量分析</h1>
+    <h1>门急诊工作量分析</h1>
     </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -21,11 +21,16 @@
                         </div>
                         <div class="col-md-2">
                             <select name="payType" id="payType" class="form-control">
-                                <option value="">请选择付费方式</option>
-                                <option value="3001">医保</option>
-                                <option value="1001">自费</option>
+                                <option value="">请选择挂号类型</option>
+                                <option value="1">窗口预约</option>
+                                <option value="2">电话预约</option>
+                                <option value="3">窗口挂号</option>
+                                <option value="4">门诊收费</option>
+                                <option value="5">医生站</option>
+                                <option value="6">自助机挂号</option>
                             </select>
                         </div>
+                        
                         <div class="col-md-6">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
@@ -87,12 +92,15 @@
                         field: "unitName"
                     },
                     { 
-                    	title: "住院次数", 
-                    	field: "ev14001"
+                    	title: "门急诊人次数", 
+                    	field: "ev13003"
                     },
                     { 
-                    	title: "出院人次数", 
-                    	field: "ev14002"
+                    	title: "门急诊总收入", 
+                    	field: "ev15001",
+                    	formatter: function(value, row, index) {
+                            return (row.ev15001/100).toFixed(2);
+                        }
 
                     }
                 ]
@@ -118,16 +126,26 @@
       		   params.startTime = time;
       	     } 
             	
-            	
-            	//14001
             	if($("#payType").find("option:selected").val()==""){
-            		params.eventIds = '14001,14002';
+            		params.eventIds = '13003,15001';
             	}
-            	if($("#payType").find("option:selected").val()=="3001"){
-            		params.eventIds = '1400101,1400201';
+            	if($("#payType").find("option:selected").val()=="1"){
+            		params.eventIds = '1300305,1500105';
             	}
-            	if($("#payType").find("option:selected").val()=="1001"){
-            		params.eventIds = '1400102,1400202';
+            	if($("#payType").find("option:selected").val()=="2"){
+            		params.eventIds = '1300306,1500106';
+            	}
+            	if($("#payType").find("option:selected").val()=="3"){
+            		params.eventIds = '1300307,1500107';
+            	}
+            	if($("#payType").find("option:selected").val()=="4"){
+            		params.eventIds = '1300308,1500108';
+            	}
+            	if($("#payType").find("option:selected").val()=="5"){
+            		params.eventIds = '1300309,1500109';
+            	}
+            	if($("#payType").find("option:selected").val()=="6"){
+            		params.eventIds = '1300310,1500110';
             	}
                 params.ignoreUnitIds = '320583810343'
                 requestParam = params;
@@ -139,21 +157,36 @@
                 }
             	console.log(response);
                 var data = {};
+
                 
                 if($("#payType").find("option:selected").val()==""){
-                	convertCount2TableData(response, '14001', data);
-                    convertCount3TableData(response, '14002', data);
+                	convertCount2TableData(response, '13003', data);
+                    convertCount3TableData(response, '15001', data);
             	}
-            	if($("#payType").find("option:selected").val()=="3001"){
-            		convertCount2TableData(response, '1400101', data);
-                    convertCount3TableData(response, '1400201', data);
+            	if($("#payType").find("option:selected").val()=="1"){
+            		convertCount2TableData(response, '1300305', data);
+                    convertCount3TableData(response, '1500105', data);
             	}
-            	if($("#payType").find("option:selected").val()=="1001"){
-            		convertCount2TableData(response, '1400102', data);
-                    convertCount3TableData(response, '1400202', data);
+            	if($("#payType").find("option:selected").val()=="2"){
+            		convertCount2TableData(response, '1300306', data);
+                    convertCount3TableData(response, '1500106', data);
             	}
-                
-                
+            	if($("#payType").find("option:selected").val()=="3"){
+            		convertCount2TableData(response, '1300307', data);
+                    convertCount3TableData(response, '1500107', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="4"){
+            		convertCount2TableData(response, '1300308', data);
+                    convertCount3TableData(response, '1500108', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="5"){
+            		convertCount2TableData(response, '1300309', data);
+                    convertCount3TableData(response, '1500109', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="6"){
+            		convertCount2TableData(response, '1300310', data);
+                    convertCount3TableData(response, '1500110', data);
+            	}
 
                 var result = []
                 for (var o in data) {
@@ -170,36 +203,7 @@
     
     function convertCount2TableData(originData, eventId, data) {
         var eventData = originData[eventId],
-            fieldName = 'ev' + '14001',
-            total = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.count;
-            total += item.count;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
-    }
-    function convertCount3TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + '14002',
+            fieldName = 'ev' + '13003',
             total = 0;
 
         eventData && eventData.forEach(function(item) {
@@ -227,6 +231,35 @@
         totalData[fieldName] = total;
     }
     
+    function convertCount3TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + '15001',
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
     function getRate(item, fixed) {
         var a = item.eventNum,
             b = item.totalNum,
@@ -253,6 +286,24 @@
             unit = [],
             values = [];
         edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count/100;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
+    function convertUnitChartData1(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
             var r = isRate ? getRateNum(item) : item.count;
             max = Math.max(r, max);
             values.push(r);
@@ -266,21 +317,35 @@
     }
 
     function initUnitChart(data){
+    	
     	if($("#payType").find("option:selected").val()==""){
-    		var ev13001 = convertUnitChartData(data, '14001', false);
-        	var ev13002 = convertUnitChartData(data, '14002', false);
+    		var ev13003 = convertUnitChartData1(data, '13003', false);
+        	var ev15001 = convertUnitChartData(data, '15001', false);
     	}
-    	if($("#payType").find("option:selected").val()=="3001"){
-    		var ev13001 = convertUnitChartData(data, '1400101', false);
-        	var ev13002 = convertUnitChartData(data, '1400201', false);
+    	if($("#payType").find("option:selected").val()=="1"){
+    		var ev13003 = convertUnitChartData1(data, '1300305', false);
+        	var ev15001 = convertUnitChartData(data, '1500105', false);
     	}
-    	if($("#payType").find("option:selected").val()=="1001"){
-    		var ev13001 = convertUnitChartData(data, '1400102', false);
-        	var ev13002 = convertUnitChartData(data, '1400202', false);
+    	if($("#payType").find("option:selected").val()=="2"){
+    		var ev13003 = convertUnitChartData1(data, '1300306', false);
+        	var ev15001 = convertUnitChartData(data, '1500106', false);
     	}
-    	
-    	
-    	
+    	if($("#payType").find("option:selected").val()=="3"){
+    		var ev13003 = convertUnitChartData1(data, '1300307', false);
+        	var ev15001 = convertUnitChartData(data, '1500107', false);
+    	}
+    	if($("#payType").find("option:selected").val()=="4"){
+    		var ev13003 = convertUnitChartData1(data, '1300308', false);
+        	var ev15001 = convertUnitChartData(data, '1500108', false);
+    	}
+    	if($("#payType").find("option:selected").val()=="5"){
+    		var ev13003 = convertUnitChartData1(data, '1300309', false);
+        	var ev15001 = convertUnitChartData(data, '1500109', false);
+    	}
+    	if($("#payType").find("option:selected").val()=="6"){
+    		var ev13003 = convertUnitChartData1(data, '1300310', false);
+        	var ev15001 = convertUnitChartData(data, '1500110', false);
+    	}
         if (!unitChart) {
             unitChart = echarts.init(document.getElementById('unitChartDiv'));
         }
@@ -313,7 +378,7 @@
             },
             legend: {
             	type:"scroll",
-            	data: ['门诊人次数', '急诊人次数'],
+            	data: ['门急诊人次数', '门急诊总收入'],
                 bottom:0
             },
             xAxis: {
@@ -329,7 +394,7 @@
                 axisTick: {
                     alignWithLabel: true
                 },
-                data: ev13001.unit,
+                data: ev13003.unit,
             },
             yAxis: [
                     {
@@ -344,8 +409,8 @@
                              barBorderRadius:2,
                          }
                      },
-                name: '门诊人次数',
-                data: ev13001.values},
+                name: '门急诊人次数',
+                data: ev13003.values},
             	 {  type: 'bar',
                 	 barWidth : 5,
                      itemStyle:{
@@ -353,15 +418,70 @@
                              barBorderRadius:3,
                          }
                      },
-                   name: '急诊人次数',
-                   data: ev13002.values}
-                     
+                   name: '门急诊总收入',
+                   data: ev15001.values}
            ]
         };
     	unitChart.setOption(option, true);
     }
     
     function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum/100);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+    
+    function convertMonthChartData1(data, eventId, isRate) {
         var eventData = data[eventId],
             unitPoints = eventData.unitPoints,
             month = [],
@@ -416,6 +536,8 @@
             valuesMap: valuesMap
         }
     }
+    
+    
     var month13001, month13002, month13003, month13004, month13005; 
     
     
@@ -426,21 +548,38 @@
             return;
         }
 
+        
         if($("#payType").find("option:selected").val()==""){
-        	month13001 = convertMonthChartData(response, '14001', false);
-            month13002 = convertMonthChartData(response, '14002', false);
+        	month13003 = convertMonthChartData1(response, '13003', false);
+            month15001 = convertMonthChartData(response, '15001', false);
         }
-        if($("#payType").find("option:selected").val()=="3001"){
-        	month13001 = convertMonthChartData(response, '1400101', false);
-            month13002 = convertMonthChartData(response, '1400201', false);
+        if($("#payType").find("option:selected").val()=="1"){
+        	month13003 = convertMonthChartData1(response, '1300305', false);
+            month15001 = convertMonthChartData(response, '1500105', false);
         }
         
-        if($("#payType").find("option:selected").val()=="1001"){
-        	month13001 = convertMonthChartData(response, '1400102', false);
-            month13002 = convertMonthChartData(response, '1400202', false);
+        if($("#payType").find("option:selected").val()=="2"){
+        	month13003 = convertMonthChartData1(response, '1300306', false);
+            month15001 = convertMonthChartData(response, '1500106', false);
         }
-      
-        //month13005 = convertMonthChartData(response, '13005', false);
+        if($("#payType").find("option:selected").val()=="3"){
+        	month13003 = convertMonthChartData1(response, '1300307', false);
+            month15001 = convertMonthChartData(response, '1500107', false);
+        }
+        
+        if($("#payType").find("option:selected").val()=="4"){
+        	month13003 = convertMonthChartData1(response, '1300308', false);
+            month15001 = convertMonthChartData(response, '1500108', false);
+        }
+        if($("#payType").find("option:selected").val()=="5"){
+        	month13003 = convertMonthChartData1(response, '1300309', false);
+            month15001 = convertMonthChartData(response, '1500109', false);
+        }
+        
+        if($("#payType").find("option:selected").val()=="6"){
+        	month13003 = convertMonthChartData1(response, '1300310', false);
+            month15001 = convertMonthChartData(response, '1500110', false);
+        }
 
         drawMonthChart('total');
     }
@@ -472,7 +611,7 @@
                },
                legend: {
             	type:"scroll",
-               	data: ['门诊人次数', '急诊人次数'],
+               	data: ['门急诊人次数', '门急诊总收入'],
                    bottom:0
                },
                xAxis: {
@@ -482,7 +621,7 @@
                        interval: 0,
                        rotate: 40 //角度顺时针计算的
                    },
-                   data: month13001.month
+                   data: month13003.month
                },
                yAxis: {type: 'value'},
                series: [
@@ -496,8 +635,8 @@
                    	position: 'top'        //这里可以自己选择位置
                    	}
                    	},
-                   name: '门诊人次数',
-                   data: month13001.valuesMap[unitId]},
+                   name: '门急诊人次数',
+                   data: month13003.valuesMap[unitId]},
                	 {  type: 'line',
                 	   barWidth : 4,
 			            smooth:0.3,
@@ -508,8 +647,8 @@
                         	position: 'top'        //这里可以自己选择位置
                         	}
                         	},
-                      name: '急诊人次数',
-                      data: month13002.valuesMap[unitId]}
+                      name: '门急诊总收入',
+                      data: month15001.valuesMap[unitId]}
               ]
            };
     	monthChart.setOption(option, true);
