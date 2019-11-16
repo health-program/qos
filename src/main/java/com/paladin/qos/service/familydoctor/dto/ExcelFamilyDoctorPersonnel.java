@@ -27,13 +27,16 @@ public class ExcelFamilyDoctorPersonnel {
  	private Integer jobRank;
     	
     	@ReadProperty(cellIndex = 6,enumType="personnel-category-type")
- 	private Integer personnelCategory;
+ 	private String personnelCategory;
     	
     	@ReadProperty(cellIndex = 7)
  	private String specialtyTeamDoctor;
     	
     	@ReadProperty(cellIndex = 8)
  	private String otherPersonnel;
+    	
+    	@ReadProperty(cellIndex = 9,enumType="boolean-type")
+    	private String isTeamCaptain;
 
 	public String getTeamName() {
 	    return teamName;
@@ -83,11 +86,11 @@ public class ExcelFamilyDoctorPersonnel {
 	    this.jobRank = jobRank;
 	}
 
-	public Integer getPersonnelCategory() {
+	public String getPersonnelCategory() {
 	    return personnelCategory;
 	}
 
-	public void setPersonnelCategory(Integer personnelCategory) {
+	public void setPersonnelCategory(String personnelCategory) {
 	    this.personnelCategory = personnelCategory;
 	}
 
@@ -106,4 +109,13 @@ public class ExcelFamilyDoctorPersonnel {
 	public void setOtherPersonnel(String otherPersonnel) {
 	    this.otherPersonnel = otherPersonnel;
 	}
+
+	public String getIsTeamCaptain() {
+	    return isTeamCaptain;
+	}
+
+	public void setIsTeamCaptain(String isTeamCaptain) {
+	    this.isTeamCaptain = isTeamCaptain;
+	}
+	
 }
