@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.dynamic.mapper.OpdLogMapper">
+
+<select id="opdLogFindList" resultType="map">
+SELECT
+	m.organ_name as organName,
+	m.dpt_name as deptName,
+	m.doc_name as doctorName,
+	m. NAME as patientName,
+	m.md_dis_name as diseaseName,
+	m.see_doc_dt as visitingTime
+FROM
+	medicalrecord m
+WHERE 
+	m.see_doc_dt &gt;= TO_DATE(#{startTime}, 'yyyy-mm-dd')
+	AND m.see_doc_dt &lt; TO_DATE(#{endTime}, 'yyyy-mm-dd')
+
+<if test="deptId !=null and deptId !='' ">
+	AND m.DPT_CODE LIKE concat(concat('%',#{deptId}),'%') 
+</if>
+
+<if test="doctorName !=null and doctorName !='' ">
+	AND m.doc_name LIKE concat(concat('%',#{doctorName}),'%') 
+</if>
+order by m.see_doc_dt desc
+</select>
+
+
+
+</mapper>
