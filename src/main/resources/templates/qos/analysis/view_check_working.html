@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <section class="content-header">
-    <h1>门急诊人次统计</h1>
+    <h1>检验检查工作量分析</h1>
     </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -19,7 +19,14 @@
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
                         </div>
-                        <div class="col-md-8">
+                        <div class="col-md-2">
+                            <select name="payType" id="payType" class="form-control">
+                                <option value="">请选择付费方式</option>
+                                <option value="1">窗口收费</option>
+                                <option value="2">自主缴费</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -80,25 +87,13 @@
                         field: "unitName"
                     },
                     { 
-                    	title: "门诊人次数", 
-                    	field: "ev13001"
+                    	title: "检查人次数", 
+                    	field: "ev17001"
                     },
                     { 
-                    	title: "急诊人次数", 
-                    	field: "ev13002"
+                    	title: "检验人次数", 
+                    	field: "ev14008"
 
-                    },
-                    {
-                    	title: "门急诊总人数", 
-                    	field: "ev13003"
-                    },
-                    {
-                    	title: "出诊医生数", 
-                    	field: "ev13004"
-                    },
-                    { 
-                    	title: "医生平均门急诊量", 
-                    	field: "ev13005"
                     }
                 ]
             ],
@@ -122,7 +117,18 @@
       		   $("#startTime").val(time);
       		   params.startTime = time;
       	     } 
-                params.eventIds = '13001,13002,13003,13004,13005';
+            	
+            	
+            	//14001
+            	if($("#payType").find("option:selected").val()==""){
+            		params.eventIds = '14007,14008';
+            	}
+            	if($("#payType").find("option:selected").val()=="1"){
+            		params.eventIds = '1400701,1400801';
+            	}
+            	if($("#payType").find("option:selected").val()=="2"){
+            		params.eventIds = '1400702,1400702';
+            	}
                 params.ignoreUnitIds = '320583810343'
                 requestParam = params;
                 return params;
@@ -133,12 +139,21 @@
                 }
             	console.log(response);
                 var data = {};
-
-                convertCount2TableData(response, '13001', data);
-                convertCount2TableData(response, '13002', data);
-                convertCount2TableData(response, '13003', data);
-                convertCount2TableData(response, '13004', data);
-                convertCount2TableData(response, '13005', data);
+                
+                if($("#payType").find("option:selected").val()==""){
+                	convertCount2TableData(response, '14007', data);
+                    convertCount3TableData(response, '14008', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="1"){
+            		convertCount2TableData(response, '1400701', data);
+                    convertCount3TableData(response, '1400801', data);
+            	}
+            	if($("#payType").find("option:selected").val()=="2"){
+            		convertCount2TableData(response, '1400702', data);
+                    convertCount3TableData(response, '1400802', data);
+            	}
+                
+                
 
                 var result = []
                 for (var o in data) {
@@ -155,7 +170,7 @@
     
     function convertCount2TableData(originData, eventId, data) {
         var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
+            fieldName = 'ev' + '14007',
             total = 0;
 
         eventData && eventData.forEach(function(item) {
@@ -182,6 +197,36 @@
         }
         totalData[fieldName] = total;
     }
+    function convertCount3TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + '14008',
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+    
     function getRate(item, fixed) {
         var a = item.eventNum,
             b = item.totalNum,
@@ -221,11 +266,21 @@
     }
 
     function initUnitChart(data){
-    	var ev13001 = convertUnitChartData(data, '13001', false);
-    	var ev13002 = convertUnitChartData(data, '13002', false);
-    	var ev13003 = convertUnitChartData(data, '13003', false);
-    	var ev13004 = convertUnitChartData(data, '13004', false);
-    	var ev13005 = convertUnitChartData(data, '13005', false);
+    	if($("#payType").find("option:selected").val()==""){
+    		var ev13001 = convertUnitChartData(data, '14007', false);
+        	var ev13002 = convertUnitChartData(data, '14008', false);
+    	}
+    	if($("#payType").find("option:selected").val()=="1"){
+    		var ev13001 = convertUnitChartData(data, '1400701', false);
+        	var ev13002 = convertUnitChartData(data, '1400801', false);
+    	}
+    	if($("#payType").find("option:selected").val()=="2"){
+    		var ev13001 = convertUnitChartData(data, '1400702', false);
+        	var ev13002 = convertUnitChartData(data, '1400802', false);
+    	}
+    	
+    	
+    	
         if (!unitChart) {
             unitChart = echarts.init(document.getElementById('unitChartDiv'));
         }
@@ -258,7 +313,7 @@
             },
             legend: {
             	type:"scroll",
-            	data: ['门诊人次数', '急诊人次数','门急诊总人数','出诊医生数','医生平均门诊量','康复服务数'],
+            	data: ['检查人次数', '检验人次数'],
                 bottom:0
             },
             xAxis: {
@@ -299,43 +354,7 @@
                          }
                      },
                    name: '急诊人次数',
-                   data: ev13002.values},
-            	 {  type: 'bar',
-              	   barWidth : 5,
-                     itemStyle:{
-                         normal:{
-                             barBorderRadius:3,
-                         }
-                     },
-                     name: '门急诊总人数',
-                     data: ev13003.values},
-            	 {  type: 'bar',
-                  	 barWidth : 5,
-                       itemStyle:{
-                           normal:{
-                               barBorderRadius:3,
-                           }
-                       },
-                     name: '出诊医生数',
-                     data: ev13004.values},
-            	 {  type: 'bar',
-                    	 barWidth : 5,
-                         itemStyle:{
-                             normal:{
-                                 barBorderRadius:3,
-                             }
-                         },
-                     name: '医生平均门急诊量',
-                     data: ev13005.values}/* ,
-            	 {  type: 'bar',
-                	 barWidth : 5,
-                     itemStyle:{
-                         normal:{
-                             barBorderRadius:3,
-                         }
-                     },
-                     	name: '康复服务数',
-                     data: recoveryNumber} */
+                   data: ev13002.values}
                      
            ]
         };
@@ -407,10 +426,20 @@
             return;
         }
 
-        month13001 = convertMonthChartData(response, '13001', false);
-        month13002 = convertMonthChartData(response, '13002', false);
-        month13003 = convertMonthChartData(response, '13003', false);
-        month13004 = convertMonthChartData(response, '13004', false);
+        if($("#payType").find("option:selected").val()==""){
+        	month13001 = convertMonthChartData(response, '14007', false);
+            month13002 = convertMonthChartData(response, '14008', false);
+        }
+        if($("#payType").find("option:selected").val()=="1"){
+        	month13001 = convertMonthChartData(response, '1400701', false);
+            month13002 = convertMonthChartData(response, '1400701', false);
+        }
+        
+        if($("#payType").find("option:selected").val()=="2"){
+        	month13001 = convertMonthChartData(response, '1400802', false);
+            month13002 = convertMonthChartData(response, '1400802', false);
+        }
+      
         //month13005 = convertMonthChartData(response, '13005', false);
 
         drawMonthChart('total');
@@ -443,7 +472,7 @@
                },
                legend: {
             	type:"scroll",
-               	data: ['门诊人次数', '急诊人次数','门急诊总人数','出诊医生数','医生平均门急诊量','康复服务数'],
+               	data: ['门诊人次数', '急诊人次数'],
                    bottom:0
                },
                xAxis: {
@@ -480,43 +509,7 @@
                         	}
                         	},
                       name: '急诊人次数',
-                      data: month13002.valuesMap[unitId]},
-               	 {  type: 'line',
-                    	  barWidth : 4,
-				            smooth:0.3,
-                    	  areaStyle: {},
-                        label:{
-                        	normal:{
-                        	show:true,            //显示数字
-                        	position: 'top'        //这里可以自己选择位置
-                        	}
-                        	},
-                        name: '门急诊总人数',
-                        data: month13003.valuesMap[unitId]},
-               	 {  type: 'line',
-                        	barWidth : 4,
-				            smooth:0.3,
-                        	areaStyle: {},
-                        label:{
-                        	normal:{
-                        	show:true,            //显示数字
-                        	position: 'top'        //这里可以自己选择位置
-                        	}
-                        	},
-                        name: '出诊医生数',
-                        data: month13004.valuesMap[unitId]}/* ,
-               	 {  type: 'line',
-                        	barWidth : 4,
-				            smooth:0.3,
-                        	areaStyle: {},
-                        label:{
-                        	normal:{
-                        	show:true,            //显示数字
-                        	position: 'top'        //这里可以自己选择位置
-                        	}
-                        	},
-                        name: '医生平均门急诊量',
-                        data: month13005.valuesMap[unitId]} */
+                      data: month13002.valuesMap[unitId]}
               ]
            };
     	monthChart.setOption(option, true);
