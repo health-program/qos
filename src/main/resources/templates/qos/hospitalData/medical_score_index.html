@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <section class="content-header">
+        <h1>数据质量校验规则管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <select name="type" class="form-control">
+                                <option value="">请选择指标类型</option>
+                                <option value="1">及时性</option>
+                                <option value="2">完整性</option>
+                                <option value="3">准确性</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                                <input type="text" id="tableName" name="tableName" class="form-control" placeholder="请输入表名">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "表名", field: "tableName" },
+                    { title: "表英文名", field: "englishName" },
+                    { title: "指标类型", field: "type",
+                    	formatter: function(value, row, index) {
+                    		if(value=='1'){
+                    			return '及时性';
+                    		}else if(value=='2'){
+                    			return '完整性';
+                    		}else{
+                    			return '准确性';
+                    		}
+                       }  
+                    },
+                    { title: "指标明细", field: "detail" },
+                    { title: "是否启用", field: "state",
+                    	formatter: function(value, row, index) {
+                		if(value=='1'){
+                			return '启用';
+                		}else 
+                			return '禁用';
+                    	}   
+                    },
+                    
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "230px",
+                        events: {
+                            'click .open': function(e, value, row, index) {
+                                open(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            },
+                            'click .share': function(e, value, row, index) {
+                            	detail(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="open btn btn-xs btn-info" style="margin-right:30px"><i class="glyphicon glyphicon-edit"></i>启用</button>' +
+                                '<button class="remove btn btn-xs btn-danger" style="margin-right:30px"><i class="glyphicon glyphicon-remove"></i>禁用</button>'+
+                                '<button class="share btn btn-xs btn-info"><i class="glyphicon glyphicon-share"></i>修改</button>';
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/hospitalData/findRule/page',
+            searchbar: '#searchbar',
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/qos/hospitalData/add';
+    }
+
+    function detail(row) {
+        window.location = '/qos/org/person/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function open(row) {
+        if (row) {
+            layer.confirm('确定启用吗?', function() {
+                $.getAjax('/qos/hospitalData/open?id=' + row.id, function() {
+                    $.successMessage("启用成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    
+    function detail(row) {
+        window.location = '/qos/hospitalData/detail' + (row ? ('?id=' + row.id) : '');
+    }
+    
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定禁用吗?', function() {
+                $.getAjax('/qos/hospitalData/close?id=' + row.id, function() {
+                    $.successMessage("禁用成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+    </script>
+</body>
+
+</html>

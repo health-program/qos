@@ -18,5 +18,7 @@ public class DSConstant {
 	public final static String DS_AADATA = "yiyuan-aadata";
 	
 	public final static String DS_CHECK= "yiyuan-check";
+	
+	public final static String Local= "local";
 
 }
