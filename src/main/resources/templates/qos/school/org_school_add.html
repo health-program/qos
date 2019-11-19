@@ -48,6 +48,7 @@
 				{title : "保健老师(兼职)人数",name : "healthTeacherPart",inputType : "NUMBER"},
 				{title : "后勤保障人数",name : "logistics",inputType : "NUMBER"}, 
 				{title : "教职员工人数",name : "teaching",required : "required",inputType : "NUMBER"},
+				{title : "卫生保健人员",name : "hygieneHealth",required : "required",inputType : "TEXT"},
 				//{title : "学生总人数",name : "total",inputType : "NUMBER",editable:false }, 
 				{ title: "地址", name: "address", inputType: "TEXTAREA" ,colspan: 2 },
 				{
@@ -72,8 +73,6 @@
 								+ data.total
 								+ '<span style="margin-left:2%;">寄宿生人数</span>:'
 								+ data.boarders
-								+ '<span style="margin-left:2%;">卫生保健人员人数</span>:'
-								+ data.hygieneHealth
 								+ '</span>';
 								return html;
 								},
@@ -90,8 +89,7 @@
 										    {title : "年级",name : "grade",required : "required", enum : "grade-type",inputType : "SELECT"},
 										    {title : "班级",name : "klass",required : "required", inputType : "TEXT"},
 											{title : "学生人数",name : "total",required : "required",inputType : "NUMBER"},
-											{title : "寄宿生人数",name : "boarders",required : "required",inputType : "NUMBER"}, 
-											{title : "卫生保健人员",name : "hygieneHealth",required : "required",inputType : "TEXT"} 
+											{title : "寄宿生人数",name : "boarders",required : "required",inputType : "NUMBER"} 
 											]
 									}
 								} ]

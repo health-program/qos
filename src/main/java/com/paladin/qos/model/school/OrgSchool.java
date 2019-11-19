@@ -54,6 +54,9 @@ public class OrgSchool extends BaseModel {
 	
 	//教职员工人数
 	private Integer teaching;
+	
+	//卫生保健人员
+	private String hygieneHealth;
 		
 	// 校医(兼职)人数
 	private Integer schoolDoctorPart;
@@ -239,6 +242,14 @@ public class OrgSchool extends BaseModel {
 
 	public void setTeaching(Integer teaching) {
 	    this.teaching = teaching;
+	}
+
+	public String getHygieneHealth() {
+	    return hygieneHealth;
+	}
+
+	public void setHygieneHealth(String hygieneHealth) {
+	    this.hygieneHealth = hygieneHealth;
 	}
 
 }
