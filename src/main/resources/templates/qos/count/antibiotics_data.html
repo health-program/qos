@@ -126,8 +126,26 @@
             columns: [
                 [
                     {title: "医疗机构", field: "unitName"},
-                    {title: "住院患者人均使用<br>抗菌药物品种数", field: "varieties",width:"10px"},
-                    {title: "住院患者人均使用<br>抗菌药物费用", field: "averageCost"},
+                    {title: "住院患者人均使用<br>抗菌药物品种数", field: "varieties",width:"10px",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }},
+                    {title: "住院患者人均使用<br>抗菌药物费用", field: "averageCost",sortable: true,
+                            sorter: function(fa, fb, ra, rb) {
+                                if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                return fa - fb;
+                            }},
                     {title: "住院患者使用<br>抗菌药物的百分率", field: "userRate",
                         formatter: function(value, row, index) {
                             if(value)
@@ -145,6 +163,9 @@
             ],
             url: '/qos/countantibiotics/data/processing',
             pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             searchbar: '#searchbar',
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');

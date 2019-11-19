@@ -89,12 +89,30 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "手术费用(元)", field: "ev42002event",
+                    { title: "手术费用(元)", field: "ev42002event",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                         formatter: function(value, row, index) {
                             return row.ev42002event/100;
                         }
                     },
-                    { title: "总费用(元)", field: "ev42002total",
+                    { title: "总费用(元)", field: "ev42002total",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                         formatter: function(value, row, index) {
                             return row.ev42002total/100;
                         }
@@ -114,6 +132,9 @@
             url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             clickToSelect: false,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');

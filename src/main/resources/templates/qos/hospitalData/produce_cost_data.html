@@ -89,12 +89,31 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "耗材费用(元)", field: "ev42001event",
+                    { title: "耗材费用(元)", field: "ev42001event",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                         formatter: function(value, row, index) {
                                 return row.ev42001event/100;
                         }
                     },
                     { title: "总费用(元)", field: "ev42001total",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                         formatter: function(value, row, index) {
                             return row.ev42001total/100;
                         }
@@ -115,6 +134,9 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
