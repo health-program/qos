@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>基本药物分析</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime" id="startTime" placeholder="请输入查询月份" autocomplete="off"   value="2019-01" type="text" class="form-control">
+                    </div>
+                  <!--  <div class="col-md-2">
+                        <select name="dataSource" id="dataSource" class="form-control">
+                            <option value="yiyuan-zyyy">昆山市中医医院</option>
+                            <option value="yiyuan-dyrmyy">昆山市第一人民医院</option>
+                            <option value="yiyuan-dsrmyy">昆山市第三人民医院</option>
+                            <option value="yiyuan-jxrmyy">昆山市锦溪人民医院</option>
+                            <option value="yiyuan-qdrmyy">昆山市千灯人民医院</option>
+                            <option value="yiyuan-jswszx">昆山市精神卫生中心</option>
+                            <option value="yiyuan-ljrmyy">昆山市陆家人民医院</option>
+                            <option value="yiyuan-zsrmyy">昆山市周市人民医院</option>
+                            <option value="yiyuan-zxyjhyy">昆山市中西医结合医院</option>
+                            <option value="yiyuan-dshrmyy">昆山市淀山湖人民医院</option>
+                            <option value="yiyuan-zprmyy">昆山市张浦人民医院</option>
+                            <option value="yiyuan-zzrmyy">昆山市周庄人民医院</option>
+                            <option value="yiyuan-dermyy">昆山市第二人民医院</option>
+                        </select>
+                    </div>-->
+                    <div class="col-md-10">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="searchData()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">基药占比</h3>
+                </div>
+                <div id="zbChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" style="padding-left: 0;padding-right: 0">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">基本药物占比排名TOP10(%)</h3>
+                </div>
+                <div id="pmChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">基本药物占比趋势(%)</h3>
+                </div>
+                <div id="qsChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6" style="padding-right: 0">
+            <div class="box box-solid" style="margin-bottom: 10px">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">按付费方式构成分析</h3>
+                </div>
+                <div id="gcChartDiv" class="box-body no-padding" style="height: 370px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="box box-solid" style="margin-bottom: 7px">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="letter-spacing: 3px">次均基药费用按病种排名TOP10</h3>
+                </div>
+                <div class="box-body cftj" style="height: 370px;overflow: auto">
+                    <table id="pm"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var pmTable;
+    $(function () {
+        $.beautifyInput($("#startTime"), "fa fa-calendar", false);
+        laydate.render({
+            elem: '#startTime',
+            type: "month",
+            calendar: true, //开启公历节日
+            theme: 'molv', //墨绿主题
+            showBottom: true, //是否出现底部栏
+            trigger: 'click' //绑定多个
+        });
+        generatorZbChart(zbChart);
+        generatorPmChart(pmChart);
+        generatorQsChart(qsChart);
+        generatorGcChart(gcChart);
+        initPmDataGrid();
+    });
+
+
+    function searchData() {
+        generatorZbChart(zbChart);
+        generatorPmChart(pmChart);
+        generatorQsChart(qsChart);
+        generatorGcChart(gcChart);
+        pmTable.refresh();
+    }
+
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        zbChart.resize();
+        pmChart.resize();
+        qsChart.resize();
+        gcChart.resize();
+    });
+
+
+    var zbChart = echarts.init(document.getElementById('zbChartDiv'));
+    var pmChart = echarts.init(document.getElementById('pmChartDiv'));
+    var qsChart = echarts.init(document.getElementById('qsChartDiv'));
+    var gcChart = echarts.init(document.getElementById('gcChartDiv'));
+
+    function generatorZbChart(chart) {
+
+        let sTime = $("#startTime").val();
+
+        let split = sTime.split("-");
+
+        var lastDay= new Date(split[0],split[1],0);
+
+        var year = lastDay.getFullYear();
+        var month = lastDay.getMonth() + 1;
+        month = month < 10 ? '0'+ month : month;
+        var day = lastDay.getDate();
+        day = day < 10 ? '0'+day : day;
+
+        let startTime = sTime + "-01";
+
+        let endTime = year + "-"+ month +"-"+ day;
+
+
+        $.postAjax("/qos/analysis/data/get/month/instalments",{startTime : startTime,endTime: endTime,eventId:'42004'},function (res) {
+
+            let month42004 = convertMonthChartData({"42004":res}, '42004', true);
+
+
+            option = {
+                tooltip : {
+                    formatter: "{a} <br/>{b} : {c}%"
+                },
+                toolbox: {
+                    feature: {
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                series: [
+                    {
+                        name: '',
+                        type: 'gauge',
+                        detail: {formatter:'{value}%',offsetCenter:[0,'60%']},
+                        data: [{value: month42004.valuesMap['total'], name: ''}]
+                    }
+                ]
+            };
+
+            chart.setOption(option,true);
+
+        });
+    }
+
+
+    function generatorPmChart(chart) {
+
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+
+        let sTime = $("#startTime").val();
+
+        let split = sTime.split("-");
+
+        var lastDay= new Date(split[0],split[1],0);
+
+        var year = lastDay.getFullYear();
+        var month = lastDay.getMonth() + 1;
+        month = month < 10 ? '0'+ month : month;
+        var day = lastDay.getDate();
+        day = day < 10 ? '0'+day : day;
+
+        let startTime = sTime + "-01";
+
+        let endTime = year + "-"+ month +"-"+ day;
+
+
+        $.postAjax("/qos/analysis/data/get/unit",{startTime : startTime,endTime: endTime,eventId:'42004'},function (res) {
+
+            if (res.length === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
+
+            let  unitName = [];
+            let data = [];
+
+            if (res && res.length > 0) {
+                res.forEach( unit => {
+                    unitName.push(unit.unitName);
+                    data.push(getRateNum(unit))
+                })
+            }
+
+            chart.hideLoading();
+            var isShowScroll = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end;// 显示百分之多少的数据量，默认全部
+            if(unitName.length >5 ){
+                dataZoom_end = 100/(unitName.length/5);
+                isShowScroll = true;
+            }else{
+                dataZoom_end = 100;
+            }
+
+
+        var labelOption = {
+            normal: {
+                show: true,
+                position: 'top',
+                distance: 15,
+                align: 'center',
+                verticalAlign: 'top',
+                rotate: 0,
+                formatter: '{c}',
+                fontSize: 12,
+                rich: {
+                    name: {
+                        textBorderColor: '#fff'
+                    }
+                }
+            }
+        };
+        option = {
+            color: ['#3398DB'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                },
+                formatter: function (params) {
+                    return params[0].name + '&nbsp;基药占比: '
+                        + params[0].data + '(%)<br/>'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '1%',
+                top: '15%',
+                containLabel: true
+            },
+            calculable: true,
+            dataZoom: [   {
+                start:0,//默认为0
+                end: dataZoom_end,
+                type: 'slider',
+                show: isShowScroll,
+                xAxisIndex: [0],
+                handleSize: 8,//滑动条的 左右2个滑动条的大小
+                height: 10,//组件高度
+                left: "center", //左边的距离
+                bottom:40,
+                handleColor: '#ddd',//h滑动图标的颜色
+                handleStyle: {
+                    borderColor: "#cacaca",
+                    borderWidth: "1",
+                    shadowBlur: 2,
+                    background: "#ddd",
+                    shadowColor: "#ddd",
+                },
+                fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                    //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                    //给第一个设置0，第四个设置1，就是垂直渐变
+                    offset: 0,
+                    color: '#1eb5e5'
+                }, {
+                    offset: 1,
+                    color: '#5ccbb1'
+                }]),
+                zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                showDataShadow: false,//是否显示数据阴影 默认auto
+                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                filterMode: 'filter'
+            },
+                //下面这个属性是里面拖到
+                {
+                    type: 'inside',
+                    show: true,
+                    xAxisIndex: [0],
+                    start: 0,//默认为1
+                    end: 50
+                }],
+            xAxis: [
+                {
+                    type: 'category',
+                    data: unitName,
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLabel: {
+                        interval:0,
+                        rotate: unitName.length === 1 ? 0 : 60//角度顺时针计算的
+                    } ,
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name:'基药占比(%)'
+                }
+            ],
+            series: [
+                {
+                    name: '基药占比',
+                    type: 'bar',
+                    smooth: true,
+                    label: labelOption,
+                    barGap: 0,
+                    data: data,
+                }
+            ]
+        };
+        chart.setOption(option,true);
+
+        });
+
+    }
+
+    function generatorQsChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+
+
+        let sTime = $("#startTime").val();
+
+        let split = sTime.split("-");
+
+        var lastDay= new Date(split[0],split[1],0);
+
+        var year = lastDay.getFullYear();
+        var month = lastDay.getMonth() + 1;
+        month = month < 10 ? '0'+ month : month;
+        var day = lastDay.getDate();
+        day = day < 10 ? '0'+day : day;
+
+        let startTime = sTime + "-01";
+
+        let endTime = year + "-"+ month +"-"+ day;
+
+
+
+        $.postAjax("/qos/analysis/data/get/day/instalments",{ startTime : startTime,endTime : endTime, eventId:'42004'},function (res) {
+
+            let dataValue = [];
+            let timeValue = [];
+
+            let month42004 = convertDayChartData(res, '42004', true);
+
+            timeValue = month42004.day;
+            dataValue = month42004.valuesMap['total'];
+
+            var isShowScroll = false;// 是否显示滚动条，默认false不显示
+            var dataZoom_end;// 显示百分之多少的数据量，默认全部
+            if(timeValue.length >10 ){
+                dataZoom_end = 100/(timeValue.length/10);
+                isShowScroll = true;
+            }else{
+                dataZoom_end = 100;
+            }
+
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'bottom',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 90,
+                    formatter: '{c}',
+                    fontSize: 12,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            option = {
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        return params[0].name + '&nbsp;基药占比: '
+                            + params[0].data + '%<br/>'
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '1%',
+                    top: '10%',
+                    containLabel: true
+                },
+                calculable: true,
+                dataZoom: [   {
+                    start:0,//默认为0
+                    end: dataZoom_end,
+                    type: 'slider',
+                    show: isShowScroll,
+                    xAxisIndex: [0],
+                    handleSize: 8,//滑动条的 左右2个滑动条的大小
+                    height: 10,//组件高度
+                    left: "center", //左边的距离
+                    bottom:20,
+                    handleColor: '#ddd',//h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                        //给第一个设置0，第四个设置1，就是垂直渐变
+                        offset: 0,
+                        color: '#1eb5e5'
+                    }, {
+                        offset: 1,
+                        color: '#5ccbb1'
+                    }]),
+                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                    showDataShadow: false,//是否显示数据阴影 默认auto
+                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
+                },
+                    //下面这个属性是里面拖到
+                    {
+                        type: 'inside',
+                        show: true,
+                        xAxisIndex: [0],
+                        start: 0,//默认为1
+                        end: 50
+                    }],
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: timeValue,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name:'基药占比(%)'
+                    }
+                ],
+                series: [
+                    {
+                        name: '基药占比',
+                        type: 'line',
+                        smooth: true,
+                        label: labelOption,
+                        barGap: 0,
+                        data: dataValue,
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        });
+    }
+
+
+    function convertDayChartData(data) {
+          var  eventData = data,
+            unitPoints = eventData.unitPoints,
+            day = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    day.push(point.year + '-' + point.month+'-'+point.day);
+                }
+
+                //values.push((point.eventNum/100).toFixed(2));
+
+                values.push(getRateNum(point));
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(getRateNum(tv) );
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            day: day,
+            valuesMap: valuesMap
+        }
+    }
+
+    function convertMonthChartData(data, eventId, isRate) {
+        var eventData = data[eventId],
+            unitPoints = eventData.unitPoints,
+            month = [],
+            valuesMap = {},
+            totalValues = [];
+
+        var first = true;
+
+        unitPoints && unitPoints.forEach(function(unitPoint) {
+            var points = unitPoint.points,
+                unitId = unitPoint.unitId;
+
+            var values = valuesMap[unitId];
+            if (!values) {
+                values = [];
+                valuesMap[unitId] = values;
+            }
+
+            for (var i = 0; i < points.length; i++) {
+                var point = points[i];
+                if (first) {
+                    month.push(point.year + '-' + point.month);
+                }
+
+                values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                var totalVal = totalValues[i];
+                if (!totalVal) {
+                    totalVal = {
+                        totalNum: point.totalNum,
+                        eventNum: point.eventNum
+                    }
+                    totalValues[i] = totalVal;
+                } else {
+                    totalVal.totalNum += point.totalNum;
+                    totalVal.eventNum += point.eventNum;
+                }
+            }
+
+            first = false;
+        });
+
+        var totalVals = [];
+        for (var j = 0; j < totalValues.length; j++) {
+            var tv = totalValues[j];
+            totalVals.push(isRate ? getRateNum(tv) : tv.totalNum);
+        }
+
+        valuesMap.total = totalVals;
+        return {
+            month: month,
+            valuesMap: valuesMap
+        }
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2);
+    }
+
+    function generatorGcChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+
+        let sTime = $("#startTime").val();
+
+        let split = sTime.split("-");
+
+        var lastDay= new Date(split[0],split[1],0);
+
+        var year = lastDay.getFullYear();
+        var month = lastDay.getMonth() + 1;
+        month = month < 10 ? '0'+ month : month;
+        var day = lastDay.getDate();
+        day = day < 10 ? '0'+day : day;
+
+        let startTime = sTime + "-01";
+
+        let endTime = year + "-"+ month +"-"+ day;
+
+        var eventIds = '42005,42006,42007,42008,42009,42010';
+        $.postAjax("/qos/analysis/data/get/total",{startTime : startTime, endTime : endTime,eventIds:eventIds},function (res) {
+            let chartData = [];
+            if (res) {
+                let czzg = res['42005'];
+                let czjm = res['42006'];
+                let xnh = res['42007'];
+                let sybx = res['42008'];
+                let qzf = res['42009'];
+                let qt = res['42010'];
+
+                let total = czzg + czjm + xnh + sybx + qzf + qt;
+
+                if (total === 0) {
+                    showChartInfo(chart,'暂无数据');
+                    return false;
+                }
+
+                chartData.push({value:czzg,name:"城镇职工"},
+                                {value:czjm,name:"城镇居民"},
+                                {value:xnh,name:"新农合"},
+                                {value:sybx,name:"商业保险"},
+                                {value:qzf,name:"全自费"},
+                                {value:qt,name:"其他"}
+                                )
+            }
+
+            chart.hideLoading();
+
+            option = {
+            tooltip : {
+                trigger : 'item',
+                formatter : "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                data:['城镇职工','城镇居民','新农合','商业保险','全自费','其他'],
+                bottom:5
+            },
+            series : [ {
+                name : '',
+                type : 'pie',
+                radius : '70%',
+                center : [ '50%', '40%' ],
+                data : chartData,
+                itemStyle : {
+                    emphasis : {
+                        shadowBlur : 10,
+                        shadowOffsetX : 0,
+                        shadowColor : 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            } ]
+        };
+        chart.setOption(option, true);
+
+        });
+
+    }
+
+    function initPmDataGrid() {
+            pmTable = $.createTable("#pm", {
+                columns: [
+                    [   {title: "病种（ICD10）", field: "NAME"},
+                        {title: "费用", field: "NUMBERS",formatter : function (val, row, index) { return val ? val.toFixed(2) + '元' : 0}},
+
+                    ]
+                ],
+                url: '/qos/drug/analysis/find/pm',
+                responseHandler: function (res) {
+                    return JSON.parse(res);
+                }
+            });
+
+
+    }
+
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+    /*]]>*/
+</script>
+</body>
+</html>
