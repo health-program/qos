@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -149,7 +150,14 @@ public class DataUnitController extends ControllerSupport {
 	@RequestMapping(value = "/bed/processing", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getAntibioticsData(AnalysisRequest request) {
-		List<DataUnit> dataUnitList=dataUnitService.findAll();
+		List<DataUnit> dataUnitList=new ArrayList<>();
+
+		if (!StringUtils.isEmpty(request.getUnitId())){
+			DataUnit dataUnit=dataUnitService.get(request.getUnitId());
+			dataUnitList.add(dataUnit);
+		}else{
+			dataUnitList=dataUnitService.findAll();
+		}
 		List<BedReportVO> bedReportVOList=new ArrayList<>();
 		for (DataUnit dataUnit:dataUnitList){
 			BedReportVO bedReportVO=new BedReportVO();

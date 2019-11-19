@@ -238,8 +238,11 @@
                 {
                     name: '住院患者使用抗菌药物百分率',
                     type: 'gauge',
-                    detail: {formatter: '{value}%'},
-                    data: [{value: userRate, name: ''}]
+                    detail: {formatter: '{value}%',
+                    offsetCenter:["0%","60%"],
+                        fontSize:20,
+                    },
+                    data: [{value: userRate, name: ''}],
                 }
             ]
         };
@@ -260,7 +263,10 @@
                 {
                     name: '住院患者抗菌药物占总费用百分率',
                     type: 'gauge',
-                    detail: {formatter: '{value}%'},
+                    detail: {formatter: '{value}%',
+                        offsetCenter:["0%","60%"],
+                        fontSize:20,
+                    },
                     data: [{value: totalRate, name: ''}]
                 }
             ]
