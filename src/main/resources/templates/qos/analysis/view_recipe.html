@@ -112,11 +112,30 @@
                     },
                     { 
                     	title: "处方数量", 
-                    	field: "ev16001"
+                    	field: "ev16001",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "处方总额", 
                     	field: "ev16002",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
 						formatter: function(value, row, index) {
                             return value/100;                            
                        }
@@ -124,6 +143,16 @@
                     { 
                     	title: "最大处方金额", 
                     	field: "ev16003",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
 						formatter: function(value, row, index) {
                             return value/100;                            
                        }
@@ -131,6 +160,16 @@
                     { 
                     	title: "最小处方金额", 
                     	field: "ev16004",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
 						formatter: function(value, row, index) {
                             return value/100;                            
                        }
@@ -138,6 +177,16 @@
                     { 
                     	title: "平均处方金额", 
                     	field: "ev16005",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                     	formatter: function(value, row, index) {
                     		if(row.ev16001==0){
                     			return "0"
@@ -190,6 +239,9 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
