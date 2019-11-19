@@ -23,7 +23,7 @@
                             <select name="payType" id="payType" class="form-control">
                                 <option value="">请选择付费方式</option>
                                 <option value="1">窗口收费</option>
-                                <option value="2">自主缴费</option>
+                                <option value="2">自助缴费</option>
                             </select>
                         </div>
                         <div class="col-md-6">
@@ -98,6 +98,8 @@
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
+            showExport: true,
+            exportTypes: ['excel'],
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
@@ -108,15 +110,21 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
+            	
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
             	if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
 					 var time = year+"-"+month+"-"+"01"
       		   $("#startTime").val(time);
       		   params.startTime = time;
-      	     } 
+      	       } 
+            	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+     		   $("#endTime").val(time);
+     		   params.endTime = time;
+     	       } 
             	
             	
             	//14001
