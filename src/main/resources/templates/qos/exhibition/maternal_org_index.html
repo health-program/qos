@@ -80,6 +80,10 @@
             var month = date .getMonth()+1;
             var time = year+"-"+month+"-"+"01";
             $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
         }
     }
 
@@ -425,7 +429,7 @@
                     {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "早孕建卡数", field: "zyjk", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "早孕建卡数", field: "zyjk", align: "center", sortable: true,footerFormatter: sumTotalFormatterModal},
                     {title: "孕妇建卡数", field: "yfjk", align: "center",footerFormatter: sumTotalFormatterModal},
                     {title: "孕妇产后访视人次数", field: "yffs", align: "center",footerFormatter: sumTotalFormatterModal},
 

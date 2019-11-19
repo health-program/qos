@@ -138,6 +138,10 @@
             var month = date .getMonth()+1;
             var time = year+"-"+month+"-"+"01";
             $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
         }
     }
 
