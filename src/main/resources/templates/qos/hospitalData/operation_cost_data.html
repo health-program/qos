@@ -2,63 +2,64 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+
 <body>
-<tt:constant enumcode="data-event-type,data-unit-type" />
-<section class="content-header">
-    <h1>手术费用分析</h1>
-</section>
-<section class="content">
-    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
-        <div class="box-body no-pad-top">
-            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
-                <div class="form-group">
-                    <!--<div class="col-md-2">-->
-                    <!--<select name="unitId" class="form-control">-->
-                    <!--<option value="">请选择单位</option>-->
-                    <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
-                    <!--</select>-->
-                    <!--</div>-->
-                    <div class="col-md-2">
-                        <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="pull-right">
-                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
-                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+        <h1>手术费用分析</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <!--<div class="col-md-2">-->
+                        <!--<select name="unitId" class="form-control">-->
+                        <!--<option value="">请选择单位</option>-->
+                        <!--<option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                <input type="text" style="display:none">
-            </form>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6" style="padding-right: 0">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <table id="dataGrid"></table>
+        <div class="row">
+            <div class="col-md-6" style="padding-right: 0">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-solid">
+                    <div id="costDayDiv" class="box-body" style="height: 350px">
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div id="drugFeeChartDiv" class="box-body" style="height: 400px">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="box box-solid">
-                <div id="costDayDiv" class="box-body" style="height: 350px">
-                </div>
-            </div>
-            <div class="box box-solid">
-                <div id="drugFeeChartDiv" class="box-body" style="height: 400px">
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<div th:include="/qos/footer" />
-<script type="text/javascript" src="/static/js/chart.js"></script>
-<script type="text/javascript">
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
     //<![CDATA[
     //图表自适应大小
     window.addEventListener("resize", function() {
@@ -66,8 +67,8 @@
         costChart.resize();
     });
 
-    var table,arrValue,requestParams,selectUnit;
-    var charResult=[];
+    var table, arrValue, requestParams, selectUnit;
+    var charResult = [];
     $(function() {
         initTable();
 
@@ -77,11 +78,7 @@
 
     function refresh() {
         table ? table.refresh() : initTable();
-
-
     }
-
-
 
     function initTable() {
         table = $.createTable("#dataGrid", {
@@ -89,7 +86,10 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "手术费用(元)", field: "ev42002event",sortable: true,
+                    {
+                        title: "手术费用(元)",
+                        field: "ev42002event",
+                        sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -100,10 +100,13 @@
                             return fa - fb;
                         },
                         formatter: function(value, row, index) {
-                            return row.ev42002event/100;
+                            return row.ev42002event / 100;
                         }
                     },
-                    { title: "总费用(元)", field: "ev42002total",sortable: true,
+                    {
+                        title: "总费用(元)",
+                        field: "ev42002total",
+                        sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -114,18 +117,29 @@
                             return fa - fb;
                         },
                         formatter: function(value, row, index) {
-                            return row.ev42002total/100;
+                            return row.ev42002total / 100;
                         }
                     },
-                    { title: "手术占比", field: "costRate" ,
+                    {
+                        title: "手术占比",
+                        field: "costRate",
                         formatter: function(value, row, index) {
-                            if(row.ev42002event==0){
+                            if (row.ev42002event == 0) {
                                 return "0%"
-                            }else{
-                                return (row.ev42002event*100/(row.ev42002total)).toFixed(2) * 1+"%";
+                            } else {
+                                return (row.ev42002event * 100 / (row.ev42002total)).toFixed(2) * 1 + "%";
                             }
-                        }
+                        },
+                        sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
 
+                            fa = ra.ev42002event / ra.ev42002total;
+                            fb = rb.ev42002event / rb.ev42002total;
+
+                            return fa - fb;
+                        }
                     },
                 ]
             ],
@@ -142,16 +156,16 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
-                if($("#startTime").val()==""||$("#startTime").val()==null){
+                if ($("#startTime").val() == "" || $("#startTime").val() == null) {
                     var date = new Date()
-                    var year = date .getFullYear();
-                    var month = date .getMonth()+1;
-                    var day = date .getDate()-1;
-                    var time = year+"-"+month+"-"+"01";
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var day = date.getDate() - 1;
+                    var time = year + "-" + month + "-" + "01";
                     $("#startTime").val(time);
                     params.startTime = time;
                 }
-                if($("#endTime").val()==""||$("#endTime").val()==null) {
+                if ($("#endTime").val() == "" || $("#endTime").val() == null) {
                     var time = year + "-" + month + "-" + day
                     $("#endTime").val(time);
                     params.endTime = time;
@@ -168,12 +182,12 @@
                 convertRate2TableData(response, '42002', data);
                 var result = [];
                 for (var o in data) {
-                    if(!(data[o].unitId =="total")){
+                    if (!(data[o].unitId == "total")) {
                         result.push(data[o])
                     }
                 }
                 for (var o in data) {
-                    if(!(data[o].unitId =="total")){
+                    if (!(data[o].unitId == "total")) {
                         charResult.push(data[o])
                     }
                 }
@@ -192,11 +206,11 @@
     }
     // var referrals =[];
     // function referral(){
-    // 	var startTime = $("#startTime").val();
-    // 	var endTime = $("#endTime").val();
-    // 	var referral =$.post('/qos/expenses/referral/count',{'startTime':startTime,'endTime':endTime},function(res){
-    // 		referrals = res.result;
-    // 	})
+    //  var startTime = $("#startTime").val();
+    //  var endTime = $("#endTime").val();
+    //  var referral =$.post('/qos/expenses/referral/count',{'startTime':startTime,'endTime':endTime},function(res){
+    //      referrals = res.result;
+    //  })
     // }
 
     function convertRate2TableData(originData, eventId, data) {
@@ -215,10 +229,10 @@
                 };
                 data[id] = unitData;
             }
-            unitData[fieldName+"total"] = item.totalNum;
-            unitData[fieldName+"event"] = item.eventNum;
+            unitData[fieldName + "total"] = item.totalNum;
+            unitData[fieldName + "event"] = item.eventNum;
             total += item.totalNum;
-            event +=item.eventNum;
+            event += item.eventNum;
         });
 
         var totalData;
@@ -226,14 +240,14 @@
         totalData = {
             unitId: 'total',
             unitName: '合计',
-            ev42002event:event,
-            ev42002total:total,
-            costRate:getRateNum(event,total)
+            ev42002event: event,
+            ev42002total: total,
+            costRate: getRateNum(event, total)
         }
-        data["total"]=totalData;
+        data["total"] = totalData;
     }
 
-    function getRateNum(a,b) {
+    function getRateNum(a, b) {
         var c = 0;
         if (a && b) {
             c = a / b * 100;
@@ -250,7 +264,7 @@
 
 
     function convertDayChartData(res, eventId) {
-        var data=res.result,
+        var data = res.result,
             eventData = data[eventId],
             unitPoints = eventData.unitPoints,
             day = [],
@@ -272,10 +286,10 @@
             for (var i = 0; i < points.length; i++) {
                 var point = points[i];
                 if (first) {
-                    day.push(point.year + '-' + point.month+'-'+point.day);
+                    day.push(point.year + '-' + point.month + '-' + point.day);
                 }
 
-                values.push((point.eventNum/100).toFixed(2));
+                values.push((point.eventNum / 100).toFixed(2));
 
                 var totalVal = totalValues[i];
                 if (!totalVal) {
@@ -296,7 +310,7 @@
         var totalVals = [];
         for (var j = 0; j < totalValues.length; j++) {
             var tv = totalValues[j];
-            totalVals.push((tv.eventNum/100).toFixed(2));
+            totalVals.push((tv.eventNum / 100).toFixed(2));
         }
 
         valuesMap.total = totalVals;
@@ -307,34 +321,36 @@
     }
 
     var day42002;
+
     function initDayChart() {
         $.ajax({
-            type : "post",    //请求类型
-            url : "/qos/analysis/data/get/day/instalments",//请求的 URL地址
+            type: "post", //请求类型
+            url: "/qos/analysis/data/get/day/instalments", //请求的 URL地址
             async: false,
-            data:requestParams,
-            success: function (res){
+            data: requestParams,
+            success: function(res) {
                 day42002 = convertDayChartData(res, '42002');
                 chart1('total');
-            }})
+            }
+        })
     }
 
-    function chart1(){
+    function chart1() {
         var unitId = selectUnit || 'total';
-        var isShowScroll = false;// 是否显示滚动条，默认false不显示
-        var dataZoom_end;// 显示百分之多少的数据量，默认全部
-        if(day42002.day.length >10 ){
+        var isShowScroll = false; // 是否显示滚动条，默认false不显示
+        var dataZoom_end; // 显示百分之多少的数据量，默认全部
+        if (day42002.day.length > 10) {
             debugger;
-            dataZoom_end = 100/(day42002.day.length/10);
+            dataZoom_end = 100 / (day42002.day.length / 10);
             isShowScroll = true;
-        }else{
+        } else {
             dataZoom_end = 100;
         }
         var option = {
             title: {
                 text: '按日期分布'
             },
-            tooltip : {
+            tooltip: {
                 trigger: 'axis',
                 axisPointer: {
                     type: 'cross',
@@ -355,105 +371,102 @@
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
-                {
-                    type : 'category',
-                    boundaryGap : false,
-                    data :day42002.day,
-                    axisLabel: {
-                        interval:0,
-                        rotate:40//角度顺时针计算的
-                    } ,
-                }
-            ],
-            dataZoom: [   {
-                start:0,//默认为0
-                end: dataZoom_end,
-                type: 'slider',
-                show: isShowScroll,
-                xAxisIndex: [0],
-                handleSize: 8,//滑动条的 左右2个滑动条的大小
-                height: 10,//组件高度
-                left: "center", //左边的距离
-                bottom:0,
-                handleColor: '#ddd',//h滑动图标的颜色
-                handleStyle: {
-                    borderColor: "#cacaca",
-                    borderWidth: "1",
-                    shadowBlur: 2,
-                    background: "#ddd",
-                    shadowColor: "#ddd",
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: day42002.day,
+                axisLabel: {
+                    interval: 0,
+                    rotate: 40 //角度顺时针计算的
                 },
-                fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                    //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                    //给第一个设置0，第四个设置1，就是垂直渐变
-                    offset: 0,
-                    color: '#1eb5e5'
-                }, {
-                    offset: 1,
-                    color: '#5ccbb1'
-                }]),
-                zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                filterMode: 'filter'
-            },
+            }],
+            dataZoom: [{
+                    start: 0, //默认为0
+                    end: dataZoom_end,
+                    type: 'slider',
+                    show: isShowScroll,
+                    xAxisIndex: [0],
+                    handleSize: 8, //滑动条的 左右2个滑动条的大小
+                    height: 10, //组件高度
+                    left: "center", //左边的距离
+                    bottom: 0,
+                    handleColor: '#ddd', //h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                        //给第一个设置0，第四个设置1，就是垂直渐变
+                        offset: 0,
+                        color: '#1eb5e5'
+                    }, {
+                        offset: 1,
+                        color: '#5ccbb1'
+                    }]),
+                    zoomLock: true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd', //两边未选中的滑动条区域的颜色
+                    showDataShadow: false, //是否显示数据阴影 默认auto
+                    showDetail: false, //即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
+                },
                 //下面这个属性是里面拖到
                 {
                     type: 'inside',
                     show: true,
                     xAxisIndex: [0],
-                    start: 0,//默认为1
+                    start: 0, //默认为1
                     end: 50
-                }],
-            yAxis : [
-                {
-                    type : 'value'
                 }
             ],
-            series : [
-                {
-                    name:'耗材费用',
-                    type:'line',
+            yAxis: [{
+                type: 'value'
+            }],
+            series: [{
+                    name: '耗材费用',
+                    type: 'line',
                     stack: '总量',
-                    smooth:0.3,
+                    smooth: 0.3,
                     areaStyle: {},
-                    itemStyle : {
-                        normal : {
+                    itemStyle: {
+                        normal: {
                             color: '#4a72c9',
-                            lineStyle:{
-                                width:0
+                            lineStyle: {
+                                width: 0
                             }
                         }
                     },
-                    data:day42002.valuesMap[unitId]
+                    data: day42002.valuesMap[unitId]
                 },
 
             ]
         };
-        costDayDiv.setOption(option,true);
+        costDayDiv.setOption(option, true);
     }
 
 
-    function chart2(){
-        if(charResult){
+    function chart2() {
+        if (charResult) {
             var data = charResult;
-            data.sort(compare('ev42002event','desc'));
-            var oPDCountSeries =[],oPDCountxAxis =[];
+            data.sort(compare('ev42002event', 'desc'));
+            var oPDCountSeries = [],
+                oPDCountxAxis = [];
             for (var i = 0; i < data.length; i++) {
-                if(data[i].unitId != 'total'){
+                if (data[i].unitId != 'total') {
                     oPDCountxAxis.push(data[i].unitName);
-                    oPDCountSeries.push({name:data[i].unitName,value:(data[i].ev42002event/100).toFixed(2)});
+                    oPDCountSeries.push({ name: data[i].unitName, value: (data[i].ev42002event / 100).toFixed(2) });
                 }
             }
-            var isShowScroll = false;// 是否显示滚动条，默认false不显示
-            var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(oPDCountxAxis.length >5 ){
-                dataZoom_end = 100/(oPDCountxAxis.length/5);
+            var isShowScroll = false; // 是否显示滚动条，默认false不显示
+            var dataZoom_end; // 显示百分之多少的数据量，默认全部
+            if (oPDCountxAxis.length > 5) {
+                dataZoom_end = 100 / (oPDCountxAxis.length / 5);
                 isShowScroll = true;
-            }else{
+            } else {
                 dataZoom_end = 100;
             }
             var labelOption = {
@@ -477,11 +490,11 @@
                 title: {
                     text: '医院手术费用排名',
                 },
-                color : [ '#3398DB' ],
-                tooltip : {
-                    trigger : 'axis',
-                    axisPointer : { // 坐标轴指示器，坐标轴触发有效
-                        type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                     }
                 },
                 toolbox: {
@@ -489,92 +502,89 @@
                         saveAsImage: {}
                     }
                 },
-                grid : {
-                    left : '3%',
-                    right : '4%',
-                    bottom : '3%',
-                    containLabel : true
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
                 },
-                xAxis : [
-                    {
-                        type : 'category',
-                        data : oPDCountxAxis,
-                        axisLabel: {
-                            interval:0,
-                            rotate:50//角度顺时针计算的
-                        } ,
-                        axisTick : {
-                            alignWithLabel : true
-                        }
-                    }
-                ],
-
-                dataZoom: [   {
-                    start:0,//默认为0
-                    end: dataZoom_end,
-                    type: 'slider',
-                    show: isShowScroll,
-                    xAxisIndex: [0],
-                    handleSize: 8,//滑动条的 左右2个滑动条的大小
-                    height: 10,//组件高度
-                    left: "center", //左边的距离
-                    bottom:0,
-                    handleColor: '#ddd',//h滑动图标的颜色
-                    handleStyle: {
-                        borderColor: "#cacaca",
-                        borderWidth: "1",
-                        shadowBlur: 2,
-                        background: "#ddd",
-                        shadowColor: "#ddd",
+                xAxis: [{
+                    type: 'category',
+                    data: oPDCountxAxis,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 50 //角度顺时针计算的
                     },
-                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                        //给第一个设置0，第四个设置1，就是垂直渐变
-                        offset: 0,
-                        color: '#1eb5e5'
-                    }, {
-                        offset: 1,
-                        color: '#5ccbb1'
-                    }]),
-                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                    showDataShadow: false,//是否显示数据阴影 默认auto
-                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                    filterMode: 'filter'
-                },
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+
+                dataZoom: [{
+                        start: 0, //默认为0
+                        end: dataZoom_end,
+                        type: 'slider',
+                        show: isShowScroll,
+                        xAxisIndex: [0],
+                        handleSize: 8, //滑动条的 左右2个滑动条的大小
+                        height: 10, //组件高度
+                        left: "center", //左边的距离
+                        bottom: 0,
+                        handleColor: '#ddd', //h滑动图标的颜色
+                        handleStyle: {
+                            borderColor: "#cacaca",
+                            borderWidth: "1",
+                            shadowBlur: 2,
+                            background: "#ddd",
+                            shadowColor: "#ddd",
+                        },
+                        fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                            //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                            //给第一个设置0，第四个设置1，就是垂直渐变
+                            offset: 0,
+                            color: '#1eb5e5'
+                        }, {
+                            offset: 1,
+                            color: '#5ccbb1'
+                        }]),
+                        zoomLock: true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                        backgroundColor: '#ddd', //两边未选中的滑动条区域的颜色
+                        showDataShadow: false, //是否显示数据阴影 默认auto
+                        showDetail: false, //即拖拽时候是否显示详细数值信息 默认true
+                        handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                        filterMode: 'filter'
+                    },
                     //下面这个属性是里面拖到
                     {
                         type: 'inside',
                         show: true,
                         xAxisIndex: [0],
-                        start: 0,//默认为1
+                        start: 0, //默认为1
                         end: 50
-                    }],
-                yAxis : [
-                    {
-                        type : 'value'
                     }
                 ],
-                series : [ {
-                    name : '手术费用',
-                    type : 'bar',
-                    barWidth:35,
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: [{
+                    name: '手术费用',
+                    type: 'bar',
+                    barWidth: 35,
                     label: labelOption,
-                    data : oPDCountSeries
-                } ]
+                    data: oPDCountSeries
+                }]
             };
-            costChart.setOption(option,true);
+            costChart.setOption(option, true);
         }
     }
 
-    function dataAll(){
+    function dataAll() {
         var dataArr = [];
         var d = new Date()
-        d.setMonth(d.getMonth()-12);
+        d.setMonth(d.getMonth() - 12);
         console.log(d.toLocaleString())
         for (var i = 0; i < 12; i++) {
-            d.setMonth(d.getMonth() + 1);//每次循环一次 月份值减1
+            d.setMonth(d.getMonth() + 1); //每次循环一次 月份值减1
             var m = d.getMonth() + 1;
             m = m < 10 ? "0" + m : m;
             dataArr.push(d.getFullYear() + "-" + (m))
@@ -582,15 +592,15 @@
         return dataArr.sort();
     }
 
-    function compare(property,sort){
-        return function(a,b){
+    function compare(property, sort) {
+        return function(a, b) {
             var data;
             var value1 = a[property];
             var value2 = b[property];
-            if(sort =='asc'){
+            if (sort == 'asc') {
                 data = value1 - value2;
             }
-            if(sort =='desc'){
+            if (sort == 'desc') {
                 data = value2 - value1;
             }
             return data;
@@ -598,7 +608,7 @@
     }
 
     //]]>
-</script>
+    </script>
 </body>
 
 </html>
