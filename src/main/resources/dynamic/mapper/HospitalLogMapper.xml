@@ -29,10 +29,10 @@
 	from medical_score_detail
 	where 1=1
 	<if test="type !=null and type != '' ">
-	 AND type LIKE CONCAT('%',#{type},'%') 
+	 AND type = #{type} 
 	</if>
 	<if test="tableName !=null and tableName != '' ">
-	 AND table_name = #{tableName} 
+	 AND table_name LIKE CONCAT('%',#{tableName},'%') 
 	</if>
 	ORDER BY create_time DESC
     </select>
