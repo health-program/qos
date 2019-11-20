@@ -254,6 +254,10 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		errors.add(new ExcelImportError(i, e));
 		continue;
 	    }
+	    
+	    if(excelOrgSchool == null){
+		continue;
+	    }
 
 	    String schoolName = excelOrgSchool.getParentSchoolName();
 

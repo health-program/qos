@@ -95,8 +95,13 @@
 	             $.errorMessage("疫情处置及时率不能为空");
 	             return;
 	         }
-	    	
-	    	var data = {
+	    	 
+	    	 
+	    	 
+	    	 var ex = /^\d+$/;
+			 if (ex.test(data)) {
+			    // 则为整数
+			 	var data = {
 	    		data:data,
 	    		type:2
 	    	}
@@ -105,6 +110,9 @@
 	            table.refresh();
 	            layer.close(index);
 	        })
+			 }else{
+				 $.errorMessage("输入的值不能少于0"); 
+			 }
 	    }
 		
 		function getRate(value, row, index){
