@@ -6,7 +6,7 @@ $(function(){
          }
       $.ajax({
         type : "post",    //请求类型
-        url : "/qos/analysis/data/get/month/instalments",//请求的 URL地址
+        url : "/analysis/data/get/month/instalments",//请求的 URL地址
         data:arr,
         success: function (rawData) {
        var  month21001Data=convertMonthChartData(rawData.result, '21001', true);
