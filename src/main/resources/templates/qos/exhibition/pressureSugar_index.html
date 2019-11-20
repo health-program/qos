@@ -4,82 +4,84 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="data-event-type,data-unit-type" />
-<section class="content-header">
-    <h1>慢病人群管理情况分析</h1>
-</section>
-<section class="content">
-    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+        <h1>慢病人群管理情况分析</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid" style="height: 45px; margin-bottom: 10px">
             <div class="box-body no-pad-top">
-                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px; margin-left: 0; margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="year" id="year" placeholder="请输入年度" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1" ></div>
+                            <div class="input-group">
+                                <input name="year" id="year" placeholder="请输入年度" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1">
+                            </div>
                         </div>
-                        <div class="col-md-2">
-                        </div>
+                        <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
-                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                                <button type="button" style="width: 100px" class="btn btn-primary tonto-btn-search" onclick="refresh()">
+                                    <i class="fa fa-search"></i>查询
+                                </button>
+                                <button type="button" style="width: 100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()">
+                                    <i class="fa fa-repeat"></i>重置
+                                </button>
                             </div>
                         </div>
                     </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                    <input type="text" style="display:none">
+                    <input type="text" style="display: none">
                 </form>
             </div>
         </div>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="box box-solid">
-                <div id="pieChartDiv1" class="box-body" style="height: 250px">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div id="pieChartDiv1" class="box-body" style="height: 250px">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div id="pieChartDiv2" class="box-body" style="height: 250px;">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div id="pieChartDiv3" class="box-body" style="height: 250px">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="box box-solid">
+                    <div id="pieChartDiv4" class="box-body" style="height: 250px">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="box box-solid">
-                <div id="pieChartDiv2" class="box-body" style="height: 250px;">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="box box-solid">
+                    <div id="barChart1" class="box-body" style="height: 330px"></div>
+                </div>
+                <div class="box box-solid">
+                    <div id="barChart2" class="box-body" style="height: 330px"></div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="box box-solid">
-                <div id="pieChartDiv3" class="box-body" style="height: 250px">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="box box-solid">
-                <div id="pieChartDiv4" class="box-body" style="height: 250px">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <table id="dataGrid"></table>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="box box-solid">
-                <div id="barChart1" class="box-body" style="height: 330px"></div>
-            </div>
-            <div class="box box-solid">
-                <div id="barChart2" class="box-body" style="height: 330px"></div>
-            </div>
-
-        </div>
-    </div>
-</section>
-<div th:include="/qos/footer" />
-<script type="text/javascript" src="/static/js/chart.js"></script>
-<script type="text/javascript">
-
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
     //图表自适应大小
     window.addEventListener("resize", function() {
         pieChart1.resize();
@@ -89,18 +91,17 @@
         barChart1.resize();
         barChart2.resize();
     });
-    var table, sumChart, dayChart, sumData, requestParams,result,selectUnit;
-    var charResult=[];
-    
+    var table, sumChart, dayChart, sumData, requestParams, result, selectUnit;
+    var charResult = [];
+
     $(function() {
         refresh();
     });
 
     function refresh() {
         table ? table.refresh() : initTable();
-        initMonthChart();
     }
-    
+
     $(function() {
         // var day=new Date();
         // day.setTime(day.getTime());
@@ -113,101 +114,294 @@
         initTable();
     });
 
-
-    function getRate(a,b) {
+    function getRate(a, b) {
         var c = 0;
         if (a && b) {
             c = a / b * 100;
         }
         return c.toFixed(2) + '%';
     }
+
     function initTable() {
-        table = $.createTable("#dataGrid", {
-            idField: "id",
-            columns: [
-                [
-                    { title: "辖区", field: "unitName" },
-                    { title: "高血压患病数", field: "ev1V30009"},
-                    { title: "高血压管理数", field: "evV30009"},
-                    { title: "高血压随访数", field: "ev1V30009",visible:false },
-                    { title: "管理人群血压<br>控制率（总）", field: "evV30004",},
-                    { title: "高血压患者规范<br>管理率", field: "pressureManageRate",
-                    	formatter: function(value, row, index) {
-                    		if(row.ev1V30009==0||row.ev1V30009==null){
-                    			return "0%"
-                    		}else{
-                    			return (row.evV30009/row.ev1V30009*100).toFixed(2) * 1+"%";
-                    		}
-                        }	
+        table = $
+            .createTable(
+                "#dataGrid", {
+                    idField: "id",
+                    columns: [
+                        [{
+                                title: "辖区",
+                                field: "unitName"
+                            },
+                            {
+                                title: "高血压患病数",
+                                field: "ev1V30009",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "高血压管理数",
+                                field: "evV30009",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "高血压随访数",
+                                field: "ev1V30009",
+                                visible: false,
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "管理人群血压<br>控制率（总）",
+                                field: "evV30004",
+                            },
+                            {
+                                title: "高血压患者规范<br>管理率",
+                                field: "pressureManageRate",
+                                formatter: function(value, row,
+                                    index) {
+                                    if (row.ev1V30009 == 0 ||
+                                        row.ev1V30009 == null) {
+                                        return "0%"
+                                    } else {
+                                        return (row.evV30009 /
+                                                row.ev1V30009 * 100)
+                                            .toFixed(2) *
+                                            1 + "%";
+                                    }
+                                },
+		                        sortable: true,
+		                        sorter: function(fa, fb, ra, rb) {
+		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+		                            fa = ra.evV30009 / ra.ev1V30009;
+		                            fb = rb.evV30009 / rb.ev1V30009;
+
+		                            return fa - fb;
+		                        }
+                            },
+                            {
+                                title: "糖尿病患病数",
+                                field: "ev1V30010",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "糖尿病管理数",
+                                field: "evV30010",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "糖尿病随访数",
+                                field: "ev1V30010",
+                                visible: false,
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "管理人群血糖<br>控制率（总）",
+                                field: "evV30005",
+		                        sortable: true,
+		                        sorter: function(fa, fb, ra, rb) {
+		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+		                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+		                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+		                            return fa - fb;
+		                        }
+                            },
+                            {
+                                title: "糖尿病患者规范<br>管理率",
+                                field: "sugarManageRate",
+                                formatter: function(value, row,
+                                    index) {
+                                    if (row.ev1V30010 == 0 ||
+                                        row.ev1V30010 == null) {
+                                        return "0%"
+                                    } else {
+                                        return (row.evV30010 /
+                                                row.ev1V30010 * 100)
+                                            .toFixed(2) *
+                                            1 + "%";
+                                    }
+                                },
+		                        sortable: true,
+		                        sorter: function(fa, fb, ra, rb) {
+		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+		                            fa = ra.evV30010 / ra.ev1V30010;
+		                            fb = rb.evV30010 / rb.ev1V30010;
+
+		                            return fa - fb;
+		                        }
+                            }
+                        ]
+                    ],
+                    url: '/qos/gongwei/pressureSugar/search/all',
+                    pagination: false,
+                    showExport: true,
+                    exportTypes: ['excel'],
+                    sidePagination: 'client',
+                    searchbar: '#searchbar',
+                    clickToSelect: true,
+                    onCheck: function(row) {
+                        console.log("on check");
                     },
-                    { title: "糖尿病患病数", field: "ev1V30010"},
-                    { title: "糖尿病管理数", field: "evV30010"},
-                    { title: "糖尿病随访数", field: "ev1V30010",visible:false },
-                    { title: "管理人群血糖<br>控制率（总）", field: "evV30005"},
-                    { title: "糖尿病患者规范<br>管理率", field: "sugarManageRate",
-                    	formatter: function(value, row, index) {
-                    		if(row.ev1V30010==0||row.ev1V30010==null){
-                    			return "0%"
-                    		}else{
-                    			return (row.evV30010/row.ev1V30010*100).toFixed(2) * 1+"%";
-                    		}
-                        }	
+                    onUncheck: function(row) {
+                        console.log("on uncheck");
+                    },
+                    onClickRow: function(row, tr) {
+                        $("#dataGrid").find(".selected")
+                            .removeClass('selected');
+                        $(tr).addClass('selected');
+                        unitSelected(row);
+                    },
+                    queryParams: function(params) {
+                        /* if($("#year").val()==""||$("#year").val()==null){
+                        	 var myDate = new Date();
+                        	 var tYear = myDate.getFullYear();
+                        	 $("#year").val(tYear-1);
+                        	params.year = tYear-1;
+                        } */
+                        requestParams = params;
+                        return params;
+                    },
+                    responseHandler: function(response) {
+                        if (!response) {
+                            return null;
+                        }
+                        var data = {};
+                        convertCount2TableData(response, 'V30009',
+                            data); //高血压管理数
+                        convertCount1TableData(response, 'V30009',
+                            data); //高血压随访数
+
+                        convertCount3TableData(response, 'V30010',
+                            data); //糖尿病管理数
+                        convertCount4TableData(response, 'V30010',
+                            data); //糖尿病随访数
+                        convertRate1TableData(response, 'V30004',
+                            data); //管理人群血压
+                        convertRate2TableData(response, 'V30005',
+                            data); //管理人群糖尿病
+
+                        var result = []
+                        for (var o in data) {
+                            result.push(data[o]);
+                        }
+                        charResult = result;
+                        initPieChart1();
+                        initPieChart2();
+                        initPieChart3();
+                        initPieChart4();
+                        initColumnDiv1();
+                        initColumnDiv2();
+                        return result;
                     }
-                ]
-            ],
-            url: '/qos/gongwei/pressureSugar/search/all',
-            pagination: false,
-            searchbar: '#searchbar',
-            clickToSelect: true,
-            onCheck: function(row) {
-                console.log("on check");
-            },
-            onUncheck: function(row) {
-                console.log("on uncheck");
-            },
-            onClickRow: function(row, tr) {
-                $("#dataGrid").find(".selected").removeClass('selected');
-                $(tr).addClass('selected');
-                unitSelected(row);
-            },
-            queryParams: function(params) {
-            	/* if($("#year").val()==""||$("#year").val()==null){
-            		 var myDate = new Date();
-            		 var tYear = myDate.getFullYear();
-            		 $("#year").val(tYear-1);
-            		params.year = tYear-1;
-            	} */
-                requestParams = params;
-                return params;
-            },
-            responseHandler: function(response) {
-            	if (!response) {
-                    return null;
-                }
-                var data = {};
-                convertCount2TableData(response, 'V30009', data);//高血压管理数
-                convertCount1TableData(response, 'V30009', data);//高血压随访数
-               
-                convertCount3TableData(response, 'V30010', data);//糖尿病管理数
-                convertCount4TableData(response, 'V30010', data);//糖尿病随访数
-                convertRate1TableData(response, 'V30004', data);//管理人群血压
-                convertRate2TableData(response, 'V30005', data);//管理人群糖尿病
-                
-                var result = []
-                for (var o in data) {
-                    result.push(data[o]);
-                }
-                charResult = result;
-                initPieChart1();
-                initPieChart2();
-                initPieChart3();
-                initPieChart4();
-                initColumnDiv1();
-                initColumnDiv2();
-                return result;
-            }
-        });
+                });
     }
+
     function convertCount5TableData(originData, eventId, data) {
         var eventData = originData[eventId],
             fieldName = 'ev1' + eventId,
@@ -237,6 +431,7 @@
         }
         totalData[fieldName] = total;
     }
+
     function convertCount2TableData(originData, eventId, data) {
         var eventData = originData[eventId],
             fieldName = 'ev' + eventId,
@@ -326,6 +521,7 @@
         }
         totalData[fieldName] = total;
     }
+
     function convertCount4TableData(originData, eventId, data) {
         var eventData = originData[eventId],
             fieldName = 'ev1' + eventId,
@@ -355,87 +551,99 @@
         }
         totalData[fieldName] = total;
     }
-    
+
     function convertRate1TableData(originData, eventId, data) {
-		var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, reachnumber = 0;
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            reachnumber = 0;
 
-		eventData && eventData.forEach(function(item) {
-			var id = item.unitId;
-			unitData = data[id];
-			if (!unitData) {
-				unitData = {
-					unitId : id,
-					unitName : item.unitName
-				};
-				data[id] = unitData;
-			}
-			unitData[fieldName] = getRate(item);
-			total += parseFloat(item.total);
-			reachnumber += item.reachnumber;
-		});
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+            total += parseFloat(item.total);
+            reachnumber += item.reachnumber;
+        });
 
-		var totalData = data['total'];
-		if (!totalData) {
-			totalData = {
-				unitId : 'total',
-				unitName : '合计',
-			}
-			data['total'] = totalData;
-		}
-		totalData[fieldName] = getRate({
-			total : total,
-			reachnumber : reachnumber
-		});
-	}
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate({
+            total: total,
+            reachnumber: reachnumber
+        });
+    }
+
     function getRate(item, fixed) {
-		var a = parseFloat(item.total), b = item.reachnumber, c = 0;
-		if (a > 0 && b > 0)
-		if (a && b) {
-			c = b/a * 100;
-		}
-		return c.toFixed(fixed || 2) + '%';
-	}
-    
+        var a = parseFloat(item.total),
+            b = item.reachnumber,
+            c = 0;
+        if (a > 0 && b > 0)
+            if (a && b) {
+                c = b / a * 100;
+            }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
     function convertRate2TableData(originData, eventId, data) {
-		var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, sugarnumber = 0;
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0,
+            sugarnumber = 0;
 
-		eventData && eventData.forEach(function(item) {
-			var id = item.unitId;
-			unitData = data[id];
-			if (!unitData) {
-				unitData = {
-					unitId : id,
-					unitName : item.unitName
-				};
-				data[id] = unitData;
-			}
-			unitData[fieldName] = getRate1(item);
-			total += parseFloat(item.total);
-			sugarnumber += item.sugarnumber;
-		});
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate1(item);
+            total += parseFloat(item.total);
+            sugarnumber += item.sugarnumber;
+        });
 
-		var totalData = data['total'];
-		if (!totalData) {
-			totalData = {
-				unitId : 'total',
-				unitName : '合计',
-			}
-			data['total'] = totalData;
-		}
-		totalData[fieldName] = getRate1({
-			total : total,
-			sugarnumber : sugarnumber
-		});
-	}
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = getRate1({
+            total: total,
+            sugarnumber: sugarnumber
+        });
+    }
+
     function getRate1(item, fixed) {
-		var a = parseFloat(item.total), b = item.sugarnumber, c = 0;
-		if (a > 0 && b > 0)
-		if (a && b) {
-			c = b/a * 100;
-		}
-		return c.toFixed(fixed || 2) + '%';
-	}
-    
+        var a = parseFloat(item.total),
+            b = item.sugarnumber,
+            c = 0;
+        if (a > 0 && b > 0)
+            if (a && b) {
+                c = b / a * 100;
+            }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
     function unitSelected(row) {
         selectUnit = row.unitName;
         initPieChart1();
@@ -451,15 +659,14 @@
     var barChart1 = echarts.init(document.getElementById('barChart1'));
     var barChart2 = echarts.init(document.getElementById('barChart2'));
 
-
-    function initPieChart(pieChar,pieName,occupyRate,remainRate) {
-        if (sumData==0){
+    function initPieChart(pieChar, pieName, occupyRate, remainRate) {
+        if (sumData == 0) {
             showChartInfo(pieChar, '暂无数据显示');
             return false;
         }
 
         var pieMessage;
-        pieMessage=occupyRate+"%";
+        pieMessage = occupyRate + "%";
 
         var option = {
 
@@ -467,13 +674,13 @@
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            color: ['#3398DB','#999999'],
+            color: ['#3398DB', '#999999'],
             graphic: [{ //环形图中间添加文字
                 type: 'text', //通过不同top值可以设置上下显示
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: pieMessage+'\n'+pieName,
+                    text: pieMessage + '\n' + pieName,
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 60,
@@ -482,158 +689,158 @@
                     fontFamily: "Microsoft YaHei"
                 }
             }],
-            series: [
-                {
-                    name:pieName,
-                    type:'pie',
-                    radius: ['50%', '80%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+            series: [{
+                name: pieName,
+                type: 'pie',
+                radius: ['50%', '80%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
 
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                    value: occupyRate,
+                    name: pieName
+                }, {
+                    value: remainRate,
+                    name: '',
+                    hoverAnimation: false,
+                    tooltip: { //禁止鼠标悬停显示提示框
+                        show: false,
                     },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:occupyRate,
-                            name:pieName
-                        },
-                        {
-                            value:remainRate,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{//禁止鼠标悬停显示提示框
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
+                }]
+            }]
         };
-        pieChar.setOption(option,true);
+        pieChar.setOption(option, true);
     };
 
     function initPieChart1() {
 
-        var pieName="高血压规范管理率";
-        var remainRate=0;
+        var pieName = "高血压规范管理率";
+        var remainRate = 0;
 
-        let unitId = selectUnit || 'total';
-        var total=[];
+        let
+            unitId = selectUnit || 'total';
+        var total = [];
         for (var i = 0; i < charResult.length; i++) {
-            if (unitId=='total'){
+            if (unitId == 'total') {
                 total.push(charResult[i])
-            }else{
-                if (charResult[i].unitName==unitId){
+            } else {
+                if (charResult[i].unitName == unitId) {
                     total.push(charResult[i]);
                 }
             }
         }
-        var it=total[total.length - 1];
-        var rate=0;
-        if ("undefined"==typeof (it.evV30009) || "undefined"==typeof (it.ev1V30009)){
-            rate=0+ '%'
-        }else{
-            rate=(it.evV30009/it.ev1V30009*100).toFixed(2)+ '%';
+        var it = total[total.length - 1];
+        var rate = 0;
+        if ("undefined" == typeof(it.evV30009) ||
+            "undefined" == typeof(it.ev1V30009)) {
+            rate = 0 + '%'
+        } else {
+            rate = (it.evV30009 / it.ev1V30009 * 100).toFixed(2) + '%';
         }
-        rate=rate.replace("%","")*1;
-        remainRate=(100-rate).toFixed(2);
-        initPieChart(pieChart1,pieName,rate,remainRate);
+        rate = rate.replace("%", "") * 1;
+        remainRate = (100 - rate).toFixed(2);
+        initPieChart(pieChart1, pieName, rate, remainRate);
     }
 
-
     function initPieChart2() {
-        let unitId = selectUnit || 'total';
-        var total=[];
+        let
+            unitId = selectUnit || 'total';
+        var total = [];
         for (var i = 0; i < charResult.length; i++) {
-            if (unitId=='total'){
+            if (unitId == 'total') {
                 total.push(charResult[i])
-            }else{
-                if (charResult[i].unitName==unitId){
+            } else {
+                if (charResult[i].unitName == unitId) {
                     total.push(charResult[i]);
                 }
             }
         }
-        var pieName="血压控制率";
-        var remainRate=0;
-        var it=total[total.length - 1];
-        var rate=it.evV30004;
-        rate=rate.replace("%","")*1;
-        remainRate=(100-rate).toFixed(2);
-        initPieChart(pieChart2,pieName,rate,remainRate);
+        var pieName = "血压控制率";
+        var remainRate = 0;
+        var it = total[total.length - 1];
+        var rate = it.evV30004;
+        rate = rate.replace("%", "") * 1;
+        remainRate = (100 - rate).toFixed(2);
+        initPieChart(pieChart2, pieName, rate, remainRate);
     }
 
     function initPieChart3() {
-        let unitId = selectUnit || 'total';
-        var total=[];
+        let
+            unitId = selectUnit || 'total';
+        var total = [];
         for (var i = 0; i < charResult.length; i++) {
-            if (unitId=='total'){
+            if (unitId == 'total') {
                 total.push(charResult[i])
-            }else{
-                if (charResult[i].unitName==unitId){
+            } else {
+                if (charResult[i].unitName == unitId) {
                     total.push(charResult[i]);
                 }
             }
         }
-        var pieName="糖尿病规范管理率";
-        var remainRate=0;
-        var it=total[total.length - 1];
-        var rate=0;
-        if ("undefined"==typeof (it.evV30010) || "undefined"==typeof (it.ev1V30010)){
-            rate=0+ '%'
-        }else{
-            rate=(it.evV30010/it.ev1V30010*100).toFixed(2)+ '%';
+        var pieName = "糖尿病规范管理率";
+        var remainRate = 0;
+        var it = total[total.length - 1];
+        var rate = 0;
+        if ("undefined" == typeof(it.evV30010) ||
+            "undefined" == typeof(it.ev1V30010)) {
+            rate = 0 + '%'
+        } else {
+            rate = (it.evV30010 / it.ev1V30010 * 100).toFixed(2) + '%';
         }
-        rate=rate.replace("%","")*1;
-        remainRate=(100-rate).toFixed(2);
-        initPieChart(pieChart3,pieName,rate,remainRate);
+        rate = rate.replace("%", "") * 1;
+        remainRate = (100 - rate).toFixed(2);
+        initPieChart(pieChart3, pieName, rate, remainRate);
     }
 
     function initPieChart4() {
-        let unitId = selectUnit || 'total';
-        var total=[];
+        let
+            unitId = selectUnit || 'total';
+        var total = [];
         for (var i = 0; i < charResult.length; i++) {
-            if (unitId=='total'){
+            if (unitId == 'total') {
                 total.push(charResult[i])
-            }else{
-                if (charResult[i].unitName==unitId){
+            } else {
+                if (charResult[i].unitName == unitId) {
                     total.push(charResult[i]);
                 }
             }
         }
-        var pieName="血糖控制率";
-        var remainRate=0;
-        var it=total[total.length - 1];
-         var rate=it.evV30005;
-        rate=rate.replace("%","")*1;
-        remainRate=(100-rate).toFixed(2);
-        initPieChart(pieChart4,pieName,rate,remainRate);
+        var pieName = "血糖控制率";
+        var remainRate = 0;
+        var it = total[total.length - 1];
+        var rate = it.evV30005;
+        rate = rate.replace("%", "") * 1;
+        remainRate = (100 - rate).toFixed(2);
+        initPieChart(pieChart4, pieName, rate, remainRate);
     }
 
-    function initColumnDiv(barChart,divName,managedName,
-    number,manageNumber,columnName1,columnName2) {
-        if (charResult==0){
+    function initColumnDiv(barChart, divName, managedName, number,
+        manageNumber, columnName1, columnName2) {
+        if (charResult == 0) {
             showChartInfo(barChart, '暂无数据显示');
             return false;
         }
 
-        var isShowScroll = false;// 是否显示滚动条，默认false不显示
-        var dataZoom_end;// 显示百分之多少的数据量，默认全部
-        if(charResult.length >5 ){
-            dataZoom_end = 100/(charResult.length/5);
+        var isShowScroll = false; // 是否显示滚动条，默认false不显示
+        var dataZoom_end; // 显示百分之多少的数据量，默认全部
+        if (charResult.length > 5) {
+            dataZoom_end = 100 / (charResult.length / 5);
             isShowScroll = true;
-        }else{
+        } else {
             dataZoom_end = 100;
         }
 
-        var	option = {
+        var option = {
             title: {
                 text: divName,
             },
@@ -651,56 +858,59 @@
                 containLabel: true
             },
 
-            dataZoom: [   {
-                start:0,//默认为0
-                end: dataZoom_end,
-                type: 'slider',
-                show: isShowScroll,
-                xAxisIndex: [0],
-                handleSize: 8,//滑动条的 左右2个滑动条的大小
-                height: 10,//组件高度
-                left: "center", //左边的距离
-                bottom:1,
-                handleColor: '#ddd',//h滑动图标的颜色
-                handleStyle: {
-                    borderColor: "#cacaca",
-                    borderWidth: "1",
-                    shadowBlur: 2,
-                    background: "#ddd",
-                    shadowColor: "#ddd",
+            dataZoom: [{
+                    start: 0, //默认为0
+                    end: dataZoom_end,
+                    type: 'slider',
+                    show: isShowScroll,
+                    xAxisIndex: [0],
+                    handleSize: 8, //滑动条的 左右2个滑动条的大小
+                    height: 10, //组件高度
+                    left: "center", //左边的距离
+                    bottom: 1,
+                    handleColor: '#ddd', //h滑动图标的颜色
+                    handleStyle: {
+                        borderColor: "#cacaca",
+                        borderWidth: "1",
+                        shadowBlur: 2,
+                        background: "#ddd",
+                        shadowColor: "#ddd",
+                    },
+                    fillerColor: new echarts.graphic.LinearGradient(1,
+                        0, 0, 0, [{
+                            //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                            //给第一个设置0，第四个设置1，就是垂直渐变
+                            offset: 0,
+                            color: '#1eb5e5'
+                        }, {
+                            offset: 1,
+                            color: '#5ccbb1'
+                        }]),
+                    zoomLock: true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                    backgroundColor: '#ddd', //两边未选中的滑动条区域的颜色
+                    showDataShadow: false, //是否显示数据阴影 默认auto
+                    showDetail: false, //即拖拽时候是否显示详细数值信息 默认true
+                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                    filterMode: 'filter'
                 },
-                fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                    //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                    //给第一个设置0，第四个设置1，就是垂直渐变
-                    offset: 0,
-                    color: '#1eb5e5'
-                }, {
-                    offset: 1,
-                    color: '#5ccbb1'
-                }]),
-                zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                showDataShadow: false,//是否显示数据阴影 默认auto
-                showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                filterMode: 'filter'
-            },
                 //下面这个属性是里面拖到
                 {
                     type: 'inside',
                     show: true,
                     xAxisIndex: [0],
-                    start: 0,//默认为1
+                    start: 0, //默认为1
                     end: 50
-                }],
+                }
+            ],
             xAxis: {
                 type: 'category',
                 axisLabel: {
-                    interval:0,
-                    rotate:30//角度顺时针计算的
-                } ,
-                axisTick : {
-                    alignWithLabel : true
+                    interval: 0,
+                    rotate: 30
+                    //角度顺时针计算的
+                },
+                axisTick: {
+                    alignWithLabel: true
                 },
                 data: managedName
             },
@@ -711,25 +921,24 @@
             grid: {
                 bottom: '40px',
             },
-            series: [
-                {
-                    name:columnName2,
+            series: [{
+                    name: columnName2,
                     type: 'bar',
-                    barWidth : 10,
-                    itemStyle:{
-                        normal:{
-                            barBorderRadius:2,
+                    barWidth: 10,
+                    itemStyle: {
+                        normal: {
+                            barBorderRadius: 2,
                             color: '#4a72c9'
                         }
                     },
 
                     data: number
                 },
-                
+
             ],
-          
+
         };
-        barChart.setOption(option,true);
+        barChart.setOption(option, true);
     };
 
     function initColumnDiv1() {
@@ -737,50 +946,60 @@
         var managedName = [];
         var pressureNumberValue = [];
         var pressureManageNumberValue = [];
-       
-        for(var i=0;i<charResult.length-1;i++){
-        	var name=charResult[i].unitName;
-            var strName=name.substring(0,name.length-8);
+
+        for (var i = 0; i < charResult.length - 1; i++) {
+            var name = charResult[i].unitName;
+            var strName = name.substring(0, name.length - 8);
             managedName.push(strName);
             //pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
-            pressureManageNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30009});
+            pressureManageNumberValue.push({
+                name: charResult[i].unitName,
+                value: charResult[i].evV30009
+            });
         }
-        
-        var divName="辖区高血压管理柱状图";
-        var columnName1="高血压患病数";
-        var columnName2="高血压管理数";
-        initColumnDiv(barChart1,divName,managedName,pressureManageNumberValue,pressureManageNumberValue,columnName1,columnName2);
+
+        var divName = "辖区高血压管理柱状图";
+        var columnName1 = "高血压患病数";
+        var columnName2 = "高血压管理数";
+        initColumnDiv(barChart1, divName, managedName,
+            pressureManageNumberValue, pressureManageNumberValue,
+            columnName1, columnName2);
     }
+
     function initColumnDiv2() {
 
         var managedName = [];
         var sugarNumberValue = [];
         var sugarManageNumberValue = [];
-      
-      /*   charResult.forEach(function(item){
-            var name=item.unitName;
-            var strName=name.substring(0,name.length-8);
+
+        /*   charResult.forEach(function(item){
+              var name=item.unitName;
+              var strName=name.substring(0,name.length-8);
+              managedName.push(strName);
+              //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
+              sugarManageNumberValue.push({name:item.unitName,value:item.evV30010});
+          }) */
+
+        for (var i = 0; i < charResult.length - 1; i++) {
+            var name = charResult[i].unitName;
+            var strName = name.substring(0, name.length - 8);
             managedName.push(strName);
             //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
-            sugarManageNumberValue.push({name:item.unitName,value:item.evV30010});
-        }) */
-        
-        for(var i=0;i<charResult.length-1;i++){
-        	var name=charResult[i].unitName;
-            var strName=name.substring(0,name.length-8);
-            managedName.push(strName);
-            //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
-            sugarManageNumberValue.push({name:charResult[i].unitName,value:charResult[i].evV30010});
+            sugarManageNumberValue.push({
+                name: charResult[i].unitName,
+                value: charResult[i].evV30010
+            });
         }
-        
-        var divName="辖区糖尿病管理排名柱状图";
-        var columnName1="糖尿病患病数";
-        var columnName2="糖尿病管理数";
-        initColumnDiv(barChart2,divName,managedName,sugarManageNumberValue,sugarManageNumberValue,columnName1,columnName2);
+
+        var divName = "辖区糖尿病管理排名柱状图";
+        var columnName1 = "糖尿病患病数";
+        var columnName2 = "糖尿病管理数";
+        initColumnDiv(barChart2, divName, managedName,
+            sugarManageNumberValue, sugarManageNumberValue,
+            columnName1, columnName2);
     }
 
-
-    var showChartInfo = function (sumChart, infoStr) {
+    var showChartInfo = function(sumChart, infoStr) {
         var msgOption = {
             title: {
                 show: true,
@@ -804,7 +1023,7 @@
         sumChart.hideLoading();
         sumChart.setOption(msgOption)
     };
-</script>
+    </script>
 </body>
 
 </html>

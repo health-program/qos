@@ -93,11 +93,31 @@
                     },
                     { 
                     	title: "门急诊人次数", 
-                    	field: "ev13003"
+                    	field: "ev13003",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "门急诊总收入", 
                     	field: "ev15001",
+                    	sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },
                     	formatter: function(value, row, index) {
                             return (row.ev15001/100).toFixed(2);
                         }
@@ -109,6 +129,7 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
+            sidePagination: 'client',
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
@@ -116,15 +137,20 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
+          	if($("#startTime").val()==""||$("#startTime").val()==null){
 					 var time = year+"-"+month+"-"+"01"
-      		   $("#startTime").val(time);
-      		   params.startTime = time;
-      	     } 
+    		   $("#startTime").val(time);
+    		   params.startTime = time;
+    	       } 
+          	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+   		   $("#endTime").val(time);
+   		   params.endTime = time;
+   	       } 
             	
             	if($("#payType").find("option:selected").val()==""){
             		params.eventIds = '13003,15001';

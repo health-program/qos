@@ -1,90 +1,95 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head th:include="/qos/header" />
 
 <body>
-<section class="content-header" style="padding-bottom: 3px">
-    <h1>孕产妇建卡统计</h1>
-</section>
-<section class="content">
-    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
-        <div class="box-body no-pad-top" >
-            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
-                <div class="form-group">
-                    <div class="col-md-2">
-                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off"  type="text" class="form-control tonto-datepicker-date">
-                    </div>
-                    <div class="col-md-2">
-                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="pull-right">
-                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
-                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+    <section class="content-header" style="padding-bottom: 3px">
+        <h1>孕产妇建卡统计</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-2">
+                            <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                <input type="text" style="display:none">
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6" style="padding-right: 10px">
-            <div class="box box-solid">
-                <div class="box-body" style="max-height: 830px;overflow: auto">
-                    <table id="dataGrid"></table>
-                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
             </div>
         </div>
-        <div class="col-md-6" style="padding-left: 0">
-            <div class="row">
-                <div class="col-md-6" style="padding-right: 3px">
-                    <div class="box box-solid" style="margin-bottom: 5px">
-                        <div id="zyjkChartDiv" class="box-body" style="height: 300px">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6" style="padding-left: 3px">
-                    <div class="box box-solid" style="margin-bottom: 5px">
-                        <div id="yffsChartDiv" class="box-body" style="height: 300px">
-                        </div>
+        <div class="row">
+            <div class="col-md-6" style="padding-right: 10px">
+                <div class="box box-solid">
+                    <div class="box-body" style="max-height: 830px;overflow: auto">
+                        <table id="dataGrid"></table>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box box-solid">
-                        <div id="orgChartDiv" class="box-body " style="height: 525px">
+            <div class="col-md-6" style="padding-left: 0">
+                <div class="row">
+                    <div class="col-md-6" style="padding-right: 3px">
+                        <div class="box box-solid" style="margin-bottom: 5px">
+                            <div id="zyjkChartDiv" class="box-body" style="height: 300px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6" style="padding-left: 3px">
+                        <div class="box box-solid" style="margin-bottom: 5px">
+                            <div id="yffsChartDiv" class="box-body" style="height: 300px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-solid">
+                            <div id="orgChartDiv" class="box-body " style="height: 525px">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
-<div th:include="/qos/footer" />
-<script type="text/javascript">
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
     /*<![CDATA[*/
-    var table,dataVal,requestParams,selectUnit;
-    $(function () {
+    var table, dataVal, requestParams, selectUnit;
+    $(function() {
         initStartDateTime();
         initDataGrid();
     });
 
 
     function initStartDateTime() {
-        if(!$("#startTime").val()){
+        if (!$("#startTime").val()) {
             var date = new Date();
-            var year = date .getFullYear();
-            var month = date .getMonth()+1;
-            var time = year+"-"+month+"-"+"01";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var time = year + "-" + month + "-" + "01";
             $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
+            var endDay = endDate.getDate();
+            var endTime = year + "-" + month + "-" + endDay;
+            $("#endTime").val(endTime);
         }
     }
 
     //图表自适应大小
-    window.addEventListener("resize", function () {
+    window.addEventListener("resize", function() {
         orgChart.resize();
         zyjkChart.resize();
         yffsChart.resize();
@@ -98,36 +103,36 @@
         let jks = 0;
         let selectData = [];
         let total = 0;
-        if ( selectUnit && selectUnit.length > 0 ) {
-            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+        if (selectUnit && selectUnit.length > 0) {
+            selectData = dataVal.filter(u => selectUnit.indexOf(u.unitId) > -1);
             selectData.forEach(data => {
                 jks += data.zyjk
             });
             dataVal.forEach(data => {
                 total += data.yffs
             });
-        }else {
+        } else {
             dataVal.forEach(data => {
                 jks += data.zyjk
             });
         }
         if (jks === 0) {
-            showChartInfo(chart,'暂无数据');
+            showChartInfo(chart, '暂无数据');
             return false;
         }
         var dataStyle = {
             normal: {
-                label: {show:false},
-                labelLine: {show:false}
+                label: { show: false },
+                labelLine: { show: false }
             }
         };
         var placeHolderStyle = {
-            normal : {
+            normal: {
                 color: 'rgba(0,0,0,0)',
-                label: {show:false},
-                labelLine: {show:false}
+                label: { show: false },
+                labelLine: { show: false }
             },
-            emphasis : {
+            emphasis: {
                 color: 'rgba(0,0,0,0)'
             }
         };
@@ -137,81 +142,78 @@
                 subtext: jks,
                 x: 'center',
                 y: '38%',
-                textStyle : {
-                    color : '#44B7D3',
-                    fontFamily : '微软雅黑',
-                    fontSize : 35,
-                    fontWeight : 'bolder'
+                textStyle: {
+                    color: '#44B7D3',
+                    fontFamily: '微软雅黑',
+                    fontSize: 35,
+                    fontWeight: 'bolder'
                 },
                 subtextStyle: {
-                    color : '#44B7D3',
+                    color: '#44B7D3',
                     fontSize: 35,
                     lineHeight: 30,
                 }
             },
-            tooltip : {
+            tooltip: {
                 show: false,
                 formatter: "{b} : {c}位 ({d}%)"
             },
-            series : [
-                {
-                    name:'早孕建卡数',
-                    type:'pie',
-                    color: [ '#44B7D3'], //环形图每块的颜色
-                    clockWise:false,
-                    radius : [100, 140],
-                    itemStyle : dataStyle,
-                    data:[
-                        {
-                            value:jks,
-                            name:'早孕建卡数'
-                        },
-                        {
-                            value:total === 0 ? jks * 0.3 : (total -jks) * 0.05,
-                            name:'invisible',
-                            itemStyle : placeHolderStyle
-                        }
-                    ]
-                }
-            ]
+            series: [{
+                name: '早孕建卡数',
+                type: 'pie',
+                color: ['#44B7D3'], //环形图每块的颜色
+                clockWise: false,
+                radius: [100, 140],
+                itemStyle: dataStyle,
+                data: [{
+                        value: jks,
+                        name: '早孕建卡数'
+                    },
+                    {
+                        value: total === 0 ? jks * 0.3 : (total - jks) * 0.05,
+                        name: 'invisible',
+                        itemStyle: placeHolderStyle
+                    }
+                ]
+            }]
         };
-        chart.setOption(option,true);
+        chart.setOption(option, true);
     }
 
     function generatorYffsChart(chart) {
         let yffs = 0;
         let total = 0;
         let selectData = [];
-        if ( selectUnit && selectUnit.length > 0 ) {
-            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+        if (selectUnit && selectUnit.length > 0) {
+            selectData = dataVal.filter(u => selectUnit.indexOf(u.unitId) > -1);
             selectData.forEach(data => {
                 yffs += data.yffs
             });
             dataVal.forEach(data => {
                 total += data.yffs
             });
-        }else {
+        } else {
             dataVal.forEach(data => {
                 yffs += data.yffs
             });
         }
         if (yffs === 0) {
-            showChartInfo(chart,'暂无数据');
+            showChartInfo(chart, '暂无数据');
             return false;
         }
         var dataStyle = {
             normal: {
-                label: {show:false},
-                labelLine: {show:false}
+                label: { show: false },
+                labelLine: { show: false }
             }
         };
         var placeHolderStyle = {
-            normal : {
+            normal: {
                 color: 'rgba(0,0,0,0)',
-                label: {show:false},
-                labelLine: {show:false}
+                label: { show: false },
+                labelLine: { show: false }
             },
-            emphasis : {
+            emphasis: {
                 color: 'rgba(0,0,0,0)'
             }
         };
@@ -221,63 +223,64 @@
                 subtext: yffs,
                 x: 'center',
                 y: '38%',
-                textStyle : {
-                    color : '#44B7D3',
-                    fontFamily : '微软雅黑',
-                    fontSize : 20,
-                    fontWeight : 'bolder'
+                textStyle: {
+                    color: '#44B7D3',
+                    fontFamily: '微软雅黑',
+                    fontSize: 20,
+                    fontWeight: 'bolder'
                 },
                 subtextStyle: {
-                    color : '#44B7D3',
+                    color: '#44B7D3',
                     fontSize: 35,
                     lineHeight: 30,
                 }
             },
-            tooltip : {
+            tooltip: {
                 show: false,
                 formatter: "{b} : {c}位 ({d}%)"
             },
-            series : [
-                {
-                    name:'孕妇产后访视人次数',
-                    type:'pie',
-                    color: [ '#44B7D3'], //环形图每块的颜色
-                    clockWise:false,
-                    radius : [100, 140],
-                    itemStyle : dataStyle,
-                    data:[
-                        {
-                            value:yffs,
-                            name:'孕妇产后访视人次数'
-                        },
-                        {
-                            value: total === 0 ? yffs * 0.3 : (total -yffs) * 0.05,
-                            name:'invisible',
-                            itemStyle : placeHolderStyle
-                        }
-                    ]
-                }
-            ]
+            series: [{
+                name: '孕妇产后访视人次数',
+                type: 'pie',
+                color: ['#44B7D3'], //环形图每块的颜色
+                clockWise: false,
+                radius: [100, 140],
+                itemStyle: dataStyle,
+                data: [{
+                        value: yffs,
+                        name: '孕妇产后访视人次数'
+                    },
+                    {
+                        value: total === 0 ? yffs * 0.3 : (total - yffs) * 0.05,
+                        name: 'invisible',
+                        itemStyle: placeHolderStyle
+                    }
+                ]
+            }]
         };
-        chart.setOption(option,true);
+        chart.setOption(option, true);
     }
+
     function generatorOrgChart(chart) {
         chart.showLoading({
             text: '数据正在努力加载...',
-            textStyle: { fontSize : 30 , color: '#444' },
-            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+            textStyle: { fontSize: 30, color: '#444' },
+            effectOption: { backgroundColor: 'rgba(0, 0, 0, 0)' }
         });
-        let data0= [] ,data1=[],data2=[],orgData=[];
+        let data0 = [],
+            data1 = [],
+            data2 = [],
+            orgData = [];
         if (dataVal.length === 0) {
-            showChartInfo(chart,'暂无数据');
+            showChartInfo(chart, '暂无数据');
             return false;
         }
         if (dataVal) {
             dataVal.forEach(data => {
                 orgData.push(data.agencyName);
-                data0.push({name:data.agencyName,value:data.zyjk});
-                data1.push({name:data.agencyName,value:data.yfjk});
-                data2.push({name:data.agencyName,value:data.yffs});
+                data0.push({ name: data.agencyName, value: data.zyjk });
+                data1.push({ name: data.agencyName, value: data.yfjk });
+                data2.push({ name: data.agencyName, value: data.yffs });
             });
 
             chart.hideLoading();
@@ -298,26 +301,26 @@
                     }
                 }
             };
-            var isShowScroll = false;// 是否显示滚动条，默认false不显示
-            var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(orgData.length >10 ){
-                dataZoom_end = 100/(orgData.length/10);
+            var isShowScroll = false; // 是否显示滚动条，默认false不显示
+            var dataZoom_end; // 显示百分之多少的数据量，默认全部
+            if (orgData.length > 10) {
+                dataZoom_end = 100 / (orgData.length / 10);
                 isShowScroll = true;
-            }else{
+            } else {
                 dataZoom_end = 100;
             }
-            let  option = {
-                color: ['#3398DB','#6087BF','#6071C6'],
+            let option = {
+                color: ['#3398DB', '#6087BF', '#6071C6'],
                 tooltip: {
                     trigger: 'axis',
-                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
                     },
-                    formatter: function (params) {
-                        return params[0].name + '<br/>'
-                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
-                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
-                            + params[2].seriesName + ':'+params[2].data.value+'位<br/>'
+                    formatter: function(params) {
+                        return params[0].name + '<br/>' +
+                            params[0].seriesName + ':' + params[0].data.value + '位<br/>' +
+                            params[1].seriesName + ':' + params[1].data.value + '位<br/>' +
+                            params[2].seriesName + ':' + params[2].data.value + '位<br/>'
                     }
                 },
                 grid: {
@@ -328,92 +331,87 @@
                 },
                 legend: {
                     top: 'bottom',
-                    data:[ '早孕建卡数', '孕妇建卡数','孕妇产后访视人次数']
+                    data: ['早孕建卡数', '孕妇建卡数', '孕妇产后访视人次数']
                 },
                 calculable: true,
-                dataZoom: [   {
-                    start:0,//默认为0
-                    end: dataZoom_end,
-                    type: 'slider',
-                    show: isShowScroll,
-                    xAxisIndex: [0],
-                    handleSize: 8,//滑动条的 左右2个滑动条的大小
-                    height: 10,//组件高度
-                    left: "center", //左边的距离
-                    bottom:40,
-                    handleColor: '#ddd',//h滑动图标的颜色
-                    handleStyle: {
-                        borderColor: "#cacaca",
-                        borderWidth: "1",
-                        shadowBlur: 2,
-                        background: "#ddd",
-                        shadowColor: "#ddd",
+                dataZoom: [{
+                        start: 0, //默认为0
+                        end: dataZoom_end,
+                        type: 'slider',
+                        show: isShowScroll,
+                        xAxisIndex: [0],
+                        handleSize: 8, //滑动条的 左右2个滑动条的大小
+                        height: 10, //组件高度
+                        left: "center", //左边的距离
+                        bottom: 40,
+                        handleColor: '#ddd', //h滑动图标的颜色
+                        handleStyle: {
+                            borderColor: "#cacaca",
+                            borderWidth: "1",
+                            shadowBlur: 2,
+                            background: "#ddd",
+                            shadowColor: "#ddd",
+                        },
+                        fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                            //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                            //给第一个设置0，第四个设置1，就是垂直渐变
+                            offset: 0,
+                            color: '#1eb5e5'
+                        }, {
+                            offset: 1,
+                            color: '#5ccbb1'
+                        }]),
+                        zoomLock: true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                        backgroundColor: '#ddd', //两边未选中的滑动条区域的颜色
+                        showDataShadow: false, //是否显示数据阴影 默认auto
+                        showDetail: false, //即拖拽时候是否显示详细数值信息 默认true
+                        handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                        filterMode: 'filter'
                     },
-                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                        //给第一个设置0，第四个设置1，就是垂直渐变
-                        offset: 0,
-                        color: '#1eb5e5'
-                    }, {
-                        offset: 1,
-                        color: '#5ccbb1'
-                    }]),
-                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                    showDataShadow: false,//是否显示数据阴影 默认auto
-                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                    filterMode: 'filter'
-                },
                     //下面这个属性是里面拖到
                     {
                         type: 'inside',
                         show: true,
                         xAxisIndex: [0],
-                        start: 0,//默认为1
+                        start: 0, //默认为1
                         end: 50
-                    }],
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: orgData,
-                        axisLabel: {
-                            interval:0,
-                            rotate:60//角度顺时针计算的
-                        } ,
-                        axisTick: {
-                            alignWithLabel: true
-                        }
                     }
                 ],
-                yAxis: [
-                    {
-                        type: 'value'
+                xAxis: [{
+                    type: 'category',
+                    data: orgData,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 60 //角度顺时针计算的
+                    },
+                    axisTick: {
+                        alignWithLabel: true
                     }
-                ],
-                series: [
-                    {
-                        name: '早孕建卡数',
-                        type: 'bar',
-                        label: labelOption,
-                        barGap: 0,
-                        data: data0
-                    },{
-                        name: '孕妇建卡数',
-                        type: 'bar',
-                        label: labelOption,
-                        barGap: 0,
-                        data: data1
-                    },{
-                        name: '孕妇产后访视人次数',
-                        type: 'bar',
-                        label: labelOption,
-                        barGap: 0,
-                        data: data2
-                    }
-                ]
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: [{
+                    name: '早孕建卡数',
+                    type: 'bar',
+                    label: labelOption,
+                    barGap: 0,
+                    data: data0
+                }, {
+                    name: '孕妇建卡数',
+                    type: 'bar',
+                    label: labelOption,
+                    barGap: 0,
+                    data: data1
+                }, {
+                    name: '孕妇产后访视人次数',
+                    type: 'bar',
+                    label: labelOption,
+                    barGap: 0,
+                    data: data2
+                }]
             };
-            chart.setOption(option,true);
+            chart.setOption(option, true);
         }
     }
 
@@ -421,20 +419,24 @@
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
-                [
-                    {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
+                [{
+                        title: "医疗机构",
+                        field: "agencyName",
+                        align: "center",
+                        footerFormatter: function(data) {
                             return '总计';
-                        }},
-                    {title: "早孕建卡数", field: "zyjk", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "孕妇建卡数", field: "yfjk", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "孕妇产后访视人次数", field: "yffs", align: "center",footerFormatter: sumTotalFormatterModal},
+                        }
+                    },
+                    { title: "早孕建卡数", field: "zyjk", align: "center", footerFormatter: sumTotalFormatterModal },
+                    { title: "孕妇建卡数", field: "yfjk", align: "center", footerFormatter: sumTotalFormatterModal },
+                    { title: "孕妇产后访视人次数", field: "yffs", align: "center", footerFormatter: sumTotalFormatterModal },
 
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
-            showFooter:true,
+            showFooter: true,
             pagination: false,
-            height:810,
+            height: 810,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
@@ -452,7 +454,7 @@
                 let yfjk = res['13319'] || [];
                 let yffs = res['13314'] || [];
                 if ($.isArray(zyjk) && $.isArray(yfjk) && $.isArray(yffs)) {
-                    let data = [{'name':'zyjk','data':zyjk}, {'name':'yfjk','data':yfjk}, {'name':'yffs','data':yffs}];
+                    let data = [{ 'name': 'zyjk', 'data': zyjk }, { 'name': 'yfjk', 'data': yfjk }, { 'name': 'yffs', 'data': yffs }];
                     let fields = ['zyjk', 'yfjk', 'yffs'];
                     let d = initTableData(data, fields);
                     dataVal = d || [];
@@ -476,7 +478,7 @@
     }
 
     function unitUnSelected(row) {
-        if (selectUnit && selectUnit.length > 0 ) {
+        if (selectUnit && selectUnit.length > 0) {
             let index = selectUnit.indexOf(row.unitId);
             if (index > -1) {
                 selectUnit.splice(index, 1);
@@ -489,7 +491,7 @@
     function initTableData(data, fields) {
         let d = [];
         if (fields && fields.length > 0) {
-            fields.forEach(function (field, index) {
+            fields.forEach(function(field, index) {
                 if (index === 0) {
                     let value = data.find(d => d.name === field);
                     value.data.forEach(f => {
@@ -499,8 +501,8 @@
                         x[field] = f.count;
                         d.push(x)
                     });
-                }else {
-                    d.forEach(c =>{
+                } else {
+                    d.forEach(c => {
                         let value = data.find(d => d.name === field).data;
                         let obj = value.find(a => a.unitId === c['unitId']);
                         if (obj) {
@@ -512,15 +514,15 @@
         }
         return d;
     }
-    
 
-    var showChartInfo = function (chart, infoStr) {
+
+    var showChartInfo = function(chart, infoStr) {
         var msgOption = {
             title: {
                 show: true,
-                textStyle:{
-                    color:'grey',
-                    fontSize:20
+                textStyle: {
+                    color: 'grey',
+                    fontSize: 20
                 },
                 text: infoStr,
                 left: 'center',
@@ -534,7 +536,7 @@
             },
             series: []
         };
-        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.clear(); //initChart(divId): get echarts instance, you can get it by using other method
         chart.hideLoading();
         chart.setOption(msgOption)
     };
@@ -547,6 +549,7 @@
         return result === 0 ? '0' : result;
     }
     /*]]>*/
-</script>
+    </script>
 </body>
+
 </html>

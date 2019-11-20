@@ -58,27 +58,27 @@ public class ExcelOrgSchool {
     
     @ReadProperty(cellIndex = 16)
     private Integer teaching;// 教职员工人数
-
+    
     @ReadProperty(cellIndex = 17)
+    private String hygieneHealth;// 卫生保健人员
+
+    @ReadProperty(cellIndex = 18)
     private String address;// 地址
 
-    @ReadProperty(cellIndex = 18, enumType = "school-section-type")
+    @ReadProperty(cellIndex = 19, enumType = "school-section-type")
     private Integer schoolSection;// 学段
 
-    @ReadProperty(cellIndex = 19, enumType = "grade-type")
+    @ReadProperty(cellIndex = 20, enumType = "grade-type")
     private Integer grade;// 年级
 
-    @ReadProperty(cellIndex = 20)
+    @ReadProperty(cellIndex = 21)
     private String klass;// 班级
 
-    @ReadProperty(cellIndex = 21)
+    @ReadProperty(cellIndex = 22)
     private Integer gradeTotal;// 年级学生人数
 
-    @ReadProperty(cellIndex = 22)
-    private Integer boarders;// 寄宿生人数
-
     @ReadProperty(cellIndex = 23)
-    private String hygieneHealth;// 卫生保健人员
+    private Integer boarders;// 寄宿生人数
 
     public String getParentSchoolName() {
 	return parentSchoolName;

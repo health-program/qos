@@ -24,9 +24,6 @@ public class OrgSchoolPeopleDTO {
  	// 寄宿生人数
  	private Integer boarders;
 
- 	// 卫生保健人员
- 	private String hygieneHealth;
-
 	// 
 	private Date createTime;
 
@@ -125,14 +122,6 @@ public class OrgSchoolPeopleDTO {
 
 	public void setKlass(String klass) {
 		this.klass = klass;
-	}
-
-	public String getHygieneHealth() {
-	    return hygieneHealth;
-	}
-
-	public void setHygieneHealth(String hygieneHealth) {
-	    this.hygieneHealth = hygieneHealth;
 	}
 	
 }
