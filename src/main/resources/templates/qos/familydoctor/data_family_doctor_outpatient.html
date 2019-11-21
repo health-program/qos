@@ -36,17 +36,17 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="row">
-							<div class="col-md-4">
-								<div class="box box-solid">
-									<div id="ndfwyxlylChart" class="box-body" style="height: 300px"></div>
-								</div>
-							</div>
-							<div class="col-md-4">
+							<!--<div class="col-md-4">-->
+								<!--<div class="box box-solid">-->
+									<!--<div id="ndfwyxlylChart" class="box-body" style="height: 300px"></div>-->
+								<!--</div>-->
+							<!--</div>-->
+							<div class="col-md-6">
 								<div class="box box-solid">
 									<div id="qyjgmzjzlChart" class="box-body" style="height: 300px"></div>
 								</div>
 							</div>
-							<div class="col-md-4">
+							<div class="col-md-6">
 								<div class="box box-solid">
 									<div id="qyysmzjzlChart" class="box-body" style="height: 300px"></div>
 								</div>
@@ -84,7 +84,7 @@
   	//<![CDATA[
 	//图表自适应大小      
 	 window.addEventListener("resize", function() {
-		ndfwyxlylChart.resize();
+		//ndfwyxlylChart.resize();
 		qyjgmzjzlChart.resize();
 		qyysmzjzlChart.resize();
 		qyjmzxjzrcsChart.resize();
@@ -110,7 +110,7 @@
         selectUnit = row.unitId;
         qyysmzjzlChartMethod(responseData);
     	qyjgmzjzlChartMethod(responseData);
-    	ndfwyxlylChartMethod(responseData);
+    	//ndfwyxlylChartMethod(responseData);
     }
     
    
@@ -122,7 +122,7 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "年度服务有<br/>效履约率", field: "a" },
+                    //{ title: "年度服务有<br/>效履约率", field: "a" },
                     { title: "签约居民中心<br/>就诊人次数", field: "event21003"},
                     { title: "签约居民就<br/>诊总次数", field: "total21003"},
                     { title: "签约机构门<br/>诊就诊率", field: "reat21003"},
@@ -186,7 +186,7 @@
                	 }
                 }
                 responseData =response;
-                ndfwyxlylChartMethod(response);
+                //ndfwyxlylChartMethod(response);
             	qyjgmzjzlChartMethod(response);
             	qyysmzjzlChartMethod(responseData);
             	qyjmzxjzrcsChartMethod(responseData);
@@ -215,8 +215,13 @@
             	 unitData['reat21003'] = getRate(item); 
             }
 			if(eventId == '21004'){
-				unitData['event21004'] = item.eventNum;
-				unitData['total21004'] = item.totalNum;
+                if(item.eventNum>item.totalNum){
+                    unitData['event21004'] = item.totalNum;
+                    unitData['total21004'] = item.totalNum;
+				}else{
+                    unitData['event21004'] = item.eventNum;
+                    unitData['total21004'] = item.totalNum;
+				}
            		unitData['reat21004'] = getRate(item); 
             } 
         });
@@ -237,7 +242,12 @@
             b = item.totalNum,
             c = 0;
         if (a && b) {
-            c = a / b * 100;
+            if(a>b){
+                c=100;
+			}else{
+                c = a / b * 100;
+			}
+
         }
         return c.toFixed(fixed || 2) + '%';
     }
@@ -247,9 +257,19 @@
             max = 0,
             unit = [],
             values = [];
+        edata && edata.forEach(function(item) {
+           if (item.eventNum>item.totalNum){
+               item.eventNum=item.totalNum;
+		   }
+        });
         edata.sort(compare('eventNum'));
         edata && edata.forEach(function(item) {
-            var r = isRate ? item.eventNum : 0;
+            var r=0;
+            if (item.eventNum>item.totalNum){
+                var r = isRate ? item.totalNum : 0;
+			}else{
+                var r = isRate ? item.eventNum : 0;
+			}
             max = Math.max(r, max);
             values.push(r);
             unit.push(item.unitName);
@@ -416,8 +436,15 @@
         eventData && eventData.forEach(function(unitPoint) {
             var unitId = unitPoint.unitId;
             var values = valuesMap[unitId];
-            var eventNum=unitPoint.eventNum,
-            	totalNum=unitPoint.totalNum;
+            var eventNum=0;
+			var totalNum=0;
+            if (unitPoint.eventNum> unitPoint.totalNum ){
+                eventNum=unitPoint.totalNum;
+                totalNum=unitPoint.totalNum;
+			}else{
+                eventNum=unitPoint.eventNum;
+				totalNum=unitPoint.totalNum;
+			}
             var rate=0;
             if(eventNum && totalNum){
             	rate=(eventNum/totalNum*100).toFixed(2);
@@ -431,8 +458,8 @@
               };
               valuesMap[unitId] = values;
             }
-            total1 += unitPoint.eventNum;
-            total2 += unitPoint.totalNum;
+            total1 += eventNum;
+            total2 += totalNum;
             first = false;
         });
         var totalData = valuesMap['total'];
@@ -455,7 +482,8 @@
     }
    
     //年度服务有效履约率
-    var ndfwyxlylChart = echarts.init(document.getElementById('ndfwyxlylChart'));
+    //var ndfwyxlylChart = echarts.init(document.getElementById('ndfwyxlylChart'));
+	var ndfwyxlylChart;
     function ndfwyxlylChartMethod(response){
     	var option = {
                 tooltip: {
