@@ -28,7 +28,6 @@ public class CommonConfiguration {
 	/**
 	 * 启用单点登录Realm
 	 * 
-	 * @param sysUserService
 	 * @return
 	 */
 	@Bean("casRealm")
@@ -40,7 +39,6 @@ public class CommonConfiguration {
 	/**
 	 * 启用默认本地登录Realm
 	 * 
-	 * @param sysUserService
 	 * @return
 	 */
 	@Bean("localRealm")
