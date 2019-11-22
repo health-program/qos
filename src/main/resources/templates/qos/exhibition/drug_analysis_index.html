@@ -224,11 +224,23 @@
             let data = [];
 
             if (res && res.length > 0) {
+                res.sort( (u1,u2) => {
+                     u1['rate'] = getRateNum(u1);
+                     u2['rate'] = getRateNum(u2);
+                    return   u2.rate - u1.rate
+                } );
+
+                if (res.length > 11) {
+                    res = res.splice(0,10)
+                }
+
                 res.forEach( unit => {
                     unitName.push(unit.unitName);
-                    data.push(getRateNum(unit))
+                    data.push(unit.rate)
                 })
             }
+
+
 
             chart.hideLoading();
             var isShowScroll = false;// 是否显示滚动条，默认false不显示
@@ -267,13 +279,14 @@
                 },
                 formatter: function (params) {
                     return params[0].name + '&nbsp;基药占比: '
-                        + params[0].data + '(%)<br/>'
+                        + params[0].data + '%<br/>'
                 }
             },
             grid: {
                 left: '3%',
                 right: '1%',
-                top: '15%',
+                top: '10%',
+                bottom : 20,
                 containLabel: true
             },
             calculable: true,
@@ -286,7 +299,7 @@
                 handleSize: 8,//滑动条的 左右2个滑动条的大小
                 height: 10,//组件高度
                 left: "center", //左边的距离
-                bottom:40,
+                bottom:10,
                 handleColor: '#ddd',//h滑动图标的颜色
                 handleStyle: {
                     borderColor: "#cacaca",
@@ -328,7 +341,7 @@
                     },
                     axisLabel: {
                         interval:0,
-                        rotate: unitName.length === 1 ? 0 : 60//角度顺时针计算的
+                        rotate: unitName.length === 1 ? 0 : 40//角度顺时针计算的
                     } ,
                 }
             ],
@@ -446,7 +459,7 @@
                     handleSize: 8,//滑动条的 左右2个滑动条的大小
                     height: 10,//组件高度
                     left: "center", //左边的距离
-                    bottom:20,
+                    bottom:10,
                     handleColor: '#ddd',//h滑动图标的颜色
                     handleStyle: {
                         borderColor: "#cacaca",
@@ -693,13 +706,14 @@
             },
             legend: {
                 data:['城镇职工','城镇居民','新农合','商业保险','全自费','其他'],
-                bottom:5
+                left:'left',
+                orient:'vertical'
             },
             series : [ {
                 name : '',
                 type : 'pie',
-                radius : '70%',
-                center : [ '50%', '40%' ],
+                radius : '75%',
+                center : [ '50%', '50%' ],
                 data : chartData,
                 itemStyle : {
                     emphasis : {
