@@ -141,11 +141,11 @@ public class InfectionController extends ControllerSupport {
 		try {
 			if (query != null) {
 				if (condition.isExportAll()) {
-					List<Infection> infections=infectionService.searchAll(query);
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, getExportData(infections),InfectionVO.class));
+					List<InfectionVO> infections=infectionService.searchFind(query);
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, infections,InfectionVO.class));
 				} else if (condition.isExportPage()) {
-					List<Infection> infections=infectionService.searchPage(query).getData();
-					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, getExportData(infections), InfectionVO.class));
+					List<InfectionVO> infections=infectionService.searchFindPage(query).getData();
+					return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, infections, InfectionVO.class));
 				}
 			}
 			return CommonResponse.getFailResponse("导出数据失败：请求参数错误");
@@ -154,17 +154,6 @@ public class InfectionController extends ControllerSupport {
 		}
 	}
 
-	private List<InfectionVO> getExportData(List<Infection> infections) {
-		List<InfectionVO> infectionVOS = new ArrayList<>();
-		for (Infection infection : infections) {
-			InfectionVO infectionVO = new InfectionVO();
-			beanCopy(infection, infectionVO);
-			infectionVOS.add(infectionVO);
-		}
-		if (!CollectionUtils.isEmpty(infectionVOS))
-			return infectionVOS;
-		return null;
-	}
 }
 
 
