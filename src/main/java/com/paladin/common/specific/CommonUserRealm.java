@@ -28,17 +28,23 @@ public class CommonUserRealm extends AuthorizingRealm {
     @Autowired
     private SysUserService sysUserService;
 
+    private LimitFailCredentialsMatcher hashedCredentialsMatcher;
+
     @Autowired
     private QosUserSessionFactory userSessionFactory;
 
     public CommonUserRealm() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+        hashedCredentialsMatcher = new LimitFailCredentialsMatcher();
         hashedCredentialsMatcher.setHashAlgorithmName("md5");// 散列算法:这里使用MD5算法;
         hashedCredentialsMatcher.setHashIterations(1);// 散列的次数，当于 m比如散列两次，相d5("");
 
         setCredentialsMatcher(hashedCredentialsMatcher);
         // 设置验证的token类型
         setAuthenticationTokenClass(UsernamePasswordToken.class);
+    }
+
+    public void unlock(){
+        hashedCredentialsMatcher.unlock();
     }
 
     /**
