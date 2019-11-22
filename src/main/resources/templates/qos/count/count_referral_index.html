@@ -78,47 +78,11 @@
 										},
 										{
 											title : "本医疗机构向上级医疗机构转出人数",
-											field : "upOutNumber",
-											sortable : true,
-											sorter : function(fa, fb, ra, rb) {
-												if (ra.unitName == '合计')
-													return table.options.sortOrder == 'desc' ? -1
-															: 1;
-												if (rb.unitName == '合计')
-													return table.options.sortOrder == 'desc' ? 1
-															: -1;
-
-												if (fa == '-')
-													return table.options.sortOrder == 'desc' ? -1
-															: 1;
-												if (fb == '-')
-													return table.options.sortOrder == 'desc' ? 1
-															: -1;
-
-												return fa - fb;
-											}
+											field : "upOutNumber"
 										},
 										{
 											title : "本医疗机构向下级医疗机构转出人数",
-											field : "downOutNumber",
-											sortable : true,
-											sorter : function(fa, fb, ra, rb) {
-												if (ra.unitName == '合计')
-													return table.options.sortOrder == 'desc' ? -1
-															: 1;
-												if (rb.unitName == '合计')
-													return table.options.sortOrder == 'desc' ? 1
-															: -1;
-
-												if (fa == '-')
-													return table.options.sortOrder == 'desc' ? -1
-															: 1;
-												if (fb == '-')
-													return table.options.sortOrder == 'desc' ? 1
-															: -1;
-
-												return fa - fb;
-											}
+											field : "downOutNumber"
 										},
 										{
 											title : "是否为签约人员",
@@ -158,9 +122,7 @@
 								exportUrl : '/qos/count/referral/export',
 								showColumns : true,
 								pagination : true,
-								showExport : true,
-								exportTypes : [ 'excel' ],
-								sidePagination : 'client',
+								showExporter : true,
 								toolbar : "#toolbar",
 								showRefresh : true
 							});

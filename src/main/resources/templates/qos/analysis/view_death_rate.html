@@ -85,39 +85,146 @@
 										},
 										{
 											title : "住院死亡率",
-											field : "ev10100"
+											field : "ev10100",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 										},
 										{
 											title : "新生儿住院<br>总死亡率",
-											field : "ev10110"
+											field : "ev10110",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 										},
 										{
 											title : "新生儿手术患者<br>住院死亡率",
-											field : "ev10111"
+											field : "ev10111",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 										},
 										{
 											title : "新生儿非手术患者<br>住院死亡率",
-											field : "ev10112"
+											field : "ev10112",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 										},
 										{
-											title : "新生儿患者出生<br>体重<=750克死亡率", field: "ev10113"
+											title : "新生儿患者出生<br>体重<=750克死亡率", field: "ev10113",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
                                         },
 					                   
 		                                 { 
                                         	title: "新生儿患者出生<br>体重751-1000克死亡率", 
-                                        	field: "ev10114"
+                                        	field: "ev10114",
+                                        	sortable: true,
+                                        	sorter: function(fa, fb, ra, rb) {
+                                                if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                                if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                                if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                                if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                                fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                                                fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                                                return fa - fb;
+                                            }
 					                    },
 					                    { 
 					                    	title: "新生儿患者出生<br>体重1001-1800克死亡率", 
 					                    	field: "ev10115",
+					                    	sortable: true,
+					                    	sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 					                    	
 					                    },
                                         { 
 					                    	title: "新生儿患者出生<br>体重>=1801克死亡率",
-											field : "ev10116"
+											field : "ev10116",
+											sortable: true,
+											sorter: function(fa, fb, ra, rb) {
+					                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+					                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+					                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+					                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+					                            return fa - fb;
+					                        }
 										} ] ],
 								url : '/qos/analysis/data/get/unit',
 								pagination : false,
+								showExport: true,
+					            exportTypes: ['excel'],
+					            sidePagination: 'client',
 								searchbar : '#searchbar',
 								clickToSelect : true,
 								onClickRow: function(row, tr) {

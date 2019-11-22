@@ -70,7 +70,7 @@
         <div class="login-box-body">
             <p class="login-box-msg"><b><font style="font-size: 20px;color: #3c8dbc;font-family: 微软雅黑">欢迎登录</font></b></p>
 
-            <form action="/qos/login" method="post">
+            <form action="/qos/login" method="post" onsubmit='checkForm()'>
                 <div class="form-group has-feedback">
                     <input type="text" class="form-control" id="username" name="username" placeholder="用户名">
                     <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -111,8 +111,10 @@
         <p></p>
     </div>
     <!-- /.login-box-body -->
-<div th:include="/qos/footer" />
-<script>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/jsencrypt.js"></script>
+
+    <script>
     $(function () {
         $('input').iCheck({
             checkboxClass: 'icheckbox_square-blue',
@@ -120,7 +122,19 @@
             increaseArea: '20%' // optional
         });
     });
-</script>
+
+    function checkForm(){
+        var password = $.trim($("#password").val());
+        if(!password) {
+            $.errorMessage("请输入密码");
+            return false;
+        }
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdVV8aqtLhdmk3ILWijIW2uWKtpeZb2lM1N7NWiAv2sbbdORPj1jfjcdZ9iosBaoD35U/KlewuiF+y3mALDTYItvmgKDDxNK4GYT2Jea1Mtz7sICVPwi3VhNO0YkNvpNH6ZK5EGLQR9F18Vj0xc2D/z9Q1lDDP1ELLvNGcHdDxIwIDAQAB');
+        $("#password").val(encrypt.encrypt(password));
+        return true;
+    }
+    </script>
 </body>
 
 </html>

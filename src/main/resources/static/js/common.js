@@ -1564,7 +1564,10 @@
              }
 
              $.each(exportColumns, function(i, column) {
-                 columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + column.name + '&nbsp;&nbsp;</label>'
+                 var columnName = $.trim(column.name);
+                 columnName = columnName.replace(/&emsp;/g,"")
+                 columnName = columnName.replace(/<\/br>/g,'');
+                 columnHtml += '<label class="control-label radio-label"><input type="checkbox" ' + (column.checked ? ' checked="checked"' : '') + ' name="dataColumn" value="' + column.field + '">&nbsp;&nbsp;' + columnName + '&nbsp;&nbsp;</label>'
              });
 
              var exportHtml = '<div style="padding:30px;padding-top:20px">' +
