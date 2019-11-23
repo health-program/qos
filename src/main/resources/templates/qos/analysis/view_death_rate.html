@@ -54,6 +54,13 @@
 	<div th:include="/qos/footer" />
 	<script type="text/javascript" src="/static/js/chart.js"></script>
 	<script type="text/javascript">
+	
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		unitChart.resize();
+		monthChart.resize();
+	});
+	
 	var table, monthChart, unitChart, requestParam, selectUnit;
     $(function() {
         refresh();
