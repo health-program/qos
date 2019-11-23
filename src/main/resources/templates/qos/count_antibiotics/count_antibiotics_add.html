@@ -39,7 +39,7 @@
 					{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",required: "required",name: "averageCost",inputType: "NUMBER",unit:"￥",attr:{'min':0}},
 					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",required: "required",name: "userRate",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
 					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",required: "required",name: "rateOfTotal",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
-					{ title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/select"},
+					{ title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/selectHospital"},
 					]
 						}
 	    $(function() {
