@@ -71,6 +71,7 @@
     function refresh() {
         table ? table.refresh() : initTable();
         referral();
+        initDayChart();
         
     }
 
@@ -114,6 +115,7 @@
                 return params;
             },
             responseHandler: function(response) {
+            	debugger;
             	if (!response) {
                     return null;
                 }
@@ -276,6 +278,7 @@
         month31004 = convertMonthChartData(response, '31004', true);
 
         chart1('total');
+        debugger;
     }
     
     function chart1(){

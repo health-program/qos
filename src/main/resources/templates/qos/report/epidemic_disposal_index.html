@@ -36,7 +36,7 @@
             idField: "id",
             columns: [
                 [
-                    { title: "疫情处置及时率", align: "center", field: "data" ,formatter:getRate},
+                    { title: "疫情处置及时率", align: "center", field: "data" ,formatter:getRate,attr:{'min':0,'max':100},required: "required"},
                     { title: "创建时间", align: "center", field: "createTime",formatter: "datetime" },
                     {
                         title: "操作",
