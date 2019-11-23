@@ -70,16 +70,12 @@
     var table, arrValue, requestParams, selectUnit;
     var charResult = [];
     $(function() {
-        initTable();
-
         refresh();
-        initDayChart();
     });
 
     function refresh() {
         table ? table.refresh() : initTable();
-
-
+        initDayChart();
     }
 
 
@@ -346,7 +342,6 @@
         var isShowScroll = false; // 是否显示滚动条，默认false不显示
         var dataZoom_end; // 显示百分之多少的数据量，默认全部
         if (day42001.day.length > 10) {
-            debugger;
             dataZoom_end = 100 / (day42001.day.length / 10);
             isShowScroll = true;
         } else {
@@ -456,11 +451,11 @@
 
 
     function chart2() {
+        var oPDCountSeries = [],
+            oPDCountxAxis = [];
         if (charResult) {
             var data = charResult;
             data.sort(compare('ev42001event', 'desc'));
-            var oPDCountSeries = [],
-                oPDCountxAxis = [];
             for (var i = 0; i < data.length; i++) {
                 if (data[i].unitId != 'total') {
                     oPDCountxAxis.push(data[i].unitName);
@@ -584,19 +579,6 @@
         }
     }
 
-    function dataAll() {
-        var dataArr = [];
-        var d = new Date()
-        d.setMonth(d.getMonth() - 12);
-        console.log(d.toLocaleString())
-        for (var i = 0; i < 12; i++) {
-            d.setMonth(d.getMonth() + 1); //每次循环一次 月份值减1
-            var m = d.getMonth() + 1;
-            m = m < 10 ? "0" + m : m;
-            dataArr.push(d.getFullYear() + "-" + (m))
-        }
-        return dataArr.sort();
-    }
 
     function compare(property, sort) {
         return function(a, b) {

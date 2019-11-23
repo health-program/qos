@@ -70,14 +70,12 @@
     var table, arrValue, requestParams, selectUnit;
     var charResult = [];
     $(function() {
-        initTable();
-
         refresh();
-        initDayChart();
     });
 
     function refresh() {
         table ? table.refresh() : initTable();
+        initDayChart();
     }
 
     function initTable() {
@@ -340,7 +338,6 @@
         var isShowScroll = false; // 是否显示滚动条，默认false不显示
         var dataZoom_end; // 显示百分之多少的数据量，默认全部
         if (day42002.day.length > 10) {
-            debugger;
             dataZoom_end = 100 / (day42002.day.length / 10);
             isShowScroll = true;
         } else {
@@ -450,11 +447,12 @@
 
 
     function chart2() {
+        var oPDCountSeries = [],
+            oPDCountxAxis = [];
         if (charResult) {
             var data = charResult;
             data.sort(compare('ev42002event', 'desc'));
-            var oPDCountSeries = [],
-                oPDCountxAxis = [];
+
             for (var i = 0; i < data.length; i++) {
                 if (data[i].unitId != 'total') {
                     oPDCountxAxis.push(data[i].unitName);
