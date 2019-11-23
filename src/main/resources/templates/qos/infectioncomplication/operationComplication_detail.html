@@ -28,14 +28,14 @@
  	        server: false,
  	        editFormClass: false,
  	        columns: [
- 	        	  { title: "手术患者并发症发生率", align: "center", name: "embolism",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者手术后肺栓塞发生率", align: "center", name: "pulmonaryEmbolism",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者手术后深静脉血栓发生率", align: "center", name: "venousThrombosis",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者手术后出血或血肿发生率", align: "center", name: "hematoma",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者手术伤口裂开发生率", align: "center", name: "woundDehiscence",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者手术后猝死发生率", align: "center", name: "suddenDeath",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术死亡患者手术并发症发生率", align: "center", name: "operativeComplications",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
- 	                 { title: "手术患者麻醉并发症发生率", align: "center", name: "anaesthesia",inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
+ 	        	  { title: "手术患者并发症发生率", align: "center", name: "embolism",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者手术后肺栓塞发生率", align: "center", name: "pulmonaryEmbolism",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者手术后深静脉血栓发生率", align: "center", name: "venousThrombosis",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者手术后出血或血肿发生率", align: "center", name: "hematoma",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者手术伤口裂开发生率", align: "center", name: "woundDehiscence",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者手术后猝死发生率", align: "center", name: "suddenDeath",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术死亡患者手术并发症发生率", align: "center", name: "operativeComplications",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+ 	                 { title: "手术患者麻醉并发症发生率", align: "center", name: "anaesthesia",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
  	                 { title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/selectHospital"},
  				     ]
  					}

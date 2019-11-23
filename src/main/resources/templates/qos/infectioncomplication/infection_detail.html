@@ -28,15 +28,15 @@
 	        server: false,
 	        editFormClass: false,
 	        columns: [
-					{title : "医院感染总发生率",name : "totalInfection",inputType : "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-					{title : "与手术相关科室感染发生率",name : "operatingDepartmentsInfection",inputType : "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-					{title : "手术部位感染总发生率",name : "operatingPartInfection",inputType : "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-					{title : "手术风险分级（NNIS分级）手术部位感染率",name : "operatingRiskInfection",inputType : "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-					{title : "手术患者肺部感染发生率",name : "lungInfection",inputType : "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
+					{title : "医院感染总发生率",name : "totalInfection",inputType : "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+					{title : "与手术相关科室感染发生率",name : "operatingDepartmentsInfection",inputType : "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+					{title : "手术部位感染总发生率",name : "operatingPartInfection",inputType : "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+					{title : "手术风险分级（NNIS分级）手术部位感染率",name : "operatingRiskInfection",inputType : "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+					{title : "手术患者肺部感染发生率",name : "lungInfection",inputType : "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
 					{title : "新生儿患者医院感染发生率",name : "newBornInfection",inputType : "NUMBER",unit:"%"},
-					{title: "择期手术患者医院感染发生率", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-                    {title: "与血液透析相关血液感染发生率", name: "bloodInfection", inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
-                    {title: "重症监护室相关感染率", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%",attr:{'min':'0'},required: "required"},
+					{title: "择期手术患者医院感染发生率", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+                    {title: "与血液透析相关血液感染发生率", name: "bloodInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
+                    {title: "重症监护室相关感染率", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
                 { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/selectHospital"}
 				     ]
 					}
