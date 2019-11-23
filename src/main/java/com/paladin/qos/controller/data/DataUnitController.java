@@ -57,6 +57,13 @@ public class DataUnitController extends ControllerSupport {
 		return CommonResponse.getSuccessResponse(dataUnitService.selectData(null));
 	}
 
+	@RequestMapping(value = "/find/selectHospital", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object findHospital() {
+		List<Integer> types = new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		return CommonResponse.getSuccessResponse(dataUnitService.selectData(types));}
+
 	@GetMapping("/get")
 	@ResponseBody
 	public Object getDetail(@RequestParam String id, Model model) {
