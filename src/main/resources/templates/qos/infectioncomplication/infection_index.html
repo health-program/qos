@@ -88,8 +88,8 @@
             ],
             url: '/qos/infectioncomplication/infection/find/page',
             searchbar: '#searchbar',
-            // exportUrl: '/qos/infectioncomplication/infection/export',
-            // showExport: true,
+            exportUrl: '/qos/infectioncomplication/infection/export',
+            showExporter: true,
             showColumns: true,
             pagination: true,
             toolbar: "#toolbar",
@@ -104,6 +104,7 @@
         if(value)
         return value+"%";
     }
+
     function detail(row) {
         window.location = '/qos/infectioncomplication/infection/detail' + (row ? ('?id=' + row.id) : '');
     }
