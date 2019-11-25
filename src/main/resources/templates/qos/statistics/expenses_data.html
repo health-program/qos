@@ -2,42 +2,51 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
+
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
-     <section class="content-header">
-        <h1>医疗运营统计</h1>
-    </section> 
+    <section class="content-header">
+        <h1>医疗费用分析</h1>
+    </section>
     <section class="content">
-            <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box box-solid" style="height: 45px; margin-bottom: 10px">
             <div class="box-body no-pad-top">
-                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px; margin-left: 0; margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间"  autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group">
+                                <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1">
+                            </div>
                         </div>
                         <div class="col-md-2">
-                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                            <div class="input-group">
+                                <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2">
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <div class="pull-right">
-                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
-                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                                <button type="button" style="width: 100px" class="btn btn-primary tonto-btn-search" onclick="refresh()">
+                                    <i class="fa fa-search"></i>查询
+                                </button>
+                                <button type="button" style="width: 100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()">
+                                    <i class="fa fa-repeat"></i>重置
+                                </button>
                             </div>
                         </div>
                     </div>
                     <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
-                    <input type="text" style="display:none">
+                    <input type="text" style="display: none">
                 </form>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6" style="padding-right: 0">
-				<div class="box box-solid">
-					<div class="box-body">
-						<table id="dataGrid"></table>
-					</div>
-				</div>
-			</div>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-6">
                 <div class="box box-solid">
                     <div id="drugsChartDiv" class="box-body" style="height: 350px">
@@ -53,162 +62,355 @@
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
     <script type="text/javascript">
-  //<![CDATA[
-	//图表自适应大小      
-	window.addEventListener("resize", function() {
-		drugChart.resize();
-		drugFeeChart.resize();
-	});
-	
-    var table,arrValue,requestParams,selectUnit;
-    $(function() {
-        initTable();
-        referral();
-        refresh();
-        initDayChart();
+    //<![CDATA[
+    //图表自适应大小      
+    window.addEventListener("resize", function() {
+        drugChart.resize();
+        drugFeeChart.resize();
     });
-    
+
+    var table, arrValue, requestParams, selectUnit;
+    $(function() {
+        refresh();
+    });
+
     function refresh() {
         table ? table.refresh() : initTable();
         referral();
         initDayChart();
-        
     }
-
 
     function initTable() {
-        table = $.createTable("#dataGrid", {
-            idField: "id",
-            columns: [
-                [
-                    { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "门急诊<br/>总人次", field: "ev31001" },
-                    { title: "门急诊总<br/>费用(元)", field: "ev31002" },
-                    { title: "门急诊人<br/>均费用(元)", field: "opdAvg" },
-                    { title: "住院人次", field: "ev31004" },
-                    { title: "住院费用(元)", field: "ev31005" },
-                    { title: "住院人均<br/>费用(元)", field: "inPatietAvg" },
-                    { title: "转入<br/>人次", field: "inPersonCount" },
-                    { title: "转出<br/>人次", field: "outPersonCount" }
-                ]
-            ],
-            url: '/qos/analysis/data/get/unit',
-            pagination: false,
-            searchbar: '#searchbar',
-            clickToSelect: false,
-            onClickRow: function(row, tr) {
-                $("#dataGrid").find(".selected").removeClass('selected');
-                $(tr).addClass('selected');
-            },
-            queryParams: function(params) {
-            	if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
-					 var time = year+"-"+month+"-"+"01";
-       		 $("#startTime").val(time);
-       		params.startTime = time;
-       	     } 
-            	params.eventIds = '31001,31002,31004,31005';
-                requestParams = params;
-                return params;
-            },
-            responseHandler: function(response) {
-            	debugger;
-            	if (!response) {
-                    return null;
-                }
-                var data = {};
-                convertRate2TableData(response, '31001', data);
-                convertRate2TableData(response, '31002', data);
-                convertRate2TableData(response, '31004', data);
-                convertRate2TableData(response, '31005', data);
-                
-                var result = [];
-                var inPersonTotal = 0,outPersonTotal = 0;
-                	 for (var o in data) {
-                		 data[o].inPersonCount = 0;
-                		 data[o].outPersonCount = 0;
-                		 if(referrals !=null && referrals.length>0){
-                			 for(var i=0;i<referrals.length;i++){ 
-                        		 if(referrals[i].unitId == o){
-                        			 data[o].inPersonCount = referrals[i].inPersonCount;
-                        			 inPersonTotal+=referrals[i].inPersonCount;
-                        			 data[o].outPersonCount = referrals[i].outPersonCount;
-                        			 outPersonTotal+=referrals[i].outPersonCount;
-                        		 }
-                        	 }
-                		 }
-                		 
-                     	var opdAvg = 0,inPatietAvg = 0;
-                     	
-                     	var ev31002 = data[o].ev31002;
-                     	var ev31001 = data[o].ev31001;
-                     	if(ev31001 && ev31002)opdAvg = (ev31002/ev31001).toFixed(2);
-                     	data[o].opdAvg =opdAvg;
-                     	
-                     	var ev31005 = data[o].ev31005;
-                     	var ev31004 = data[o].ev31004;
-                     	if(ev31005 && ev31004)inPatietAvg = (ev31005/ev31004).toFixed(2);
-                     	data[o].inPatietAvg =inPatietAvg;
-                     	if(data[o].unitId =='total'){
-                     		data[o].inPersonCount=inPersonTotal;
-                         	data[o].outPersonCount=outPersonTotal;	
-                     	}
-                         result.push(data[o]);	
-                     }
-                
-                arrValue = result;
-                chart2(drugFeeChart)
-                result.sort(compare('ev31002','asc'));
-                return result;
-            }
-        });
+        table = $
+            .createTable(
+                "#dataGrid", {
+                    idField: "id",
+                    columns: [
+                        [
+                            { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
+                            {
+                                title: "门急诊<br/>总人次",
+                                field: "ev31001",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "门急诊总<br/>费用(元)",
+                                field: "ev31002",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "门急诊人<br/>均费用(元)",
+                                field: "opdAvg",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "住院人次",
+                                field: "ev31004",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "住院费用(元)",
+                                field: "ev31005",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "住院人均<br/>费用(元)",
+                                field: "inPatietAvg",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "转入<br/>人次",
+                                field: "inPersonCount",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
+                            {
+                                title: "转出<br/>人次",
+                                field: "outPersonCount",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            }
+                        ]
+                    ],
+                    url: '/qos/analysis/data/get/unit',
+                    pagination: false,
+                    showExport: true,
+                    exportTypes: ['excel'],
+                    sidePagination: 'client',
+                    searchbar: '#searchbar',
+                    clickToSelect: false,
+                    onClickRow: function(row, tr) {
+                        $("#dataGrid").find(".selected")
+                            .removeClass('selected');
+                        $(tr).addClass('selected');
+                    },
+                    queryParams: function(params) {
+                        if ($("#startTime").val() == "" ||
+                            $("#startTime").val() == null) {
+                            var date = new Date()
+                            var year = date.getFullYear();
+                            var month = date.getMonth() + 1;
+                            var day = date.getDate() - 1;
+                            var time = year + "-" + month + "-" +
+                                "01";
+                            $("#startTime").val(time);
+                            params.startTime = time;
+                        }
+                        if ($("#endTime").val() == "" ||
+                            $("#endTime").val() == null) {
+                            var time = year + "-" + month + "-" +
+                                day
+                            $("#endTime").val(time);
+                            params.endTime = time;
+                        }
+                        params.eventIds = '31001,31002,31004,31005';
+                        requestParams = params;
+                        return params;
+                    },
+                    responseHandler: function(response) {
+                        if (!response) {
+                            return null;
+                        }
+                        var data = {};
+                        convertRate2TableData(response, '31001', data);
+                        convertRate2TableData(response, '31002', data);
+                        convertRate2TableData(response, '31004', data);
+                        convertRate2TableData(response, '31005', data);
+
+                        var result = [];
+                        var inPersonTotal = 0,
+                            outPersonTotal = 0;
+                        for (var o in data) {
+                            debugger;
+                            if (o != 'total') {
+                                data[o].inPersonCount = 0;
+                                data[o].outPersonCount = 0;
+                                if (referrals != null &&
+                                    referrals.length > 0) {
+                                    for (var i = 0; i < referrals.length; i++) {
+                                        if (referrals[i].unitId == o) {
+                                            data[o].inPersonCount = referrals[i].inPersonCount;
+                                            inPersonTotal += referrals[i].inPersonCount;
+                                            data[o].outPersonCount = referrals[i].outPersonCount;
+                                            outPersonTotal += referrals[i].outPersonCount;
+                                        }
+                                    }
+                                }
+
+                                var opdAvg = 0,
+                                    inPatietAvg = 0;
+
+                                var ev31002 = data[o].ev31002;
+                                var ev31001 = data[o].ev31001;
+                                if (ev31001 && ev31002)
+                                    opdAvg = (ev31002 / ev31001)
+                                    .toFixed(2);
+                                data[o].opdAvg = opdAvg;
+
+                                var ev31005 = data[o].ev31005;
+                                var ev31004 = data[o].ev31004;
+                                if (ev31005 && ev31004)
+                                    inPatietAvg = (ev31005 / ev31004)
+                                    .toFixed(2);
+                                data[o].inPatietAvg = inPatietAvg;
+                                /* if(data[o].unitId =='total'){
+                                  data[o].inPersonCount=inPersonTotal;
+                                  data[o].outPersonCount=outPersonTotal;  
+                                } */
+                                result.push(data[o]);
+                            }
+                        }
+                        data['total'].inPersonCount = inPersonTotal;
+                        data['total'].outPersonCount = outPersonTotal;
+                        result.push(data['total']);
+                        arrValue = result;
+                        chart2(drugFeeChart)
+                        //result.sort(compare('ev31002','asc'));
+                        return result;
+                    }
+                });
     }
-    
-    var referrals =[];
-    function referral(){
-    	var startTime = $("#startTime").val();
-    	var endTime = $("#endTime").val();
-    	var referral =$.post('/qos/expenses/referral/count',{'startTime':startTime,'endTime':endTime},function(res){
-    		referrals = res.result;
-    	})
+
+    var referrals = [];
+
+    function referral() {
+        var startTime = $("#startTime").val();
+        var endTime = $("#endTime").val();
+        var referral = $.post('/qos/expenses/referral/count', {
+            'startTime': startTime,
+            'endTime': endTime
+        }, function(res) {
+            referrals = res.result;
+        })
     }
-    
+
     function convertRate2TableData(originData, eventId, data) {
-    	 var eventData = originData[eventId],
-         fieldName = 'ev' + eventId,
-         total = 0;
-       var eventData = originData[eventId];
-       eventData && eventData.forEach(function(item) {
-           var id = item.unitId;
-           unitData = data[id];
-           if (!unitData) {
-               unitData = {
-                   unitId: id,
-                   unitName: item.unitName,
-               };
-               data[id] = unitData;
-           }
-           	unitData[fieldName] = item.count;
-           	total += item.count;
-       });
-       var totalData = data['total'];
-       if (!totalData) {
-           totalData = {
-               unitId: 'total',
-               unitName: '合计',
-           }
-           data['total'] = totalData;
-       }
-       totalData[fieldName] = total;
-   }
-    
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+        var eventData = originData[eventId];
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName,
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+        var totalData = data['total'];
+        if (!totalData) {
+            totalData = {
+                unitId: 'total',
+                unitName: '合计',
+            }
+            data['total'] = totalData;
+        }
+        totalData[fieldName] = total;
+    }
+
     var drugChart = echarts.init(document.getElementById('drugsChartDiv'));
-    var drugFeeChart = echarts.init(document.getElementById('drugFeeChartDiv'));
-    
-    
+    var drugFeeChart = echarts.init(document
+        .getElementById('drugFeeChartDiv'));
+
     function convertMonthChartData(data, eventId, isRate) {
         var eventData = data[eventId],
             unitPoints = eventData.unitPoints,
@@ -219,7 +421,7 @@
         var first = true;
 
         unitPoints && unitPoints.forEach(function(unitPoint) {
-        	
+
             var points = unitPoint.points,
                 unitId = unitPoint.unitId;
 
@@ -265,12 +467,14 @@
             valuesMap: valuesMap
         }
     }
-    
+
     var month31001, month31004;
+
     function initDayChart(response) {
         if (!response) {
-        	requestParams.eventIds='31001,31004';
-            $.postAjax('/qos/analysis/data/get/month/instalments', requestParams, initDayChart);
+            requestParams.eventIds = '31001,31004';
+            $.postAjax('/qos/analysis/data/get/month/instalments',
+                requestParams, initDayChart);
             return;
         }
 
@@ -278,305 +482,197 @@
         month31004 = convertMonthChartData(response, '31004', true);
 
         chart1('total');
-        debugger;
     }
-    
-    function chart1(){
-    	 var unitId = selectUnit || 'total';
-    	 var isShowScroll = false;// 是否显示滚动条，默认false不显示
-         var dataZoom_end;// 显示百分之多少的数据量，默认全部
-         if(month31001.month.length >10 ){
-             dataZoom_end = 100/(month31001.month.length/10);
-             isShowScroll = true;
-         }else{
-             dataZoom_end = 100;
-         }
-        	option = {
-        		    title: {
-        		        text: '按日期分布'
-        		    },
-        		    tooltip : {
-        		        trigger: 'axis',
-        		        axisPointer: {
-        		            type: 'cross',
-        		            label: {
-        		                backgroundColor: '#6a7985'
-        		            }
-        		        }
-        		    },
-        		    legend: {
-        		        data:['门急诊人次','住院人次']
-        		    },
-        		    toolbox: {
-        		        feature: {
-        		            saveAsImage: {}
-        		        }
-        		    },
-        		    grid: {
-        		        left: '3%',
-        		        right: '4%',
-        		        bottom: '3%',
-        		        containLabel: true
-        		    },
-        		    calculable: true,
-                    dataZoom: [   {
-                        start:0,//默认为0
-                        end: dataZoom_end,
-                        type: 'slider',
-                        show: isShowScroll,
-                        xAxisIndex: [0],
-                        handleSize: 8,//滑动条的 左右2个滑动条的大小
-                        height: 10,//组件高度
-                        left: "center", //左边的距离
-                        bottom:0,
-                        handleColor: '#ddd',//h滑动图标的颜色
-                        handleStyle: {
-                            borderColor: "#cacaca",
-                            borderWidth: "1",
-                            shadowBlur: 2,
-                            background: "#ddd",
-                            shadowColor: "#ddd",
-                        },
-                        fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                            //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                            //给第一个设置0，第四个设置1，就是垂直渐变
-                            offset: 0,
-                            color: '#1eb5e5'
-                        }, {
-                            offset: 1,
-                            color: '#5ccbb1'
-                        }]),
-                        zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                        backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                        showDataShadow: false,//是否显示数据阴影 默认auto
-                        showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                        handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                        filterMode: 'filter'
+
+    function chart1() {
+        var unitId = selectUnit || 'total';
+
+        option = {
+            title: {
+                text: '按日期分布'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#6a7985'
+                    }
+                }
+            },
+            legend: {
+                data: ['门急诊人次', '住院人次']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                data: month31001.month,
+                axisLabel: {
+                    interval: 0,
+                    rotate: 50
+                    //角度顺时针计算的
+                },
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
+            series: [{
+                name: '门急诊人次',
+                type: 'line',
+                stack: '总量',
+                smooth: 0.3,
+                areaStyle: {},
+                itemStyle: {
+                    normal: {
+                        color: '#4a72c9',
+                        lineStyle: {
+                            width: 0
+                        }
+                    }
+                },
+                data: month31001.valuesMap[unitId]
+            }, {
+                name: '住院人次',
+                type: 'line',
+                stack: '总量',
+                smooth: 0.3,
+                areaStyle: {},
+                itemStyle: {
+                    normal: {
+                        color: '#2c97d2',
+                        lineStyle: {
+                            width: 0
+                        }
+                    }
+                },
+                data: month31004.valuesMap[unitId]
+            }]
+        };
+        drugChart.setOption(option, true);
+    }
+
+    function chart2() {
+        if (arrValue) {
+            var data = arrValue;
+            data.sort(compare('ev31001', 'desc'));
+            var oPDCountSeries = [],
+                oPDCountxAxis = [];
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].unitId != 'total') {
+                    oPDCountxAxis.push(data[i].unitName);
+                    oPDCountSeries.push({
+                        name: data[i].unitName,
+                        value: data[i].ev31001
+                    });
+                }
+            }
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 11,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 11,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            var option = {
+                title: {
+                    text: '门急诊总人次排名',
+                },
+                color: ['#3398DB'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [{
+                    type: 'category',
+                    data: oPDCountxAxis,
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 50
+                        //角度顺时针计算的
                     },
-                        //下面这个属性是里面拖到
-                        {
-                            type: 'inside',
-                            show: true,
-                            xAxisIndex: [0],
-                            start: 0,//默认为1
-                            end: 50
-                        }],
-        		    xAxis : [
-        		        {
-        		            type : 'category',
-        		            boundaryGap : false,
-        		            data :month31001.month,
-        		            axisLabel: {
-       		                 interval:0,
-       		                 rotate:50//角度顺时针计算的
-       		                } ,
-        		        }
-        		    ],
-        		    yAxis : [
-        		        {
-        		            type : 'value'
-        		        }
-        		    ],
-        		    series : [
-        		        {
-        		            name:'门急诊人次',
-        		            type:'line',
-        		            stack: '总量',
-        		            smooth:0.3,
-        		            areaStyle: {},
-        		            itemStyle : {
-              	                    normal : {
-              							color: '#4a72c9',
-              	                        lineStyle:{
-              	                            width:0
-              	                        }
-              	                    }
-    			            },
-        		            data:month31001.valuesMap[unitId]
-        		        },
-        		        {
-        		            name:'住院人次',
-        		            type:'line',
-        		            stack: '总量',
-        		            smooth:0.3,
-        		            areaStyle: {},
-        		            itemStyle : {
-             	                    normal : {
-             							color: '#2c97d2',
-             	                        lineStyle:{
-             	                            width:0
-             	                        }
-             	                    }
-    		            },
-        		            data:month31004.valuesMap[unitId]
-        		        }
-        		    ]
-        		};
-        	drugChart.setOption(option,true);
-    	}
-    	
-    
-    function chart2(){
-    	if(arrValue){
-    		var data = arrValue;
-    			data.sort(compare('ev31001','desc'));
-    		 var oPDCountSeries =[],oPDCountxAxis =[];
-    		 for (var i = 0; i < data.length; i++) {
-    			 if(data[i].unitId != 'total'){
-    				 oPDCountxAxis.push(data[i].unitName);
-        	         oPDCountSeries.push({name:data[i].unitName,value:data[i].ev31001});
-    			 }
-    		 }
-    		 var isShowScroll = false;// 是否显示滚动条，默认false不显示
-             var dataZoom_end;// 显示百分之多少的数据量，默认全部
-             if(oPDCountxAxis.length >10 ){
-                 dataZoom_end = 100/(oPDCountxAxis.length/10);
-                 isShowScroll = true;
-             }else{
-                 dataZoom_end = 100;
-             }
-    		 var labelOption = {
-    		            normal: {
-    		                show: true,
-    		                position: 'top',
-    		                distance: 11,
-    		                align: 'center',
-    		                verticalAlign: 'top',
-    		                rotate: 0,
-    		                formatter: '{c}',
-    		                fontSize: 11,
-    		                rich: {
-    		                    name: {
-    		                        textBorderColor: '#fff'
-    		                    }
-    		                }
-    		            }
-    		        };
-    		var option = {
-        			title: {
-    			        text: '门急诊总人次排名',
-    			    },
-        			color : [ '#3398DB' ],
-        			tooltip : {
-        				trigger : 'axis',
-        				axisPointer : { // 坐标轴指示器，坐标轴触发有效
-        					type : 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-        				}
-        			},
-        			 toolbox: {
-         		        feature: {
-         		            saveAsImage: {}
-         		        }
-         		    },
-        			grid : {
-        				left : '3%',
-        				right : '4%',
-        				bottom : '3%',
-        				containLabel : true
-        			},
-        			  calculable: true,
-                      dataZoom: [   {
-                          start:0,//默认为0
-                          end: dataZoom_end,
-                          type: 'slider',
-                          show: isShowScroll,
-                          xAxisIndex: [0],
-                          handleSize: 8,//滑动条的 左右2个滑动条的大小
-                          height: 10,//组件高度
-                          left: "center", //左边的距离
-                          bottom:0,
-                          handleColor: '#ddd',//h滑动图标的颜色
-                          handleStyle: {
-                              borderColor: "#cacaca",
-                              borderWidth: "1",
-                              shadowBlur: 2,
-                              background: "#ddd",
-                              shadowColor: "#ddd",
-                          },
-                          fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-                              //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-                              //给第一个设置0，第四个设置1，就是垂直渐变
-                              offset: 0,
-                              color: '#1eb5e5'
-                          }, {
-                              offset: 1,
-                              color: '#5ccbb1'
-                          }]),
-                          zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-                          backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-                          showDataShadow: false,//是否显示数据阴影 默认auto
-                          showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-                          handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-                          filterMode: 'filter'
-                      },
-                          //下面这个属性是里面拖到
-                          {
-                              type: 'inside',
-                              show: true,
-                              xAxisIndex: [0],
-                              start: 0,//默认为1
-                              end: 50
-                          }],
-        			xAxis : [ 
-        			          {
-        				type : 'category',
-        				data : oPDCountxAxis,
-        				 axisLabel: {
-        		                 interval:0,
-        		                 rotate:50//角度顺时针计算的
-        		                } ,
-        				axisTick : {
-        					alignWithLabel : true
-        				}
-        			} 
-        			],
-        			yAxis : [ 
-        			          {
-        				type : 'value'
-        			}
-        			],
-        			series : [ {
-        				name : '门急诊总人次',
-        				type : 'bar',
-        				barWidth:35,
-        				label: labelOption,
-        				data : oPDCountSeries
-        			} ]
-        		};
-        	drugFeeChart.setOption(option,true);
-    	}
+                    axisTick: {
+                        alignWithLabel: true
+                    }
+                }],
+                yAxis: [{
+                    type: 'value'
+                }],
+                series: [{
+                    name: '门急诊总人次',
+                    type: 'bar',
+                    barWidth: 35,
+                    label: labelOption,
+                    data: oPDCountSeries
+                }]
+            };
+            drugFeeChart.setOption(option, true);
+        }
     }
-    
-    function dataAll(){
-	       var dataArr = [];
-	       var d = new Date()
-	       d.setMonth(d.getMonth()-12);
-	       console.log(d.toLocaleString())
-	       for (var i = 0; i < 12; i++) {
-	            d.setMonth(d.getMonth() + 1);//每次循环一次 月份值减1
-	            var m = d.getMonth() + 1;
-	            m = m < 10 ? "0" + m : m;
-	            dataArr.push(d.getFullYear() + "-" + (m))
-	        }
-		return dataArr.sort();
-	}
-    
-    function compare(property,sort){
-        return function(a,b){
-        	var data;
+
+    function dataAll() {
+        var dataArr = [];
+        var d = new Date()
+        d.setMonth(d.getMonth() - 12);
+        console.log(d.toLocaleString())
+        for (var i = 0; i < 12; i++) {
+            d.setMonth(d.getMonth() + 1); //每次循环一次 月份值减1
+            var m = d.getMonth() + 1;
+            m = m < 10 ? "0" + m : m;
+            dataArr.push(d.getFullYear() + "-" + (m))
+        }
+        return dataArr.sort();
+    }
+
+    function compare(property, sort) {
+        return function(a, b) {
+            var data;
             var value1 = a[property];
             var value2 = b[property];
-            if(sort =='asc'){
-            	data = value1 - value2;
+            if (sort == 'asc') {
+                data = value1 - value2;
             }
-			if(sort =='desc'){
-				data = value2 - value1;
+            if (sort == 'desc') {
+                data = value2 - value1;
             }
             return data;
         }
     }
-    
-	//]]>
+
+    //]]>
     </script>
 </body>
 

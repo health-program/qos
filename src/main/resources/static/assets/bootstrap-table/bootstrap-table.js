@@ -1164,7 +1164,7 @@
                 '</button>');
         }
 
-        if (this.options.showExport) {
+        if (this.options.showExporter) {
             html.push(sprintf('<button class="btn' +
                     sprintf(' btn-%s', this.options.buttonsClass) +
                     sprintf(' btn-%s', this.options.iconSize) +
@@ -1244,7 +1244,7 @@
                 .off('click').on('click', $.proxy(this.refresh, this));
         }
 
-        if (this.options.showExport) {
+        if (this.options.showExporter) {
             this.$toolbar.find('button[name="export"]')
                 .off('click').on('click', $.proxy(this.export, this));
         }

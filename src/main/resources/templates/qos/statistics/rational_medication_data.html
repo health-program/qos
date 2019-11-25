@@ -6,7 +6,7 @@
 <body>
     <tt:constant enumcode="data-event-type,data-unit-type" />
     <section class="content-header">
-        <h1>医疗运营分析</h1>
+        <h1>药品费用及排名分析</h1>
     </section>
     <section class="content">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -92,16 +92,60 @@
         table1 ? table1.refresh() : buildTable2();
         $('#dataGrid1').bootstrapTable('refresh');
     }
-    
 	function buildTable1(){
     	debugger;
 		 columns= [
               { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName",align:'center',valign:'middle'},
-              { title: "就医总人次", field: "count" ,align:'center',valign:'middle'},
-              { title: "就医患者使<br/>用药瓶数", field: "drugNum",align:'center',valign:'middle'},
-              { title: "就医人均使<br/>用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle'},
-              { title: "就医患者药<br/>品总费用(元)", field: "totalMoney" ,align:'center',valign:'middle'},
-              { title: "每次就诊人<br/>均药费(元)", field: "averageMoney",align:'center',valign:'middle' }
+              { title: "就医总人次", field: "count" ,align:'center',valign:'middle',sortable: true,
+                  sorter: function(fa, fb, ra, rb) {
+                      if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      return fa - fb;
+                  }},
+              { title: "就医患者使<br/>用药瓶数", field: "drugNum",align:'center',valign:'middle',sortable: true,
+                      sorter: function(fa, fb, ra, rb) {
+                          if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                          if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                          if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                          if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                          return fa - fb;
+                      }},
+              { title: "就医人均使<br/>用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle',sortable: true,
+                          sorter: function(fa, fb, ra, rb) {
+                              if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              return fa - fb;
+                          }},
+              { title: "就医患者药<br/>品总费用(元)", field: "totalMoney" ,align:'center',valign:'middle',sortable: true,
+                              sorter: function(fa, fb, ra, rb) {
+                                  if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                  if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                  if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                  if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                  return fa - fb;
+                              }},
+              { title: "每次就诊人<br/>均药费(元)", field: "averageMoney",align:'center',valign:'middle' ,sortable: true,
+                                  sorter: function(fa, fb, ra, rb) {
+                                      if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      return fa - fb;
+                                  }}
            ];
 
 		 let datas = [];
@@ -114,6 +158,9 @@
             data: datas,
             striped: true, //是否显示行间隔色
             clickToSelect: true,
+            sidePagination: 'client',
+            showExport: true,
+            exportTypes: ['excel'],
             //fixedColumns: true,
            // fixedNumber: 1, //固定列数,
             onClickRow: function(row, tr) {
@@ -180,26 +227,79 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName"},
-                    { title: "门急诊人次", field: "ev31001" },
-                    { title: "门急诊使<br/>用药瓶数", field: "ev31003" },
-                    { title: "门急诊人均<br/>使用药瓶数", field: "drugAvg" },
-                    { title: "门急诊药品<br/>总费用(元)", field: "ev31002" },
-                    { title: "门急诊每次<br/>人均药费(元)", field: "moneyAvg" }
+                    { title: "门急诊人次", field: "ev31001" ,sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }},
+                    { title: "门急诊使<br/>用药瓶数", field: "ev31003",sortable: true,
+                            sorter: function(fa, fb, ra, rb) {
+                                if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                return fa - fb;
+                            } },
+                    { title: "门急诊人均<br/>使用药瓶数", field: "drugAvg",sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                    if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                    return fa - fb;
+                                } },
+                    { title: "门急诊药品<br/>总费用(元)", field: "ev31002" ,sortable: true,
+                                    sorter: function(fa, fb, ra, rb) {
+                                        if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                        if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                        if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                        if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                        return fa - fb;
+                                    }},
+                    { title: "门急诊每次<br/>人均药费(元)", field: "moneyAvg",sortable: true,
+                                        sorter: function(fa, fb, ra, rb) {
+                                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                            return fa - fb;
+                                        } }
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             pagination: false,
+            sidePagination: 'client',
             searchbar: '#searchbar',
+            showExport: true,
+            exportTypes: ['excel'],
             queryParams: function(params) {
             	 if($("#startTime").val()==""||$("#startTime").val()==null){
 					 var date = new Date()
 					  var year = date .getFullYear(); 
 					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+					 var day = date .getDate()-1;
 					 var time = year+"-"+month+"-"+"01";
        		   $("#startTime").val(time);
        		   params.startTime = time;
        	       }
+            	 if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+   		   $("#endTime").val(time);
+   		   params.endTime = time;
+   	       } 
                 params.eventIds = '31001,31002,31003';
                 requestParam = params;
                 return params;
@@ -217,8 +317,13 @@
 
                 var result = [];
                 for (var o in data) {
-                    result.push(data[o]);
+                	debugger;
+                	if(o !='total'){
+                		result.push(data[o]);
+                	}
+                   
                 }
+                result.push(data['total']);
                 dataVal = result|| [];
                 buildTable3();
 
@@ -257,7 +362,7 @@
           }
 
       });
-
+debugger;
       return data;
   }
 
@@ -267,15 +372,63 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName"},
-                    { title: "住院人次", field: "ev31004" },
-                    { title: "住院患者使<br/>用药瓶数", field: "ev31006" },
-                    { title: "住院人均使<br/>用药瓶数", field: "drugAvg" },
-                    { title: "住院药品<br/>总费用(元)", field: "ev31005" },
-                    { title: "住院每次人<br/>均药费(元)", field: "moneyAvg"}
+                    { title: "住院人次", field: "ev31004",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        } },
+                    { title: "住院患者使<br/>用药瓶数", field: "ev31006" ,sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }},
+                    { title: "住院人均使<br/>用药瓶数", field: "drugAvg" ,sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }},
+                    { title: "住院药品<br/>总费用(元)", field: "ev31005" ,sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }},
+                    { title: "住院每次人<br/>均药费(元)", field: "moneyAvg",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        }}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             searchbar: '#searchbar',
             queryParams: function(params) {
                 params.eventIds = '31004,31005,31006';
@@ -292,11 +445,15 @@
                 convertCount2TableData(response, '31004', data);
                 convertCount2TableData(response, '31005', data);
                 convertCount2TableData(response, '31006', data);
-
+	
                 var result = [];
                 for (var o in data) {
-                    result.push(data[o]);
+                	if(o !='total'){
+                		result.push(data[o]);
+                	}
+                    
                 }
+                result.push(data['total']);
                 dataVal1 = result|| [];
                 buildTable1();
                 return   initData(result);

@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="nature-type,subordination-type,region-type,business-region-type"/>
+<tt:constant enumcode="nature-type,subordination-type,region-type"/>
 <section class="content-header">
     <h1>学校数展示</h1>
 </section>
@@ -18,15 +18,10 @@
 	                    </div>
 						<div class="col-md-2">
 							<select id="district" name="district" class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
-								<option value="">请选择行政区域</option>
+								<option value="">请选择区域</option>
 							</select>
 						</div>
-						<div class="col-md-2">
-							 <select name="businessDistrict" id="businessDistrict" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.businessDistrict}" enumcode="business-region-type">
-                                 <option value="">请选择业务管理区域</option>
-                             </select>
-						</div>
-						<div class="col-md-4">
+						<div class="col-md-6">
                   <div class="pull-right">
                       <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
                       <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -103,8 +98,7 @@
          }); 
 		 var schoolYear = $("#schoolYear").val();
 		 var district = $("#district").find('option:selected').val();
-		 var businessDistrict = $("#businessDistrict").val();
-		 $.post("/qos/org/school/statistic/school/countsbyAffiliation",{"schoolYear":schoolYear,"district":district,"businessDistrict":businessDistrict},function(res){
+		 $.post("/qos/org/school/statistic/school/countsbyAffiliation",{"schoolYear":schoolYear,"district":district},function(res){
 				var result = res.result;
 				var titleArr= [], seriesArr=[];
 				if (result.length == 0) {
@@ -125,14 +119,14 @@
 		                textAlign: 'center',
 		                textStyle: {
 		                    fontWeight: 'normal',
-		                    fontSize: '16',
+		                    fontSize: '14',
 		                    textAlign: 'center',
 		                }
 				    });
 					seriesArr.push({
 			                name: result['affiGroup'][i],
 			                type: 'pie',
-			                radius: [60, 110],
+			                radius: ['30%', '50%'],
 			                label: {
 			                    normal: {
 			                    	 position: 'inner',
@@ -183,8 +177,7 @@
          }); 
 		 var schoolYear = $("#schoolYear").val();
 		 var district = $("#district").find('option:selected').val();
-		 var businessDistrict = $("#businessDistrict").val();
-		 $.post("/qos/org/school/statistic/school/countsbyNature",{"schoolYear":schoolYear,"district":district,"businessDistrict":businessDistrict},function(res){
+		 $.post("/qos/org/school/statistic/school/countsbyNature",{"schoolYear":schoolYear,"district":district},function(res){
 				var result = res.result;
 				var titleArr= [], seriesArr=[];
 				if (result.length == 0) {
@@ -208,14 +201,14 @@
 		                textAlign: 'center',
 		                textStyle: {
 		                    fontWeight: 'normal',
-		                    fontSize: '16',
+		                    fontSize: '14',
 		                    textAlign: 'center',
 		                }
 				    });
 					seriesArr.push({
 			                name: result['natureGroup'][i],
 			                type: 'pie',
-			                radius: [60, 110],
+			                radius: ['12%', '18%'],
 			                label: {
 			                    normal: {
 			                    	 position: 'inner',

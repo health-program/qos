@@ -83,28 +83,96 @@
                     },
                     {
                         title: "冠状动脉旁路<br>移植术死亡率",
-                        field: "ev12100"
+                        field: "ev12100",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     {
                         title: "经皮冠状动脉<br>介入治疗死亡率",
-                        field: "ev12101"
+                        field: "ev12101",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     {
                         title: "髋、膝关节置换<br>术死亡率",
-                        field: "ev12102"
+                        field: "ev12102",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     {
                         title: "颅、脑手术死亡率",
-                        field: "ev12103"
+                        field: "ev12103",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     {
                         title: "剖宫产死亡率",
-                        field: "ev12104"
+                        field: "ev12104",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     }
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             searchbar: '#searchbar',
             clickToSelect: true,
             onClickRow: function(row, tr) {
@@ -113,15 +181,20 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
-            	 if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
+        	if($("#startTime").val()==""||$("#startTime").val()==null){
 					 var time = year+"-"+month+"-"+"01"
-        		 $("#startTime").val(time);
-        		params.startTime = time;
-        	     } 
+  		   $("#startTime").val(time);
+  		   params.startTime = time;
+  	       } 
+        	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+ 		   $("#endTime").val(time);
+ 		   params.endTime = time;
+ 	       } 
                 params.eventIds = '12100,12101,12102,12103,12104';
                 requestParam = params;
                 return params;

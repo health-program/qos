@@ -113,15 +113,20 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
-            	if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
+          	if($("#startTime").val()==""||$("#startTime").val()==null){
 					 var time = year+"-"+month+"-"+"01"
-      		   $("#startTime").val(time);
-      		   params.startTime = time;
-      	     } 
+    		   $("#startTime").val(time);
+    		   params.startTime = time;
+    	       } 
+          	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+   		   $("#endTime").val(time);
+   		   params.endTime = time;
+   	       } 
                 params.eventIds = '13001,13002,13003,13004,13005';
                 params.ignoreUnitIds = '320583810343'
                 requestParam = params;

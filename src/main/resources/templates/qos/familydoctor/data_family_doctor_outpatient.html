@@ -4,85 +4,85 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="data-unit-type" />
-<section class="content-header">
-	<h1>签约服务就诊统计</h1>
-</section>
-<section class="content">
-	<!--<div class="box box-solid" style="height: 45px;margin-bottom: 10px">-->
-	<!--<div class="box-body no-pad-top">-->
-	<!--<form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">-->
-	<!--<div class="form-group">-->
-	<!--<div class="col-md-2">-->
-	<!--<div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>-->
-	<!--</div>-->
-	<!--<div class="col-md-2">-->
-	<!--<div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>-->
-	<!--</div>-->
-	<!--<div class="col-md-8">-->
-	<!--<div class="pull-right">-->
-	<!--<button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>-->
-	<!--<button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--</div>-->
-	<!--&lt;!&ndash; 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 &ndash;&gt;-->
-	<!--<input type="text" style="display:none">-->
-	<!--</form>-->
-	<!--</div>-->
-	<!--</div>-->
-	<div class="row">
-		<div class="col-md-7">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="row">
-						<!--<div class="col-md-4">-->
-						<!--<div class="box box-solid">-->
-						<!--<div id="ndfwyxlylChart" class="box-body" style="height: 300px"></div>-->
-						<!--</div>-->
-						<!--</div>-->
-						<div class="col-md-6">
-							<div class="box box-solid">
-								<div id="qyjgmzjzlChart" class="box-body" style="height: 300px"></div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="box box-solid">
-								<div id="qyysmzjzlChart" class="box-body" style="height: 300px"></div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="box box-solid">
-						<div class="box-body">
-							<table id="dataGrid"></table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-5">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="box box-solid">
-						<div id="qyjmzxjzrcsChart" class="box-body" style="height: 400px"></div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="box box-solid">
-						<div id="qyjmjtysjzzsChart" class="box-body" style="height: 400px"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-<div th:include="/qos/footer" />
-<script type="text/javascript" src="/static/js/chart.js"></script>
-<script type="text/javascript">
+    <tt:constant enumcode="data-unit-type" />
+    <section class="content-header">
+        <h1>签约服务就诊统计</h1>
+    </section>
+    <section class="content">
+        <!--<div class="box box-solid" style="height: 45px;margin-bottom: 10px">-->
+        <!--<div class="box-body no-pad-top">-->
+        <!--<form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">-->
+        <!--<div class="form-group">-->
+        <!--<div class="col-md-2">-->
+        <!--<div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>-->
+        <!--</div>-->
+        <!--<div class="col-md-2">-->
+        <!--<div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>-->
+        <!--</div>-->
+        <!--<div class="col-md-8">-->
+        <!--<div class="pull-right">-->
+        <!--<button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>-->
+        <!--<button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--&lt;!&ndash; 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 &ndash;&gt;-->
+        <!--<input type="text" style="display:none">-->
+        <!--</form>-->
+        <!--</div>-->
+        <!--</div>-->
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <!--<div class="col-md-4">-->
+                            <!--<div class="box box-solid">-->
+                            <!--<div id="ndfwyxlylChart" class="box-body" style="height: 300px"></div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <div class="col-md-6">
+                                <div class="box box-solid">
+                                    <div id="qyjgmzjzlChart" class="box-body" style="height: 300px"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="box box-solid">
+                                    <div id="qyysmzjzlChart" class="box-body" style="height: 300px"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <table id="dataGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div id="qyjmzxjzrcsChart" class="box-body" style="height: 400px"></div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="box box-solid">
+                        <div id="qyjmjtysjzzsChart" class="box-body" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script type="text/javascript">
     //<![CDATA[
-    //图表自适应大小
+    //图表自适应大小      
     window.addEventListener("resize", function() {
         //ndfwyxlylChart.resize();
         qyjgmzjzlChart.resize();
@@ -95,15 +95,14 @@
         selectUnit = row.unitId;
     }
 
-
-    var table, dataVal, requestParams,selectUnit,responseData;
+    var table, dataVal, requestParams, selectUnit, responseData;
     $(function() {
         refresh();
     });
 
     function refresh() {
         table ? table.refresh() : initTable();
-        selectUnit=null;
+        selectUnit = null;
     }
 
     function unitSelected(row) {
@@ -123,27 +122,27 @@
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
                     //{ title: "年度服务有<br/>效履约率", field: "a" },
-                    { title: "签约居民中心<br/>就诊人次数", field: "event21003"},
-                    { title: "签约居民就<br/>诊总次数", field: "total21003"},
-                    { title: "签约机构门<br/>诊就诊率", field: "reat21003"},
-                    { title: "签约居民家庭<br/>医生就诊总数", field: "event21004"},
-                    { title: "签约居民中心<br/>就诊总次数", field: "total21004"},
-                    { title: "签约医生<br/>就诊率", field: "reat21004"}
+                    { title: "签约居民中心<br/>就诊人次数", field: "event21003" },
+                    { title: "签约居民就<br/>诊总次数", field: "total21003" },
+                    { title: "签约机构门<br/>诊就诊率", field: "reat21003" },
+                    { title: "签约居民家庭<br/>医生就诊总数", field: "event21004" },
+                    { title: "签约居民中心<br/>就诊总次数", field: "total21004" },
+                    { title: "签约医生<br/>就诊率", field: "reat21004" }
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            height : 480,
+            height: 480,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
                 unitSelected(row);
             },
             queryParams: function(params) {
-                var s ='2000-01-01';
-                params.startTime=s;
+                var s = '2000-01-01';
+                params.startTime = s;
                 params.eventIds = '21003,21004';
                 params.ignoreUnitIds = '320583810343'
                 requestParams = params;
@@ -160,33 +159,38 @@
                 convertCountTableData(response, '21004', data);
 
                 var result = [];
-                var event21003=0,total21003=0,reat21003=0,
-                    total21004=0,event21004=0,reat21004=0;
+                var event21003 = 0,
+                    total21003 = 0,
+                    reat21003 = 0,
+                    total21004 = 0,
+                    event21004 = 0,
+                    reat21004 = 0;
                 for (var o in data) {
-                    event21003+=data[o].event21003;
-                    total21003+=data[o].total21003;
-                    event21004+=data[o].event21004;
-                    total21004+=data[o].total21004;
+                    event21003 += data[o].event21003;
+                    total21003 += data[o].total21003;
+                    event21004 += data[o].event21004;
+                    total21004 += data[o].total21004;
                     result.push(data[o]);
-                    if(o=='total'){
+                    if (o == 'total') {
                         var a = 0;
                         data[o].event21003 = event21003;
                         data[o].total21003 = total21003;
-                        if(event21003 && total21003){
-                            a = event21003/total21003*100
+                        if (event21003 && total21003) {
+                            a = event21003 / total21003 * 100
                         }
-                        data[o].reat21003 = a.toFixed(2)+'%';
+                        data[o].reat21003 = a.toFixed(2) + '%';
                         var b = 0;
                         data[o].event21004 = event21004;
                         data[o].total21004 = total21004;
-                        if(event21004 && total21004){
-                            b = event21004/total21004*100
+                        if (event21004 && total21004) {
+                            b = event21004 / total21004 * 100
                         }
-                        data[o].reat21004 = b.toFixed(2)+'%';
+                        data[o].reat21004 = b.toFixed(2) + '%';
                     }
                 }
-                responseData =response;
+                responseData = response;
                 //ndfwyxlylChartMethod(response);
+
                 qyjgmzjzlChartMethod(response);
                 qyysmzjzlChartMethod(responseData);
                 qyjmzxjzrcsChartMethod(responseData);
@@ -209,16 +213,16 @@
                 };
                 data[id] = unitData;
             }
-            if(eventId == '21003'){
+            if (eventId == '21003') {
                 unitData['event21003'] = item.eventNum;
                 unitData['total21003'] = item.totalNum;
                 unitData['reat21003'] = getRate(item);
             }
-            if(eventId == '21004'){
-                if(item.eventNum>item.totalNum){
+            if (eventId == '21004') {
+                if (item.eventNum > item.totalNum) {
                     unitData['event21004'] = item.totalNum;
                     unitData['total21004'] = item.totalNum;
-                }else{
+                } else {
                     unitData['event21004'] = item.eventNum;
                     unitData['total21004'] = item.totalNum;
                 }
@@ -230,11 +234,17 @@
             unitId: 'total',
             unitName: '合计'
         }
-        data['total'] = totalData;
-        totalData['event21003'] = 0;
-        totalData['total21003'] = 0;
-        totalData['event21004'] = 0;
-        totalData['total21004'] = 0;
+    });
+    var totalData = data['total'];
+    totalData = {
+        unitId: 'total',
+        unitName: '合计'
+    }
+    data['total'] = totalData;
+    totalData['event21003'] = 0;
+    totalData['total21003'] = 0;
+    totalData['event21004'] = 0;
+    totalData['total21004'] = 0;
     }
 
     function getRate(item, fixed) {
@@ -242,12 +252,11 @@
             b = item.totalNum,
             c = 0;
         if (a && b) {
-            if(a>b){
-                c=100;
-            }else{
+            if (a > b) {
+                c = 100;
+            } else {
                 c = a / b * 100;
             }
-
         }
         return c.toFixed(fixed || 2) + '%';
     }
@@ -258,18 +267,20 @@
             unit = [],
             values = [];
         edata && edata.forEach(function(item) {
-            if (item.eventNum>item.totalNum){
-                item.eventNum=item.totalNum;
+            if (item.eventNum > item.totalNum) {
+                item.eventNum = item.totalNum;
             }
         });
         edata.sort(compare('eventNum'));
         edata && edata.forEach(function(item) {
-            var r=0;
-            if (item.eventNum>item.totalNum){
-                var r = isRate ? item.totalNum : 0;
-            }else{
+            var r = 0;
+            if (item.eventNum > item.totalNum) {
+                var r = isRate ? item.totalNum : 0; <<
+
+            } else {
                 var r = isRate ? item.eventNum : 0;
             }
+
             max = Math.max(r, max);
             values.push(r);
             unit.push(item.unitName);
@@ -282,8 +293,9 @@
     }
 
     var qyjmzxjzrcsChart = echarts.init(document.getElementById('qyjmzxjzrcsChart'));
-    function qyjmzxjzrcsChartMethod(response){
-        var ev21003= convertUnitChartData(response, '21003', true);
+
+    function qyjmzxjzrcsChartMethod(response) {
+        var ev21003 = convertUnitChartData(response, '21003', true);
         var labelOption = {
             normal: {
                 show: true,
@@ -303,14 +315,14 @@
         };
         option = {
             color: ['#3398DB'],
-            tooltip : {
+            tooltip: {
                 trigger: 'axis',
-                axisPointer : {
-                    type : 'shadow'
+                axisPointer: {
+                    type: 'shadow'
                 }
             },
             legend: {
-                data:['签约居民中心就诊人次数']
+                data: ['签约居民中心就诊人次数']
             },
             grid: {
                 left: '3%',
@@ -318,46 +330,41 @@
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
-                {
-                    type : 'category',
-                    axisLabel: {
-                        interval:0,
-                        rotate:0,//角度顺时针计算的
-                        formatter: function(value) {
-                            var reg = new RegExp('社区卫生服务中心', "g");
-                            return value.replace(reg, '');
-                        }
-                    } ,
-                    data: ev21003.unit,
-                    axisTick: {
-                        alignWithLabel: true
+            xAxis: [{
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                        return value.replace(reg, '');
                     }
+                },
+                data: ev21003.unit,
+                axisTick: {
+                    alignWithLabel: true
                 }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
 
-            series : [
-                {
-                    name:'签约居民中心就诊人次数',
-                    type:'bar',
-                    barWidth: '60%',
-                    label: labelOption,
-                    data:ev21003.values
-                }
-            ]
+            series: [{
+                name: '签约居民中心就诊人次数',
+                type: 'bar',
+                barWidth: '60%',
+                label: labelOption,
+                data: ev21003.values
+            }]
         };
-        qyjmzxjzrcsChart.setOption(option,true);
+        qyjmzxjzrcsChart.setOption(option, true);
     }
 
 
     var qyjmjtysjzzsChart = echarts.init(document.getElementById('qyjmjtysjzzsChart'));
-    function qyjmjtysjzzsChartMethod(response){
-        var ev21004= convertUnitChartData(response, '21004', true);
+
+    function qyjmjtysjzzsChartMethod(response) {
+        var ev21004 = convertUnitChartData(response, '21004', true);
         var labelOption = {
             normal: {
                 show: true,
@@ -377,14 +384,14 @@
         };
         option = {
             color: ['#3398DB'],
-            tooltip : {
+            tooltip: {
                 trigger: 'axis',
-                axisPointer : {
-                    type : 'shadow'
+                axisPointer: {
+                    type: 'shadow'
                 }
             },
             legend: {
-                data:['签约居民家庭医生就诊总数']
+                data: ['签约居民家庭医生就诊总数']
             },
             grid: {
                 left: '3%',
@@ -392,39 +399,33 @@
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis : [
-                {
-                    type : 'category',
-                    axisLabel: {
-                        interval:0,
-                        rotate:0,//角度顺时针计算的
-                        formatter: function(value) {
-                            var reg = new RegExp('社区卫生服务中心', "g");
-                            return value.replace(reg, '');
-                        }
-                    } ,
-                    data: ev21004.unit,
-                    axisTick: {
-                        alignWithLabel: true
+            xAxis: [{
+                type: 'category',
+                axisLabel: {
+                    interval: 0,
+                    rotate: 0, //角度顺时针计算的
+                    formatter: function(value) {
+                        var reg = new RegExp('社区卫生服务中心', "g");
+                        return value.replace(reg, '');
                     }
+                },
+                data: ev21004.unit,
+                axisTick: {
+                    alignWithLabel: true
                 }
-            ],
-            yAxis : [
-                {
-                    type : 'value'
-                }
-            ],
-            series : [
-                {
-                    name:'签约居民家庭医生就诊总数',
-                    type:'bar',
-                    barWidth: '60%',
-                    label: labelOption,
-                    data:ev21004.values
-                }
-            ]
+            }],
+            yAxis: [{
+                type: 'value'
+            }],
+            series: [{
+                name: '签约居民家庭医生就诊总数',
+                type: 'bar',
+                barWidth: '60%',
+                label: labelOption,
+                data: ev21004.values
+            }]
         };
-        qyjmjtysjzzsChart.setOption(option,true);
+        qyjmjtysjzzsChart.setOption(option, true);
     }
 
     function convertChartData(data, eventId, isRate) {
@@ -432,29 +433,32 @@
             unitPoints = eventData.unitPoints,
             valuesMap = {};
         var first = true;
-        var total1 = 0,total2 = 0;
+        var total1 = 0,
+            total2 = 0;
         eventData && eventData.forEach(function(unitPoint) {
             var unitId = unitPoint.unitId;
             var values = valuesMap[unitId];
-            var eventNum=0;
-            var totalNum=0;
-            if (unitPoint.eventNum> unitPoint.totalNum ){
-                eventNum=unitPoint.totalNum;
-                totalNum=unitPoint.totalNum;
-            }else{
-                eventNum=unitPoint.eventNum;
-                totalNum=unitPoint.totalNum;
-            }
-            var rate=0;
-            if(eventNum && totalNum){
-                rate=(eventNum/totalNum*100).toFixed(2);
+            var eventNum = 0;
+            
+            var totalNum = 0;
+            if (unitPoint.eventNum > unitPoint.totalNum) {
+                eventNum = unitPoint.totalNum;
+                totalNum = unitPoint.totalNum;
+            } else {
+                eventNum = unitPoint.eventNum;
+                totalNum = unitPoint.totalNum;
+            } 
+
+            var rate = 0;
+            if (eventNum && totalNum) {
+                rate = (eventNum / totalNum * 100).toFixed(2);
             }
             if (!values) {
                 values = {
-                    eventNum:eventNum,
-                    totalNum:totalNum,
-                    rate:rate,
-                    total:eventNum+totalNum
+                    eventNum: eventNum,
+                    totalNum: totalNum,
+                    rate: rate,
+                    total: eventNum + totalNum
                 };
                 valuesMap[unitId] = values;
             }
@@ -462,18 +466,19 @@
             total2 += totalNum;
             first = false;
         });
+
         var totalData = valuesMap['total'];
         if (!totalData) {
-            var rate=0;
-            if(total1 && total2){
-                rate=(total1/total2*100).toFixed(2);
+            var rate = 0;
+            if (total1 && total2) {
+                rate = (total1 / total2 * 100).toFixed(2);
             }
             totalData = {
                 unitId: 'total',
                 unitName: '合计',
-                eventNum:total1,
-                totalNum:total2,
-                rate:rate
+                eventNum: total1,
+                totalNum: total2,
+                rate: rate
             }
             valuesMap['total'] = totalData;
         }
@@ -483,20 +488,22 @@
 
     //年度服务有效履约率
     //var ndfwyxlylChart = echarts.init(document.getElementById('ndfwyxlylChart'));
-    var ndfwyxlylChart;
-    function ndfwyxlylChartMethod(response){
+     
+    var ndfwyxlylChart; 
+
+    function ndfwyxlylChartMethod(response) {
         var option = {
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            color: ['#3398DB','#999999'],
+            color: ['#3398DB', '#999999'],
             graphic: [{ //环形图中间添加文字
                 type: 'text', //通过不同top值可以设置上下显示
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: '0%'+'\n'+'年度服务有效履约率',
+                    text: '0%' + '\n' + '年度服务有效履约率',
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 30,
@@ -505,50 +512,48 @@
                     fontFamily: "Microsoft YaHei"
                 }
             }],
-            series: [
-                {
-                    name:'年度服务有效履约率',
-                    type:'pie',
-                    radius: ['50%', '70%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+            series: [{
+                name: '年度服务有效履约率',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
 
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                        value: '0',
+                        name: '年度服务有效履约率'
                     },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:'0',
-                            name:'年度服务有效履约率'
+                    {
+                        value: '1',
+                        name: '',
+                        hoverAnimation: false,
+                        tooltip: {
+                            show: false,
                         },
-                        {
-                            value:'1',
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
+                    }
+                ]
+            }]
         };
-        ndfwyxlylChart.setOption(option,true);
+        ndfwyxlylChart.setOption(option, true);
     }
 
     var qyjgmzjzlChart = echarts.init(document.getElementById('qyjgmzjzlChart'));
-    function qyjgmzjzlChartMethod(responseData){
+
+    function qyjgmzjzlChartMethod(responseData) {
         var unitId = selectUnit || 'total';
-        var res=convertChartData(responseData, '21003', true);
+        var res = convertChartData(responseData, '21003', true);
         var value1 = 0;
-        if(res[unitId].eventNum !=0 && res[unitId].totalNum !=0){
+        if (res[unitId].eventNum != 0 && res[unitId].totalNum != 0) {
             value1 = res[unitId].eventNum;
         }
 
@@ -557,13 +562,13 @@
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            color: ['#3398DB','#999999'],
+            color: ['#3398DB', '#999999'],
             graphic: [{ //环形图中间添加文字
                 type: 'text', //通过不同top值可以设置上下显示
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: res[unitId].rate+'%'+'\n'+'签约机构门诊就诊率',
+                    text: res[unitId].rate + '%' + '\n' + '签约机构门诊就诊率',
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 30,
@@ -572,50 +577,48 @@
                     fontFamily: "Microsoft YaHei"
                 }
             }],
-            series: [
-                {
-                    name:'签约机构门诊就诊率',
-                    type:'pie',
-                    radius: ['50%', '70%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+            series: [{
+                name: '签约机构门诊就诊率',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
 
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                        value: value1,
+                        name: '签约机构门诊就诊率'
                     },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:  value1,
-                            name:'签约机构门诊就诊率'
+                    {
+                        value: res[unitId].totalNum == 0 ? 1 : res[unitId].totalNum - res[unitId].eventNum,
+                        name: '',
+                        hoverAnimation: false,
+                        tooltip: {
+                            show: false,
                         },
-                        {
-                            value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
+                    }
+                ]
+            }]
         };
-        qyjgmzjzlChart.setOption(option,true);
+        qyjgmzjzlChart.setOption(option, true);
     }
 
     var qyysmzjzlChart = echarts.init(document.getElementById('qyysmzjzlChart'));
-    function qyysmzjzlChartMethod(responseData){
+
+    function qyysmzjzlChartMethod(responseData) {
         var unitId = selectUnit || 'total';
-        var res=convertChartData(responseData, '21004', true);
+        var res = convertChartData(responseData, '21004', true);
         var value1 = 0;
-        if(res[unitId].eventNum !=0 && res[unitId].totalNum !=0){
+        if (res[unitId].eventNum != 0 && res[unitId].totalNum != 0) {
             value1 = res[unitId].eventNum;
         }
         var option = {
@@ -623,13 +626,13 @@
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
             },
-            color: ['#3398DB','#999999'],
+            color: ['#3398DB', '#999999'],
             graphic: [{ //环形图中间添加文字
                 type: 'text', //通过不同top值可以设置上下显示
                 left: 'center',
                 top: '45%',
                 style: {
-                    text: res[unitId].rate+'%'+'\n'+'签约医生就诊率',
+                    text: res[unitId].rate + '%' + '\n' + '签约医生就诊率',
                     textAlign: 'center',
                     fill: 'black', //文字的颜色
                     width: 30,
@@ -638,53 +641,50 @@
                     fontFamily: "Microsoft YaHei"
                 }
             }],
-            series: [
-                {
-                    name:'签约医生就诊率',
-                    type:'pie',
-                    radius: ['50%', '70%'],
-                    avoidLabelOverlap: false,
-                    label: {
-                        normal: {
-                            show: false,
-                            position: 'center'
-                        },
+            series: [{
+                name: '签约医生就诊率',
+                type: 'pie',
+                radius: ['50%', '70%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
 
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                        value: value1,
+                        name: '签约医生就诊率'
                     },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {
-                            value:value1,
-                            name:'签约医生就诊率'
+                    {
+                        value: res[unitId].totalNum == 0 ? 1 : res[unitId].totalNum - res[unitId].eventNum,
+                        name: '',
+                        hoverAnimation: false,
+                        tooltip: {
+                            show: false,
                         },
-                        {
-                            value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
-                            name:'',
-                            hoverAnimation:false,
-                            tooltip:{
-                                show:false,
-                            },
-                        }
-                    ]
-                }
-            ]
+                    }
+                ]
+            }]
         };
-        qyysmzjzlChart.setOption(option,true);
+        qyysmzjzlChart.setOption(option, true);
     }
 
-    function compare(property){
-        return function(a,b){
+    function compare(property) {
+        return function(a, b) {
             var value1 = a[property];
             var value2 = b[property];
             return value2 - value1;
         }
     }
     //]]>
-</script>
+    </script>
 </body>
 
 </html>

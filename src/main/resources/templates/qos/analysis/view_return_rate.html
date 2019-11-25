@@ -88,85 +88,335 @@
                     },
                     { 
                     	title: "住院患者出院31天内再住院率", 
-                    	field: "ev11100"
+                    	field: "ev11100",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "急性心肌梗死再住院率", 
-                    	field: "ev11101"
+                    	field: "ev11101",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "充血性心力衰竭再住院率", 
-                    	field: "ev11102"
+                    	field: "ev11102",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "脑出血和脑梗死再住院率", 
-                    	field: "ev11103"
+                    	field: "ev11103",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "创伤性颅脑损伤再住院率",
-                    	field: "ev11104"
+                    	field: "ev11104",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "消化道出血（无并发症）再住院率",
-                    	field: "ev11105"
+                    	field: "ev11105",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "累积身体多个部位的损伤再住院率", 
-                    	field: "ev11106"
+                    	field: "ev11106",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "细菌性肺炎（成人、无并发症）再住院率", 
-                    	field: "ev11107"
+                    	field: "ev11107",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "慢性阻塞性肺疾病再住院率",
-                    	field: "ev11108"
+                    	field: "ev11108",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "糖尿病伴短期与长期并发症再住院率",
-                    	field: "ev11109"
+                    	field: "ev11109",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "结节性甲状腺肿再住院率", 
-                    	field: "ev11110"
+                    	field: "ev11110",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "急性阑尾炎伴弥漫性腹膜炎及脓肿再住院率\n",
-                    	field: "ev11111"
+                    	field: "ev11111",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "前列腺增生再住院率", 
-                    	field: "ev11112"
+                    	field: "ev11112",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "肾衰竭再住院率", 
-                    	field: "ev11113"
+                    	field: "ev11113",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "败血症(成人)再住院率", 
-                    	field: "ev11114"
+                    	field: "ev11114",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "高血压病(成人)再住院率", 
-                    	field: "ev11115"
+                    	field: "ev11115",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "急性胰腺炎再住院率", 
-                    	field: "ev11116"
+                    	field: "ev11116",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "恶性肿瘤术后化疗再住院率"
-                    	, field: "ev11117"
+                    	, field: "ev11117",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     },
                     { 
                     	title: "恶性肿瘤维持性化学治疗再住院率", 
-                    	field: "ev11118"
+                    	field: "ev11118",
+						sortable: true,
+						sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+
+                            return fa - fb;
+                        }
                     }
                     
                 ]
             ],
             url : '/qos/analysis/data/get/unit',
             pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            sidePagination: 'client',
             searchbar: '#searchbar',
             clickToSelect : true,
             onClickRow: function(row, tr) {
@@ -176,15 +426,20 @@
             },
 			onCheck: unitSelected,
             queryParams: function(params) {
-            	 if($("#startTime").val()==""||$("#startTime").val()==null){
-					 var date = new Date()
-					  var year = date .getFullYear(); 
-					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
+        	if($("#startTime").val()==""||$("#startTime").val()==null){
 					 var time = year+"-"+month+"-"+"01"
-        		 $("#startTime").val(time);
-        		params.startTime = time;
-        	     } 
+  		   $("#startTime").val(time);
+  		   params.startTime = time;
+  	       } 
+        	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+ 		   $("#endTime").val(time);
+ 		   params.endTime = time;
+ 	       } 
             	params.eventIds = '11100,11101,11102,11103,11104,11105,11106,11107,11108,11109,11110,11111,11112,11113,11114,11115,11116,11117,11118';
 				requestParam = params;
 				return params;

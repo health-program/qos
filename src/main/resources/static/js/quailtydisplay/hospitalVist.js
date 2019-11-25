@@ -117,8 +117,6 @@ function gethospitelNumbers(){
                                              stack: 'sum',
                                              barWidth: '5px',
                                              data: data1
-
-
                                          },
                                          {
                                              name: '当日急诊人次',

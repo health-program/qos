@@ -1,8 +1,8 @@
 package com.paladin.qos.service.hospital.dto;
 
-import java.util.Date;
-
 import com.paladin.framework.common.OffsetPage;
+
+import java.util.Date;
 
 public class HospitalDataQuery  extends OffsetPage{
 	
@@ -10,6 +10,7 @@ public class HospitalDataQuery  extends OffsetPage{
 	private String issuesType;
 	private Date startTime;
 	private Date endTime;
+	private  String year;
 	
 	public String getDataSource() {
 		return dataSource;
@@ -35,6 +36,12 @@ public class HospitalDataQuery  extends OffsetPage{
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
 	}
-	
-	
+
+	public String getYear() {
+		return year;
+	}
+
+	public void setYear(String year) {
+		this.year = year;
+	}
 }

@@ -22,5 +22,50 @@
         </if>
 	</select>
 
+
+    <select id="findRulePage" parameterType="com.paladin.qos.model.hospitalData.HospitalDataRule" resultType="com.paladin.qos.model.hospitalData.HospitalDataRule">
+	select id,table_name as tableName,english_name as englishName,type,detail,state,remark,create_time as createTime,create_id as createId,
+	update_time as updateTime,update_id as updateId
+	from medical_score_detail
+	where 1=1
+	<if test="type !=null and type != '' ">
+	 AND type = #{type} 
+	</if>
+	<if test="tableName !=null and tableName != '' ">
+	 AND table_name LIKE CONCAT('%',#{tableName},'%') 
+	</if>
+	ORDER BY create_time DESC
+    </select>
+    
+    <update id="close" parameterType = "String" >
+     update medical_score_detail
+     set state = '99'
+     where id = #{id}
+    </update>
+    
+    <update id="open" parameterType = "String" >
+     update medical_score_detail
+     set state = '1'
+     where id = #{id}
+    </update>
 	
+	<insert id="save" parameterType="com.paladin.qos.model.hospitalData.HospitalDataRule">
+	 insert into medical_score_detail values(#{id},#{tableName},#{englishName},#{type},#{detail},#{state},#{remark},#{createTime},#{createId},#{updateTime},#{updateId})
+	</insert>
+	
+	<select id="getHospitalDataRule" parameterType="String" resultType="com.paladin.qos.model.hospitalData.HospitalDataRule">
+	select id,table_name as tableName,english_name as englishName,type,detail,state,remark
+	from medical_score_detail
+	where id =#{id}
+	</select>
+	
+   <update id="updateHospitalDataRule" parameterType="com.paladin.qos.model.hospitalData.HospitalDataRule">
+	update medical_score_detail
+	set table_name = #{tableName},
+		english_name = #{englishName},
+		type = #{type},
+		detail = #{detail},
+		update_time = #{updateTime}
+    where id = #{id}
+	</update>
 </mapper>

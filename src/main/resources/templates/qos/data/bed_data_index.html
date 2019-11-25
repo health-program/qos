@@ -138,11 +138,16 @@
 					 var date = new Date()
 					  var year = date .getFullYear(); 
 					 var month = date .getMonth()+1;
-					 var day = date .getDate();
+					 var day = date .getDate()-1;
 					 var time = year+"-"+month+"-"+"01"
       		 $("#startTime").val(time);
       		params.startTime = time;
-      	     } 
+      	     }
+                if($("#endTime").val()==""||$("#endTime").val()==null) {
+                    var time = year + "-" + month + "-" + day
+                    $("#endTime").val(time);
+                    params.endTime = time;
+                }
                 requestParams = params;
                 return params;
             },

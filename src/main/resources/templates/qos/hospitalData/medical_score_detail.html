@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="target-type"/>
+    <section class="content-header">
+        <h1>校验规则新增</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/hospitalData/rule/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+        <a href="/qos/hospitalData/rule/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+        var options = {
+            id: "model",
+            name: "详情",
+            server: false,
+            editFormClass: false,
+            columns: [
+				{ title: "表名", name: "tableName", inputType: "TEXT",required: "required" },
+				{ title: "表英文名", name: "englishName", inputType: "TEXT",required: "required" },
+				{ title: "指标类型", name: "type",enum:"target-type",required: "required", inputType: "SELECT" },
+				{ title: "指标明细", name: "detail",required: "required", inputType: "TEXT" }
+            ]
+        }
+        var model, itemId;
+        $(function() {
+        	console.log(111);
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+            itemId = $("#id").val();
+
+            $.getAjax("/qos/hospitalData/get?id=" + $("#id").val(),
+                function(data) {
+                    model = new tonto.Model("model",
+                        options.columns, {
+                            server : false,
+                            submitClick : function() {
+                                update();
+                            }
+                        });
+                    model.setData(data);
+                });
+        });
+
+        function update(confirm) {
+            var data = model.getFormData();
+            data['id'] = itemId;
+            $.postAjax("/qos/hospitalData/update", data,
+                function(result) {
+                    $.successAlert("保存成功", function() {
+                        model.toView();
+                        model.setData(data);
+                    });
+                }, $("#submitBtn"));
+        }
+    </script>
+</body>
+
+</html>
