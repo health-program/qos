@@ -244,11 +244,10 @@
             ],
 			url: '/qos/sign/get/group/data',
             pagination: false,
-			height : 685,
-			//fixedColumns: true,
-			//fixedNumber: 1, //固定列数,
+            fixedColumns: true,
+            fixedNumber: 1,
             searchbar: '#searchbar',
-			clickToSelect: true,
+            clickToSelect: true,
 			onClickRow: function(row, tr) {
 				$("#dataGrid").find(".selected").removeClass('selected');
 				$(tr).addClass('selected');

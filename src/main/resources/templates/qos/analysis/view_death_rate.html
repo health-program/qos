@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/qos/header" />
+<head th:include="/qos/header" >
 
+</head>
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
 	<tt:constant enumcode="data-event-type,data-unit-type" />
 	<section class="content-header">
@@ -53,6 +56,7 @@
     </section>
 	<div th:include="/qos/footer" />
 	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
 	<script type="text/javascript">
 	var table, monthChart, unitChart, requestParam, selectUnit;
     $(function() {
@@ -65,7 +69,6 @@
     }
 
     function unitSelected(row) {
-    	debugger
         selectUnit = row.unitId;
         drawMonthChart();
     }
@@ -78,10 +81,10 @@
 							{
 								idField : "id",
 								columns : [ [
-										
+
 										{
-											title: "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;医疗机构&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", 
-					                    	field: "unitName"
+											title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>",
+					                    	field: "unitName",
 										},
 										{
 											title : "住院死亡率",
@@ -222,11 +225,14 @@
 										} ] ],
 								url : '/qos/analysis/data/get/unit',
 								pagination : false,
-								showExport: true,
+                                 showExport: true,
+                                 fixedColumns: true,//固定列
+                                fixedNumber:1,
 					            exportTypes: ['excel'],
-					            sidePagination: 'client',
+					            // sidePagination: 'client',
 								searchbar : '#searchbar',
 								clickToSelect : true,
+
 								onClickRow: function(row, tr) {
 					                $("#dataGrid").find(".selected").removeClass('selected');
 					                $(tr).addClass('selected');

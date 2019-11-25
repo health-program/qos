@@ -93,9 +93,8 @@
         $('#dataGrid1').bootstrapTable('refresh');
     }
 	function buildTable1(){
-    	debugger;
 		 columns= [
-              { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName",align:'center',valign:'middle'},
+              { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName",align:'center',valign:'middle'},
               { title: "就医总人次", field: "count" ,align:'center',valign:'middle',sortable: true,
                   sorter: function(fa, fb, ra, rb) {
                       if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
@@ -106,7 +105,7 @@
 
                       return fa - fb;
                   }},
-              { title: "就医患者使<br/>用药瓶数", field: "drugNum",align:'center',valign:'middle',sortable: true,
+              { title: "就医患者使用药瓶数", field: "drugNum",align:'center',valign:'middle',sortable: true,
                       sorter: function(fa, fb, ra, rb) {
                           if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                           if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -116,7 +115,7 @@
 
                           return fa - fb;
                       }},
-              { title: "就医人均使<br/>用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle',sortable: true,
+              { title: "就医人均使用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle',sortable: true,
                           sorter: function(fa, fb, ra, rb) {
                               if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                               if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -126,7 +125,7 @@
 
                               return fa - fb;
                           }},
-              { title: "就医患者药<br/>品总费用(元)", field: "totalMoney" ,align:'center',valign:'middle',sortable: true,
+              { title: "就医患者药品总费用(元)", field: "totalMoney" ,align:'center',valign:'middle',sortable: true,
                               sorter: function(fa, fb, ra, rb) {
                                   if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                                   if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -136,7 +135,7 @@
 
                                   return fa - fb;
                               }},
-              { title: "每次就诊人<br/>均药费(元)", field: "averageMoney",align:'center',valign:'middle' ,sortable: true,
+              { title: "每次就诊人均药费(元)", field: "averageMoney",align:'center',valign:'middle' ,sortable: true,
                                   sorter: function(fa, fb, ra, rb) {
                                       if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                                       if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -161,8 +160,8 @@
             sidePagination: 'client',
             showExport: true,
             exportTypes: ['excel'],
-            //fixedColumns: true,
-           // fixedNumber: 1, //固定列数,
+            fixedColumns: true,
+            fixedNumber: 1, //固定列数,
             onClickRow: function(row, tr) {
                 $("#dataGrid1").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
@@ -317,7 +316,6 @@
 
                 var result = [];
                 for (var o in data) {
-                	debugger;
                 	if(o !='total'){
                 		result.push(data[o]);
                 	}
@@ -362,7 +360,7 @@
           }
 
       });
-debugger;
+
       return data;
   }
 
