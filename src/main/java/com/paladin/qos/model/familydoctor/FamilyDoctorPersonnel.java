@@ -25,7 +25,7 @@ public class FamilyDoctorPersonnel extends BaseModel {
 	private Integer oeducation;
 	
 	// 是否团队长
-	private Integer isTeamCaptain;
+	private String isTeamCaptain;
 
 	// 职称
 	private Integer jobRank;
@@ -133,11 +133,11 @@ public class FamilyDoctorPersonnel extends BaseModel {
 	    this.personnelCategory = personnelCategory;
 	}
 
-	public Integer getIsTeamCaptain() {
+	public String getIsTeamCaptain() {
 	    return isTeamCaptain;
 	}
 
-	public void setIsTeamCaptain(Integer isTeamCaptain) {
+	public void setIsTeamCaptain(String isTeamCaptain) {
 	    this.isTeamCaptain = isTeamCaptain;
 	}
 

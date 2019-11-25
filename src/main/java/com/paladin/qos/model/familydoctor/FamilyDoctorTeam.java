@@ -19,7 +19,7 @@ public class FamilyDoctorTeam extends BaseModel {
 	private String serviceDistrict;
 
 	// 服务区域常住人口数
-	private Integer servicePopulation;
+	private String servicePopulation;
 
 	// 经纬度
 	private String coordinate;
@@ -56,11 +56,11 @@ public class FamilyDoctorTeam extends BaseModel {
 		this.serviceDistrict = serviceDistrict;
 	}
 
-	public Integer getServicePopulation() {
+	public String getServicePopulation() {
 		return servicePopulation;
 	}
 
-	public void setServicePopulation(Integer servicePopulation) {
+	public void setServicePopulation(String servicePopulation) {
 		this.servicePopulation = servicePopulation;
 	}
 
