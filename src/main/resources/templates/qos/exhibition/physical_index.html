@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
 <tt:constant enumcode="data-event-type,data-unit-type" />
 <section class="content-header">
@@ -44,6 +45,7 @@
 </section>
 <div th:include="/qos/footer" />
 <script type="text/javascript" src="/static/js/chart.js"></script>
+<script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
 <script type="text/javascript">
 
     //图表自适应大小
@@ -66,7 +68,7 @@
             idField: "id",
             columns: [
                 [
-                    { title: "辖区", field: "unitName" },
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>辖区</span>", field: "unitName" },
                     { title: "老年人数", field: "evV30003",
                     	formatter: function(value, row, index) {
                             if(value)
@@ -98,6 +100,8 @@
             url: '/qos/gongwei/archives/search/oldPeople',
             pagination: false,
             searchbar: '#searchbar',
+            fixedColumns: true,//固定列
+            fixedNumber:1,
             clickToSelect: true,
             onCheck: function(row) {
                 console.log("on check");

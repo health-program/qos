@@ -149,7 +149,7 @@
             idField: "id",
             columns: [
                 [
-                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName"},
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>", field: "unitName"},
                     { title: "残疾人群<br/>签约率", field: "evV21002",
                         formatter: function(value, row, index) {
                             if(row.evV21001==0||row.evV21002==null){
@@ -195,7 +195,7 @@
                             }
                         }
                     },
-                    { title: "65周岁及<br/>以上老年<br/>人签约率", field: "evV21007",
+                    { title: "65周岁及以上<br/>老年人签约率", field: "evV21007",
                         formatter: function(value, row, index) {
                             if(row.evV21001==0||row.evV21007==null){
                                 return "0%"
@@ -204,7 +204,7 @@
                             }
                         }
                     },
-                    { title: "严重精神<br/>障碍患者<br/>签约率", field: "evV21008",
+                    { title: "严重精神<br/>障碍患者签约率", field: "evV21008",
                         formatter: function(value, row, index) {
                             if(row.evV21001==0||row.evV21008==null){
                                 return "0%"
@@ -213,7 +213,7 @@
                             }
                         }
                     },
-                    { title: "肺结核<br/>患者<br/>签约率", field: "evV21009",
+                    { title: "肺结核<br/>患者签约率", field: "evV21009",
                         formatter: function(value, row, index) {
                             if(row.evV21001==0||row.evV21009==null){
                                 return "0%"
@@ -222,7 +222,7 @@
                             }
                         }
                     },
-                    { title: "疾病筛查<br/>高危人员<br/>签约率", field: "evV21010",
+                    { title: "疾病筛查<br/>高危人员签约率", field: "evV21010",
                         formatter: function(value, row, index) {
                             if(row.evV21001==0||row.evV21010==null){
                                 return "0%"
