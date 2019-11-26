@@ -62,13 +62,13 @@ public class ExcelEpidemicSituation {
     @ReadProperty(cellIndex = 16)
     private Integer districtTownNumber;//出动人次数(区镇级专业部门)
     
-    @ReadProperty(cellIndex = 17,enumType="boolean-type")
+    @ReadProperty(cellIndex = 19,enumType="boolean-type")
     private Integer isEarlyWarningValue;//是否预警值(是为1，否为2)
     
-    @ReadProperty(cellIndex = 18,enumType="boolean-type")
+    @ReadProperty(cellIndex = 17,enumType="boolean-type")
     private Integer isReasonTraceability;//是否原因溯源(是为1，否为2)
     
-    @ReadProperty(cellIndex = 19,enumType="boolean-type")
+    @ReadProperty(cellIndex = 18,enumType="boolean-type")
     private Integer isTraceabilityClear;//溯源是否清楚(是为1，否为2)
     
     @ReadProperty(cellIndex = 20)

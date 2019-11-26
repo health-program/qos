@@ -162,6 +162,9 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 		errors.add(new ExcelImportError(i, e));
 		continue;
 	    }
+	    if(excelEpidemicSituation == null){
+		continue;
+	    }
 	    EpidemicSituation situation = new EpidemicSituation();
 	    SimpleBeanCopyUtil.simpleCopy(excelEpidemicSituation, situation);
 

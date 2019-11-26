@@ -244,7 +244,7 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     
 	while (reader.hasNext()) {
 	    i++;
-	    if (i > 500) {
+	    if (i > 1000) {
 		break;
 	    }
 	    ExcelOrgSchool excelOrgSchool = null;
