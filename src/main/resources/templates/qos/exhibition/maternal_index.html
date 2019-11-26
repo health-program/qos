@@ -487,7 +487,7 @@
                     text: ['{name|早孕建卡率}'].join('\n'),
                     subtext: percentage,
                     top: '35%',
-                    left:'54%',
+                    left:'57%',
                     textAlign: 'center',
                     textStyle: {
                         rich: {
@@ -531,7 +531,7 @@
                         name:'孕妇建卡',
                         type:'pie', //环形图的type和饼图相同
                         radius: ['70%', '95%'],//饼图的半径，第一个为内半径，第二个为外半径
-                        center: ['55%', '50%'],
+                        center: ['58%', '50%'],
                         avoidLabelOverlap: false,
                         color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
                         hoverAnimation : false,
@@ -888,14 +888,33 @@
                             }, 0);
                             return result;
                         }},
-                    {title: "初检人次数", field: "firstExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "产前复查人次数", field: "cycleExaminationTimes", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "初检人次数", field: "firstExaminationTimes", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return ycfTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return ycfTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return ycfTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return ycfTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "产前复查人次数", field: "cycleExaminationTimes", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return ycfTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return ycfTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return ycfTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return ycfTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/maternal/search/yftj',
             showFooter:true,
             height:220,
+            sidePagination: 'client',
             pagination: false,
             responseHandler: function (res) {
                 res = res || [];
@@ -937,13 +956,19 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "围产期心脏病筛查人数", field: "data", align: "center",footerFormatter: sumTotalFormatterModal}
+                    {title: "围产期心脏病筛查人数", field: "data", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal}
 
                 ]
             ],
             url: '/qos/exhibition/maternal/search/wcq',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             searchbar: '#searchbar'
         });
     }

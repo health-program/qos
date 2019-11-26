@@ -426,13 +426,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "儿童体检人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "儿童体检人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/ettj',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });
@@ -446,13 +456,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿视力筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿视力筛查人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '昆山市妇幼保健所') return yeslTable.options.sortOrder == 'desc' ? 1 : -1;
+                            if (rb.unitName == '昆山市妇幼保健所') return yeslTable.options.sortOrder == 'desc' ? -1 : 1;
+
+                            if (fa == '-') return yeslTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return yeslTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/yesl',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });
@@ -466,13 +486,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿先天性心脏病筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿先天性心脏病筛查人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/xzb',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });
