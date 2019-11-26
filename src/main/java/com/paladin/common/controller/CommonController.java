@@ -1,21 +1,5 @@
 package com.paladin.common.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.paladin.common.specific.CommonUserRealm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.paladin.common.core.container.ConstantsContainer;
 import com.paladin.common.core.container.ConstantsContainer.KeyValue;
 import com.paladin.common.model.syst.SysAttachment;
@@ -26,11 +10,19 @@ import com.paladin.framework.core.VersionContainerManager.VersionObject;
 import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.web.response.CommonResponse;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Api("通用操作管理")
 @Controller
@@ -39,9 +31,6 @@ public class CommonController {
 
     @Autowired
     private SysAttachmentService attachmentService;
-
-    @Autowired
-    private CommonUserRealm commonUserRealm;
 
     @ApiOperation(value = "通过code获取常量", response = KeyValue.class, responseContainer = "List")
     @ApiImplicitParam(name = "code", value = "CODE", required = true, dataType = "String", allowMultiple = true)
@@ -196,16 +185,6 @@ public class CommonController {
             VersionContainerManager.versionChanged();
             long t2 = System.currentTimeMillis();
             return CommonResponse.getSuccessResponse("", t2 - t1);
-        }
-        return CommonResponse.getNoPermissionResponse("无权限");
-    }
-
-    @ApiOperation(value = "异常测试")
-    @GetMapping("/login/unlock")
-    @ResponseBody
-    public Object unlock() {
-        if (UserSession.getCurrentUserSession().isSystemAdmin()) {
-            commonUserRealm.unlock();
         }
         return CommonResponse.getNoPermissionResponse("无权限");
     }

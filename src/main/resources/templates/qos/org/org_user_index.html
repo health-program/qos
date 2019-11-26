@@ -68,15 +68,11 @@
                             },
                             'click .remove': function(e, value, row, index) {
                                 remove(row);
-                            },
-                            'click .unlock': function(e, value, row, index) {
-                                unlock(row);
                             }
                         },
                         formatter: function operateFormatter(value, row, index) {
                             return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
                                 '<button class="reset btn btn-xs btn-warning" style="margin-right:10px"><i class="glyphicon glyphicon-refresh"></i>密码重置</button>' +
-                                '<button class="unlock btn btn-xs btn-warning" style="margin-right:10px"><i class="glyphicon glyphicon-refresh"></i>账号解锁</button>' +
                                 '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
                         }
                     }
@@ -116,17 +112,6 @@
                 $.getAjax('/qos/org/user/delete?id=' + row.id, function() {
                     $.successMessage("删除成功");
                     table.refresh();
-                });
-            });
-        }
-    }
-
-    function unlock(row) {
-        if (row) {
-            layer.confirm('确定解锁吗?', function() {
-                $.getAjax('/common/login/unlock', function() {
-                    $.successMessage("解锁成功");
-
                 });
             });
         }
