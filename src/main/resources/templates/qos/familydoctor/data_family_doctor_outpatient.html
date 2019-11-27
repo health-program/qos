@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+	  href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
     <tt:constant enumcode="data-unit-type" />
     <section class="content-header">
@@ -79,7 +80,8 @@
         </div>
     </section>
     <div th:include="/qos/footer" />
-    <script type="text/javascript" src="/static/js/chart.js"></script>
+	<script type="text/javascript" src="/static/js/chart.js"></script>
+	<script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
     //<![CDATA[
     //图表自适应大小      
@@ -120,7 +122,7 @@
             idField: "id",
             columns: [
                 [
-                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>", field: "unitName" },
                     //{ title: "年度服务有<br/>效履约率", field: "a" },
                     { title: "签约居民中心<br/>就诊人次数", field: "event21003" },
                     { title: "签约居民就<br/>诊总次数", field: "total21003" },
@@ -134,7 +136,9 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            height: 480,
+            fixedColumns: true,//固定列
+            fixedNumber:1,
+            height : 480,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');

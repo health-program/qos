@@ -85,7 +85,7 @@
             idField: "id",
             columns: [
                 [
-                    { title: "&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;", field: "unitName" },
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>", field: "unitName" },
                     {
                         title: "耗材费用(元)",
                         field: "ev42001event",
@@ -187,6 +187,9 @@
                     if (!(data[o].unitId == "total")) {
                         result.push(data[o])
                     }
+                }
+                if(charResult.length>0){
+                    charResult.length=0;
                 }
                 for (var o in data) {
                     if (!(data[o].unitId == "total")) {

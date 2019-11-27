@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
     <tt:constant enumcode="data-unit-type" />
        <section class="content-header">
@@ -59,6 +60,7 @@
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   	//<![CDATA[
 	//图表自适应大小      
@@ -89,7 +91,8 @@
             columns: [
                 [
 
-                    { title: "医疗机构", field: "unitName" },
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>",
+                        field: "unitName" },
                     { title: "手术患者并发症<br>发生率", field: "embolism" , formatter: getRate},
                     { title: "手术患者手术后<br>肺栓塞发生率", field: "pulmonaryEmbolism" , formatter: getRate},
                     { title: "手术患者手术后<br>深静脉血栓发生率", field: "venousThrombosis" , formatter: getRate},
@@ -103,6 +106,7 @@
             ],
             url: '/qos/operationComplication/charts/count',
             pagination: false,
+
             searchbar: '#searchbar',
             clickToSelect: true,
             onCheck: function(row) {

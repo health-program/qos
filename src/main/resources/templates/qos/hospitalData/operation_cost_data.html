@@ -184,6 +184,9 @@
                         result.push(data[o])
                     }
                 }
+                if(charResult.length>0){
+                    charResult.length=0;
+                }
                 for (var o in data) {
                     if (!(data[o].unitId == "total")) {
                         charResult.push(data[o])
