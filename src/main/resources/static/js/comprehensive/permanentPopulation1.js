@@ -139,7 +139,7 @@ $(function() {
 
 
              var chartmain1ID = echarts.init(document.getElementById('chartmain1'));
-                 debugger
+
                  chartmain1ID.setOption(permanentPopulationOption11);
 
 

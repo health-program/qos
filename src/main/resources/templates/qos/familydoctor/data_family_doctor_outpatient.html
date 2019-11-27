@@ -34,7 +34,7 @@
         <!--</div>-->
         <div class="row">
             <div class="col-md-7">
-                <div class="row">
+
                     <div class="col-md-12">
                         <div class="row">
                             <!--<div class="col-md-4">-->
@@ -54,7 +54,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+
                 <div class="col-md-12">
                     <div class="box box-solid">
                         <div class="box-body">
@@ -63,21 +63,22 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="box box-solid">
-                        <div id="qyjmzxjzrcsChart" class="box-body" style="height: 400px"></div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-solid">
+                            <div id="qyjmzxjzrcsChart" class="box-body" style="height: 400px"></div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-12">
-                    <div class="box box-solid">
-                        <div id="qyjmjtysjzzsChart" class="box-body" style="height: 400px"></div>
+                    <div class="col-md-12">
+                        <div class="box box-solid">
+                            <div id="qyjmjtysjzzsChart" class="box-body" style="height: 400px"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </section>
     <div th:include="/qos/footer" />
 	<script type="text/javascript" src="/static/js/chart.js"></script>
@@ -136,8 +137,8 @@
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
-            fixedColumns: true,//固定列
-            fixedNumber:1,
+            // fixedColumns: true,//固定列
+            // fixedNumber:1,
             height : 480,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
@@ -238,7 +239,7 @@
             unitId: 'total',
             unitName: '合计'
         }
-    });
+
     var totalData = data['total'];
     totalData = {
         unitId: 'total',
@@ -279,7 +280,7 @@
         edata && edata.forEach(function(item) {
             var r = 0;
             if (item.eventNum > item.totalNum) {
-                var r = isRate ? item.totalNum : 0; <<
+                var r = isRate ? item.totalNum : 0;
 
             } else {
                 var r = isRate ? item.eventNum : 0;

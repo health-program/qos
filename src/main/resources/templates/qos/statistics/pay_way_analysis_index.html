@@ -186,7 +186,7 @@
 		function mzybsrpm(){
 			var xAxisData = [],yAxisDate = [];
 				$.get('/qos/pay/way/hospital',function(data){
-					debugger;
+
 					for(var i=0;i<data.result.length;i++){
 						xAxisData.push(data.result[i].name);
 						yAxisDate.push({name:data.result[i].name,value:i+1+'000'});

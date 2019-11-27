@@ -10,7 +10,7 @@ function gethospitelNumbers(){
         type : "post",    //请求类型
         url : "/home/page/qos/hospital/getOutPatientNumber",//请求的 URL地址
         success: function (rawData) {
-        debugger 
+
         var patientNumberList = rawData.result.patientHospitalNumberList;
         var emergencyNumberList = rawData.result.emergencyHospitalNumberList;
         var todayNumberList = rawData.result.todayNumberHospitalList;
