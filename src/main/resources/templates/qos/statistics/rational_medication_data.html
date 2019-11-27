@@ -105,7 +105,7 @@
 
                       return fa - fb;
                   }},
-              { title: "就医患者使用药瓶数", field: "drugNum",align:'center',valign:'middle',sortable: true,
+              { title: "就医患者使用药品数", field: "drugNum",align:'center',valign:'middle',sortable: true,
                       sorter: function(fa, fb, ra, rb) {
                           if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                           if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -115,7 +115,7 @@
 
                           return fa - fb;
                       }},
-              { title: "就医人均使用药瓶数", field: "drugAvgCount" ,align:'center',valign:'middle',sortable: true,
+              { title: "就医人均使用药品数", field: "drugAvgCount" ,align:'center',valign:'middle',sortable: true,
                           sorter: function(fa, fb, ra, rb) {
                               if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                               if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -236,7 +236,7 @@
 
                             return fa - fb;
                         }},
-                    { title: "门急诊使<br/>用药瓶数", field: "ev31003",sortable: true,
+                    { title: "门急诊使<br/>用药品数", field: "ev31003",sortable: true,
                             sorter: function(fa, fb, ra, rb) {
                                 if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                                 if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -246,7 +246,7 @@
 
                                 return fa - fb;
                             } },
-                    { title: "门急诊人均<br/>使用药瓶数", field: "drugAvg",sortable: true,
+                    { title: "门急诊人均<br/>使用药品数", field: "drugAvg",sortable: true,
                                 sorter: function(fa, fb, ra, rb) {
                                     if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                                     if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -380,7 +380,7 @@
 
                             return fa - fb;
                         } },
-                    { title: "住院患者使<br/>用药瓶数", field: "ev31006" ,sortable: true,
+                    { title: "住院患者使<br/>用药品数", field: "ev31006" ,sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -390,7 +390,7 @@
 
                             return fa - fb;
                         }},
-                    { title: "住院人均使<br/>用药瓶数", field: "drugAvg" ,sortable: true,
+                    { title: "住院人均使<br/>用药品数", field: "drugAvg" ,sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -502,7 +502,7 @@
         };
     	var option = {
     			title: {
-			        text:  xAxis.length === 1 ? '人均使用药瓶数排名(医疗机构: '+ xAxis[0] +')' :'人均使用药瓶数排名',
+			        text:  xAxis.length === 1 ? '人均使用药品数排名(医疗机构: '+ xAxis[0] +')' :'人均使用药品数排名',
 			    },
     			color : [ '#3398DB' ],
     			tooltip : {
@@ -541,7 +541,7 @@
     			}
     			],
     			series : [ {
-    				name : '就医人均使用药瓶数(瓶)',
+    				name : '就医人均使用药品数',
     				type : 'bar',
                     label: labelOption,
     				data : series
