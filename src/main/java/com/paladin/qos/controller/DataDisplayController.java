@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.controller.analysis.AnalysisRequest;
+import com.paladin.qos.controller.analysis.HospitalRequest;
+import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.model.familydoctor.FamilyDoctorUnit;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.gongwei.EntityGongweiFamily;
 import com.paladin.qos.service.analysis.AnalysisService;
+import com.paladin.qos.service.analysis.data.AnalysisUnit;
+import com.paladin.qos.service.analysis.data.DataCountUnit;
 import com.paladin.qos.service.analysis.data.DataMonthRate;
 import com.paladin.qos.service.analysis.data.DataSigningMonth;
 import com.paladin.qos.service.familydoctor.FamilyDoctorUnitService;
@@ -158,6 +162,119 @@ public class DataDisplayController {
                 }
             });
         }
+    }
+
+
+
+    @RequestMapping(value = "/search/hospital/data", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public Object getHospitalData(HospitalRequest request) {
+        String year=request.getYear();
+        Date startDate=null;
+        Date endDate=null;
+        if (!StringUtils.isEmpty(year)){
+            startDate=getYearFirst(Integer.valueOf(year));
+            endDate=getYearFirst(Integer.valueOf(year)+1);
+        }
+        List<String> eventIds = request.getEventIds();
+        if (eventIds != null && eventIds.size() > 0) {
+            Map<String, Object> map = new HashMap<>();
+            for (String eventId : eventIds) {
+                DataConstantContainer.Event event = DataConstantContainer.getEvent(eventId);
+                if (event != null) {
+                    int eventType = event.getEventType();
+                    int unitType = getUnitType(event);
+                    if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                        List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, null);
+                        getCountData(request,countUnits);
+                        if (countUnits != null) {
+                            map.put(eventId, countUnits);
+                        }
+                    } else if(DataEvent.EVENT_TYPE_RATE == eventType) {
+                        List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, null);
+                        getRateData(request,analysisUnits);
+                        if (analysisUnits != null) {
+                            map.put(eventId, analysisUnits);
+                        }
+                    }
+                }
+            }
+            return CommonResponse.getSuccessResponse(map);
+        } else {
+            String eventId = request.getEventId();
+            DataConstantContainer.Event event = DataConstantContainer.getEvent(eventId);
+            if (event != null) {
+                int eventType = event.getEventType();
+                int unitType = getUnitType(event);
+                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
+                    List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, null);
+                    getCountData(request,countUnits);
+                    return CommonResponse.getSuccessResponse(countUnits);
+                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
+                    List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, null);
+                    getRateData(request,analysisUnits);
+                    return CommonResponse.getSuccessResponse(analysisUnits);
+                }
+            }
+        }
+        return  CommonResponse.getErrorResponse();
+    }
+
+
+    private void getRateData(HospitalRequest request,List<AnalysisUnit> analysisUnits ){
+        Iterator<AnalysisUnit> it=analysisUnits.iterator();
+        while(it.hasNext()){
+            AnalysisUnit data=it.next();
+            if (CollectionUtils.isEmpty(request.getUnitIds())){
+                if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
+                    it.remove();
+                }
+            }else{
+                for(String unitId:request.getUnitIds()){
+                    if(!data.getUnitId().equals(unitId)){
+                        it.remove();
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void getCountData(HospitalRequest request,List<DataCountUnit> dataCountUnits ){
+        Iterator<DataCountUnit> it=dataCountUnits.iterator();
+        while(it.hasNext()){
+            DataCountUnit data=it.next();
+            if (CollectionUtils.isEmpty(request.getUnitIds())){
+                if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
+                    it.remove();
+                }
+            }else{
+                for(String unitId:request.getUnitIds()){
+                    if(!data.getUnitId().equals(unitId)){
+                        it.remove();
+                    }
+                }
+            }
+
+        }
+    }
+
+    private int getUnitType(DataConstantContainer.Event event) {
+        int targetType = event.getTargetType();
+        if (targetType == DataEvent.TARGET_TYPE_COMMUNITY)
+            return 2;
+        if (targetType == DataEvent.TARGET_TYPE_HOSPITAL)
+            return 1;
+        return 0;
+    }
+
+    //取一年的第一天
+    private  Date getYearFirst(int year){
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        Date currYearFirst = calendar.getTime();
+        return currYearFirst;
     }
 
 }
