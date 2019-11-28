@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.goal.HospitalMonthGoalMapper">
+  <resultMap id="BaseResultMap" type="com.paladin.qos.model.goal.HospitalMonthGoal">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="hospital" jdbcType="VARCHAR" property="hospital" />
+    <result column="event_id" jdbcType="VARCHAR" property="eventId" />
+    <result column="month" jdbcType="VARCHAR" property="month" />
+    <result column="basic_goal" jdbcType="VARCHAR" property="basicGoal" />
+    <result column="raise_goal" jdbcType="VARCHAR" property="raiseGoal" />
+    <result column="zoom_goal" jdbcType="VARCHAR" property="zoomGoal" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, hospital, event_id, month, basic_goal, raise_goal, zoom_goal, create_time, create_user_id, 
+    update_time, update_user_id, state
+  </sql>
+  <!-- <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_hospital_month_goal
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <insert id="insert" parameterType="com.paladin.qos.model.goal.HospitalMonthGoal">
+    insert into tb_hospital_month_goal (id, hospital, event_id, 
+      month, basic_goal, raise_goal, 
+      zoom_goal, create_time, create_user_id, 
+      update_time, update_user_id, state
+      )
+    values (#{id,jdbcType=VARCHAR}, #{hospital,jdbcType=VARCHAR}, #{eventId,jdbcType=VARCHAR}, 
+      #{month,jdbcType=VARCHAR}, #{basicGoal,jdbcType=VARCHAR}, #{raiseGoal,jdbcType=VARCHAR}, 
+      #{zoomGoal,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.paladin.qos.model.goal.HospitalMonthGoal">
+    insert into tb_hospital_month_goal
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="hospital != null">
+        hospital,
+      </if>
+      <if test="eventId != null">
+        event_id,
+      </if>
+      <if test="month != null">
+        month,
+      </if>
+      <if test="basicGoal != null">
+        basic_goal,
+      </if>
+      <if test="raiseGoal != null">
+        raise_goal,
+      </if>
+      <if test="zoomGoal != null">
+        zoom_goal,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="hospital != null">
+        #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="eventId != null">
+        #{eventId,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="basicGoal != null">
+        #{basicGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseGoal != null">
+        #{raiseGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="zoomGoal != null">
+        #{zoomGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.paladin.qos.model.goal.HospitalMonthGoal">
+    update tb_hospital_month_goal
+    <set>
+      <if test="hospital != null">
+        hospital = #{hospital,jdbcType=VARCHAR},
+      </if>
+      <if test="eventId != null">
+        event_id = #{eventId,jdbcType=VARCHAR},
+      </if>
+      <if test="month != null">
+        month = #{month,jdbcType=VARCHAR},
+      </if>
+      <if test="basicGoal != null">
+        basic_goal = #{basicGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="raiseGoal != null">
+        raise_goal = #{raiseGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="zoomGoal != null">
+        zoom_goal = #{zoomGoal,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.paladin.qos.model.goal.HospitalMonthGoal">
+    update tb_hospital_month_goal
+    set hospital = #{hospital,jdbcType=VARCHAR},
+      event_id = #{eventId,jdbcType=VARCHAR},
+      month = #{month,jdbcType=VARCHAR},
+      basic_goal = #{basicGoal,jdbcType=VARCHAR},
+      raise_goal = #{raiseGoal,jdbcType=VARCHAR},
+      zoom_goal = #{zoomGoal,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=VARCHAR},
+      state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>-->
+
+  <select id="findList" resultType="com.paladin.qos.service.goal.vo.HospitalMonthGoalVO"
+          parameterType="com.paladin.qos.service.goal.dto.HospitalMonthGoalQuery">
+    select id, hospital, event_id eventId, month, basic_goal basicGoal, raise_goal raiseGoal, zoom_goal zoomGoal,
+    create_time createTime, create_user_id createUserId, update_time updateTime, update_user_id updateUserId, state
+    from tb_hospital_month_goal
+    where state=1
+    <if test="hospital != null">
+      and hospital = #{hospital,jdbcType=VARCHAR}
+    </if>
+    <if test="eventId != null">
+      and event_id = #{eventId,jdbcType=VARCHAR}
+    </if>
+    <if test="month != null">
+      and month = #{month,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <update id="deleteById" parameterType="map">
+    update tb_hospital_month_goal
+    set update_time = #{updateTime,jdbcType=TIMESTAMP},
+    update_user_id = #{updateUserId,jdbcType=VARCHAR},
+    state = #{state,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

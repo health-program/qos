@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="hospital-goal-event-type"/>
+    <section class="content-header">
+        <h1>任务目标统计表</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                	<div class="form-group">
+                        <div class="col-md-2">
+							 <select name="hospital" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.hospital}" >
+                                 <option value="">请选择医院</option>
+                                 <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                             </select>
+						</div>
+						<div class="col-md-2">
+	                        <select name="eventId" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.eventId}" enumcode="hospital-goal-event-type">
+								<option value="">请选择指标</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+                            <input name="year" placeholder="请选择月份" autocomplete="off" type="text" class="form-control tonto-datepicker-month">
+						</div>
+						<div class="col-md-4">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>
+	                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+          var unitList=[[${unit}]];
+          var unitMap=new Map();
+          unitList.forEach(function(element, index){
+            unitMap[element.id]=element.name;
+          })
+    /*]]>*/
+</script>
+    <script type="text/javascript">
+    var
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "医院", field: "hospital",formatter:function(value, row, index){
+                          return unitMap[value];
+                    }  },
+                    { title: "月份", field: "month"},
+                    { title: "指标", field: "eventId" ,enumcode: "hospital-goal-event-type" },
+					{ title: "目标", field: "basicGoal"},
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/hospital/month/goal/find/page',
+            searchbar: '#searchbar',
+            //exportUrl: '/qos/hospital/month/goal/export',
+            //showExport: true,
+            showColumns: true,
+            pagination: true,
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/qos/hospital/month/goal/add';
+    }
+
+    function detail(row) {
+        window.location = '/qos/hospital/month/goal/detail' + (row ? ('?id=' + row.id) : '');
+    }
+    </script>
+    <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
+</body>
+
+</html>

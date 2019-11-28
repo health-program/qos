@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="hospital-goal-event-type" />
+    <section class="content-header">
+        <h1>月份指标管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/hospital/month/goal/index"><i class="fa fa-table"></i>列表</a></li>
+            <li class="active">新增</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+        <a href="/qos/hospital/month/goal/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var options = {
+        id: "model",
+        cancelBtn: false,
+        name: "新增",
+        url: "/qos/hospital/month/goal/save",
+        columns: [
+            { title: "医院", name: "hospital", inputType: "SELECT-SERVER", url: "/qos/data/unit/find/selectHospital", multiple: false, required: "required" },
+                { title: "指标", name: "eventId", inputType: "SELECT", multiple: false, required: "required",enum: "hospital-goal-event-type"  },
+                { title: "月份", name: "month", inputType: "DATE",attr:{class: "form-control tonto-datepicker-month"}, required: "required"  },
+                { title: "目标", name: "basicGoal", inputType: "NUMBER" , required: "required" }
+        ]
+    }
+
+    $(function() {
+        var html = generateEditHtml(options);
+        $(".content").html(html);
+        $.initComponment($(".content"));
+
+        var model = new tonto.Model("model", options.columns, {
+            pattern: "edit",
+            successCallback: function() {
+                $.successAlert("保存成功", function() {
+                    window.location = "/qos/hospital/month/goal/index";
+                });
+            }
+        });
+        model.setData(null);
+    });
+    </script>
+</body>
+
+</html>

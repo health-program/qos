@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="hospital-goal-event-type" />
+    <section class="content-header">
+        <h1>年度指标管理</h1>
+        <ol class="breadcrumb">
+            <li><a href="/qos/hospital/annual/goal/index"><i class="fa fa-list-alt"></i>列表</a></li>
+            <li class="active">详情</li>
+        </ol>
+    </section>
+    <section class="content">
+    </section>
+    <div class="col-sm-2 col-sm-offset-5 btn-back">
+        <a href="/qos/hospital/annual/goal/index" class="btn btn-primary btn-block">返回</a>
+    </div>
+    <input type="hidden" id="id" th:value="${id}" />
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/qos/hospital/annual/goal/update?id=" + $("#id").val(),
+            columns: [
+                { title: "医院", name: "hospital", inputType: "SELECT-SERVER", url: "/qos/data/unit/find/selectHospital", multiple: false, required: "required" },
+                { title: "指标", name: "eventId", inputType: "SELECT", multiple: false, required: "required",enum: "hospital-goal-event-type"  },
+                { title: "年度", name: "annual", inputType: "DATE",attr:{class: "form-control tonto-datepicker-year"}, required: "required" },
+                { title: "基本目标", name: "basicGoal", inputType: "NUMBER" , required: "required"},
+                { title: "提升目标", name: "raiseGoal", inputType: "NUMBER", required: "required" },
+                { title: "跃升目标", name: "zoomGoal", inputType: "NUMBER" , required: "required"}
+            ]
+        }
+
+        $.getAjax("/qos/hospital/annual/goal/get?id=" + $("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <tt:constant enumcode="hospital-goal-event-type"/>
+    <section class="content-header">
+        <h1>年度指标管理</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                	<div class="form-group">
+                        <div class="col-md-2">
+							 <select name="hospital" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.hospital}" >
+                                 <option value="">请选择医院</option>
+                                 <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                             </select>
+						</div>
+						<div class="col-md-2">
+	                        <select name="eventId" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.eventId}" enumcode="hospital-goal-event-type">
+								<option value="">请选择指标</option>
+							</select>
+						</div>
+						<div class="col-md-2">
+                            <input name="annual" placeholder="请选择年度" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+						</div>
+						<div class="col-md-4">
+		                    <div class="pull-right">
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+		                    </div>
+		                </div>
+	                </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                        <!--<a onclick="importschool()" class="btn btn-default"><i class="glyphicon glyphicon-import"></i>导入学校信息</a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script th:inline="javascript">
+    /*<![CDATA[*/
+          var unitList=[[${unit}]];
+          var unitMap=new Map();
+          unitList.forEach(function(element, index){
+            unitMap[element.id]=element.name;
+          })
+    /*]]>*/
+</script>
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    { title: "医院", field: "hospital",formatter:function(value, row, index){
+                          return unitMap[value];
+                    } },
+                    { title: "年度", field: "annual"},
+                    { title: "指标", field: "eventId" ,enumcode: "hospital-goal-event-type"},
+					{ title: "基本目标", field: "basicGoal"},
+					{ title: "提升目标", field: "raiseGoal" },
+					{ title: "跃升目标", field: "zoomGoal" },
+					{ title: "创建时间", field: "createTime",formatter: "datetime"},
+                    {
+                        title: "操作",
+                        align: "center",
+                        width: "200px",
+                        events: {
+                            'click .detail': function(e, value, row, index) {
+                                detail(row);
+                            },
+                            'click .remove': function(e, value, row, index) {
+                                remove(row);
+                            }
+                        },
+                        formatter: function operateFormatter(value, row, index) {
+                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
+                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
+
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/hospital/annual/goal/find/page',
+            searchbar: '#searchbar',
+            //exportUrl: '/qos/hospital/annual/goal/export',
+            //showExport: true,
+            showColumns: true,
+            pagination: true,
+            toolbar: "#toolbar",
+            showRefresh: true
+        });
+    }
+
+    function add() {
+        window.location = '/qos/hospital/annual/goal/add';
+    }
+
+    function detail(row) {
+        window.location = '/qos/hospital/annual/goal/detail' + (row ? ('?id=' + row.id) : '');
+    }
+
+    function remove(row) {
+        if (row) {
+            layer.confirm('确定删除吗?', function() {
+                $.getAjax('/qos/hospital/annual/goal/delete?id=' + row.id, function() {
+                    $.successMessage("删除成功");
+                    table.refresh();
+                });
+            });
+        }
+    }
+
+    function importschool() {
+        $.openPageLayer(importContent, {
+            width: 600,
+            height: 200,
+            title: '导入学校信息',
+            success: function(layero, index) {
+            }
+        });
+    }
+
+    var importContent = '<div class="container-fluid"><form id="importForm" class="form-horizontal" style="padding:10px">' +
+    '    <div class="form-group">' +
+    '        <label for="file" class="col-xs-3 control-label">Excel文件</label>' +
+    '        <div class="col-xs-8">' +
+    '            <input type="file" id="file" name="file" class="form-control" />' +
+    '        </div>' +
+    '    </div>' +
+    '    <div class="form-group">' +
+    '        <label for="file" class="col-xs-3 control-label"></label>' +
+    '        <div class="col-xs-6">' +
+    '            <button type="button" style="width:80px" onclick="importSubmit()" class="btn btn-primary">提交</button>' +
+    '            <a href="/static/excel/学校信息导入模板.xlsx" target="_blank" class="btn btn-danger"><i class="fa fa-download"></i>导入模板下载</a>' +
+    '        </div>' +
+    '    </div>' +
+    '</form></div>';
+
+    function importSubmit() {
+
+    var filename = $("#file").val();
+    if (!filename) {
+        $.errorMessage("请选择导入的Excel文件");
+        return;
+    }
+
+    if (filename.substr(filename.lastIndexOf(".") + 1) != 'xlsx') {
+        $.errorMessage("请下载正确的模板填写");
+        return;
+    }
+
+    $.ajaxFileUpload({
+        url: '/qos/org/school/import', //用于文件上传的服务器端请求地址
+        secureuri: false, //是否需要安全协议，一般设置为false
+        fileElementId: 'file', //文件上传域的ID
+        dataType: 'json', //返回值类型 一般设置为json
+        success: function(data, status) //服务器成功响应处理函数
+        {
+            $.ajaxResponseHandler(data, function(result) {
+                if (result) {
+                    if (result.errorCount == 0) {
+                        $.successAlert("成功导入" + result.successCount + "条记录");
+                        table.refresh();
+                    } else {
+                        var html = "<p>成功导入" + result.successCount + "条记录</p>";
+                        result.errors.forEach(function(a) {
+                            html += "<p>导入第<b>" + a.index + "</b>条记录失败：" + a.message + "</p>";
+                        });
+
+                        layer.alert(html, { icon: 2, area: ['600px', '400px'] }, function(index) {
+                            layer.close(index);
+                            table.refresh();
+                        });
+                    }
+                } else {
+                    $.successAlert("没有可导入的人员，是否正确使用模板");
+                }
+            });
+        },
+        error: function(data, status, e) //服务器响应失败处理函数
+        {
+            console.log(e);
+        }
+    })
+}
+    </script>
+    <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
+</body>
+
+</html>
