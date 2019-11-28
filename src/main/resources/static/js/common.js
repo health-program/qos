@@ -686,6 +686,20 @@
          });
      });
 
+
+    container.find('.tonto-datepicker-month').each(function() {
+             $.beautifyInput(this, "fa fa-calendar", false);
+             laydate.render({
+                 elem: this,
+                 type: "month",
+                 calendar: true, //开启公历节日
+                 theme: 'molv', //墨绿主题
+                 showBottom: true, //是否出现底部栏
+                 trigger: 'click' //绑定多个
+             });
+         });
+
+
      container.find('.tonto-datepicker-datetime').each(function() {
          $.beautifyInput(this, "fa fa-calendar", false);
          laydate.render({
