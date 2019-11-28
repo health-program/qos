@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>公立医院绩效考核</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off"   type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid" style="margin-bottom: 15px">
+                <div class="box-body" style="max-height: 800px;overflow: auto">
+                    <h3 class="box-title" style="letter-spacing: 3px;text-align: center;font-size: 25px;font-weight: bold;margin-top: 10px">昆山市公立医院绩效考核表（医疗质量）</h3>
+                    <table id="jxkhDataGrid"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var table;
+    $(function () {
+        initStartDateTime();
+        initJxkhDataGrid();
+    });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
+        }
+    }
+
+    function initJxkhDataGrid() {
+        table = $.createTable("#jxkhDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医院名称", field: "unitName",  rowspan: 2},
+                    {title: "门诊出院", colspan: 3},
+                    {title: "转诊人次",  rowspan: 2,field: 'ev70002', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {title: "出院者手术",  colspan: 2},
+                    {title: "三四级手术",  colspan: 2},
+                    {title: "手术并发症",  colspan: 2},
+                    {title: "Ⅰ类切口手术",  colspan: 3},
+                    {title: "临床路径管理",  colspan: 2},
+                    {title: "预约诊疗",  colspan: 3},
+                ],
+                [
+                    {field: 'ev70001', title: '门诊人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev51003', title: '出院人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '门诊出院比', formatter:function (value, row, index) {
+                            let number = row.ev70001 ? row.ev70001 : 0;
+                            let number1 = row.ev51003 ? row.ev51003 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                    {field: 'ev70003', title: '手术数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+                            let number = row.ev70003 ? row.ev70003 : 0;
+                            let number1 = row.ev51003 ? row.ev51003 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                    {field: 'ev70004', title: '例数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+                            let number = row.ev70004 ? row.ev70004 : 0;
+                            let number1 = row.ev70003 ? row.ev70003 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                    {field: 'strDefault2', title: '人数', formatter:function (value, row, index) {return 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {return 0.00 ;}},
+                    {field: 'ev70006', title: '感染人次数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70005', title: '手术台数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+                            let number = row.ev70006 ? row.ev70006 : 0;
+                            let number1 = row.ev70005 ? row.ev70005 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                    {field: 'ev70007', title: '入组数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+                            let number = row.ev70007 ? row.ev70007 : 0;
+                            let number1 = row.ev51003 ? row.ev51003 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                    {field: 'ev41001', title: '预约人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev41002', title: '总诊疗人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+                            let number = row.ev41001 ? row.ev41001 : 0;
+                            let number1 = row.ev41002 ? row.ev41002 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1 * 100;
+                            }
+                            return c.toFixed(2) ;
+                        }},
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            queryParams: function(params) {
+                params.eventIds = '70001,70002,70003,70004,70005,70006,70007,51003,41001,41002';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+                if (!response) {
+                    return null;
+                }
+
+                var data = {};
+                convertCount2TableData(response, '70001', data);
+                convertCount2TableData(response, '70002', data);
+                convertCount2TableData(response, '70003', data);
+                convertCount2TableData(response, '70004', data);
+                convertCount2TableData(response, '70006', data);
+                convertCount2TableData(response, '70005', data);
+                convertCount2TableData(response, '70007', data);
+                convertCount2TableData(response, '51003', data);
+                convertCount2TableData(response, '41001', data);
+                convertCount2TableData(response, '41002', data);
+
+                var result = [];
+                for (var o in data) {
+                    if(o !='total'){
+                        result.push(data[o]);
+                    }
+
+                }
+                return   result;
+            }
+        });
+    }
+
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+        });
+
+    }
+
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>
