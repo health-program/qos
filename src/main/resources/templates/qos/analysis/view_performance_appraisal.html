@@ -79,18 +79,33 @@
                     {title: "预约诊疗",  colspan: 3},
                 ],
                 [
-                    {field: 'ev70001', title: '门诊人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
-                    {field: 'ev51003', title: '出院人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70001', title: '门诊人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev51003', title: '出院人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '门诊出院比', formatter:function (value, row, index) {
-                            let number = row.ev70001 ? row.ev70001 : 0;
-                            let number1 = row.ev51003 ? row.ev51003 : 0;
+                            let number = row.ev51003 ? row.ev51003 : 0;
+                            let number1 = row.ev70001 ? row.ev70001 : 0;
                             let c = 0;
                             if (number && number1) {
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev70003', title: '手术数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70003', title: '手术数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev70003 ? row.ev70003 : 0;
                             let number1 = row.ev51003 ? row.ev51003 : 0;
@@ -100,7 +115,12 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev70004', title: '例数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70004', title: '例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev70004 ? row.ev70004 : 0;
                             let number1 = row.ev70003 ? row.ev70003 : 0;
@@ -113,7 +133,12 @@
                     {field: 'strDefault2', title: '人数', formatter:function (value, row, index) {return 0 ;}},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {return 0.00 ;}},
                     {field: 'ev70006', title: '感染人次数', formatter:function (value, row, index) {return value ? value : 0 ;}},
-                    {field: 'ev70005', title: '手术台数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70005', title: '手术台数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev70006 ? row.ev70006 : 0;
                             let number1 = row.ev70005 ? row.ev70005 : 0;
@@ -123,7 +148,12 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev70007', title: '入组数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70007', title: '入组数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev70007 ? row.ev70007 : 0;
                             let number1 = row.ev51003 ? row.ev51003 : 0;
@@ -133,8 +163,18 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev41001', title: '预约人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
-                    {field: 'ev41002', title: '总诊疗人次', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev41001', title: '预约人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev41002', title: '总诊疗人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev41001 ? row.ev41001 : 0;
                             let number1 = row.ev41002 ? row.ev41002 : 0;
