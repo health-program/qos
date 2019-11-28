@@ -1,0 +1,265 @@
+#familybg{
+    width: 100vw;
+    height: 100vh;
+    background: url('../img/family/familybg.jpg') no-repeat center;
+    background-size:100% 100%;;
+}
+.familysame{
+    width: 22.604vw;
+    height: 27.9629vh;
+    background: url('../img/family/familyLeft.png') no-repeat center;
+    background-size:100% 100%;;
+    margin-bottom: 1.388vh;
+}
+.ml1875{
+    margin-left: 1.875vw;
+}
+.mt10{
+    margin-top: 10vh;
+}
+#familyLeft{
+    display: inline-block;
+    width: 22.604vw;
+    float: left;
+}
+#familyMiddle{
+    display: inline-block;
+    width: 40.3645vw;
+    float: left;
+}
+#familyRight{
+    display: inline-block;
+    float: left;
+}
+.mt9259{
+    margin-top: 9.259vh;
+}
+
+#familyMiddleTop{
+
+    height:31.388vh;
+}
+
+#familyMiddleBottom{
+    width:40.3645vw;
+    height: 45vh;
+    background: url('../img/family/familyList.png') no-repeat center;
+    background-size:100% 100%;
+    position:relative;
+}
+#familyMiddle{
+    margin-left: 5.38vw;
+    margin-right: 4.55vw;
+}
+
+#familyTable{
+    width: 39.994vw;
+}
+
+#familyTable li{
+    width: 5.7vw;
+    height:4.074vh;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    float: left;
+    font-weight:400;
+    color:rgba(255,242,223,1);
+    text-align: center;
+    line-height: 4.074vh;
+}
+#familyTable li:first-child{
+    border-top-left-radius:1vw;
+    text-align: left;
+    text-indent: 1vw;
+ }
+#familyTable li:last-child{
+    border-top-right-radius:1vw;
+    border-top-right:none;
+}
+
+.sameDiv{
+    width: 40vw;
+    height:4.074vh;
+    margin: auto;
+}
+.sameDiv:nth-child(even){
+   background: #213961;
+    margin-left: 0.2vw;
+}
+.sameDiv:nth-child(odd){
+    margin-left: 0.2vw;
+}
+
+.familySocilty{
+    height: 3.37vh;
+
+}
+.familySocilty li{
+    width: 5.6vw;
+    height: 3.5vh;
+
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    float: left;
+    font-weight:400;
+    color:rgba(255,242,223,1);
+    text-align: center;
+    line-height: 3.5vh;
+}
+.familySocilty li:first-child{
+    border-top-left-radius:1vw;
+    text-align: left;
+    text-indent: 1vw;
+}
+.familySocilty li:last-child{
+    border-top-right-radius:1vw;
+    border-top-right:none;
+    width: 5.5vw;
+}
+#familyTable{height:40.74vh;overflow:hidden;position:relative;}
+#familyTableUl{position:absolute;top:0;left:0;}
+.onebg{
+    width:8.88125vw;
+    height: 8.42vh;
+    background: url('../img/family/familyMiddleLittle.png') no-repeat center;
+    background-size:100% 100%;
+    position:relative;
+    text-align: center;
+    float: left;
+    margin-right: 1.552vw;
+    margin-bottom: 2.037vh;
+}
+.onebg:nth-child(4n){
+    margin-right: 0;
+}
+.onebg span:first-child{
+    color:rgba(255,255,255,1);
+    padding-top: 2.31vh;
+    display: block;
+}
+.onebg span:nth-child(2){
+    font-weight:400;
+    color:rgba(1,212,249,1);
+    line-height:20px;
+}
+.one,.two,.three{
+    width: 40.3645vw;
+    height: 31.388vh;
+}
+
+
+.familysame{
+    position: relative;
+}
+
+.familysame header{
+    color: #C1F3FF;
+    width: 22.604vw;
+    text-align: center;
+    position: absolute;
+    top: 3vh;
+}
+
+
+/*轮播开始*/
+/* 设置大小，根绝需要决定大小 */
+.swiper-container {
+    width: 600px;
+    height: 400px;
+}
+
+/* 分页器样式 */
+.pagination {
+    position: absolute;
+    z-index: 20;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+.swiper-pagination-switch {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background: #555;
+    margin: 0 5px;
+    opacity: 0.8;
+    border: 1px solid #fff;
+    cursor: pointer;
+}
+.swiper-active-switch {
+    background: #fff;
+}
+
+.swiper-container{
+    width: 40.3645vw;
+    height:31.388vh;
+}
+
+.swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet{
+    width:2.1875vw;
+    height: 0.18518vh;
+    background: #019EFF;
+}
+.swiper-pagination-bullet-active {
+    background:#fff;
+    width:2.1875vw!important;
+    height: 0.18518vh!important;
+}
+/*轮播结束*/
+
+
+#keyGroups,#comprehensiveHealth,#performance,#contractDoctor,#individualization,#managementService{
+    width:20vw;
+    height: 20vh;
+    margin: auto;
+    padding-top: 4vh;
+}
+.porealiteve{
+    position: relative;
+}
+#selection{
+    position: absolute;
+    z-index: 9999999;
+}
+
+
+
+select {
+    border: solid 1px #01ffff;
+    appearance:none;
+    -moz-appearance:none;
+    -webkit-appearance:none;
+    background: url("../img/family/arrow.png") no-repeat scroll right center transparent;
+    color: #00FFFF;
+}
+
+select::-ms-expand { display: none; }
+
+option{
+    background: #048cbf;
+    color: #ffffff;
+}
+.keyGroupsHeader{
+    color: #C1F3FF;
+    width: 22.604vw;
+    position: absolute;
+    top: 3vh;
+    height: 3vh;
+}
+.keyGroups{
+    position: absolute;
+    top: 1vh;
+    left: 5vw;
+    display: inline-block;
+    float: left;
+}
+#selection{
+    position: absolute;
+    top: 1vh;
+    display: inline-block;
+    left: 12vw;
+}

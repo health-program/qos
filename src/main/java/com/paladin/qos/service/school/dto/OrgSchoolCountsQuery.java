@@ -10,6 +10,8 @@ public class OrgSchoolCountsQuery extends OffsetPage {
     
     private String district;
     
+    private String businessDistrict;
+    
     private List<String> affiliations;
     
     private String nature;
@@ -54,6 +56,14 @@ public class OrgSchoolCountsQuery extends OffsetPage {
 
 	public void setSicknessClassify(String sicknessClassify) {
 		this.sicknessClassify = sicknessClassify;
+	}
+
+	public String getBusinessDistrict() {
+	    return businessDistrict;
+	}
+
+	public void setBusinessDistrict(String businessDistrict) {
+	    this.businessDistrict = businessDistrict;
 	}
     
 }

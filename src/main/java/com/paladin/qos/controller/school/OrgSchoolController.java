@@ -1,35 +1,28 @@
 package com.paladin.qos.controller.school;
 
-import com.paladin.qos.controller.school.dto.OrgSchoolExportCondition;
-import com.paladin.qos.model.school.OrgSchool;
-import com.paladin.qos.service.school.OrgSchoolService;
-import com.paladin.qos.service.school.dto.OrgSchoolQuery;
-import com.paladin.qos.service.school.dto.OrgSchoolDTO;
-import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-
+import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.controller.school.dto.OrgSchoolExportCondition;
+import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.service.school.OrgSchoolService;
+import com.paladin.qos.service.school.dto.OrgSchoolDTO;
+import com.paladin.qos.service.school.dto.OrgSchoolQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 import javax.validation.Valid;
+import java.io.IOException;
 
 /**
  * < 学校基础情况管理>
@@ -80,6 +73,7 @@ public class OrgSchoolController extends ControllerSupport {
     }
 
     @PostMapping("/save")
+	@SysControllerLog(action = "新增学校信息")
     @ResponseBody
     public Object save(@Valid @RequestBody OrgSchoolDTO orgSchoolDTO, BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -98,6 +92,7 @@ public class OrgSchoolController extends ControllerSupport {
     }
 
     @PostMapping("/update")
+	@SysControllerLog(action = "修改学校信息")
     @ResponseBody
     public Object update(@Valid @RequestBody OrgSchoolDTO orgSchoolDTO, BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
@@ -111,6 +106,7 @@ public class OrgSchoolController extends ControllerSupport {
     }
 
     @RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@SysControllerLog(action = "删除学校信息")
     @ResponseBody
     public Object delete(@RequestParam String id) {
 	return CommonResponse.getResponse(orgSchoolService.deleteSchoolAndPeople(id));

@@ -33,6 +33,11 @@
 		  <artifactId>ojdbc6</artifactId>
 		  <version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.31</version>
+		</dependency>
 	</dependencies>
 
 	<!-- Package as an executable jar -->
@@ -43,6 +48,16 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**/*.temp</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+
 	</build>
 	
 	<repositories>

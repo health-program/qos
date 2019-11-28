@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="nature-type,subordination-type,region-type"/>
+<tt:constant enumcode="nature-type,subordination-type,region-type,business-region-type"/>
  <section class="content-header">
     <h1>学校校医配备核查情况</h1>
 </section>
@@ -18,8 +18,13 @@
 	                    </div>
 						<div class="col-md-2">
 							<select id="district" name="district"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.district}"enumcode="region-type">
-								<option value="">请选择区域</option>
+								<option value="">请选择行政区域</option>
 							</select>
+						</div>
+						<div class="col-md-2">
+							 <select name="businessDistrict" id="businessDistrict" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.businessDistrict}" enumcode="business-region-type">
+                                 <option value="">请选择业务管理区域</option>
+                             </select>
 						</div>
 						<div class="col-md-2">
 							<select id="affiliation" name="affiliation"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.affiliation}"enumcode="subordination-type">
@@ -31,7 +36,7 @@
 								<option value="">请选择性质</option>
 							</select>
 						</div>
-						<div class="col-md-4">
+						<div class="col-md-2">
                   <div class="pull-right">
                       <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="query()"><i class="fa fa-search"></i>查询</button>
                       <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -111,7 +116,8 @@
 		var affiliation = $("#affiliation").val();
 		var nature = $("#nature").val();
 		var schoolYear =$("#schoolYear").val();
-		$.post("/qos/org/school/statistic/doctor/count",{"district":district,"affiliation":affiliation,"nature":nature,"schoolYear":schoolYear},function(res){
+		var businessDistrict = $("#businessDistrict").val();
+		$.post("/qos/org/school/statistic/doctor/count",{"district":district,"affiliation":affiliation,"nature":nature,"schoolYear":schoolYear,"businessDistrict":businessDistrict},function(res){
 			 reslut = res.result;
 			 reslut.sort(compare('schoolDoctorFull','desc'));
 			if(reslut.length == 0){
@@ -179,7 +185,7 @@
                     formatter: function (params) {
                         return params[0].name + '<br/>'
                             + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
-                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
+                           /*  + params[1].seriesName + ':'+ params[1].data.value+'位<br/>' */
                     } 
                 },
                 grid: {
@@ -190,7 +196,7 @@
                 },
                 legend: {
                     top: 'top',
-                    data:[ '校医(专职)', '校医(兼职)']
+                    data:[ '校医']
                 },
                 calculable: true,
                 dataZoom: [   {
@@ -275,7 +281,7 @@
                 ],
                 series: [
                     {
-                    	name: '校医(专职)',
+                    	name: '校医',
                         type: 'bar',
                         label: labelOption,
                         barGap: 0,
@@ -303,7 +309,7 @@
 			                }
 			            },
                         data: schoolDoctorFullValue
-                    },{
+                    }/* ,{
                     	name: '校医(兼职)',
                         type: 'bar',
                         label: labelOption,
@@ -332,7 +338,7 @@
 			                }
 			            },
                         data: schoolDoctorPartValue
-                    }
+                    } */
                 ]
             };
 			

@@ -59,16 +59,16 @@
             idField: "id",
             columns: [
                 [
-                    { title: "单位", field: "unitName",align: "left"},
+                    { title: "&emsp;&emsp;&emsp;&emsp;&emsp;单位&emsp;&emsp;&emsp;&emsp;&emsp;", field: "unitName"},
                     {title: "医院感染总发生率", field: "totalInfection",formatter: getRate},
                     {title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection",formatter: getRate},
                     {title: "手术部位感染总发生率", field: "operatingPartInfection",formatter: getRate},
-                    {title: "手术风险分级(NNIS分级)手术部位感染率", field: "operatingRiskInfection",formatter: getRate},
-                    {title: "创建时间", field: "createTime",formatter: "datetime"},
+                    /* {title: "手术风险分级(NNIS分级)手术部位感染率", field: "operatingRiskInfection",formatter: getRate}, */
+                    {title: "创建时间",width:"200px", field: "createTime",formatter: "datetime"},
                     {
                         title: "操作",
                         align: "center",
-                        width: "200px",
+                        width: "150px",
                         events: {
                             'click .detail': function (e, value, row, index) {
                                 detail(row);
@@ -89,7 +89,7 @@
             url: '/qos/infectioncomplication/infection/find/page',
             searchbar: '#searchbar',
             exportUrl: '/qos/infectioncomplication/infection/export',
-            showExport: true,
+            showExporter: true,
             showColumns: true,
             pagination: true,
             toolbar: "#toolbar",

@@ -14,7 +14,7 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" value="2015-01-01"></div>
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" ></div>
                         </div>
                         <div class="col-md-2">
                             <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
@@ -128,6 +128,20 @@
             },
             onCheck: unitSelected,
             queryParams: function(params) {
+            	var date = new Date()
+				  var year = date.getFullYear(); 
+				 var month = date.getMonth()+1;
+				 var day = date.getDate()-1;
+          	if($("#startTime").val()==""||$("#startTime").val()==null){
+					 var time = year+"-"+month+"-"+"01"
+    		   $("#startTime").val(time);
+    		   params.startTime = time;
+    	       } 
+          	if($("#endTime").val()==""||$("#endTime").val()==null){
+					 var time = year+"-"+month+"-"+day
+   		   $("#endTime").val(time);
+   		   params.endTime = time;
+   	       } 
             	params.eventIds = '14001,14002,14003,14005,14006';
             	params.ignoreUnitIds = '320583810343';
                 requestParam = params;

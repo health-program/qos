@@ -234,5 +234,94 @@ public class TimeUtil {
 	public static void main(String[] args) throws Exception {
 		System.out.println(format.format(getTodayBefore(1)));
 	}
+	
+	/**
+	 * 获取上个月最后一天(去年上个月最后一天)
+	 */
+	public static Date getLastMonthMaxDay(int i){
+		if(i==0){//今年
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();
+			//设置为指定日期
+			c.setTime(date);
+			//指定日期月份减去一
+			c.add(Calendar.MONTH, -1);
+			//指定日期月份减去一后的 最大天数
+			c.set(Calendar.DATE, c.getActualMaximum(Calendar.DATE));
+			//获取最终的时间
+			Date lastDateOfPrevMonth = c.getTime();
+			return lastDateOfPrevMonth;
+		}else{//去年
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();
+			//设置为指定日期
+			c.setTime(date);
+			//指定日期月份减去一
+			c.add(Calendar.MONTH, -13);
+			//指定日期月份减去一后的 最大天数
+			c.set(Calendar.DATE, c.getActualMaximum(Calendar.DATE));
+			//获取最终的时间
+			Date lastDateOfPrevMonth = c.getTime();
+			return lastDateOfPrevMonth;
+		}
+	}
+	
+	/**
+	 * 获取12个月前第一天(获取24个月前第一天)
+	 */
+	public static Date getLastYearMinDay(int i){
+		if(i==0){//今年
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();
+			//设置为指定日期
+			c.setTime(date);
+			//指定日期月份减去一
+			c.add(Calendar.MONTH, -12);
+			//指定日期月份减去一后的 最大天数
+			c.set(Calendar.DATE, c.getActualMinimum(Calendar.DATE));
+			//获取最终的时间
+			Date lastDateOfPrevMonth = c.getTime();
+			return lastDateOfPrevMonth;
+		}else{//去年
+			Date date = new Date();
+			Calendar c = Calendar.getInstance();
+			//设置为指定日期
+			c.setTime(date);
+			//指定日期月份减去一
+			c.add(Calendar.MONTH, -24);
+			//指定日期月份减去一后的 最大天数
+			c.set(Calendar.DATE, c.getActualMinimum(Calendar.DATE));
+			//获取最终的时间
+			Date lastDateOfPrevMonth = c.getTime();
+			return lastDateOfPrevMonth;
+		}
+	}
+	
+	//获取当月第一天
+	public static Date FirstDayOfThisMonth(){
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		//设置为指定日期
+		c.setTime(date);
+		//指定日期月份减去一
+		//c.add(Calendar.MONTH, -12);
+		//指定日期月份减去一后的 最大天数
+		c.set(Calendar.DATE, c.getActualMinimum(Calendar.DATE));
+		//获取最终的时间
+		Date lastDateOfPrevMonth = c.getTime();
+		return lastDateOfPrevMonth;
+	}
+
+	public static Date ThirtyOneBefore() {
+		Date date = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		//指定日期月份减去一
+		c.add(Calendar.DATE, -31);
+		
+		//获取最终的时间
+		Date thirtyOneBefore = c.getTime();
+        return thirtyOneBefore;
+	}
 
 }

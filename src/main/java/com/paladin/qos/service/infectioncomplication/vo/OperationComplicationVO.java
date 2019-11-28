@@ -18,6 +18,11 @@ public class OperationComplicationVO {
     private Double anaesthesia;
     private String unitId;
     private String date;
+    private String unitName;
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
 
     public String getDate() {
         return date;

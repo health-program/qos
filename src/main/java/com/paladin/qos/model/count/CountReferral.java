@@ -6,12 +6,16 @@ import javax.persistence.Id;
 
 public class CountReferral extends BaseModel {
 
+    public static final String COLUMN_IS_SIGNING = "isSigning";
+
     @Id
     private String id;
 
     private Integer upOutNumber;
 
     private Integer downOutNumber;
+
+    private Integer isSigning;
 
     private String  unitId;
 
@@ -47,4 +51,11 @@ public class CountReferral extends BaseModel {
         this.downOutNumber = downOutNumber;
     }
 
+    public Integer getIsSigning() {
+        return isSigning;
+    }
+
+    public void setIsSigning(Integer isSigning) {
+        this.isSigning = isSigning;
+    }
 }

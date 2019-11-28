@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.org.OrgPersonMapper">
+
+
+    <select id="getTotalNumber" resultType="com.paladin.qos.service.org.vo.OrgPersonReport">
+        SELECT sum(health_person) as healthPeopleNumber,sum(non_health_person) as nonHealthPeopleNumber
+        FROM
+        org_person
+            where year=(
+            SELECT year
+            FROM
+            org_person
+            order by year desc
+            limit 1
+            )
+    </select>
+
+
+
+</mapper>

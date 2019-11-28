@@ -44,4 +44,8 @@ public class OrgSchoolNameDTO {
 	    this.level = level;
 	}
 
+	@Override
+	public String toString() {
+		return "学校名: " + schoolFullName ;
+	}
 }

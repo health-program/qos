@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
     <tt:constant enumcode="data-unit-type" />
     <section class="content-header">
@@ -59,6 +60,7 @@
     </section>
     <div th:include="/qos/footer" />
     <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   	//<![CDATA[
 	//图表自适应大小      
@@ -88,19 +90,21 @@
             columns: [
                 [
                     { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "医院感染<br/>总发生率", field: "totalInfection" , formatter: getRate},
-                    { title: "与手术相关科<br/>室感染发生率", field: "operatingDepartmentsInfection" , formatter: getRate},
-                    { title: "手术部位感<br/>染总发生率", field: "operatingPartInfection" , formatter: getRate},
-                    { title: "手术风险分级(NNIS分级)<br/>手术部位感染率", field: "operatingRiskInfection" , formatter: getRate},
-                    { title: "手术患者肺部<br/>感染发生率", field: "lungInfection" , formatter: getRate},
-                    { title: "新生儿患者医<br/>院感染发生率", field: "newBornInfection" , formatter: getRate},
-                    { title: "择期手术患者医<br/>院感染发生率", field: "selectiveOperationsInfection" , formatter: getRate},
-                    { title: "与血液透析相关<br/>血液感染发生率", field: "bloodInfection" , formatter: getRate},
-                    { title: "重症监护室<br/>相关感染率", field: "intensiveCareUnitInfection" , formatter: getRate}
+                    { title: "医院感染总发生率", field: "totalInfection" , formatter: getRate},
+                    { title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection" , formatter: getRate},
+                    { title: "手术部位感染总发生率", field: "operatingPartInfection" , formatter: getRate},
+                    { title: "手术风险分级(NNIS分级)手术部位感染率", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "手术患者肺部感染发生率", field: "lungInfection" , formatter: getRate},
+                    { title: "新生儿患者医院感染发生率", field: "newBornInfection" , formatter: getRate},
+                    { title: "择期手术患者医院感染发生率", field: "selectiveOperationsInfection" , formatter: getRate},
+                    { title: "与血液透析相关血液感染发生率", field: "bloodInfection" , formatter: getRate},
+                    { title: "重症监护室相关感染率", field: "intensiveCareUnitInfection" , formatter: getRate}
                 ]
             ],
             url: '/qos/infectioncomplication/infection/charts/count',
             pagination: false,
+            fixedColumns: true,//固定列
+            fixedNumber:1,
             searchbar: '#searchbar',
             clickToSelect: true,
             onClickRow: function(row, tr) {

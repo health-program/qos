@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
     <tt:constant enumcode="data-unit-type" />
     <section class="content-header">
@@ -14,12 +15,9 @@
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                     <div class="form-group">
                         <div class="col-md-2">
-                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" value="2015-01-01" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1"></div>
+                            <div class="input-group"><input name="year" id="year" placeholder="请输入年度" value="2018" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1" ></div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
-                        </div>
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <div class="pull-right">
                                 <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
                                 <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
@@ -73,6 +71,7 @@
     </section>
     <div th:include="/qos/footer" />
 	<script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
     <script type="text/javascript">
   	//<![CDATA[
 	//图表自适应大小      
@@ -84,7 +83,7 @@
 	});
     
     
-	 var table, monthChart, unitChart, requestParam, selectUnit,responseData;
+	 var table, monthChart, unitChart, requestParam, selectUnit,responseData,sumData,result;
 	    $(function() {
 	        refresh();
 	    });
@@ -96,32 +95,70 @@
 
 	    function unitSelected(row) {
 	        selectUnit = row.unitId;
-	        jkglqylChart1(responseData);
-	        gxhfwqylChart1(responseData)
+	        jkglqylChart1(sumData);
+	        gxhfwqylChart1(sumData)
 	    }
-	   
- 
-    var currentElement;
 
     function initTable() {
         table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
-                    { title: "&emsp;&emsp;&emsp;&emsp;医疗机构&emsp;&emsp;&emsp;&emsp;", field: "unitName" },
-                    { title: "应签居民数", field: "total21001"},
-                    { title: "健康管理服<br/>务包签约数", field: "event21001" },
-                    { title: "综合健康管理服务包<br/>签约率(免费)", field: "reat21001"},
-                    { title: "综合健康管理服务包<br/>签约率(收费)", field: "reat21001"},
-                    { title: "个性化服<br/>务签约数", field: "event21002"},
-                    { title: "签约总数", field: "total21002"},
-                    { title: "个性化服务<br/>签约率(收费)", field: "reat21002"}
+                    { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>", field: "unitName" },
+                    { title: "应签居民数", field: "totalV90001"},
+                    { title: "健康管理服<br/>务包签约数", field: "number",
+                        formatter: function(value, row, index) {
+                         if (row.totalV90002 && row.totalV90003)
+                                return row.totalV90003 + row.totalV90002;
+                         else if(!row.totalV90002 && row.totalV90003)
+                               return  row.totalV90003
+                         else
+                             return row.totalV90002
+                        }
+                    },
+                    { title: "综合健康管理服务包<br/>签约率(免费)", field: "healthSignRateFree",
+                        formatter: function(value, row, index) {
+                            if(row.totalV90001==0){
+                                return "0%"
+                            }else{
+                                return (row.totalV90003/row.totalV90001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "综合健康管理服务包<br/>签约率(收费)", field: "getHealthSignRate",
+                        formatter: function(value, row, index) {
+                            if(!row.totalV90002 || row.totalV90001==0){
+                                return "0%"
+                            }else{
+                                return (row.totalV90002/row.totalV90001*100).toFixed(2) * 1+"%";
+                            }
+                        }
+                    },
+                    { title: "个性化服<br/>务签约数", field: "totalV90004"},
+                    { title: "签约总数", field: "totalV90005"},
+                    { title: "个性化服务<br/>签约率(收费)", field: "personalSignRate",
+                        formatter: function(value, row, index) {
+                            if(row.totalV90004==0){
+                                return "0%"
+                            }else{
+                                var rate=row.totalV90004/row.totalV90005;
+                                if(rate>1){
+                                    return 1*100+"%";
+                                }else{
+                                    return (row.totalV90004/row.totalV90005*100).toFixed(2) * 1+"%";
+                                }
+
+                            }
+                        }
+                    }
                 ]
             ],
-            url: '/qos/analysis/data/get/unit',
+            url: '/qos/sign/get/manage/data',
             pagination: false,
             searchbar: '#searchbar',
             clickToSelect: true,
+            // fixedColumns: true,//固定列
+            // fixedNumber:1,
             height : 475,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
@@ -129,8 +166,7 @@
                 unitSelected(row);
             },
             queryParams: function(params) {
-            	params.eventIds = '21001,21002';
-            	params.ignoreUnitIds = '320583810343'
+            	params.eventIds = 'V90001,V90002,V90003,V90004,V90005';
                 requestParams = params;
                 return params;
             },
@@ -141,42 +177,58 @@
 
             	 var data = {};
 
-                 convertCountTableData(response, '21001', data);
-                 convertCountTableData(response, '21002', data);
+                 convertCountTableData(response, 'V90001', data);
+                 convertCountTableData(response, 'V90002', data);
+                 convertCountTableData(response, 'V90003', data);
+                 convertCountTableData(response, 'V90004', data);
+                 convertCountTableData(response, 'V90005', data);
+                sumData = [];
+                result=[];
+                var number=0;
+                var totalV90001=0;
+                var totalV90002=0;
+                var totalV90003=0;
+                var totalV90004=0;
+                var totalV90005=0;
+                for (var o in data) {
+                    sumData.push(data[o]);
+                    result.push(data[o]);
+                    if (data[o].totalV90002 && data[o].totalV90002){
+                        number+=(data[o].totalV90002+data[o].totalV90003);
+                        totalV90002+=data[o].totalV90002;
+                        totalV90003+=data[o].totalV90003;
+                    }else if(!data[o].totalV90002 && data[o].totalV90003){
+                        number+=data[o].totalV90003;
+                        totalV90002=0;
+                        totalV90003+=data[o].totalV90003;
+                    }else{
+                        number+=data[o].totalV90002;
+                        totalV90003=0;
+                        totalV90002+=data[o].totalV90002;
+                    }
+                    totalV90001+=data[o].totalV90001;
+                    totalV90004+=data[o].totalV90004;
+                    totalV90005+=data[o].totalV90005;
+                }
 
-                 var result = [];
-                   var event21001=0,total21001=0,reat21001=0,
-         	    	total21002=0,event21002=0,reat21002=0;  
-                 for (var o in data) {
-                	 event21001+=data[o].event21001;
-                	 total21001+=data[o].total21001;
-                	 event21002+=data[o].event21002;
-                	 total21002+=data[o].total21002;  
-                	 result.push(data[o]);
-                     if(o=='total'){
-                		 var a = 0;
-                		 data[o].event21001 = event21001;
-                		 data[o].total21001 = total21001;
-     	               	if(event21001 && total21001){
-     	               		a = event21001/total21001*100
-     	               	}
-     	              	data[o].reat21001 = a.toFixed(2)+'%';
-     	               	var b = 0;
-     	               	data[o].event21002 = event21002;
-     	              	data[o].total21002 = total21002;
-     	               	if(event21002 && total21002){
-     	               		b = event21002/total21002*100
-     	               	}
-     	               	data[o].reat21002 = b.toFixed(2)+'%'; 
-                	 }
-                 }
-                 jkglfwbqysChart1(response);
-                 qygxhfwsChart1(response);
-                 responseData =response;
-                 debugger;
-                 jkglqylChart1(responseData);
-                 gxhfwqylChart1(responseData);
-                 return result;
+                var total={
+                    "unitId" : "total",
+                    "unitName" : "合计",
+                    "totalV90001" :totalV90001,
+                    "totalV90002":totalV90002,
+                    "totalV90003" :totalV90003,
+                    "totalV90004":totalV90004,
+                    "totalV90005":totalV90005
+                }
+
+                sumData.push(total);
+                 jkglfwbqysChart1(result);
+                 qygxhfwsChart1(result);
+
+                 jkglqylChart1(sumData);
+                 gxhfwqylChart1(sumData);
+
+                 return sumData;
             }
         });
     }
@@ -193,62 +245,35 @@
                 };
                 data[id] = unitData;
             }
-             if(eventId == '21001'){
-            	 unitData['event21001'] = item.eventNum;
-            	 unitData['total21001'] = item.totalNum;
-            	 unitData['reat21001'] = getRate(item); 
-            }
-			if(eventId == '21002'){
-				unitData['event21002'] = item.eventNum;
-				unitData['total21002'] = item.totalNum;
-           		unitData['reat21002'] = getRate(item); 
-            } 
+            unitData['total'+eventId]=item.count;
         });
-         var totalData = data['total'];
-            totalData = {
-                unitId: 'total',
-                unitName: '合计'
-            }
-            data['total'] = totalData;
-            totalData['event21001'] = 0;
-            totalData['total21001'] = 0;
-            totalData['event21002'] = 0;
-          	totalData['total21002'] = 0;
+
     }
     
-    function getRate(item, fixed) {
-        var a = item.eventNum,
-            b = item.totalNum,
-            c = 0;
+    function getRate(a, b) {
+        var   c = 0;
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed || 2) + '%';
+        return c.toFixed(2) + '%';
     }
      
-     function convertUnitChartData(data, eventId, isRate) {
-         var edata = data[eventId],
-             max = 0,
-             unit = [],
-             values = [];
-         edata.sort(compare('eventNum'));
-         edata && edata.forEach(function(item) {
-             var r = isRate ? item.eventNum : 0;
-             max = Math.max(r, max);
-             values.push(r);
-             unit.push(intercept(item.unitName));
-         });
-         return {
-             max: max,
-             unit: unit,
-             values: values
-         };
-     }
 
-    
     var jkglfwbqysChart = echarts.init(document.getElementById('jkglfwbqysChart'));
-    function jkglfwbqysChart1(response){
-    	 var ev21001= convertUnitChartData(response, '21001', true);
+    function jkglfwbqysChart1(data){
+        var xLabel=[];
+        var yData=[];
+    	 for(var i=0;i<data.length;i++){
+
+             if (data[i].totalV90002 && data[i].totalV90003)
+                 yData.push(data[i].totalV90003 + data[i].totalV90002);
+             else if(!data[i].totalV90002 && data[i].totalV90003)
+                 yData.push(data[i].totalV90003);
+             else
+                 yData.push(data[i].totalV90002);
+             xLabel.push(data[i].unitName.substring(0,data[i].unitName.length-8));
+
+         }
     	 var labelOption = {
 		            normal: {
 		                show: true,
@@ -290,7 +315,7 @@
     		                interval:0,
     		                rotate:40//角度顺时针计算的
     		                } ,
-    		            data: ev21001.unit,
+    		            data: xLabel,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -307,7 +332,7 @@
     		            type:'bar',
     		            barWidth: '60%',
     		            label: labelOption,
-    		            data:ev21001.values
+    		            data:yData
     		        }
     		    ]
     		};
@@ -316,8 +341,13 @@
     
     
     var qygxhfwsChart = echarts.init(document.getElementById('qygxhfwsChart'));
-    function qygxhfwsChart1(response){
-    	var ev21002= convertUnitChartData(response, '21002', true);
+    function qygxhfwsChart1(data){
+        var xLabel=[];
+        var yData=[];
+        for(var i=0;i<data.length;i++){
+            xLabel.push(data[i].unitName.substring(0,data[i].unitName.length-8));
+            yData.push(data[i].totalV90004)
+        }
     	var labelOption = {
 	            normal: {
 	                show: true,
@@ -359,7 +389,7 @@
     		                interval:0,
     		                rotate:40//角度顺时针计算的
     		                } ,
-    		            data: ev21002.unit,
+    		            data: xLabel,
     		            axisTick: {
     		                alignWithLabel: true
     		            }
@@ -376,66 +406,36 @@
     		            type:'bar',
     		            barWidth: '60%',
     		            label: labelOption,
-    		            data:ev21002.values
+    		            data:yData
     		        }
     		    ]
     		};
     	qygxhfwsChart.setOption(option,true);
     }
     
-    
-    function convertChartData(data, eventId, isRate) {
-        var eventData = data[eventId],
-            unitPoints = eventData.unitPoints,
-            valuesMap = {};
-        	var first = true;
-        	var total1 = 0,total2 = 0;
-        eventData && eventData.forEach(function(unitPoint) {
-            var unitId = unitPoint.unitId;
-            var values = valuesMap[unitId];
-            var eventNum=unitPoint.eventNum,
-            	totalNum=unitPoint.totalNum;
-            var rate=0;
-            if(eventNum && totalNum){
-            	rate=(eventNum/totalNum*100).toFixed(2);
-            }
-            if (!values) {
-              values = {
-              		eventNum:eventNum,
-                  	totalNum:totalNum,
-                  	rate:rate,
-                  	total:eventNum+totalNum
-              };
-              valuesMap[unitId] = values;
-            }
-            total1 += unitPoint.eventNum;
-            total2 += unitPoint.totalNum;
-            first = false;
-        });
-        var totalData = valuesMap['total'];
-        if (!totalData) {
-        	 var rate=0;
-        	if(total1 && total2){
-        		rate=(total1/total2*100).toFixed(2);
-        	}
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-                eventNum:total1,
-                totalNum:total2,
-                rate:rate
-            }
-            valuesMap['total'] = totalData;
-        }
-	return valuesMap;
-        
-    }
-    
-   
+
     var jkglqylChart = echarts.init(document.getElementById('jkglqylChart'));
-    function jkglqylChart1(responseData){
+    function jkglqylChart1(data){
     	var unitId = selectUnit || 'total';
-    	var res=convertChartData(responseData, '21001', true);
+        var total=[];
+        for (var i = 0; i < data.length; i++) {
+            if (unitId=='total'){
+                total.push(data[i]);
+            }else{
+                if (data[i].unitId==unitId){
+                    total.push(data[i]);
+                }
+            }
+        }
+    	var dataObject=total[total.length-1];
+        var sum=0;
+        if (dataObject.totalV90002 && dataObject.totalV90003)
+            sum= dataObject.totalV90003 + dataObject.totalV90002;
+        else if(!dataObject.totalV90002 && dataObject.totalV90003)
+            sum=dataObject.totalV90003;
+        else
+            sum=dataObject.totalV90002;
+        var rate=(sum/dataObject.totalV90001).toFixed(4);
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -447,7 +447,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'健康管理服务包签约率',
+                        text: (rate*100).toFixed(2)+'%\n'+'健康管理服务包签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -476,11 +476,11 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
-                                name:'健康管理服务包签约率'
+                                value:rate,
+                                name:''
                             },
                             {
-                                value:res[unitId].totalNum ==0?1:res[unitId].totalNum-res[unitId].eventNum,
+                                value:1-rate,
                                 name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{
@@ -495,9 +495,29 @@
     }
     
     var gxhfwqylChart = echarts.init(document.getElementById('gxhfwqylChart'));
-    function gxhfwqylChart1(){
+    function gxhfwqylChart1(data){
     	var unitId = selectUnit || 'total';
-    	var res=convertChartData(responseData, '21002', true);
+
+        var unitId = selectUnit || 'total';
+        var total=[];
+        for (var i = 0; i < data.length; i++) {
+            if (unitId=='total'){
+                total.push(data[i]);
+            }else{
+                if (data[i].unitId==unitId){
+                    total.push(data[i]);
+                }
+            }
+        }
+        var dataObject=total[total.length-1];
+        var rate=dataObject.totalV90004/dataObject.totalV90005;
+        if (rate>1){
+            rate=1;
+        }else{
+            rate=rate.toFixed(4);
+        }
+
+
     	var option = {
                 tooltip: {
                     trigger: 'item',
@@ -509,7 +529,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: res[unitId].rate+'%'+'\n'+'个性化服务签约率(收费)',
+                        text: (rate*100).toFixed(2)+'%\n'+'个性化服务签约率(收费)',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
                         width: 30,
@@ -538,11 +558,11 @@
                         },
                         data:[
                             {
-                                value:res[unitId].eventNum,
+                                value:rate,
                                 name:'个性化服务签约率(收费)'
                             },
                             {
-                                value:res[unitId].totalNum-res[unitId].eventNum,
+                                value:1-rate,
                                 name:'invisible',
                                 hoverAnimation:false,
                                 tooltip:{

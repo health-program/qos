@@ -20,6 +20,7 @@
     </div>
      <input type="hidden" id="id" th:value="${id}" />
 	<div th:include="/common/footer" />
+	<script type="text/javascript" src="/static/assets/jquery-validation/localization/messages_zh.js" charset="UTF-8" ></script>
 	<script type="text/javascript">
 	
 	
@@ -32,17 +33,17 @@
 	 	        cancelBtn: true,
 	 	        editFormClass: false,
 	 	        columns: [
-	 	        	{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left",required: "required",name: "varieties",inputType: "NUMBER"},
-					{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",required: "required",name: "averageCost",inputType: "NUMBER",unit:"元"},
-					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",required: "required",name: "userRate",inputType: "NUMBER",unit:"%"},
-					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",required: "required",name: "rateOfTotal",inputType: "NUMBER",unit:"%"},
-					{ title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
+	 	        	{ title: "住院患者人均使用抗菌药物品种数", field: "varieties",align: "left",required: "required",name: "varieties",inputType: "NUMBER",attr:{'min':0}},
+					{ title: "住院患者人均使用抗菌药物费用", field: "averageCost",align: "left",required: "required",name: "averageCost",inputType: "NUMBER",unit:"元",attr:{'min':0}},
+					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",required: "required",name: "userRate",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
+					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",required: "required",name: "rateOfTotal",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
+					{ title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/selectHospital"},
 	 				     ]
 	 					}
 	 					var model, itemId;
 
 	 					$(function() {
-	 						debugger;
+
 	 						var html = generateHtml(options);
 	 						$(".content").html(html);
 	 						$.initComponment($(".content"));

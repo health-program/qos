@@ -209,6 +209,44 @@
 		GROUP BY unit_id
 	</select>
 	
+	<select id="countMaxNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       IFNULL(max(total_num),0) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>        
+		GROUP BY unit_id
+	</select>
+	
+	<select id="countMinNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       IFNULL(min(total_num),0) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;=#{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>        
+		GROUP BY unit_id
+	</select>
+	
 	<select id="countEventNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id AS unitId,
 		       IFNULL(sum(event_num),0) AS count
@@ -411,53 +449,135 @@
 	
 	<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register"> 
 		 SELECT regid,orgname,deptname,patientname,sexcode,regdate as seedate,paykindname 
-		 FROM jcyl_opr_register
+		 FROM j_opr_register
 		 WHERE regstatus = '0'
 	     ORDER BY regdate desc 
 	     LIMIT 100
 	</select>
 	
 	<select id="getOutPatientNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	     SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '13001' and unit_id!='320583810343'
+	     SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	     WHERE event_id = '13001' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getEmergencyNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	      SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '13002' and unit_id!='320583810343'
+	      SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	      WHERE event_id = '13002' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getTodayNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-		SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '13003' and unit_id!='320583810343'
+		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
+         WHERE event_id = '13001' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getThisMonthNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '13003' and unit_id!='320583810343'
+         WHERE event_id = '13002' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalOutPatientNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	     SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '31008' and unit_id!='320583810343'
+	     SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	     WHERE event_id = '31008' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalEmergencyNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-	      SELECT unit_id as unitId,SUM(total_num) as count FROM `data_processed_day` WHERE event_id = '31007' and unit_id!='320583810343'
+	      SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day` 
+	      WHERE event_id = '31007' and unit_id!='320583810343'
          GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalTodayNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
-		SELECT unit_id as unitId,SUM(case when serial_number = DATE_FORMAT( NOW(), '%Y%m%d' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '31001' and unit_id!='320583810343'
+		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
+         WHERE event_id = '31008' and unit_id!='320583810343'
         GROUP BY unit_id
 	</select>
 	
 	<select id="getHospitalThisMonthNumber" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id as unitId,SUM(case when left(serial_number,6) = DATE_FORMAT( NOW(), '%Y%m' )then total_num else 0 end) as count FROM `data_processed_day`
-         WHERE event_id = '31001' and unit_id!='320583810343'
+         WHERE event_id = '31007' and unit_id!='320583810343'
         GROUP BY unit_id
+	</select>
+	
+	<!-- 人口签约数 -->
+	<select id="populationSigningNum" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
+	SELECT DATE_FORMAT( serial_number,'%Y-%m') as month,SUM(total_num) as count from data_processed_day where event_id in ('21000','21001') GROUP BY DATE_FORMAT( serial_number,'%Y-%m');
+	</select>
+
+	<!-- 实际签约信息 -->
+	<select id="getSignInfo" resultType="com.paladin.qos.model.home.Sign">
+		 SELECT  createdunitname AS signOrg,selfname as signName, gender as signGender, signperiodtofrom as signDate,teamname as signTeam,familynew as signType
+		 from g_fha_person_sign_main
+		 where STATUS =1  and stateid =0  and LASTFLAG = '1'
+		 order by createdtime desc
+		 limit 30;
+	</select>
+
+	<!-- 门急诊 -->
+	<select id="getTwoYear" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
+	SELECT DATE_FORMAT( serial_number,'%Y-%m') as month,SUM(total_num) as count from data_processed_day where event_id='13003' GROUP BY DATE_FORMAT( serial_number,'%Y-%m');
+	</select>
+
+	<!--建档率-->
+	<select id="getArchivesRate" resultType="com.paladin.qos.service.analysis.data.DataSigningMonth">
+		select  DATE_FORMAT(managedate,'%Y-%m') as month ,count(1) as count from g_fha_person_main where stateid='1'  GROUP BY DATE_FORMAT( managedate,'%Y-%m');
+	</select>
+
+	<!--获取当前月份之前的所有建档数-->
+	<select id="getArchivesNumber" resultType="java.lang.Long">
+		select count(1)  from g_fha_person_main where stateid='1' and  managedate <![CDATA[<]]> #{month} ;
+	</select>
+
+
+	<!--获取数据-->
+	<select id="getTotalData" resultType="java.lang.String">
+		select data from data_view_store where id=#{id};
+	</select>
+
+
+    <!--获取高血压管理数/随访数-->
+	<select id="getPressureTotalDataFromLocal" resultType="com.paladin.qos.model.gongwei.EntityGongwei">
+		select t.MANAGEDCENTERCODE,t.PRESSUREMANAGENUMBER,m.PRESSUREFOLLOWNUMBER from
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as PRESSUREMANAGENUMBER from report_year_blood  where
+yeartype=1 
+<if test="year != null">
+		 and reportyear = #{year}
+ </if>
+group by porgcode) t
+
+left join
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as PRESSUREFOLLOWNUMBER from report_year_blood where
+yeartype=1 
+<if test="year != null">
+		 and reportyear = #{year}
+ </if>
+group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
+	</select>
+	
+	<!--获取糖尿病管理数/随访数-->
+	<select id="getSugarTotalDataFromLocal" resultType="com.paladin.qos.model.gongwei.EntityGongwei">
+select t.MANAGEDCENTERCODE,t.SUGARMANAGENUMBER,m.SUGARFOLLOWNUMBER from
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(gf) ,0) as SUGARMANAGENUMBER from report_year_diabetes  where
+yeartype=1 
+<if test="year != null">
+		 and reportyear = #{year}
+ </if>
+group by porgcode) t
+
+left join
+(select porgcode as MANAGEDCENTERCODE ,COALESCE (SUM(sf) ,0) as SUGARFOLLOWNUMBER from report_year_diabetes  where
+yeartype=1 
+<if test="year != null">
+		 and reportyear = #{year}
+ </if>
+group by porgcode) m on t.MANAGEDCENTERCODE = m.MANAGEDCENTERCODE
+	</select>
+	
+	<select id="findNameList" resultType="com.paladin.qos.model.gongwei.Disease">
+	select major_code as diseasecode, disease_name as diseasecodeName from classify_code_disease
 	</select>
 </mapper>

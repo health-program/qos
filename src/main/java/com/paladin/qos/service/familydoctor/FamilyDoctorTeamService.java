@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.qos.mapper.familydoctor.FamilyDoctorPersonnelMapper;
 import com.paladin.qos.mapper.familydoctor.FamilyDoctorTeamMapper;
@@ -121,6 +122,22 @@ public class FamilyDoctorTeamService extends ServiceSupport<FamilyDoctorTeam> {
 	    
 	    if(countTaem(teamName) != null){
 		errors.add(new ExcelImportError(i, ""+teamName+":团队名称不能重复"));
+		continue;
+	    }
+	    
+	    
+	    if(StringUtil.isEmpty(team.getServiceDistrict())){
+		errors.add(new ExcelImportError(i, "服务责任小区(自然村)不能为空"));
+		continue;
+	    }
+	    
+	    if(team.getServicePopulation() == null){
+		errors.add(new ExcelImportError(i, "服务区域常住人口数不能为空"));
+		continue;
+	    }
+	    
+	    if(!StringUtils.isNumber(team.getServicePopulation())){
+		errors.add(new ExcelImportError(i, "服务区域常住人口数只能输入数字"));
 		continue;
 	    }
 	    

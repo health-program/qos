@@ -15,7 +15,9 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.util.StringUtil;
 import com.paladin.common.core.container.ConstantsContainer;
+import com.paladin.framework.common.Condition;
 import com.paladin.framework.common.ExcelImportResult;
+import com.paladin.framework.common.QueryType;
 import com.paladin.framework.common.ExcelImportResult.ExcelImportError;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
@@ -28,7 +30,6 @@ import com.paladin.framework.excel.read.ExcelReadException;
 import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.uuid.UUIDUtil;
-import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.mapper.epidemic.EpidemicSituationMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
@@ -39,6 +40,7 @@ import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.dto.ExcelEpidemicSituation;
 import com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.OrgSchoolPeopleService;
 import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolCountsQuery;
@@ -46,82 +48,91 @@ import com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO;
 import com.paladin.qos.service.school.vo.OrgSchoolEpidemicRateVO;
 import com.paladin.qos.service.school.vo.SchoolNameVO;
 
-/**   
+/**
  * @author 黄伟华
- * @version 2019年6月11日 下午3:56:28 
+ * @version 2019年6月11日 下午3:56:28
  */
 @Service
-public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
-    
+public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> {
+
     @Autowired
     private EpidemicSituationMapper epidemicSituationMapper;
-    
     @Autowired
     private OrgSchoolNameMapper orgSchoolNameMapper;
     @Autowired
     private OrgSchoolPeopleService orgSchoolPeopleService;
     @Autowired
     private OrgSchoolService orgSchoolService;
-    
-   public PageResult<EpidemicSituationVO> searchFindPage(EpidemicSituationQueryDTO query){
-       Page<EpidemicSituationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit()); 
-       epidemicSituationMapper.searchFindPage(query);
-       return new PageResult<>(page);
-   }
-   
-   public List<DataEpidemicSituationVO> dataTraceabilityRate(EpidemicSituationQueryDTO query){
-       return epidemicSituationMapper.dataTraceabilityRate(query);
-   }
-   
+    @Autowired
+    private OrgSchoolNameService orgSchoolNameService;
+
+    public PageResult<EpidemicSituationVO> searchFindPage(
+	    EpidemicSituationQueryDTO query) {
+	Page<EpidemicSituationVO> page = PageHelper.offsetPage(
+		query.getOffset(), query.getLimit());
+	epidemicSituationMapper.searchFindPage(query);
+	return new PageResult<>(page);
+    }
+
+    public List<DataEpidemicSituationVO> dataTraceabilityRate(
+	    EpidemicSituationQueryDTO query) {
+	return epidemicSituationMapper.dataTraceabilityRate(query);
+    }
+
     public int updateEpidemic(EpidemicSituationDTO dto) {
 	String id = dto.getId();
-	
+
 	if (StringUtil.isEmpty(id)) {
 	    throw new BusinessException("找不到更新的疫情信息");
 	}
-	//验证班级id
-	OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(dto.getGrade());
-	if(orgSchoolPeople==null){
-		throw new BusinessException("只可以选择班级项！");
+	// 验证班级id
+	OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(dto
+		.getGrade());
+	if (orgSchoolPeople == null) {
+	    throw new BusinessException("只可以选择班级项！");
 	}
-	OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople.getSchoolId());
-	if(orgSchool==null){
-		throw new BusinessException("该学校信息不存在，请确认！");
+	OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople
+		.getSchoolId());
+	if (orgSchool == null) {
+	    throw new BusinessException("该学校信息不存在，请确认！");
 	}
-	if(!StringUtils.equals(dto.getSchoolYear(), orgSchool.getSchoolYear())){
-		throw new BusinessException("该学校该学年没有该班级，请确认!");
+	if (!StringUtils.equals(dto.getSchoolYear(), orgSchool.getSchoolYear())) {
+	    throw new BusinessException("该学校该学年没有该班级，请确认!");
 	}
 	dto.setIncidentUnit(orgSchool.getParentSchoolId());
 	EpidemicSituation es = get(id);
-	
+
 	if (es == null) {
 	    throw new BusinessException("找不到更新的疫情信息");
 	}
-	
+
 	SimpleBeanCopyUtil.simpleCopy(dto, es);
-	
+
 	return update(es);
     }
-    
-     private static final List<ReadColumn> epidemicImportColumns = DefaultReadColumn.createReadColumn(ExcelEpidemicSituation.class, new EnumContainer(){
-         	
-     	@Override
-    	public String getEnumName(String type, String key) {
-    	    return ConstantsContainer.getTypeValue(type, key);
-    	}
-    
-    	@Override
-    	public String getEnumKey(String type, String name) {
-    	    return ConstantsContainer.getTypeKey(type, name);
-    	}
-     });
-    
-     /**
-      * 导入学校疫情信息
-      * @param excelInputStream
-      * @return
-      * @see [类、类#方法、类#成员]
-      */
+
+    private static final List<ReadColumn> epidemicImportColumns = DefaultReadColumn
+	    .createReadColumn(ExcelEpidemicSituation.class,
+		    new EnumContainer() {
+
+			@Override
+			public String getEnumName(String type, String key) {
+			    return ConstantsContainer.getTypeValue(type, key);
+			}
+
+			@Override
+			public String getEnumKey(String type, String name) {
+			    return ConstantsContainer.getTypeKey(type, name);
+			}
+		    });
+
+    /**
+     * 导入学校疫情信息
+     * 
+     * @param excelInputStream
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
     @SuppressWarnings("resource")
     @Transactional
     public ExcelImportResult importEpidemic(InputStream excelInputStream) {
@@ -132,7 +143,9 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	    throw new BusinessException("导入异常");
 	}
 
-	ExcelReader<ExcelEpidemicSituation> reader = new ExcelReader<>(ExcelEpidemicSituation.class, epidemicImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 1);
+	ExcelReader<ExcelEpidemicSituation> reader = new ExcelReader<>(
+		ExcelEpidemicSituation.class, epidemicImportColumns,
+		new DefaultSheet(workbook.getSheetAt(0)), 2);
 	List<ExcelImportError> errors = new ArrayList<>();
 
 	int i = 0;
@@ -151,69 +164,93 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation>{
 	    }
 	    EpidemicSituation situation = new EpidemicSituation();
 	    SimpleBeanCopyUtil.simpleCopy(excelEpidemicSituation, situation);
-	    
+
 	    String incidentUnit = excelEpidemicSituation.getIncidentUnit();
-	    
-	    if(StringUtil.isEmpty(incidentUnit)){
-		errors.add(new ExcelImportError(i, "事发单位名称不能为空"));
+
+	    if (StringUtil.isEmpty(incidentUnit)) {
+		errors.add(new ExcelImportError(i, "事发学校名称不能为空"));
 		continue;
 	    }
-	    
+
 	    SchoolNameVO name = orgSchoolNameMapper.getSchoolName(incidentUnit);
-	    
-	    if(name == null){
-		errors.add(new ExcelImportError(i, ""+incidentUnit+"学校名称不存在"));
+
+	    if (name == null) {
+		errors.add(new ExcelImportError(i, "" + incidentUnit
+			+ "学校名称不存在"));
 		continue;
 	    }
 	    
+	    OrgSchool orgSchool = orgSchoolService.searchOne(new Condition[] {
+			new Condition(OrgSchool.PARENT_SCHOOL_ID, QueryType.EQUAL, name.getId()),
+			new Condition(OrgSchool.SCHOOL_YEAR, QueryType.EQUAL, excelEpidemicSituation.getSchoolYear())});
+	    
+	    if (orgSchool == null) {
+		errors.add(new ExcelImportError(i, "事发学校不存在"));
+		continue;
+	    }
+	    
+	    
+	    OrgSchoolPeople people = orgSchoolPeopleService.searchOne(new Condition[] {
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_ID, QueryType.EQUAL, orgSchool.getId()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_SECTION, QueryType.EQUAL, excelEpidemicSituation.getSchoolSection()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_GRADE, QueryType.EQUAL, excelEpidemicSituation.getGrade()),
+			new Condition(OrgSchoolPeople.COLUMN_SCHOOL_KLASS, QueryType.EQUAL, excelEpidemicSituation.getKlass())});
+	    
+	    if (people == null) {
+		errors.add(new ExcelImportError(i, "事发学校班级不存在"));
+		continue;
+	    }
+
 	    String id = UUIDUtil.createUUID();
 	    situation.setId(id);
 	    situation.setIncidentUnit(name.getId());
+	    situation.setGrade(people.getId());
 	    try {
 		save(situation);
-        	} catch (BusinessException e) {
-        		errors.add(new ExcelImportError(i, e.getMessage()));
-        		continue;
-        	} catch (Exception e) {
-        		errors.add(new ExcelImportError(i, "保存失败"));
-        		continue;
-        	}
-	    
+	    } catch (BusinessException e) {
+		errors.add(new ExcelImportError(i, e.getMessage()));
+		continue;
+	    } catch (Exception e) {
+		errors.add(new ExcelImportError(i, "保存失败"));
+		continue;
+	    }
+
 	}
 	return new ExcelImportResult(i, errors);
     }
 
     /**
      * 按学校统计疫情次数
+     * 
      * @param query
      * @return
      */
-	public List<OrgSchoolCountsGroupByNatureVO> epidemicCountsGroupByUnit(
-			OrgSchoolCountsQuery query) {
-		return epidemicSituationMapper.epidemicCountsGroupByUnit(query);
-	}
+    public List<OrgSchoolCountsGroupByNatureVO> epidemicCountsGroupByUnit(
+	    OrgSchoolCountsQuery query) {
+	return epidemicSituationMapper.epidemicCountsGroupByUnit(query);
+    }
 
-	/**
+    /**
      * 按学校统计疫情人数
+     * 
      * @param query
      * @return
      */
-	public List<OrgSchoolCountsGroupByNatureVO> epidemicPeopleCountsGroupByUnit(
-			OrgSchoolCountsQuery query) {
-		return epidemicSituationMapper.epidemicPeopleCountsGroupByUnit(query);
-	}
+    public List<OrgSchoolCountsGroupByNatureVO> epidemicPeopleCountsGroupByUnit(
+	    OrgSchoolCountsQuery query) {
+	return epidemicSituationMapper.epidemicPeopleCountsGroupByUnit(query);
+    }
 
-	
-	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByAffiliation(
-			OrgSchoolCountsQuery query) {
-		
-		return epidemicSituationMapper.queryEpidemicRatesByAffiliation(query);
-	}
+    public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByAffiliation(
+	    OrgSchoolCountsQuery query) {
 
-	public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByNature(
-			OrgSchoolCountsQuery query) {
-		
-		return epidemicSituationMapper.queryEpidemicRatesByNature(query);
-	}
+	return epidemicSituationMapper.queryEpidemicRatesByAffiliation(query);
+    }
+
+    public List<OrgSchoolEpidemicRateVO> queryEpidemicRatesByNature(
+	    OrgSchoolCountsQuery query) {
+
+	return epidemicSituationMapper.queryEpidemicRatesByNature(query);
+    }
 
 }

@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" value="2015-01-01" type="text" class="form-control tonto-datepicker-date">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -48,14 +48,14 @@
                     </p>
                 </div>
             </div>
-            <div class="box box-solid">
+<!--            <div class="box box-solid">
                 <div class="box-header with-border" >
                     <h3 class="box-title" style="letter-spacing: 3px">新生儿出生缺陷人数</h3>
                 </div>
                 <div class="box-body" style="height: 110px">
                     <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="csqx">
                 </div>
-            </div>
+            </div>-->
             <div class="box box-solid">
                 <div class="box-header with-border" >
                     <h3 class="box-title" style="letter-spacing: 3px">儿童入园健康检查数</h3>
@@ -64,14 +64,14 @@
                     <p style="text-align: center;font-size: 45px;color: #44b7d3;font-weight: bold" id="etry">
                 </div>
             </div>
-            <div class="box box-solid">
+<!--            <div class="box box-solid">
                 <div class="box-header with-border" >
                     <h3 class="box-title" style="letter-spacing: 3px">婴幼儿死亡人数</h3>
                 </div>
                 <div class="box-body" style="height: 110px">
                     <p style="text-align: center;font-size: 40px;color: #44b7d3;font-weight: bold" id="yesw">
                 </div>
-            </div>
+            </div>-->
         </div>
         <div class="col-md-3" style="padding-left: 0">
             <div class="box box-solid">
@@ -122,12 +122,29 @@
     /*<![CDATA[*/
     var newbornChildTotal, newbornHearingTotal,xzbTable,EttjTable,yeslTable;
     $(function () {
+        initStartDateTime();
         initChildCareManagement();
         generatorXsefmChart(xsefmChart);
         initEtjkDataGrid();
         initYeslDataGrid();
         initYexzbDataGrid();
     });
+
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
+        }
+    }
+
     //图表自适应大小
     window.addEventListener("resize", function () {
         xsefmChart.resize();
@@ -225,9 +242,8 @@
             if (newbornChildTotal !== 0) {
                 generatorXsetlChart(xsetlChart);
             }else {
-
-                    showChartInfo(xsetlChart,'暂无数据')
-
+                showChartInfo(xsetlChart,'暂无数据');
+                return false;
             }
             var labelOption = {
                 normal: {
@@ -291,21 +307,21 @@
             title: {
                 text: ['{name|筛查率}'].join('\n'),
                 subtext: percentage,
-                top: '25%',
+                top: '30%',
                 left:'50%',
                 textAlign: 'center',
                 textStyle: {
                     rich: {
                         name: {
                             color: '#67E0E3',
-                            lineHeight: 50,
+                            lineHeight: 60,
                             fontWeight: 'bold',
-                            fontSize: '50'
+                            fontSize: '60'
                         }
                     }
                 },
                 subtextStyle: {
-                    fontSize: '40',
+                    fontSize: '45',
                     fontWeight: 'bold',
                     lineHeight: 35,
                     color: '#67E0E3',
@@ -316,7 +332,6 @@
                 formatter: "{b} : {c}个 ({d}%)"
             },
             legend: {
-                orient: 'vertical',
                 top: 'bottom',
                 selectedMode: false,
                 bottom : 5 ,
@@ -328,15 +343,15 @@
                         }
 
                     }
-                    return name + ' ' + target + '个';
+                    return name + ':' + target;
                 }
             },
             series: [
                 {
                     name:'新生儿听力筛查',
                     type:'pie', //环形图的type和饼图相同
-                    radius: ['60%', '80%'],//饼图的半径，第一个为内半径，第二个为外半径
-                    center: ['50%', '40%'],
+                    radius: ['70%', '90%'],//饼图的半径，第一个为内半径，第二个为外半径
+                    center: ['50%', '48%'],
                     avoidLabelOverlap: false,
                     color: [ '#67E0E3', '#37A2DA'], //环形图每块的颜色
                     hoverAnimation : false,
@@ -411,13 +426,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "儿童体检人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "儿童体检人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/ettj',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });
@@ -431,13 +456,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿视力筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿视力筛查人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '昆山市妇幼保健所') return yeslTable.options.sortOrder == 'desc' ? 1 : -1;
+                            if (rb.unitName == '昆山市妇幼保健所') return yeslTable.options.sortOrder == 'desc' ? -1 : 1;
+
+                            if (fa == '-') return yeslTable.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return yeslTable.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/yesl',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });
@@ -451,13 +486,23 @@
                     {title: "医疗机构", field: "unitName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "婴幼儿先天性心脏病筛查人次数", field: "count", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "婴幼儿先天性心脏病筛查人次数", field: "count", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/exhibition/child/search/xzb',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:210,
             searchbar: '#searchbar'
         });

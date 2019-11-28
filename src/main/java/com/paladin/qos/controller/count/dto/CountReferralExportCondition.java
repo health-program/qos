@@ -5,13 +5,13 @@ import com.paladin.qos.service.count.dto.CountReferralQuery;
 
 public class CountReferralExportCondition extends ExportCondition {
 
-	private CountReferralQuery countReferralQuery;
+	private CountReferralQuery query;
 
-	public CountReferralQuery getCountReferralQuery() {
-		return countReferralQuery;
+	public CountReferralQuery getQuery() {
+		return query;
 	}
 
-	public void setCountReferralQuery(CountReferralQuery countReferralQuery) {
-		this.countReferralQuery = countReferralQuery;
+	public void setQuery(CountReferralQuery query) {
+		this.query = query;
 	}
 }

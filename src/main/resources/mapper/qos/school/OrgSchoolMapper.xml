@@ -3,7 +3,7 @@
 <mapper namespace="com.paladin.qos.mapper.school.OrgSchoolMapper">
 
 <select id="findSchool" resultType="com.paladin.qos.service.school.vo.OrgSchoolVO">
-	SELECT o.id, school_year as schoolYear, n.`school_full_name`AS parentSchoolId,o.`address`,o.`affiliation`,o.`district`,o.`nature`,o.`create_Time` AS createTime FROM 
+	SELECT o.id, school_year as schoolYear, n.`school_full_name`AS parentSchoolId,o.`address`,o.`affiliation`,o.`district`,o.business_district AS businessDistrict,o.`nature`,o.`create_Time` AS createTime FROM 
 	org_school AS o 
 	LEFT JOIN org_school_name AS n ON o.`parent_school_id`=n.`id` where 1=1 
 	<if test="schoolName !=null and schoolName != '' ">
@@ -17,6 +17,9 @@
 	</if>
 	<if test="district !=null and district != '' ">
 	 AND district = #{district}
+	</if>
+	<if test="businessDistrict !=null and businessDistrict != '' ">
+	 AND business_district = #{businessDistrict}
 	</if>
 	ORDER BY o.create_time DESC
 </select>
@@ -35,6 +38,9 @@
 	WHERE 1=1
 	<if test="district != null and district !='' ">
 		AND  s.`district` =#{district}
+	</if>
+	<if test="businessDistrict !=null and businessDistrict != '' ">
+	 AND s.business_district = #{businessDistrict}
 	</if>
 	<if test="affiliation != null and affiliation != '' ">
 		AND s.`affiliation` = #{affiliation}
@@ -63,6 +69,9 @@
 	<if test="district != null and district !='' ">
 		AND  s.`district` =#{district}
 	</if>
+	<if test="businessDistrict !=null and businessDistrict != '' ">
+	 AND s.business_district = #{businessDistrict}
+	</if>
 	<if test="affiliation != null and affiliation != '' ">
 		AND s.`affiliation` = #{affiliation}
 	</if>
@@ -90,6 +99,9 @@
 		<if test="district != null and district !='' ">
 			AND  t.district =#{district}
 		</if>
+		<if test="businessDistrict !=null and businessDistrict != '' ">
+		 AND t.business_district = #{businessDistrict}
+		</if>
 		group by t.nature
 	</select>
 	
@@ -105,6 +117,9 @@
 			</if>
 			<if test="district != null and district !='' ">
 				AND  t.district =#{district}
+			</if>
+			<if test="businessDistrict !=null and businessDistrict != '' ">
+			 AND t.business_district = #{businessDistrict}
 			</if>
 			<if test="nature != null and nature !='' ">
 				AND  t.nature =#{nature}
@@ -130,6 +145,9 @@
 		<if test="district != null and district !='' ">
 			AND  t.district =#{district}
 		</if>
+		<if test="businessDistrict !=null and businessDistrict != '' ">
+		 AND t.business_district = #{businessDistrict}
+		</if>
 		group by t.nature
 	</select>
 
@@ -147,6 +165,9 @@
 			<if test="district != null and district !='' ">
 				AND  t.district =#{district}
 			</if>
+			<if test="businessDistrict !=null and businessDistrict != '' ">
+				 AND t.business_district = #{businessDistrict}
+				</if>
 			<if test="nature != null and nature !='' ">
 				AND  t.nature =#{nature}
 			</if>

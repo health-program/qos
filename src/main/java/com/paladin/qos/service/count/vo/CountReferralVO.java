@@ -10,6 +10,8 @@ public class CountReferralVO {
 
     private Integer upOutNumber;
 
+    private Integer isSigning;
+
     private Integer downOutNumber;
 
     private Date createTime;
@@ -21,6 +23,12 @@ public class CountReferralVO {
     private String updateUserId;
 
     private String  unitId;
+
+    private String unitName;
+
+    public void setUnitName(String unitName) {
+        this.unitName = unitName;
+    }
 
     public String getUnitId() {
         return unitId;
@@ -90,4 +98,11 @@ public class CountReferralVO {
         this.updateUserId = updateUserId;
     }
 
+    public Integer getIsSigning() {
+        return isSigning;
+    }
+
+    public void setIsSigning(Integer isSigning) {
+        this.isSigning = isSigning;
+    }
 }

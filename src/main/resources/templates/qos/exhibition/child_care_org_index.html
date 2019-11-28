@@ -4,7 +4,7 @@
 
 <body>
 <section class="content-header" style="padding-bottom: 3px">
-    <h1>新生儿访视统计</h1>
+    <h1>新生儿建卡统计</h1>
 </section>
 <section class="content">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" value="2015-01-01"  type="text" class="form-control tonto-datepicker-date">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off"   type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -30,14 +30,14 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6" style="padding-right: 10px">
+        <div class="col-md-7" style="padding-right: 10px">
             <div class="box box-solid">
                 <div class="box-body" style="max-height: 830px;overflow: auto">
                     <table id="dataGrid"></table>
                 </div>
             </div>
         </div>
-        <div class="col-md-6" style="padding-left: 0">
+        <div class="col-md-5" style="padding-left: 0">
             <div class="row">
                 <div class="col-md-6" style="padding-right: 3px">
                     <div class="box box-solid" style="margin-bottom: 5px">
@@ -68,8 +68,23 @@
     /*<![CDATA[*/
     var table,dataVal,requestParams,selectUnit;
     $(function () {
+        initStartDateTime();
         initDataGrid();
     });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
+        }
+    }
 
     //图表自适应大小
     window.addEventListener("resize", function () {
@@ -134,7 +149,8 @@
                 subtextStyle: {
                     color : '#44B7D3',
                     fontSize: 35,
-                    lineHeight: 30,
+                    lineHeight: 40,
+                    fontWeight: 'bolder'
                 }
             },
             tooltip : {
@@ -147,7 +163,7 @@
                     type:'pie',
                     color: [ '#44B7D3'], //环形图每块的颜色
                     clockWise:false,
-                    radius : [100, 140],
+                    radius : [90, 115],
                     itemStyle : dataStyle,
                     data:[
                         {
@@ -205,20 +221,21 @@
         };
         option = {
             title: {
-                text: '新生儿访视数',
+                text: '新生儿访视人次数',
                 subtext: fss,
                 x: 'center',
                 y: '38%',
                 textStyle: {
                     color: '#44B7D3',
                     fontFamily: '微软雅黑',
-                    fontSize: 30,
+                    fontSize: 20,
                     fontWeight: 'bolder'
                 },
                 subtextStyle: {
                     color: '#44B7D3',
                     fontSize: 35,
-                    lineHeight: 30,
+                    lineHeight: 40,
+                    fontWeight: 'bolder'
                 }
             },
             tooltip: {
@@ -227,16 +244,16 @@
             },
             series: [
                 {
-                    name: '新生儿访视数',
+                    name: '新生儿访视人次数',
                     type: 'pie',
                     color: ['#44B7D3'], //环形图每块的颜色
                     clockWise: false,
-                    radius: [100, 140],
+                    radius : [90, 115],
                     itemStyle: dataStyle,
                     data: [
                         {
                             value: fss,
-                            name: '新生儿访视数'
+                            name: '新生儿访视人次数'
                         },
                         {
                             value: total === 0 ? fss * 0.3 : (total -fss) * 0.03,
@@ -302,10 +319,12 @@
                         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     },
                     formatter: function (params) {
-                        return params[0].name + '<br/>'
-                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
-                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
-                            + params[2].seriesName + ':'+params[2].data.value+'位<br/>'
+                        let html = params[0].name + '：';
+                        for (var i = 0; i < params.length; i++) {
+                            var param = params[i];
+                            html += '<br/>' + param.marker + param.seriesName + '：' + param.data.value + '位';
+                        }
+                        return html;
                     }
                 },
                 grid: {
@@ -316,7 +335,7 @@
                 },
                 legend: {
                     top: 'bottom',
-                    data:[ '新生儿访视数', '新生儿数','儿童建卡数']
+                    data:[ '新生儿访视人次数', '新生儿数','儿童建卡数']
                 },
                 calculable: true,
                 dataZoom: [   {
@@ -367,7 +386,7 @@
                         data: orgData,
                         axisLabel: {
                             interval:0,
-                            rotate:60//角度顺时针计算的
+                            rotate:65//角度顺时针计算的
                         } ,
                         axisTick: {
                             alignWithLabel: true
@@ -381,7 +400,7 @@
                 ],
                 series: [
                     {
-                        name: '新生儿访视数',
+                        name: '新生儿访视人次数',
                         type: 'bar',
                         label: labelOption,
                         barGap: 0,
@@ -413,15 +432,38 @@
                     {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "新生儿访视数", field: "fss", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "新生儿数", field: "xses", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "儿童建卡数", field: "jks", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "新生儿访视人次数", field: "fss", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    //{title: "新生儿数", field: "xses", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "男性新生儿数", field: "male", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "女性新生儿数", field: "female", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "儿童建卡数", field: "jks", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:810,
             searchbar: '#searchbar',
             onClickRow: function(row, tr) {
@@ -440,10 +482,10 @@
                 let male = res['13201'] || [];
                 let female = res['13202'] || [];
                 let jks = res['13203'] || [];
-                let xses = mergeOrgTotalNumArr(male, female);
-                if ($.isArray(fss) && $.isArray(xses) && $.isArray(jks)) {
-                    let data = [{'name':'fss','data':fss}, {'name':'xses','data':xses}, {'name':'jks','data':jks}];
-                    let fields = ['fss', 'xses', 'jks'];
+                 let xses = mergeOrgTotalNumArr(male, female);
+                if ($.isArray(fss) && $.isArray(male) && $.isArray(jks)&& $.isArray(female)) {
+                    let data = [{'name':'fss','data':fss}, {'name':'male','data':male}, {'name':'female','data':female},{'name':'jks','data':jks},{'name':'xses','data':xses}];
+                    let fields = ['fss','male', 'female', 'jks', 'xses'];
                     let d = initTableData(data, fields);
                     dataVal = d || [];
                     generatorXseChart(xseChart);

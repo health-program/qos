@@ -16,15 +16,19 @@ import com.paladin.qos.service.data.dto.DataUnitDTO;
 import com.paladin.qos.service.data.dto.DataUnitQuery;
 import com.paladin.qos.service.data.vo.BedReportVO;
 import com.paladin.qos.service.data.vo.DataUnitVO;
+import com.paladin.qos.service.familydoctor.vo.DataFamilyDoctorTeamVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Controller
@@ -52,6 +56,13 @@ public class DataUnitController extends ControllerSupport {
 	public Object find() {
 		return CommonResponse.getSuccessResponse(dataUnitService.selectData(null));
 	}
+
+	@RequestMapping(value = "/find/selectHospital", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object findHospital() {
+		List<Integer> types = new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		return CommonResponse.getSuccessResponse(dataUnitService.selectData(types));}
 
 	@GetMapping("/get")
 	@ResponseBody
@@ -146,27 +157,21 @@ public class DataUnitController extends ControllerSupport {
 	@RequestMapping(value = "/bed/processing", method = { RequestMethod.GET, RequestMethod.POST })
 	@ResponseBody
 	public Object getAntibioticsData(AnalysisRequest request) {
-//		String unitId=request.getUnitId();
-//		String dateStr=request.getDate();
-//		String yearStr="";
-//		String monthStr="";
-//		if (!StringUtils.isEmpty(dateStr)){
-//			String[] arr = dateStr.split("-");
-//			yearStr=arr[0];
-//			monthStr=arr[1];
-//		}
-		List<DataUnit> dataUnitList=dataUnitService.findAll();
+		List<DataUnit> dataUnitList=new ArrayList<>();
 
-//		Map<String, Integer> dataUnitMap = dataUnitList.stream().collect(
-//				Collectors.toMap(w -> w.getId(),
-//						w -> w.getBedNumber()));
-
+		if (!StringUtils.isEmpty(request.getUnitId())){
+			DataUnit dataUnit=dataUnitService.get(request.getUnitId());
+			dataUnitList.add(dataUnit);
+		}else{
+			dataUnitList=dataUnitService.findAll();
+		}
 		List<BedReportVO> bedReportVOList=new ArrayList<>();
 		for (DataUnit dataUnit:dataUnitList){
 			BedReportVO bedReportVO=new BedReportVO();
 			if (dataUnit.getType()==1){
 				DataPointMonth analysisMonth=dataUnitService.getBedReportByQuery(dataUnit.getId(),"22013",request.getStartTime(),request.getEndTime());
 				if (null!=analysisMonth){
+					bedReportVO.setUnitId(dataUnit.getId());
 					bedReportVO.setUnitName(dataUnit.getId());
 					bedReportVO.setBedNumber(dataUnit.getBedNumber());
 					bedReportVO.setOpenBedNumber(analysisMonth.getTotalNum());
@@ -175,14 +180,21 @@ public class DataUnitController extends ControllerSupport {
 				}
 			}
 		}
-
-//		AnalysisMonth analysisMonths=dataUnitService.getBedReportByQuery(request.getUnitId(),HospitalizationBedTotal.EVENT_ID,request.getStartTime(),request.getEndTime());
-//
-//		List<BedReportVO> bedReportVOList=new ArrayList<>();
-//		for (AnalysisMonth a:analysisMonths){
-//			BedReportVO bedReportVO=new BedReportVO();
-//			bedReportVO.setUnitName(analysisMonths.);
-//		}
+		orderByUnit(bedReportVOList);
 		return CommonResponse.getSuccessResponse(bedReportVOList);
 		}
+
+
+	private void orderByUnit(List<BedReportVO> list) {
+		if (list != null && list.size() > 0) {
+			Collections.sort(list, new Comparator<BedReportVO>() {
+				@Override
+				public int compare(BedReportVO o1, BedReportVO o2) {
+					String uid1 = o1.getUnitId();
+					String uid2 = o2.getUnitId();
+					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
+				}
+			});
+		}
+	}
 }

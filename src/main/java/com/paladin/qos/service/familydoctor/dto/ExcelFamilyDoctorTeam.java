@@ -15,7 +15,7 @@ public class ExcelFamilyDoctorTeam {
     private String serviceDistrict;
     
     @ReadProperty(cellIndex = 2)
-    private Integer servicePopulation;
+    private String servicePopulation;
     
     public String getTeamName() {
         return teamName;
@@ -29,10 +29,10 @@ public class ExcelFamilyDoctorTeam {
     public void setServiceDistrict(String serviceDistrict) {
         this.serviceDistrict = serviceDistrict;
     }
-    public Integer getServicePopulation() {
+    public String getServicePopulation() {
         return servicePopulation;
     }
-    public void setServicePopulation(Integer servicePopulation) {
+    public void setServicePopulation(String servicePopulation) {
         this.servicePopulation = servicePopulation;
     }
    

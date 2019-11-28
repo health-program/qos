@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+    <section class="content-header">
+        <h1>问题溯源 </h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid">
+            <div class="box-body">
+                <form id="searchbar" class="form-horizontal form-search">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" value="2019-11-01" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-2">
+                            <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" value="2019-11-06" class="form-control tonto-datepicker-date">
+                        </div>
+                        <div class="col-md-2">
+                            <select name="dataSource" class="form-control">
+                                <option value="yiyuan-dyrmyy">昆山市第一人民医院</option>
+                                <option value="yiyuan-zyyy">昆山市中医医院</option>
+                                <option value="yiyuan-dsrmyy">昆山市第三人民医院</option>
+                                <option value="yiyuan-jxrmyy">昆山市锦溪人民医院</option>
+                                <option value="yiyuan-qdrmyy">昆山市千灯人民医院</option>
+                                <option value="yiyuan-jswszx">昆山市精神卫生中心</option>
+                                <option value="yiyuan-ljrmyy">昆山市陆家人民医院</option>
+                                <option value="yiyuan-zsrmyy">昆山市周市人民医院</option>
+                                <option value="yiyuan-zxyjhyy">昆山市中西医结合医院</option>
+                                <option value="yiyuan-dshrmyy">昆山市淀山湖人民医院</option>
+                                <option value="yiyuan-zprmyy">昆山市张浦人民医院</option>
+                                <option value="yiyuan-zzrmyy">昆山市周庄人民医院</option>
+                                <option value="yiyuan-dermyy">昆山市第二人民医院</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="issuesType" class="form-control">
+                                <option value="BCJL">病程记录</option>
+                                <option value="CYJL">出院记录</option>
+                                <option value="FYCB">费用从表</option>
+                                <option value="FYZB">费用主表</option>
+                                <option value="HCSY">高值耗材使用</option>
+                                <option value="GH">挂号</option>
+                                <option value="HCCK">耗材出库</option>
+                                <option value="HCRK">耗材入库</option>
+                                <option value="HZXX">患者信息</option>
+                                <option value="JCBG">检查报告</option>
+                                <option value="JCSQ">检查申请</option>
+                                <option value="JYBG">检验报告</option>
+                                <option value="JYMX">检验明细</option>
+                                <option value="JYSQ">检验申请</option>
+                                <option value="JZJL">就诊记录</option>
+                                <option value="ZYSF">门诊住院收费统计</option>
+                                <option value="RYCY">入院出院患者统计</option>
+                                <option value="RYJL">入院记录</option>
+                                <option value="SSCZ">手术操作</option>
+                                <option value="SXJL">输血记录</option>
+                                <option value="SXSQ">输血申请</option>
+                                <option value="XYCFCB">西药处方从表</option>
+                                <option value="XYCFZB">西药处方主表</option>
+                                <option value="XYBA">西医病案首页</option>
+                                <option value="XYBACB">西医病案首页手术从表</option>
+                                <option value="YPCK">药品出库</option>
+                                <option value="YPRK">药品入库</option>
+                                <option value="ZLCZ">治疗处置</option>
+                                <option value="ZYCFCB">中药处方从表</option>
+                                <option value="ZYCFZB">中药处方主表</option>
+                                <option value="ZYBA">中医病案首页表</option>
+                                <option value="ZYBASS">中医病案首页中手术记录</option>
+                                <option value="BRYZ">住院病人医嘱表</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+                <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+                <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+            </div>
+        </div>
+        <div class="box box-solid" style="margin-top:20px">
+            <div id="result" class="box-body">
+                <table id="dataGrid"></table>
+                <!--      <div id="toolbar">
+                    <div class="btn-group">
+                        <a onclick="add()" class="btn btn-default"><i class="glyphicon glyphicon-plus"></i>新增</a>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript">
+    var table;
+    $(function() {
+        initDataGrid();
+    });
+
+    function initDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                [{
+                        title: "医院名称",
+                        formatter: function formatter(value, row, index) {
+                            return row.ORGAN_NAME || row.UPDATE_ORGANNAME || row.CHK_ORGAN_NAME || row.APP_ORGAN_NAME || row.TEST_ORGAN_NAME || " ";
+                        }
+                    },
+                    {
+                        title: "业务编码",
+                        formatter: function formatter(value, row, index) {
+                            return row.HP_S_NO || row.OP_EM_HP_NO || row.OP_EM_NO || row.OUTSTORE_CODE || row.INSTORE_CODE || row.CARDNO || row.OP_EM_HP_EX_NO || " ";
+                        }
+                    },
+                    { title: "原因", field: "KHNR" },
+                    {
+                        title: "记录时间",
+                        formatter: function formatter(value, row, index) {
+                            var value = row.POF_DT || row.RCD_DT || row.REC_DT || row.OUTSTORE_DATE || row.UPDATE_DATE || row.RPT_DT || row.APPLY_DT ||
+                                row.OUT_H_DATE || row.INSTORE_DATE || row.STAT_DATE || row.SEE_DOC_DT || row.VISIT_DATE || "";
+                            if(!isNaN(value)) {
+                                return $.formatDate(new Date(value), "yyyy-MM-dd");
+                            } else {
+                                return value;
+                            }
+                        }
+                    }
+                ]
+            ],
+            url: '/qos/improvement/problem/find/page',
+            searchbar: '#searchbar',
+            /*  exportUrl: '/qos/improvement/problem/export',
+              showExport: true,
+              showColumns: true,*/
+            pagination: true,
+            toolbar: "#toolbar"
+            /*showRefresh: true*/
+        });
+    }
+
+    </script>
+</body>
+
+</html>

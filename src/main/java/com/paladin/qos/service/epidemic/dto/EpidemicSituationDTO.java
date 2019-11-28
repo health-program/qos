@@ -207,5 +207,10 @@ public class EpidemicSituationDTO {
 	public void setSchoolYear(String schoolYear) {
 		this.schoolYear = schoolYear;
 	}
+
+    @Override
+    public String toString() {
+        return "疫情ID:" + id;
+    }
     
 }

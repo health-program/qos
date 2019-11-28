@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type"/>
+    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type,business-region-type"/>
     <input th:value="${id}" id="id" type="hidden" />
     <section class="content-header">
         <h1>学校信息详情</h1>
@@ -32,18 +32,21 @@
 					{ title: "学年", name: "schoolYear", inputType: "DATE",attr:{class: "form-control tonto-datepicker-year"} },
 					{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 					{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
-					{ title: "区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
+					{ title: "行政区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
+					{ title: "业务管理区域", name: "businessDistrict",enum:"business-region-type",required: "required", inputType: "SELECT" },
 					{ title: "主要领导姓名", name: "mainLeaderName", inputType: "TEXT" },
 					{ title: "主要领导电话", name: "mainLeaderCellphone", inputType: "TEXT" },
 					{ title: "分管领导姓名", name: "chargeLeaderName", inputType: "TEXT" },
 					{ title: "分管领导电话", name: "chargeLeaderCellphone", inputType: "TEXT" },
 					{ title: "具体负责人姓名", name: "specificChargeLeaderName", inputType: "TEXT" },
 					{ title: "具体负责人电话", name: "specificChargeLeaderCellphone", inputType: "TEXT" },
-					{title : "校医(专职)人数",name : "schoolDoctorFull",inputType : "NUMBER"}, 
+					{title : "校医人数",name : "schoolDoctorFull",inputType : "NUMBER"}, 
 					{title : "保健老师(专职)人数",name : "healthTeacherFull",inputType : "NUMBER"},
-					{title : "校医(兼职)人数",name : "schoolDoctorPart",inputType : "NUMBER"}, 
+					/* {title : "校医(兼职)人数",name : "schoolDoctorPart",inputType : "NUMBER"},  */
 					{title : "保健老师(兼职)人数",name : "healthTeacherPart",inputType : "NUMBER"},
 					{title : "后勤保障人数",name : "logistics",inputType : "NUMBER"}, 
+					{title : "教职员工人数",name : "teaching",required : "required",inputType : "NUMBER"},
+					{title : "卫生保健人员",name : "hygieneHealth",required : "required",inputType : "TEXT"},
 					//{title : "学生总人数",name : "total",inputType : "NUMBER"},
 					{ title: "地址", name: "address", inputType: "TEXTAREA" ,colspan: 2 },
 					{
@@ -68,8 +71,6 @@
 								+ data.total
 								+ '<span style="margin-left:2%;">寄宿生人数</span>:'
 								+ data.boarders
-								+ '<span style="margin-left:2%;">教职员工人数</span>:'
-								+ data.teaching
 								+ '</span>';
 								return html;
 								},
@@ -86,8 +87,7 @@
 									          {title : "年级",name : "grade",required : "required", enum : "grade-type",inputType : "SELECT"},
 									          {title : "班级",name : "klass",required : "required", inputType : "TEXT"},
 											  {title : "学生人数",name : "total",required : "required",inputType : "TEXT"}, 
-											  {title : "寄宿生人数",name : "boarders",required : "required",inputType : "TEXT"}, 
-											  {title : "教职员工人数",name : "teaching",required : "required",inputType : "TEXT"}
+											  {title : "寄宿生人数",name : "boarders",required : "required",inputType : "TEXT"}
 											  ]
 								}
 								} ]

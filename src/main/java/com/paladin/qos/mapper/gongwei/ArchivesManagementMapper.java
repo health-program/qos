@@ -10,7 +10,7 @@ import com.paladin.qos.service.gongwei.vo.ArchivesManagementVO;
 public interface ArchivesManagementMapper {
 
     //档案总数
-    ArchivesManagementVO getArchivesTotal (@Param("eventId1") String eventId1, @Param("eventId2") String eventId2, @Param("unitId") String unitId);
+    Long getArchivesTotal ();
 
 
     //一个月档案数

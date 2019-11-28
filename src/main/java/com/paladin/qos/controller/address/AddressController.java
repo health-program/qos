@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 @Controller
-@RequestMapping("/qos/address")
+@RequestMapping("/home/page/address")
 public class AddressController extends ControllerSupport {
 
     @Autowired

@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off" value="2015-01-01"  type="text" class="form-control tonto-datepicker-date">
+                        <input name="startTime"  id="startTime" placeholder="请输入开始时间" autocomplete="off"  type="text" class="form-control tonto-datepicker-date">
                     </div>
                     <div class="col-md-2">
                         <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
@@ -68,8 +68,24 @@
     /*<![CDATA[*/
     var table,dataVal,requestParams,selectUnit;
     $(function () {
+        initStartDateTime();
         initDataGrid();
     });
+
+
+    function initStartDateTime() {
+        if (!$("#startTime").val()) {
+            var date = new Date();
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var time = year + "-" + month + "-" + "01";
+            $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24 * 60 * 60 * 1000);
+            var endDay = endDate.getDate();
+            var endTime = year + "-" + month + "-" + endDay;
+            $("#endTime").val(endTime);
+        }
+    }
 
     //图表自适应大小
     window.addEventListener("resize", function () {
@@ -86,21 +102,21 @@
         let jks = 0;
         let selectData = [];
         let total = 0;
-        if ( selectUnit && selectUnit.length > 0 ) {
-            selectData = dataVal.filter( u => selectUnit.indexOf(u.unitId) > -1);
+        if (selectUnit && selectUnit.length > 0) {
+            selectData = dataVal.filter(u => selectUnit.indexOf(u.unitId) > -1);
             selectData.forEach(data => {
                 jks += data.zyjk
             });
             dataVal.forEach(data => {
                 total += data.yffs
             });
-        }else {
+        } else {
             dataVal.forEach(data => {
                 jks += data.zyjk
             });
         }
         if (jks === 0) {
-            showChartInfo(chart,'暂无数据');
+            showChartInfo(chart, '暂无数据');
             return false;
         }
         var dataStyle = {
@@ -128,13 +144,14 @@
                 textStyle : {
                     color : '#44B7D3',
                     fontFamily : '微软雅黑',
-                    fontSize : 35,
+                    fontSize : 40,
                     fontWeight : 'bolder'
                 },
                 subtextStyle: {
                     color : '#44B7D3',
                     fontSize: 35,
-                    lineHeight: 30,
+                    lineHeight: 40,
+                    fontWeight: 'bolder'
                 }
             },
             tooltip : {
@@ -147,7 +164,7 @@
                     type:'pie',
                     color: [ '#44B7D3'], //环形图每块的颜色
                     clockWise:false,
-                    radius : [100, 140],
+                    radius : [110, 140],
                     itemStyle : dataStyle,
                     data:[
                         {
@@ -205,20 +222,21 @@
         };
         option = {
             title: {
-                text: '孕妇产后访视数',
+                text: '孕妇产后访视人次数',
                 subtext: yffs,
                 x: 'center',
                 y: '38%',
                 textStyle : {
                     color : '#44B7D3',
                     fontFamily : '微软雅黑',
-                    fontSize : 25,
+                    fontSize : 23,
                     fontWeight : 'bolder'
                 },
                 subtextStyle: {
                     color : '#44B7D3',
                     fontSize: 35,
-                    lineHeight: 30,
+                    lineHeight: 40,
+                    fontWeight: 'bolder'
                 }
             },
             tooltip : {
@@ -227,16 +245,16 @@
             },
             series : [
                 {
-                    name:'孕妇产后访视数',
+                    name:'孕妇产后访视人次数',
                     type:'pie',
                     color: [ '#44B7D3'], //环形图每块的颜色
                     clockWise:false,
-                    radius : [100, 140],
+                    radius : [110, 140],
                     itemStyle : dataStyle,
                     data:[
                         {
                             value:yffs,
-                            name:'孕妇产后访视数'
+                            name:'孕妇产后访视人次数'
                         },
                         {
                             value: total === 0 ? yffs * 0.3 : (total -yffs) * 0.05,
@@ -302,10 +320,12 @@
                         type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
                     },
                     formatter: function (params) {
-                        return params[0].name + '<br/>'
-                            + params[0].seriesName + ':'+params[0].data.value+'位<br/>'
-                            + params[1].seriesName + ':'+ params[1].data.value+'位<br/>'
-                            + params[2].seriesName + ':'+params[2].data.value+'位<br/>'
+                        let html = params[0].name + '：';
+                        for (var i = 0; i < params.length; i++) {
+                            var param = params[i];
+                            html += '<br/>' + param.marker + param.seriesName + '：' + param.data.value + '位';
+                        }
+                        return html;
                     }
                 },
                 grid: {
@@ -316,7 +336,7 @@
                 },
                 legend: {
                     top: 'bottom',
-                    data:[ '早孕建卡数', '孕妇建卡数','孕妇产后访视数']
+                    data:[ '早孕建卡数', '孕妇建卡数','孕妇产后访视人次数']
                 },
                 calculable: true,
                 dataZoom: [   {
@@ -367,7 +387,7 @@
                         data: orgData,
                         axisLabel: {
                             interval:0,
-                            rotate:60//角度顺时针计算的
+                            rotate:65//角度顺时针计算的
                         } ,
                         axisTick: {
                             alignWithLabel: true
@@ -393,7 +413,7 @@
                         barGap: 0,
                         data: data1
                     },{
-                        name: '孕妇产后访视数',
+                        name: '孕妇产后访视人次数',
                         type: 'bar',
                         label: labelOption,
                         barGap: 0,
@@ -413,15 +433,31 @@
                     {title: "医疗机构", field: "agencyName", align: "center",footerFormatter: function (data) {
                             return '总计';
                         }},
-                    {title: "早孕建卡数", field: "zyjk", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "孕妇建卡数", field: "yfjk", align: "center",footerFormatter: sumTotalFormatterModal},
-                    {title: "孕妇产后访视数", field: "yffs", align: "center",footerFormatter: sumTotalFormatterModal},
+                    {title: "早孕建卡数", field: "zyjk", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "孕妇建卡数", field: "yfjk", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "孕妇产后访视人次数", field: "yffs", align: "center",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
 
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
             showFooter:true,
             pagination: false,
+            sidePagination: 'client',
             height:810,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');

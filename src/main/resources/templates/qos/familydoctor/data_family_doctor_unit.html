@@ -51,7 +51,7 @@
     
 	
 	 function unitSelected(row) {
-		 debugger;
+
 	        selectUnit = row.unitId;
 	        pieChart1();
 	    }
@@ -399,7 +399,7 @@
     
     var pieChart = echarts.init(document.getElementById('pieChart'));
     function pieChart1(){
-    	debugger;
+
     	var unitId = selectUnit || 'total';
     	var res=convertChartData(dataAll, true);
     	var total= res[unitId].doctorNum+res[unitId].nurseNum+res[unitId].healthCoordinatorNum

@@ -152,6 +152,16 @@ public class AnalysisController {
 						if (item != null) {
 							map.put(eventId, item);
 						}
+					}else if (DataEvent.EVENT_TYPE_MAX == eventType) {
+						Object item = analysisService.countMaxNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+						if (item != null) {
+							map.put(eventId, item);
+						}
+					}else if (DataEvent.EVENT_TYPE_MIN == eventType) {
+						Object item = analysisService.countMinNumByUnit(eventId, unitType, startDate, endDate, ignoreUnitIds);
+						if (item != null) {
+							map.put(eventId, item);
+						}
 					}
 				}
 			}

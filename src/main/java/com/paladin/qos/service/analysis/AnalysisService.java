@@ -6,6 +6,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import com.paladin.qos.model.gongwei.Disease;
+import com.paladin.qos.model.gongwei.EntityGongwei;
+import com.paladin.qos.model.home.Sign;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,7 @@ import com.paladin.qos.service.analysis.data.DataPointWeekMonth;
 import com.paladin.qos.service.analysis.data.DataPointWeekYear;
 import com.paladin.qos.service.analysis.data.DataPointYear;
 import com.paladin.qos.service.analysis.data.DataResult;
+import com.paladin.qos.service.analysis.data.DataSigningMonth;
 
 @Service
 public class AnalysisService {
@@ -371,6 +376,38 @@ public class AnalysisService {
 		orderByUnit(result);
 		return result;
 	}
+	
+	/**
+	 * 获取时间段内某类型单位某事件的最大值
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countMaxNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.countMaxNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+	}
+	
+	/**
+	 * 获取时间段内某类型单位某事件的最小值
+	 * 
+	 * @param eventId
+	 * @param unitType
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	public List<DataCountUnit> countMinNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.countMinNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+	}
 
 	/**
 	 * 获取时间段内所有单位某事件的事件总数
@@ -576,7 +613,7 @@ public class AnalysisService {
 				@Override
 				public int compare(DataByUnit o1, DataByUnit o2) {
 					String uid1 = o1.getUnitId();
-					String uid2 = o1.getUnitId();
+					String uid2 = o2.getUnitId();
 					return DataConstantContainer.getUnit(uid1).getOrderNum() > DataConstantContainer.getUnit(uid2).getOrderNum() ? 1 : -1;
 				}
 			});
@@ -709,4 +746,67 @@ public class AnalysisService {
 		return result;
 	}
 
+	/**
+	 * 人口签约数
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<DataSigningMonth> populationSigningNum(){
+	   return analysisMapper.populationSigningNum();
+	}
+
+	public List<DataSigningMonth> getTwoYear() {
+
+		return analysisMapper.getTwoYear();
+	}
+
+	/**
+	 * 根据月份获取建档率
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<DataSigningMonth> getArchivesRate() {
+
+		return analysisMapper.getArchivesRate();
+	}
+
+	/**
+	 * 根据月份获取所有建档数
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public Long getArchivesNumber(Date date) {
+
+		return analysisMapper.getArchivesNumber(date);
+	}
+
+	/**
+	 * 实际签约信息
+	 * @return
+	 * @see [类、类#方法、类#成员]
+	 */
+	public List<Sign> getSignInfo(){
+		return analysisMapper.getSignInfo();
+	}
+
+
+	//获得数据的总方法
+	public  String getTotalData(String id){
+		return  analysisMapper.getTotalData(id);
+	}
+
+	public List<EntityGongwei> getPressureTotalDataFromLocal(String year) {
+
+		return analysisMapper.getPressureTotalDataFromLocal(year);
+	}
+
+	public List<EntityGongwei> getSugarTotalDataFromLocal(String year) {
+
+		return analysisMapper.getSugarTotalDataFromLocal(year);
+	}
+
+	public List<Disease> findNameList() {
+
+		return analysisMapper.findNameList();
+	}
 }

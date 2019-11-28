@@ -1,15 +1,18 @@
 package com.paladin.common.model.syst;
 
-import java.util.Date;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import java.util.Date;
 
 public class SysLoggerLogin {
 
-	// 
+
 	@Id
+	@GeneratedValue(generator = "UUID")
 	private String id;
 
-	// 
+
 	private String ip;
 
 	// 登录方式
@@ -18,13 +21,15 @@ public class SysLoggerLogin {
 	// 登录账号
 	private String account;
 
+	private String loginAction;
+
 	// 用户ID
 	private String userId;
 
 	// 用户类型
 	private Integer userType;
 
-	// 
+	@OrderBy("DESC")
 	private Date createTime;
 
 	public String getId() {
@@ -83,4 +88,11 @@ public class SysLoggerLogin {
 		this.createTime = createTime;
 	}
 
+	public String getLoginAction() {
+		return loginAction;
+	}
+
+	public void setLoginAction(String loginAction) {
+		this.loginAction = loginAction;
+	}
 }

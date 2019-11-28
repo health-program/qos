@@ -4,7 +4,7 @@
 <head th:include="/common/header" />
 
 <body>
-     <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type" /> 
+     <tt:constant enumcode="boolean-type,report-unit-type,sickness-type,region-type,school-section-type,grade-type" /> 
     <section class="content-header">
         <h1>疫情管理</h1>
     </section>
@@ -18,7 +18,7 @@
                         </div>
                         <div class="col-md-2">
 							<select id="region" name="region"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.region}"enumcode="region-type">
-								<option value="">请选择区域</option>
+								<option value="">请选择行政区域</option>
 							</select>
 						</div>
                          <div class="col-md-2">
@@ -61,32 +61,13 @@
     <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
     <script type="text/javascript">
     var table,treedata=[];
-    function findParentNode(id, nodes, path) {
-	  	  if(!path){
-	  		  path=[];
-	  	  }
-	  	  var currentNode;
-	  	  for(var i = 0; i < nodes.length; i++) {
-	  	      //先找出当前节点
-	  	      if(nodes[i].id==id){
-	  	    	  currentNode=nodes[i];
-	  	    	  path.push(currentNode);
-	  	    	  findParentNode(currentNode.parentId, nodes, path);
-	  	      }
-	  	  }
-	  }
-    
+
     $(function() {
-    	$.ajax({
-       	 	url: '/qos/org/school/people/findList',
-            async: false,
-            type:'post',
-    		dataType:'json',
-            success: function (data, status) {
-            	treedata=data.result;
-            }
-        });
-        initDataGrid();
+    	$.getAjax("/qos/org/school/people/findList",function(data){
+    		treedata = classDataHandler(data);   		
+    		initDataGrid();
+    	})
+        
     });
 
     function initDataGrid() {
@@ -100,14 +81,23 @@
                 [
                     //{ title: "事发单位名称", align: "center", field: "incidentUnit" },
                     { title: "学年", align: "center", field: "schoolYear"},
-                    { title: "班级", field: "grade",
-    					formatter:function(value, row, index){
-    						var path=[],pathStr='';
-    						findParentNode(value,treedata,path);	
-    						path.forEach(function(item){
-    							pathStr=item.name+'-'+pathStr;
-    						})
-    						return pathStr.substr(0,pathStr.length-1);;
+                    { title: "班级", field: "grade",width: "350px",
+    					formatter:function(v, row, index){
+    						var g = function(items, str) {
+                                for (var i = 0; i < items.length; i++) {
+                                    var item = items[i];
+                                    if (item.id == v) {
+                                        return str ? str + "-" + item.name : item.name;
+                                    } else {
+                                        if (item.children) {
+                                            var r = g(item.children, str ? str + "-" + item.name : item.name);
+                                            if (r) return r;
+                                        }
+                                    }
+                                }
+                            }
+
+                            return g(treedata);
     					}
                      },
                     { title: "报告单位", align: "center", field: "reportUnit",enumcode: "report-unit-type"},
@@ -143,6 +133,80 @@
             showRefresh: true
         });
     }
+    
+   
+    
+    function classDataHandler(data) {
+        var schoolNames = data.schoolName,
+            schoolPeople = data.schoolPeople,
+            schoolYear = data.schoolYear;
+
+        var nameMap = {};
+        schoolNames.forEach(function(name) {
+            nameMap[name.id] = name.schoolFullName;
+        });
+
+        var yearMap = {};
+        var yearSchoolNodeMap = {};
+
+        schoolYear.forEach(function(sy) {
+            var y = sy.schoolYear;
+            var yearNode = yearMap[y];
+
+            if (!yearNode) {
+                yearNode = {
+                    name: y + '学年',
+                    id: y,
+                    children: []
+                }
+                yearMap[y] = yearNode;
+            }
+
+            var yearSchoolNode = {
+                name: nameMap[sy.parentSchoolId],
+                id: sy.id,
+                children: []
+            }
+
+            yearNode.children.push(yearSchoolNode);
+            yearSchoolNodeMap[sy.id] = yearSchoolNode;
+        });
+
+        var schoolPeopleNodeMap = {};
+
+        schoolPeople.forEach(function(sp) {
+            var id = sp.schoolId,
+                spId = id + '-' + sp.schoolSection + '-' + sp.grade;
+
+            var yearSchoolNode = yearSchoolNodeMap[id];
+            if (yearSchoolNode) {
+                var schoolPeopleNode = schoolPeopleNodeMap[spId];
+                if (!schoolPeopleNode) {
+                    schoolPeopleNode = {
+                        name: $.getConstantEnumValue('school-section-type', sp.schoolSection) + '-' + $.getConstantEnumValue('grade-type', sp.grade),
+                        id: spId,
+                        children: []
+                    }
+
+                    yearSchoolNode.children.push(schoolPeopleNode);
+                    schoolPeopleNodeMap[spId] = schoolPeopleNode;
+                }
+
+                schoolPeopleNode.children.push({
+                    name: sp.klass,
+                    id: sp.id,
+                    isClass: true
+                });
+            }
+        });
+
+        var treedata = [];
+        for (var o in yearMap) {
+            treedata.push(yearMap[o]);
+        }
+
+        return treedata;
+    }
 
     function add() {
         window.location = '/qos/epidemic/add';
@@ -173,12 +237,14 @@
         return row;
     }
     
+  
     function importEpidemic() {
-        $.openPageLayer(importContent, {
+    	  $.openPageLayer(importContent, {
             width: 600,
             height: 200,
             title: '导入疫情',
             success: function(layero, index) {
+            	
             }
         });
     }
@@ -201,7 +267,6 @@
     
     function importSubmit() {
 	
-    //var	teamId=$("#teamId").val();
     
     var filename = $("#file").val();
     if (!filename) {

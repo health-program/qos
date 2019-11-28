@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type"/>
+    <tt:constant enumcode="nature-type,region-type,subordination-type,school-section-type,grade-type,boolean-type"/>
     <input th:value="${id}" id="id" type="hidden" />
     <section class="content-header">
         <h1>双向转诊统计详情</h1>
@@ -19,7 +19,8 @@
     	<a href="/qos/count/referral/index" class="btn btn-primary btn-block">返回</a>
     </div>
     <input type="hidden" id="id" th:value="${id}"/>
-    <div th:include="/qos/footer" />
+    <div th:include="/common/footer" />
+<script type="text/javascript" src="/static/assets/jquery-validation/localization/messages_zh.js" charset="UTF-8" ></script>
     <script type="text/javascript">
 
     var options = {
@@ -28,9 +29,14 @@
 	        server: false,
 	        editFormClass: false,
 	        columns: [
-					{title : "本医疗机构向上级医疗机构转出人数",name : "upOutNumber",inputType : "NUMBER"},
-					{title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",inputType : "NUMBER"},
-                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"}
+					{title : "本医疗机构向上级医疗机构转出人数",name : "upOutNumber",required: "required",inputType : "NUMBER",attr:{
+		            	'data-type':'naturalNumber'
+		            }},
+					{title : "本医疗机构向下级医疗机构转出人数",name : "downOutNumber",required: "required",inputType : "NUMBER",attr:{
+		            	'data-type':'naturalNumber'
+		            }},
+                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/select"},
+                { title: "是否为签约人员", field: "isSigning",name: "isSigning", inputType: "RADIO",required: "required", enum: "boolean-type"}
 				     ]
 					}
 					var model, itemId;

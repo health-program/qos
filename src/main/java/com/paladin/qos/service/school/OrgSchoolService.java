@@ -237,7 +237,7 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
         throw new BusinessException("导入异常");
     }
     
-    ExcelReader<ExcelOrgSchool> reader = new ExcelReader<>(ExcelOrgSchool.class, schoolImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 1);
+    ExcelReader<ExcelOrgSchool> reader = new ExcelReader<>(ExcelOrgSchool.class, schoolImportColumns,new DefaultSheet(workbook.getSheetAt(0)), 2);
     List<ExcelImportError> errors = new ArrayList<>();
     
     int i = 0;
@@ -252,6 +252,10 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
 		excelOrgSchool = reader.readRow();
 	    } catch (ExcelReadException e) {
 		errors.add(new ExcelImportError(i, e));
+		continue;
+	    }
+	    
+	    if(excelOrgSchool == null){
 		continue;
 	    }
 

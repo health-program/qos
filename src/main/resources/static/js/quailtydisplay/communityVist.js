@@ -51,7 +51,7 @@ function getNumbers(){
                                               fontSize: 10,
                                                color: '#fff'
                                            },
-                                         data: ['门诊人次', '急诊人次', '当日门急诊人次', '当月门急诊人次'],
+                                         data: ['当天门诊人次', '当天急诊人次', '当月门诊人次', '当月急诊人次'],
                                      },
                                      grid: { //图表的位置
                                          top: '20%',
@@ -112,7 +112,7 @@ function getNumbers(){
                                          }
                                      }],
                                      series: [{
-                                             name: '门诊人次',
+                                             name: '当天门诊人次',
                                              type: 'bar',
                                              stack: 'sum',
                                              barWidth: '5px',
@@ -121,7 +121,7 @@ function getNumbers(){
 
                                          },
                                          {
-                                             name: '急诊人次',
+                                             name: '当天急诊人次',
                                              type: 'bar',
                                              barWidth: '5px',
                                              stack: 'sum',
@@ -129,7 +129,7 @@ function getNumbers(){
 
                                          },
                                          {
-                                             name: '当日门急诊人次',
+                                             name: '当月门诊人次',
                                              type: 'bar',
                                              color: '#F6931C',
                                              stack: 'sum1',
@@ -138,7 +138,7 @@ function getNumbers(){
 
                                          },
                                          {
-                                             name: '当月门急诊人次',
+                                             name: '当月急诊人次',
                                              type: 'bar',
                                              color: '#FFD52E',
                                              stack: 'sum1',

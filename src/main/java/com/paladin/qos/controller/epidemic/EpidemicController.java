@@ -1,24 +1,8 @@
 package com.paladin.qos.controller.epidemic;
 
-import java.io.IOException;
-
-import javax.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.alibaba.druid.util.StringUtils;
+import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
 import com.paladin.framework.excel.write.ExcelWriteException;
@@ -35,8 +19,19 @@ import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
 import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.OrgSchoolPeopleService;
 import com.paladin.qos.service.school.OrgSchoolService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-/** 疫情管理
+import javax.validation.Valid;
+import java.io.IOException;
+
+/**
+ * 疫情管理
+ * 
  * @author 黄伟华
  * @version 2019年6月11日 下午1:39:24
  */
@@ -46,7 +41,7 @@ public class EpidemicController extends ControllerSupport {
 
     @Autowired
     private EpidemicSituationService epidemicSituationService;
-    
+
     @Autowired
     private OrgSchoolNameService orgSchoolNameService;
     @Autowired
@@ -64,39 +59,43 @@ public class EpidemicController extends ControllerSupport {
     @ResponseBody
     @QueryOutputMethod(queryClass = EpidemicSituationQueryDTO.class, paramIndex = 0)
     public Object find(EpidemicSituationQueryDTO query) {
-	return CommonResponse.getSuccessResponse(epidemicSituationService.searchFindPage(query));
+	return CommonResponse.getSuccessResponse(epidemicSituationService
+		.searchFindPage(query));
     }
-    
+
     @RequestMapping("/find/select")
     @ResponseBody
     public Object schoolName() {
-	return CommonResponse.getSuccessResponse(orgSchoolNameService.schoolNameFind());
+	return CommonResponse.getSuccessResponse(orgSchoolNameService
+		.schoolNameFind());
     }
-    
+
     @RequestMapping("/detail")
     public String detailInput(@RequestParam String id, Model model) {
 	model.addAttribute("id", id);
 	return "/qos/epidemic/epidemic_situation_detail";
     }
-    
+
     @RequestMapping("/get")
     @ResponseBody
     public Object getDetail(@RequestParam String id) {
-	return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
+	return CommonResponse.getSuccessResponse(beanCopy(
+		epidemicSituationService.get(id), new EpidemicSituationVO()));
     }
 
     @RequestMapping("/add")
     public String add() {
 	return "/qos/epidemic/epidemic_situation_add";
     }
-    
+
     @RequestMapping("/traceability/index")
     public String traceabilityIndex() {
 	return "/qos/epidemic/epidemic_situation_statistics_count";
     }
-    
+
     /**
-     *  溯源指标
+     * 溯源指标
+     * 
      * @param query
      * @return
      * @see [类、类#方法、类#成员]
@@ -106,60 +105,87 @@ public class EpidemicController extends ControllerSupport {
     public Object traceabilityStatistics(EpidemicSituationQueryDTO query) {
 	return CommonResponse.getSuccessResponse(epidemicSituationService.dataTraceabilityRate(query));
     }
-    
+
     @RequestMapping("/save")
     @ResponseBody
-    public Object save(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){
+    @SysControllerLog(action = "新增学校疫情")
+    public Object save(@Valid EpidemicSituationDTO dto,BindingResult bindingResult) {
 	if (bindingResult.hasErrors()) {
-		return validErrorHandler(bindingResult);
+	    return validErrorHandler(bindingResult);
 	}
 	String id = UUIDUtil.createUUID();
 	dto.setId(id);
-	
+
 	EpidemicSituation eSituation = beanCopy(dto, new EpidemicSituation());
-	//验证班级id
+
+	// 验证班级id
 	OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(eSituation.getGrade());
-	if(orgSchoolPeople==null){
-		return CommonResponse.getFailResponse("只可以选择班级项！");
+	if (orgSchoolPeople == null) {
+	    return CommonResponse.getFailResponse("只可以选择班级项！");
 	}
+
 	OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople.getSchoolId());
-	if(orgSchool==null){
-		return CommonResponse.getFailResponse("该学校信息不存在，请确认！");
+	if (orgSchool == null) {
+	    return CommonResponse.getFailResponse("该学校信息不存在，请确认！");
 	}
-	if(!StringUtils.equals(dto.getSchoolYear(), orgSchool.getSchoolYear())){
-		throw new BusinessException("该学校该学年没有该班级，请确认!");
-	}
+
+	eSituation.setSchoolYear(orgSchool.getSchoolYear());
 	eSituation.setIncidentUnit(orgSchool.getParentSchoolId());
+
 	if (epidemicSituationService.save(eSituation) > 0) {
-		return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
+	    return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id),new EpidemicSituationVO()));
 	}
 	return CommonResponse.getFailResponse();
     }
-    
+
     @RequestMapping("/update")
+    @SysControllerLog(action = "修改学校疫情")
     @ResponseBody
-    public Object update(@Valid EpidemicSituationDTO dto,BindingResult bindingResult){
-		if (bindingResult.hasErrors()) {
-			return validErrorHandler(bindingResult);
-		}
-		String id = dto.getId();
-		try {
-			if (epidemicSituationService.updateEpidemic(dto) > 0) {
-				return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id), new EpidemicSituationVO()));
-			}
-		} catch (Exception e) {
-			return CommonResponse.getFailResponse(e.getMessage());
-		}
-		return CommonResponse.getFailResponse();
+    public Object update(@Valid EpidemicSituationDTO dto,
+	    BindingResult bindingResult) {
+	if (bindingResult.hasErrors()) {
+	    return validErrorHandler(bindingResult);
+	}
+	String id = dto.getId();
+	try {
+
+	    EpidemicSituation eSituation = epidemicSituationService.get(id);
+	    if (eSituation == null) {
+		return CommonResponse.getFailResponse("没写选择需要修改的信息！");
+	    }
+
+	    eSituation = beanCopy(dto, eSituation);
+
+	    // 验证班级id
+	    OrgSchoolPeople orgSchoolPeople = orgSchoolPeopleService.get(eSituation.getGrade());
+	    if (orgSchoolPeople == null) {
+		return CommonResponse.getFailResponse("只可以选择班级项！");
+	    }
+
+	    OrgSchool orgSchool = orgSchoolService.get(orgSchoolPeople.getSchoolId());
+	    if (orgSchool == null) {
+		return CommonResponse.getFailResponse("该学校信息不存在，请确认！");
+	    }
+
+	    eSituation.setSchoolYear(orgSchool.getSchoolYear());
+	    eSituation.setIncidentUnit(orgSchool.getParentSchoolId());
+
+	    if (epidemicSituationService.update(eSituation) > 0) {
+		return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id),new EpidemicSituationVO()));
+	    }
+	} catch (Exception e) {
+	    return CommonResponse.getFailResponse(e.getMessage());
+	}
+	return CommonResponse.getFailResponse();
     }
-    
-    
+
     @RequestMapping("/remove")
+    @SysControllerLog(action = "删除学校疫情")
     @ResponseBody
-    public Object remove(@RequestParam String id){
+    public Object remove(@RequestParam String id) {
 	return CommonResponse.getSuccessResponse(epidemicSituationService.removeByPrimaryKey(id));
     }
-    
+
     @RequestMapping("/import")
     @ResponseBody
     public Object importEpidemic(@RequestParam("file") MultipartFile file) {
@@ -169,7 +195,7 @@ public class EpidemicController extends ControllerSupport {
 	    return CommonResponse.getFailResponse("导入异常");
 	}
     }
-    
+
     @PostMapping(value = "/export")
     @ResponseBody
     public Object export(@RequestBody EpidemicExportCondition condition) {
@@ -183,7 +209,7 @@ public class EpidemicController extends ControllerSupport {
 		if (condition.isExportAll()) {
 		    return CommonResponse.getSuccessResponse("success",ExportUtil.export(condition,epidemicSituationService.searchAll(query),EpidemicSituation.class));
 		} else if (condition.isExportPage()) {
-		    return CommonResponse.getSuccessResponse("success", ExportUtil.export(condition, epidemicSituationService.searchPage(query).getData(), EpidemicSituation.class));
+		    return CommonResponse.getSuccessResponse("success",ExportUtil.export(condition, epidemicSituationService.searchPage(query).getData(),EpidemicSituation.class));
 		}
 	    }
 	    return CommonResponse.getFailResponse("导出数据失败：请求参数错误");

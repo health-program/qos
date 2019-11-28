@@ -21,6 +21,9 @@ public class OrgSchoolVO {
 
 	// 区域
 	private String district;
+	
+	// 业务管理区域
+	private String businessDistrict;
 
 	// 性质
 	private Integer nature;
@@ -45,6 +48,12 @@ public class OrgSchoolVO {
 	
 	// 后勤保障人数
 	private Integer logistics;
+	
+	//教职员工人数
+	private Integer teaching;
+	
+	//卫生保健人员
+	private String hygieneHealth;
 			
 	// 校医(兼职)人数
 	private Integer schoolDoctorPart;
@@ -279,6 +288,30 @@ public class OrgSchoolVO {
 
 	public void setSchoolYear(String schoolYear) {
 	    this.schoolYear = schoolYear;
+	}
+
+	public String getBusinessDistrict() {
+	    return businessDistrict;
+	}
+
+	public void setBusinessDistrict(String businessDistrict) {
+	    this.businessDistrict = businessDistrict;
+	}
+
+	public Integer getTeaching() {
+	    return teaching;
+	}
+
+	public void setTeaching(Integer teaching) {
+	    this.teaching = teaching;
+	}
+
+	public String getHygieneHealth() {
+	    return hygieneHealth;
+	}
+
+	public void setHygieneHealth(String hygieneHealth) {
+	    this.hygieneHealth = hygieneHealth;
 	}
 
 }

@@ -24,9 +24,6 @@ public class OrgSchoolPeopleDTO {
  	// 寄宿生人数
  	private Integer boarders;
 
- 	// 教职员工人数
- 	private Integer teaching;
-
 	// 
 	private Date createTime;
 
@@ -85,14 +82,6 @@ public class OrgSchoolPeopleDTO {
 
 	public void setBoarders(Integer boarders) {
 	    this.boarders = boarders;
-	}
-
-	public Integer getTeaching() {
-	    return teaching;
-	}
-
-	public void setTeaching(Integer teaching) {
-	    this.teaching = teaching;
 	}
 
 	public Date getCreateTime() {
