@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <div class="col-md-2">
                             <div class="input-group">
-                                <input name="year" id="year" placeholder="请输入年度" autocomplete="off" type="text" class="form-control tonto-datepicker-year" lay-key="1">
+                                <input name="year" id="year" placeholder="请输入年度" autocomplete="off" type="text" class="form-control" lay-key="1">
                             </div>
                         </div>
                         <div class="col-md-2"></div>
@@ -108,13 +108,23 @@
         // var day=new Date();
         // day.setTime(day.getTime());
         // var month = day.getFullYear()+"-" + (day.getMonth()+1);
-        // laydate.render({
-        //     elem: '#dateInput',
-        //     type: 'month',
-        //     value:month
-        // });
+        laydate.render({
+            elem: '#year',
+            type: 'year',
+            calendar: true, //开启公历节日
+            theme: 'molv', //墨绿主题
+            showBottom: true, //是否出现底部栏
+            trigger: 'click' ,//绑定多个
+            max:maxYear()
+        });
         initTable();
     });
+
+    function maxYear(){
+        var now = new Date();
+        return now.getFullYear()-1+"-"+"12"+"-"+"31";
+    }
+
 
     function getRate(a, b) {
         var c = 0;
@@ -131,31 +141,31 @@
                     idField: "id",
                     columns: [
                         [{
-                                title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>辖区</span>",
+                                title: "<span style='display: inline-block;width:200px;height: 64px;text-align: center;line-height: 64px'>辖区</span>",
                                 field: "unitName"
                             },
-                            // {
-                            //     title: "高血压患病数",
-                            //     field: "ev1V30009",
-                            //     sortable: true,
-                            //     sorter: function(fa, fb, ra, rb) {
-                            //         if (ra.unitName == '合计')
-                            //             return table.options.sortOrder == 'desc' ? -1 :
-                            //                 1;
-                            //         if (rb.unitName == '合计')
-                            //             return table.options.sortOrder == 'desc' ? 1 :
-                            //                 -1;
-                            //
-                            //         if (fa == '-')
-                            //             return table.options.sortOrder == 'desc' ? -1 :
-                            //                 1;
-                            //         if (fb == '-')
-                            //             return table.options.sortOrder == 'desc' ? 1 :
-                            //                 -1;
-                            //
-                            //         return fa - fb;
-                            //     }
-                            // },
+                            {
+                                title: "高血压患病数",
+                                field: "ev1V30009",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
                             {
                                 title: "高血压管理数",
                                 field: "evV30009",
@@ -231,28 +241,28 @@
 		                            return fa - fb;
 		                        }
                             },
-                            // {
-                            //     title: "糖尿病患病数",
-                            //     field: "ev1V30010",
-                            //     sortable: true,
-                            //     sorter: function(fa, fb, ra, rb) {
-                            //         if (ra.unitName == '合计')
-                            //             return table.options.sortOrder == 'desc' ? -1 :
-                            //                 1;
-                            //         if (rb.unitName == '合计')
-                            //             return table.options.sortOrder == 'desc' ? 1 :
-                            //                 -1;
-                            //
-                            //         if (fa == '-')
-                            //             return table.options.sortOrder == 'desc' ? -1 :
-                            //                 1;
-                            //         if (fb == '-')
-                            //             return table.options.sortOrder == 'desc' ? 1 :
-                            //                 -1;
-                            //
-                            //         return fa - fb;
-                            //     }
-                            // },
+                            {
+                                title: "糖尿病患病数",
+                                field: "ev1V30010",
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (rb.unitName == '合计')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    if (fa == '-')
+                                        return table.options.sortOrder == 'desc' ? -1 :
+                                            1;
+                                    if (fb == '-')
+                                        return table.options.sortOrder == 'desc' ? 1 :
+                                            -1;
+
+                                    return fa - fb;
+                                }
+                            },
                             {
                                 title: "糖尿病管理数",
                                 field: "evV30010",
@@ -343,8 +353,8 @@
                     url: '/qos/gongwei/pressureSugar/search/all',
                     pagination: false,
                     showExport: true,
-                    // fixedColumns: true,//固定列
-                    // fixedNumber:1,
+                    fixedColumns: true,//固定列
+                    fixedNumber:1,
                     exportTypes: ['excel'],
                     sidePagination: 'client',
                     searchbar: '#searchbar',
