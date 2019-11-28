@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
+<body>
+    <tt:constant enumcode="data-event-type,data-unit-type" />
+    <section class="content-header">
+    <h1>运营效率</h1>
+    </section>
+    <section class="content">
+        <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+            <div class="box-body no-pad-top">
+                <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="1" ></div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="input-group"><input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date" lay-key="2"></div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="pull-right">
+                                <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="refresh()"><i class="fa fa-search"></i>查询</button>
+                                <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                    <input type="text" style="display:none">
+                </form>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="box box-solid">
+                    <div class="box-body">
+                    <h3 class="box-title" style="letter-spacing: 3px;text-align: center;font-size: 25px;font-weight: bold;margin-top: 10px">昆山市公立医院绩效考核表（运营效率）</h3>
+                        <table id="dataGrid"></table>
+                    </div>
+                </div>
+                
+            </div>
+			
+        </div>
+    </section>
+    <div th:include="/qos/footer" />
+    <script type="text/javascript" src="/static/js/chart.js"></script>
+    <script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
+    <script type="text/javascript">
+    var table;
+    $(function () {
+        initStartDateTime();
+        initJxkhDataGrid();
+    });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            var time = year+"-"+month+"-"+"01";
+            $("#startTime").val(time);
+            var endDate = new Date(date.getTime() - 24*60*60*1000);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
+        }
+    }
+
+  
+
+    function initJxkhDataGrid() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+                      [
+                       { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>",field: "unitName",rowspan:2},
+                       {title: "每执业医师日均住院工作负担", colspan: 3},
+                       {title: "门诊医保基金占比", colspan: 3},
+                       {title: "住院医保基金占比", colspan: 3},
+                       {title: "住院收入占比",  colspan: 3},
+                       {title: "医疗服务收入占比",  colspan: 3},
+                       {title: "药费用占比",  colspan: 5},
+                       {title: "医疗收入",  colspan: 3},
+                       {title: "门诊次均费用",  colspan: 3},
+                       {title: "住院次均费用",  colspan: 3},
+                       {title: "住院次均药品费用",  colspan: 3}
+                   ],
+                [
+					
+					{ title: "实际占用总床日数",field: "ev60016", formatter:function (value, row, index) {
+						if(row.ev60016==null){
+							return 0;
+						}
+                    }},
+					{ title: "执业（助理）医师数",field: "evV90006", formatter:function (value, row, index) {
+						if(row.ev60016==null){
+							return 0;
+						}
+					}},
+					{ title: "负担值",field: "", formatter:function (value, row, index) {
+						
+						if(row.ev60016==null||row.evV90006==null){
+							return "0%";
+						}
+						var  startDate = Date.parse($("#startTime").val());
+						var  endDate = Date.parse($("#endTime").val());
+					    var days=(endDate - startDate)/(1*24*60*60*1000);
+                        var a = row.ev60016/row.evV90006;
+                        return (a/days).toFixed(2)
+                    }},
+					{ title: "门诊医保费用",field: "ev60001" ,formatter:function (value, row, index) {
+						if(row.ev60001==null){
+							return "0";
+						}
+                        return (value/100).toFixed(2)
+                    }},
+					{ title: "门诊总费用",field: "ev60002" ,formatter:function (value, row, index) {
+						if(row.ev60002==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "" ,formatter:function (value, row, index) {
+						if(row.ev60001==null||row.ev60001==null){
+							return "0%";
+						}
+                        return (row.ev60001/row.ev60002*100).toFixed(2)
+                    }},
+					{ title: "住院医保费用",field: "ev60003",formatter:function (value, row, index) {
+						if(row.ev60003==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "住院总费用",field: "ev60004",formatter:function (value, row, index) {
+						if(row.ev60004==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "",formatter:function (value, row, index) {
+						if(row.ev60003==null||row.ev60004==null){
+							return "0%";
+						}
+						return (row.ev60003/row.ev60004*100).toFixed(2)
+                    }},
+					{ title: "住院收入",field: "ev60004",formatter:function (value, row, index) {
+						if(row.ev60004==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "总收入",field: "ev60005",formatter:function (value, row, index) {
+						if(row.ev60005==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "",formatter:function (value, row, index) {
+						if(row.ev60004==null||row.ev60005==null){
+							return "0%";
+						}
+						return (row.ev60004/row.ev60005*100).toFixed(2)
+                    }},
+					{ title: "医疗服务收入",field: "ev60006",formatter:function (value, row, index) {
+						if(row.ev60006==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "总收入",field: "ev60005",formatter:function (value, row, index) {
+						if(row.ev60005==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "",formatter:function (value, row, index) {
+						if(row.ev60005==null||row.ev60006==null){
+							return "0%";
+						}
+						 return (row.ev60006/row.ev60005*100).toFixed(2)
+                    }},
+					{ title: "药品收入",field: "ev60007",formatter:function (value, row, index) {
+						if(row.ev60007==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "基药费用",field: "ev42004",formatter:function (value, row, index) {
+						if(row.ev42004==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "",formatter:function (value, row, index) {
+						if(row.ev42004==null||row.ev60007==null){
+							return "0%";
+						}
+						return (row.ev42004/row.ev60007*100).toFixed(2)
+                    }},
+					{ title: "辅药收入",field: "ev60009",formatter:function (value, row, index) {
+						if(row.ev60009==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "%",field: "ev60009",formatter:function (value, row, index) {
+						if(row.ev60009==null||row.ev60007==null){
+							return "0%";
+						}
+						return (row.ev60009/row.ev60007*100).toFixed(2)
+                    }},
+					{ title: "医疗收入上年同期",field: "ev6000501",formatter:function (value, row, index) {
+						if(row.ev6000501==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "本期",field: "ev60005",formatter:function (value, row, index) {
+						if(row.ev60005==null){
+							return "0";
+						}
+						return (value/100).toFixed(2)
+                    }},
+					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
+						if(row.ev60005==null||row.ev6000501==null){
+							return "0%";
+						}
+					    return ((row.ev60005-row.ev6000501)/row.ev6000501*100).toFixed(2)
+                    }},
+					{ title: "门诊次均费用（上年同期）",field: "",formatter:function (value, row, index) {
+						if(row.ev6000201==null||row.ev6001101==null){
+							return "0";
+						}
+					    return (row.ev6000201/row.ev6001101/100).toFixed(2)
+                    }},
+					{ title: "本期",field: "",formatter:function (value, row, index) {
+						if(row.ev60002==null||row.ev60011==null){
+							return "0";
+						}
+					    return (row.ev60002/row.ev60011/100).toFixed(2)
+                    }},
+					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
+						if(row.ev60011==null||row.ev60002==null||row.ev6000201==null||row.ev6001101==null){
+							return "0%";
+						}
+						return ((row.ev60002/row.ev60011-row.ev6000201/row.ev6001101)/(row.ev6000201/row.ev6001101)*100).toFixed(2)
+                    }},
+                    
+                    
+					{ title: "住院次均费用住院总费用（上年同期）",field: "",formatter:function (value, row, index) {
+						if(row.ev6001501==null||row.ev5100301==null){
+							return "0";
+						}
+					    return (row.ev6001501/row.ev5100301/100).toFixed(2)
+                    }},
+					{ title: "本期",field: "",formatter:function (value, row, index) {
+						if(row.ev60015==null||row.ev51003==null){
+							return "0";
+						}
+						return (row.ev60015/row.ev51003/100).toFixed(2)
+                    }},
+					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
+						if(row.ev60015==null||row.ev51003==null||row.ev6001501==null||row.ev5100301==null){
+							return "0%";
+						}
+					    return ((row.ev60015/row.ev51003-row.ev6001501/row.ev5100301)/(row.ev6001501/row.ev5100301)*100).toFixed(2)
+                    }},
+					{ title: "住院次均费用上年同期药品",field: "",formatter:function (value, row, index) {
+						if(row.ev6001401==null||row.ev5100301==null){
+							return "0";
+						}
+					    return (row.ev6001401/row.ev5100301/100).toFixed(2)
+                    }},
+					{ title: "本期",field: "",formatter:function (value, row, index) {
+						if(row.ev60014==null||row.ev51003==null){
+							return "0";
+						}
+					    return (row.ev60014/row.ev51003/100).toFixed(2)
+                    }},
+					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
+						if(row.ev60014==null||row.ev51003==null||row.ev6001401==null||row.ev5100301==null){
+							return "0%";
+						}
+					    return ((row.ev60014/row.ev51003-row.ev6001401/row.ev5100301)/(row.ev6001401/row.ev5100301)*100).toFixed(2)
+                    }}
+                    
+                ]
+            ],
+            url: '/qos/performance/search/all',
+            pagination: false,
+            fixedColumns: true,//固定列
+            fixedNumber:1,
+            searchbar: '#searchbar',
+            clickToSelect: true,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+            },
+            queryParams: function(params) {
+            	                                                                                                       //eventNum 基药
+            	params.eventIds = '51003,60001,60002,60003,60004,60005,60006,60007,60009,60011,60014,60015,60016,42004';
+                requestParam = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	if (!response) {
+                    return null;
+                }
+                var data = {};
+
+                convertCount2TableData(response, '51003', data);
+                convertCount2TableData(response, '60001', data);
+                convertCount2TableData(response, '60002', data);
+                convertCount2TableData(response, '60003', data);
+                convertCount2TableData(response, '60004', data);
+                convertCount2TableData(response, '60005', data);
+                convertCount2TableData(response, '60006', data);
+                convertCount2TableData(response, '60007', data);
+                convertCount2TableData(response, '60008', data);
+                convertCount2TableData(response, '60009', data);
+                convertCount2TableData(response, '60011', data);
+                convertCount2TableData(response, '60014', data);
+                convertCount2TableData(response, '60015', data);
+                convertCount2TableData(response, '60016', data);
+                
+                convertCount2TableData(response, '6000501', data);
+                convertCount2TableData(response, '6000201', data);
+                convertCount2TableData(response, '6001101', data);
+                convertCount2TableData(response, '6001401', data);
+                convertCount2TableData(response, '6001501', data);
+                convertCount2TableData(response, '5100301', data);
+                
+                convertCount2TableData(response, 'V90006', data);
+                
+                convertRate2TableData(response, '42004', data);
+                
+                var result = []
+                for (var o in data) {
+                    result.push(data[o]);
+                }
+                
+                return result;
+            }
+        });
+    }
+    
+    function convertCount2TableData(originData, eventId, data) {
+        var eventData = originData[eventId],
+            fieldName = 'ev' + eventId,
+            total = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId: id,
+                    unitName: item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = item.count;
+            total += item.count;
+        });
+
+    }
+    
+    function convertRate2TableData(originData, eventId, data) {
+    	var eventData = originData[eventId],
+        fieldName = 'ev' + eventId,
+        total = 0;
+
+    eventData && eventData.forEach(function(item) {
+        var id = item.unitId;
+        unitData = data[id];
+        if (!unitData) {
+            unitData = {
+                unitId: id,
+                unitName: item.unitName
+            };
+            data[id] = unitData;
+        }
+        unitData[fieldName] = item.eventNum;
+        total += item.eventNum;
+    });
+	}
+    
+    function getRate(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed || 2) + '%';
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed|| 2);
+    }
+
+    function convertUnitChartData(data, eventId, isRate) {
+        var edata = data[eventId],
+            max = 0,
+            unit = [],
+            values = [];
+        edata && edata.forEach(function(item) {
+            var r = isRate ? getRateNum(item) : item.count/100;
+            max = Math.max(r, max);
+            values.push(r);
+            unit.push(item.unitName);
+        });
+        return {
+            max: max,
+            unit: unit,
+            values: values
+        }
+    }
+    
+     
+     function convertMonthChartData(data, eventId, isRate) {
+         var eventData = data[eventId],
+             unitPoints = eventData.unitPoints,
+             month = [],
+             valuesMap = {},
+             totalValues = [];
+
+         var first = true;
+
+         unitPoints && unitPoints.forEach(function(unitPoint) {
+             var points = unitPoint.points,
+                 unitId = unitPoint.unitId;
+
+             var values = valuesMap[unitId];
+             if (!values) {
+                 values = [];
+                 valuesMap[unitId] = values;
+             }
+
+             for (var i = 0; i < points.length; i++) {
+                 var point = points[i];
+                 if (first) {
+                     month.push(point.year + '-' + point.month);
+                 }
+
+                 values.push(isRate ? getRateNum(point) : point.totalNum);
+
+                 var totalVal = totalValues[i];
+                 if (!totalVal) {
+                     totalVal = {
+                         totalNum: point.totalNum,
+                         eventNum: point.eventNum
+                     }
+                     totalValues[i] = totalVal;
+                 } else {
+                     totalVal.totalNum += point.totalNum;
+                     totalVal.eventNum += point.eventNum;
+                 }
+             }
+
+             first = false;
+         });
+
+         var totalVals = [];
+         for (var j = 0; j < totalValues.length; j++) {
+             var tv = totalValues[j];
+             totalVals.push(isRate ? getRateNum(tv) : tv.totalNum/100);
+         }
+
+         valuesMap.total = totalVals;
+         return {
+             month: month,
+             valuesMap: valuesMap
+         }
+     }
+     
+    </script>
+</body>
+
+</html>

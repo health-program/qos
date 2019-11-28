@@ -2,6 +2,7 @@ package com.paladin.qos.dynamic.mapper;
 
 import java.util.List;
 import java.util.Map;
+
 import com.paladin.qos.service.statistics.dto.OpdQuery;
 
 /**   
@@ -11,4 +12,6 @@ import com.paladin.qos.service.statistics.dto.OpdQuery;
 public interface OpdLogMapper {
     
     List<Map<String, Object>> opdLogFindList(OpdQuery query);
+
+	List<Map<String, Object>> comLogFindList(OpdQuery query);
 }

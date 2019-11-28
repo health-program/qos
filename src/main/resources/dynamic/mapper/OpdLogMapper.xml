@@ -27,5 +27,34 @@ order by m.see_doc_dt desc
 </select>
 
 
+<select id="comLogFindList" resultType="map">
+select 
+a.ORGNAME as organName,
+a.DEPTNAME as deptName,
+a.docname as doctorName,
+a.PATIENTNAME as patientName,
+b.DIAGNAME as diseaseName,
+a.SEEDATE as visitingTime
+
+from phis_webhis.v_opr_register a 
+left join phis_webhis.v_opm_diagnose_info b
+on a.regid = b.regid
+where
+ and a.SEEDATE &gt;=to_date(#{startTime}, 'yyyy-mm-dd')
+and  a.SEEDATE &lt;to_date(#{endTime}, 'yyyy-mm-dd')
+
+<if test="dataSource !=null and dataSource !='' ">
+	AND a.ORGCODE  = #{dataSource}
+</if>
+<if test="deptId !=null and deptId !='' ">
+	AND a.DEPTNAME LIKE concat(concat('%',#{deptId}),'%') 
+</if>
+
+<if test="doctorName !=null and doctorName !='' ">
+	AND a.docname LIKE concat(concat('%',#{doctorName}),'%') 
+</if>
+order by a.SEEDATE desc
+</select>
+
 
 </mapper>
