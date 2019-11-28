@@ -19,6 +19,7 @@ import org.apache.shiro.crypto.hash.Hash;
 import org.apache.shiro.util.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -170,11 +171,22 @@ public class DataDisplayController {
     @ResponseBody
     public Object getHospitalData(HospitalRequest request) {
         String year=request.getYear();
-        Date startDate=null;
-        Date endDate=null;
+        Date startYear=null;
+        Date endYear=null;
+        Date startMonth=null;
+        Date endMonth=null;
         if (!StringUtils.isEmpty(year)){
-            startDate=getYearFirst(Integer.valueOf(year));
-            endDate=getYearFirst(Integer.valueOf(year)+1);
+            if (year.contains("-")){
+                String[] date = year.split("-");
+                startYear=getYearFirst(Integer.valueOf(date[0]));
+                endYear=getYearFirst(Integer.valueOf(date[0])+1);
+                startMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1]));
+                endMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1])+1);
+            }else{
+                startYear=getYearFirst(Integer.valueOf(year));
+                endYear=getYearFirst(Integer.valueOf(year));
+            }
+
         }
         List<String> eventIds = request.getEventIds();
         if (eventIds != null && eventIds.size() > 0) {
@@ -185,37 +197,35 @@ public class DataDisplayController {
                     int eventType = event.getEventType();
                     int unitType = getUnitType(event);
                     if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                        List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, null);
-                        getCountData(request,countUnits);
-                        if (countUnits != null) {
-                            map.put(eventId, countUnits);
+                        List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startYear, endYear, null);
+                        if (!CollectionUtils.isEmpty(countUnits)) {
+                            getCountData(request,countUnits);
+                            map.put(eventId+"y", countUnits);
+                            if (null!=startMonth){
+                                List<DataCountUnit> countUnitsMonth=analysisService.countTotalNumByUnit(eventId, unitType, startMonth, endMonth, null);
+                                if (!CollectionUtils.isEmpty(countUnitsMonth)) {
+                                    getCountData(request, countUnitsMonth);
+                                    map.put(eventId + "m", countUnitsMonth);
+                                }
+                            }
                         }
                     } else if(DataEvent.EVENT_TYPE_RATE == eventType) {
-                        List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, null);
-                        getRateData(request,analysisUnits);
-                        if (analysisUnits != null) {
-                            map.put(eventId, analysisUnits);
+                        List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear, endYear, null);
+                        if (!CollectionUtils.isEmpty(analysisUnits)) {
+                            getRateData(request,analysisUnits);
+                            map.put(eventId+'y', analysisUnits);
+                            if (null!=startMonth){
+                                List<AnalysisUnit> analysisUnitsMonth=analysisService.getAnalysisResultByUnit(eventId, unitType, startMonth, endMonth, null);
+                                if (!CollectionUtils.isEmpty(analysisUnitsMonth)) {
+                                    getRateData(request, analysisUnitsMonth);
+                                    map.put(eventId + "m", analysisUnitsMonth);
+                                }
+                            }
                         }
                     }
                 }
             }
             return CommonResponse.getSuccessResponse(map);
-        } else {
-            String eventId = request.getEventId();
-            DataConstantContainer.Event event = DataConstantContainer.getEvent(eventId);
-            if (event != null) {
-                int eventType = event.getEventType();
-                int unitType = getUnitType(event);
-                if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                    List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startDate, endDate, null);
-                    getCountData(request,countUnits);
-                    return CommonResponse.getSuccessResponse(countUnits);
-                } else if (DataEvent.EVENT_TYPE_RATE == eventType) {
-                    List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startDate, endDate, null);
-                    getRateData(request,analysisUnits);
-                    return CommonResponse.getSuccessResponse(analysisUnits);
-                }
-            }
         }
         return  CommonResponse.getErrorResponse();
     }
@@ -275,6 +285,15 @@ public class DataDisplayController {
         calendar.set(Calendar.YEAR, year);
         Date currYearFirst = calendar.getTime();
         return currYearFirst;
+    }
+
+    private  Date getMonthFirst(int year,int month){
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, month-1);
+        Date currMonthFirst = calendar.getTime();
+        return currMonthFirst;
     }
 
 }
