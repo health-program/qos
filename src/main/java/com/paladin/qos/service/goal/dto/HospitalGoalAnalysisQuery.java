@@ -24,14 +24,6 @@ public class HospitalGoalAnalysisQuery extends OffsetPage {
         this.year = year;
     }
 
-    public String getMonth() {
-        return month;
-    }
-
-    public void setMonth(String month) {
-        this.month = month;
-    }
-
     public String getUnitId() {
         return unitId;
     }
@@ -54,5 +46,13 @@ public class HospitalGoalAnalysisQuery extends OffsetPage {
 
     public void setEventIds(List<String> eventIds) {
         this.eventIds = eventIds;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 }

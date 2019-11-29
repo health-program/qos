@@ -2,11 +2,11 @@ package com.paladin.qos.model.goal;
 
 import com.paladin.framework.common.BaseModel;
 
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name="tb_hospital_annual_goal")
 public class HospitalAnnualGoal extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = -5058162526152643177L;

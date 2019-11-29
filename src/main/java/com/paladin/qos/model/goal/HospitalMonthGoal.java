@@ -6,7 +6,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Table(name="tb_hospital_month_goal")
 public class HospitalMonthGoal extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 3862334613769520096L;

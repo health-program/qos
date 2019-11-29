@@ -14,22 +14,17 @@
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
                         <div class="col-md-2">
-							 <select name="hospital" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.hospital}" >
-                                 <option value="">请选择医院</option>
+                            <input id="year" name="year" placeholder="请选择月份" autocomplete="off" type="text" class="form-control tonto-datepicker-month">
+                        </div>
+                        <div class="col-md-2">
+							 <select id="hospital" name="unitId" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.unitId}" >
+                                <!-- <option value="">请选择医院</option>-->
                                  <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
                              </select>
 						</div>
-						<div class="col-md-2">
-	                        <select name="eventId" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.eventId}" enumcode="hospital-goal-event-type">
-								<option value="">请选择指标</option>
-							</select>
-						</div>
-						<div class="col-md-2">
-                            <input name="year" placeholder="请选择月份" autocomplete="off" type="text" class="form-control tonto-datepicker-month">
-						</div>
 						<div class="col-md-4">
 		                    <div class="pull-right">
-		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="queryGoalYearAndMonthValue();"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
 		                    </div>
 		                </div>
@@ -52,68 +47,138 @@
     /*<![CDATA[*/
           var unitList=[[${unit}]];
           var unitMap=new Map();
+          var unitArr=[];
           unitList.forEach(function(element, index){
             unitMap[element.id]=element.name;
+            unitArr.push(element.id);
           })
     /*]]>*/
-</script>
-    <script type="text/javascript">
-    var
-    var table;
-    $(function() {
-        initDataGrid();
-    });
-
-    function initDataGrid() {
-        table = $.createTable("#dataGrid", {
-            idField: "id",
-            columns: [
-                [
-                    { title: "医院", field: "hospital",formatter:function(value, row, index){
-                          return unitMap[value];
-                    }  },
-                    { title: "月份", field: "month"},
-                    { title: "指标", field: "eventId" ,enumcode: "hospital-goal-event-type" },
-					{ title: "目标", field: "basicGoal"},
-                    {
-                        title: "操作",
-                        align: "center",
-                        width: "200px",
-                        events: {
-                            'click .detail': function(e, value, row, index) {
-                                detail(row);
-                            },
-                            'click .remove': function(e, value, row, index) {
-                                remove(row);
-                            }
-                        },
-                        formatter: function operateFormatter(value, row, index) {
-                            return '<button class="detail btn btn-xs btn-info" style="margin-right:10px"><i class="glyphicon glyphicon-edit"></i>详情</button>' +
-                                '<button class="remove btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>删除</button>';
-
-                        }
-                    }
-                ]
-            ],
-            url: '/qos/hospital/month/goal/find/page',
-            searchbar: '#searchbar',
-            //exportUrl: '/qos/hospital/month/goal/export',
-            //showExport: true,
-            showColumns: true,
-            pagination: true,
-            showRefresh: true
-        });
-    }
-
-    function add() {
-        window.location = '/qos/hospital/month/goal/add';
-    }
-
-    function detail(row) {
-        window.location = '/qos/hospital/month/goal/detail' + (row ? ('?id=' + row.id) : '');
-    }
     </script>
     <script type="text/javascript" src="/static/js/ajaxfileupload.js"></script>
 </body>
+<script type="text/javascript">
+    var eventConstant=$.getConstantEnum('hospital-goal-event-type');
+    var eventMap=new Map();
+    var eventArr=[];
+    eventConstant.forEach(function(element, index){
+        console.log(element)
+        eventMap[element.key]=element.value;
+        eventArr.push(element.key);
+    })
+
+    var table=$('#dataGrid');
+    var currentList;
+    var goalList;
+    var data=[];
+
+    //获取当年日期所属学年
+	function getCurrentYearMonth (date) {
+		var currentYear=date.getFullYear();
+		var currentMonth=date.getMonth()+1;
+	    return currentYear+'-'+currentMonth;
+	}
+
+	$(function() {
+		$('#year').val(getCurrentYearMonth(new Date()));
+        queryGoalYearAndMonthValue();
+        initDataGrid();
+    });
+
+
+    function queryGoalYearAndMonthValue(){
+        var yearMonthValue=$('#year').val();
+        var year=yearMonthValue.substr(0,4);
+        var lastYear=year-1;
+        var lastBeforeYear=year-2;
+        var hospital=$('#hospital').find('option:selected').val();
+        $.ajax({
+             type : "post",    //请求类型
+             //async:false,
+             url : "/qos/hospital/goal/analysis/goalList",//请求的 URL地址
+             data:{'year':yearMonthValue,'eventIds':eventArr.join(','),'unitId':hospital},
+             success: function (rawData) {
+                 goalList=[];
+                if(rawData.status==1){
+                    goalList=rawData.result;
+                }
+                formatData();
+             }
+        });
+        $.ajax({
+             type : "post",    //请求类型
+             //async:false,
+             url : "/data/display/search/hospital/data",//请求的 URL地址
+             data:{'year':yearMonthValue,'eventIds':eventArr.join(','),'unitId':hospital},
+             success: function (rawData) {
+                currentList=[];
+                if(rawData.status==1){
+                    currentList=rawData.result;
+                }
+                formatData();
+             }
+        });
+        table.bootstrapTable({
+            columns: [
+                [
+                   { title: "指标"},
+					{ title: year+"年预期目标值", colspan:'4'},
+                    { title: "月度目标值",colspan:'2'},
+
+                ],[
+                    { title: "指标", field: "eventId" ,formatter:function(value,row,index){
+                        return eventMap[value];
+                    } },
+                    { title: "基本目标", field: "y_basicGoal"},
+					{ title: "提升目标", field: "y_raiseGoal"},
+                    { title: "跃升目标", field: "y_zoomGoal"},
+                    { title: "当前值", field: "y_count"},
+                    { title: "月度目标", field: "m_basicGoal"},
+                    { title: "当月值", field: "m_count"}
+                ]
+            ],
+            data:data,
+            showColumns: false
+        })
+    }
+
+   function formatData(){
+        data=[];
+        eventArr.forEach(function(element,index){
+            /*<![CDATA[*/
+            var eventId=element,y_basicGoal='', y_raiseGoal='',y_zoomGoal='',y_count='', m_basicGoal='',m_count='';
+            if(currentList){
+               var y_totalNumArr= currentList[element+'y'];
+               if(y_totalNumArr.length>0){
+                  y_count = y_totalNumArr[0].count;
+               }
+               var m_totalNumArr =currentList[element+'m'];
+               if(m_totalNumArr.length>0){
+                   y_count = m_totalNumArr[0].count;
+               }
+            }
+            if(goalList){
+                var yearGoalObj=goalList[element+'y'];
+                if(yearGoalObj){
+                    y_basicGoal = yearGoalObj.basicGoal;
+                    y_raiseGoal = yearGoalObj.raiseGoal;
+                    y_zoomGoal = yearGoalObj.zoomGoal;
+                }
+                var monthGoalObj=goalList[element+'m'];
+                if(monthGoalObj){
+                    m_basicGoal = monthGoalObj.basicGoal;
+                }
+            }
+            data.push({"eventId":eventId,
+               "y_basicGoal":y_basicGoal,
+                "y_raiseGoal":y_raiseGoal,
+                "y_zoomGoal":y_zoomGoal,
+                "y_count":y_count,
+                "m_basicGoal":m_basicGoal,
+                "m_count":m_count});
+            table.bootstrapTable('load', data);
+             /*]]>*/
+        })
+   }
+    </script>
 
 </html>

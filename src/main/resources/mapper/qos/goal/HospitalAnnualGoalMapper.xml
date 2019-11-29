@@ -13,7 +13,7 @@
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
-    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="state" jdbcType="INTEGER" property="state" />
   </resultMap>
   <sql id="Base_Column_List">
     id, hospital, event_id, annual, basic_goal, raise_goal, zoom_goal, create_time, create_user_id, 
@@ -22,11 +22,11 @@
   <!--<select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from tb_hospital_annual_goal
+    from hospital_annual_goal
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <insert id="insert" parameterType="com.paladin.qos.model.goal.HospitalAnnualGoal">
-    insert into tb_hospital_annual_goal (id, hospital, event_id, 
+    insert into hospital_annual_goal (id, hospital, event_id, 
       annual, basic_goal, raise_goal, 
       zoom_goal, create_time, create_user_id, 
       update_time, update_user_id, state
@@ -34,11 +34,11 @@
     values (#{id,jdbcType=VARCHAR}, #{hospital,jdbcType=VARCHAR}, #{eventId,jdbcType=VARCHAR}, 
       #{annual,jdbcType=VARCHAR}, #{basicGoal,jdbcType=VARCHAR}, #{raiseGoal,jdbcType=VARCHAR}, 
       #{zoomGoal,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUserId,jdbcType=VARCHAR}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.paladin.qos.model.goal.HospitalAnnualGoal">
-    insert into tb_hospital_annual_goal
+    insert into hospital_annual_goal
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -112,12 +112,12 @@
         #{updateUserId,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
-        #{state,jdbcType=VARCHAR},
+        #{state,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.paladin.qos.model.goal.HospitalAnnualGoal">
-    update tb_hospital_annual_goal
+    update hospital_annual_goal
     <set>
       <if test="hospital != null">
         hospital = #{hospital,jdbcType=VARCHAR},
@@ -150,13 +150,13 @@
         update_user_id = #{updateUserId,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
-        state = #{state,jdbcType=VARCHAR},
+        state = #{state,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.paladin.qos.model.goal.HospitalAnnualGoal">
-    update tb_hospital_annual_goal
+    update hospital_annual_goal
     set hospital = #{hospital,jdbcType=VARCHAR},
       event_id = #{eventId,jdbcType=VARCHAR},
       annual = #{annual,jdbcType=VARCHAR},
@@ -167,7 +167,7 @@
       create_user_id = #{createUserId,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user_id = #{updateUserId,jdbcType=VARCHAR},
-      state = #{state,jdbcType=VARCHAR}
+      state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>-->
 
@@ -175,7 +175,7 @@
           parameterType="com.paladin.qos.service.goal.dto.HospitalAnnualGoalQuery">
       select id, hospital, event_id eventId, annual, basic_goal basicGoal, raise_goal raiseGoal, zoom_goal zoomGoal,
           create_time createTime, create_user_id createUserId, update_time updateTime, update_user_id updateUserId, state
-      from tb_hospital_annual_goal
+      from hospital_annual_goal
       where state=1
     <if test="hospital != null">
       and hospital = #{hospital,jdbcType=VARCHAR}
@@ -189,13 +189,30 @@
   </select>
 
   <update id="deleteById" parameterType="map">
-     update tb_hospital_annual_goal
+     update hospital_annual_goal
      set update_time = #{updateTime,jdbcType=TIMESTAMP},
          update_user_id = #{updateUserId,jdbcType=VARCHAR},
-         state = #{state,jdbcType=VARCHAR}
+         state = #{state,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-
+    <select id="findGoalListByCondition" parameterType="com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery"
+            resultType="com.paladin.qos.service.goal.vo.HospitalAnnualGoalVO">
+        select hospital, event_id eventId, annual, basic_goal basicGoal, raise_goal raiseGoal, zoom_goal zoomGoal
+        from hospital_annual_goal
+        where state=1
+        <if test="unitId != null  and unitId != ''">
+            and hospital = #{unitId,jdbcType=VARCHAR}
+        </if>
+        <if test="eventId != null  and eventId != ''">
+            and event_id = #{eventId,jdbcType=VARCHAR}
+        </if>
+        <if test="eventIds != null and eventIds.size>0">
+            and (event_id in<foreach collection="eventIds" index="index" item="item" open="(" separator="," close=")">#{item}</foreach>)
+        </if>
+        <if test="year != null and year != ''">
+            and annual = #{year,jdbcType=VARCHAR}
+        </if>
+    </select>
 
 </mapper>

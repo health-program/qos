@@ -19,7 +19,7 @@ public class HospitalMonthGoalDTO {
 
     private String zoomGoal;//跃升目标
 
-    private String state;
+    private Integer state;
 
     public String getId() {
         return id;
@@ -77,12 +77,12 @@ public class HospitalMonthGoalDTO {
         this.zoomGoal = zoomGoal == null ? null : zoomGoal.trim();
     }
 
-    public String getState() {
+    public Integer getState() {
         return state;
     }
 
-    public void setState(String state) {
-        this.state = state == null ? null : state.trim();
+    public void setState(Integer state) {
+        this.state = state ;
     }
 
 }

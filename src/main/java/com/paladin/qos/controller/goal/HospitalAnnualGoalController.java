@@ -100,9 +100,12 @@ public class HospitalAnnualGoalController extends ControllerSupport {
         if (oldRecord == null) {
             return CommonResponse.getFailResponse("数据库中已不存在该记录");
         }
-
-        if (hospitalAnnualGoalService.updateGoal(hospitalAnnualGoalDTO, oldRecord) > 0) {
-            return CommonResponse.getSuccessResponse(beanCopy(hospitalAnnualGoalService.get(hospitalAnnualGoalDTO.getId()), new HospitalAnnualGoalVO()));
+        try {
+            if (hospitalAnnualGoalService.updateGoal(hospitalAnnualGoalDTO, oldRecord) > 0) {
+                return CommonResponse.getSuccessResponse(beanCopy(hospitalAnnualGoalService.get(hospitalAnnualGoalDTO.getId()), new HospitalAnnualGoalVO()));
+            }
+        } catch (Exception e) {
+            return CommonResponse.getFailResponse(e.getMessage());
         }
         return CommonResponse.getFailResponse();
     }

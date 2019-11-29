@@ -11,6 +11,7 @@ import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.goal.HospitalMonthGoalMapper;
 import com.paladin.qos.model.goal.HospitalAnnualGoal;
 import com.paladin.qos.model.goal.HospitalMonthGoal;
+import com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalDTO;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalQuery;
 import com.paladin.qos.service.goal.vo.HospitalMonthGoalVO;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -74,4 +76,7 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
         return hospitalMonthGoalMapper.updateByPrimaryKey(oldRecord);
     }
 
+    public List<HospitalMonthGoalVO> findGoalListByCondition(HospitalGoalAnalysisQuery query) {
+        return hospitalMonthGoalMapper.findGoalListByCondition(query);
+    }
 }
