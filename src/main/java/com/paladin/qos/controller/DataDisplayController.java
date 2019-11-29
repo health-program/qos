@@ -175,16 +175,35 @@ public class DataDisplayController {
         Date endYear=null;
         Date startMonth=null;
         Date endMonth=null;
+
+        Date startYear1=null;
+        Date endYear1=null;
+
+        Date startYear2=null;
+        Date endYear2=null;
         if (!StringUtils.isEmpty(year)){
             if (year.contains("-")){
                 String[] date = year.split("-");
                 startYear=getYearFirst(Integer.valueOf(date[0]));
                 endYear=getYearFirst(Integer.valueOf(date[0])+1);
+
+                startYear1=getYearFirst(Integer.valueOf(date[0])-1);
+                endYear1=getYearFirst(Integer.valueOf(date[0]));
+
+                startYear2=getYearFirst(Integer.valueOf(date[0])-2);
+                endYear2=getYearFirst(Integer.valueOf(date[0])-1);
+
                 startMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1]));
                 endMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1])+1);
             }else{
                 startYear=getYearFirst(Integer.valueOf(year));
-                endYear=getYearFirst(Integer.valueOf(year));
+                endYear=getYearFirst(Integer.valueOf(year)+1);
+
+                startYear1=getYearFirst(Integer.valueOf(year)-1);
+                endYear1=getYearFirst(Integer.valueOf(year));
+
+                startYear2=getYearFirst(Integer.valueOf(year)-2);
+                endYear2=getYearFirst(Integer.valueOf(year)-1);
             }
 
         }
@@ -198,9 +217,15 @@ public class DataDisplayController {
                     int unitType = getUnitType(event);
                     if (DataEvent.EVENT_TYPE_COUNT == eventType) {
                         List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startYear, endYear, null);
+                        List<DataCountUnit> countUnits1=analysisService.countTotalNumByUnit(eventId, unitType, startYear1, endYear1, null);
+                        List<DataCountUnit> countUnits2=analysisService.countTotalNumByUnit(eventId, unitType, startYear2, endYear2, null);
                         if (!CollectionUtils.isEmpty(countUnits)) {
                             getCountData(request,countUnits);
+                            getCountData(request,countUnits1);
+                            getCountData(request,countUnits2);
                             map.put(eventId+"y", countUnits);
+                            map.put(eventId+"y-1", countUnits1);
+                            map.put(eventId+"y-2", countUnits2);
                             if (null!=startMonth){
                                 List<DataCountUnit> countUnitsMonth=analysisService.countTotalNumByUnit(eventId, unitType, startMonth, endMonth, null);
                                 if (!CollectionUtils.isEmpty(countUnitsMonth)) {
@@ -211,9 +236,15 @@ public class DataDisplayController {
                         }
                     } else if(DataEvent.EVENT_TYPE_RATE == eventType) {
                         List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear, endYear, null);
+                        List<AnalysisUnit> analysisUnits1=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear1, endYear1, null);
+                        List<AnalysisUnit> analysisUnits2=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear2, endYear2, null);
                         if (!CollectionUtils.isEmpty(analysisUnits)) {
                             getRateData(request,analysisUnits);
-                            map.put(eventId+'y', analysisUnits);
+                            getRateData(request,analysisUnits1);
+                            getRateData(request,analysisUnits2);
+                            map.put(eventId+"y", analysisUnits);
+                            map.put(eventId+"y-1", analysisUnits1);
+                            map.put(eventId+"y-2", analysisUnits2);
                             if (null!=startMonth){
                                 List<AnalysisUnit> analysisUnitsMonth=analysisService.getAnalysisResultByUnit(eventId, unitType, startMonth, endMonth, null);
                                 if (!CollectionUtils.isEmpty(analysisUnitsMonth)) {
@@ -232,41 +263,47 @@ public class DataDisplayController {
 
 
     private void getRateData(HospitalRequest request,List<AnalysisUnit> analysisUnits ){
-        Iterator<AnalysisUnit> it=analysisUnits.iterator();
-        while(it.hasNext()){
-            AnalysisUnit data=it.next();
-            if (CollectionUtils.isEmpty(request.getUnitIds())){
-                if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
-                    it.remove();
-                }
-            }else{
-                for(String unitId:request.getUnitIds()){
-                    if(!data.getUnitId().equals(unitId)){
+        if (!CollectionUtils.isEmpty(analysisUnits)){
+            Iterator<AnalysisUnit> it=analysisUnits.iterator();
+            while(it.hasNext()){
+                AnalysisUnit data=it.next();
+                if (CollectionUtils.isEmpty(request.getUnitIds())){
+                    if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
                         it.remove();
                     }
+                }else{
+                    for(String unitId:request.getUnitIds()){
+                        if(!data.getUnitId().equals(unitId)){
+                            it.remove();
+                        }
+                    }
                 }
-            }
 
+            }
         }
+
     }
 
     private void getCountData(HospitalRequest request,List<DataCountUnit> dataCountUnits ){
-        Iterator<DataCountUnit> it=dataCountUnits.iterator();
-        while(it.hasNext()){
-            DataCountUnit data=it.next();
-            if (CollectionUtils.isEmpty(request.getUnitIds())){
-                if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
-                    it.remove();
-                }
-            }else{
-                for(String unitId:request.getUnitIds()){
-                    if(!data.getUnitId().equals(unitId)){
+        if (!CollectionUtils.isEmpty(dataCountUnits)){
+            Iterator<DataCountUnit> it=dataCountUnits.iterator();
+            while(it.hasNext()){
+                DataCountUnit data=it.next();
+                if (CollectionUtils.isEmpty(request.getUnitIds())){
+                    if(!StringUtils.isEmpty(request.getUnitId() ) && !data.getUnitId().equals(request.getUnitId())){
                         it.remove();
                     }
+                }else{
+                    for(String unitId:request.getUnitIds()){
+                        if(!data.getUnitId().equals(unitId)){
+                            it.remove();
+                        }
+                    }
                 }
-            }
 
+            }
         }
+
     }
 
     private int getUnitType(DataConstantContainer.Event event) {
