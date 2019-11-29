@@ -209,7 +209,7 @@
 	        let endTime = year + "-"+ month +"-"+ day;
 
 
-	        $.postAjax("/qos/analysis/data/get/unit",{startTime : startTime,endTime: endTime,eventId:'42002'},function (res) {
+	        $.postAjax("/qos/analysis/data/get/unit",{startTime : startTime,endTime: endTime,eventId:'42003'},function (res) {
 	        	debugger;
 	            if (res.length === 0) {
 	                showChartInfo(chart,'暂无数据');
@@ -221,8 +221,8 @@
 
 	            if (res && res.length > 0) {
 	                res.sort( (u1,u2) => {
-	                     u1['rate'] =u1.totalNum;
-	                     u2['rate'] =u2.totalNum;
+	                     u1['rate'] =u1.count;
+	                     u2['rate'] =u2.count;
 	                    return   u2.rate - u1.rate
 	                } );
 
@@ -539,7 +539,7 @@
 	                normal: {
 	                    show: true,
 	                    position: 'bottom',
-	                    distance: 15,
+	                    distance: 30,
 	                    align: 'center',
 	                    verticalAlign: 'top',
 	                    rotate: 90,
