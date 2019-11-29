@@ -35,10 +35,12 @@ public class CommonAuthenticationListener implements AuthenticationListener {
 		if (principal instanceof UserSession) {
 			UserSession userSession = (UserSession) principal;
 
-			String ip;
+			String ip = null;
 			if (token instanceof HostAuthenticationToken) {
 				ip = ((HostAuthenticationToken) token).getHost();
-			} else {
+			}
+
+			if(ip == null || ip.length() == 0) {
 				// 获取request ip
 				WebSubject webSubject = (WebSubject) SecurityUtils.getSubject();
 				HttpServletRequest request = (HttpServletRequest) webSubject.getServletRequest();

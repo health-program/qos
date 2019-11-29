@@ -125,7 +125,7 @@ public class LoginController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.TEXT_HTML_VALUE)
 	public Object login(HttpServletRequest request, HttpServletResponse response, Model model) {
 		Subject subject = SecurityUtils.getSubject();
-		if (subject.isAuthenticated()) {
+		if (!subject.isAuthenticated()) {
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
 			if (username != null && username.length() != 0 && password != null && password.length() != 0) {
