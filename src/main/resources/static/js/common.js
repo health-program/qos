@@ -692,7 +692,6 @@
              laydate.render({
                  elem: this,
                  type: "month",
-
                  calendar: true, //开启公历节日
                  theme: 'molv', //墨绿主题
                  showBottom: true, //是否出现底部栏
