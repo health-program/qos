@@ -248,8 +248,8 @@
             chart.hideLoading();
             var isShowScroll = false;// 是否显示滚动条，默认false不显示
             var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(unitName.length >5 ){
-                dataZoom_end = 100/(unitName.length/5);
+            if(unitName.length >4){
+                dataZoom_end = 100/(unitName.length/4);
                 isShowScroll = true;
             }else{
                 dataZoom_end = 100;
@@ -302,7 +302,7 @@
                 handleSize: 8,//滑动条的 左右2个滑动条的大小
                 height: 10,//组件高度
                 left: "center", //左边的距离
-                bottom:10,
+                bottom:5,
                 handleColor: '#ddd',//h滑动图标的颜色
                 handleStyle: {
                     borderColor: "#cacaca",
@@ -344,7 +344,7 @@
                     },
                     axisLabel: {
                         interval:0,
-                        rotate: unitName.length === 1 ? 0 : 45//角度顺时针计算的
+                        rotate: unitName.length === 1 ? 0 : 50//角度顺时针计算的
                     } ,
                 }
             ],
