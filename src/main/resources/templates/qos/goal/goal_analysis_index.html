@@ -81,13 +81,14 @@
 	$(function() {
 		$('#year').val(getCurrentYearMonth(new Date()));
         queryGoalYearAndMonthValue();
-        initDataGrid();
+        initDataGrid($('#year').val().substr(0,4));
     });
 
 
     function queryGoalYearAndMonthValue(){
         var yearMonthValue=$('#year').val();
         var year=yearMonthValue.substr(0,4);
+        var month=yearMonthValue.substr(5,2).replace(/^0/, '')
         var lastYear=year-1;
         var lastBeforeYear=year-2;
         var hospital=$('#hospital').find('option:selected').val();
@@ -95,7 +96,7 @@
              type : "post",    //请求类型
              //async:false,
              url : "/qos/hospital/goal/analysis/goalList",//请求的 URL地址
-             data:{'year':yearMonthValue,'eventIds':eventArr.join(','),'unitId':hospital},
+             data:{'year':yearMonthValue,'eventIds':eventArr.join(','),'unitId':hospital},//传年月需要20191，月份前面需要0
              success: function (rawData) {
                  goalList=[];
                 if(rawData.status==1){
@@ -108,7 +109,7 @@
              type : "post",    //请求类型
              //async:false,
              url : "/data/display/search/hospital/data",//请求的 URL地址
-             data:{'year':yearMonthValue,'eventIds':eventArr.join(','),'unitId':hospital},
+             data:{'year':year+'-'+month,'eventIds':eventArr.join(','),'unitId':hospital},//传年月需要20191，月份前面不需要0
              success: function (rawData) {
                 currentList=[];
                 if(rawData.status==1){
@@ -117,23 +118,32 @@
                 formatData();
              }
         });
-        table.bootstrapTable({
+
+
+        table.bootstrapTable("refreshOptions",{
             columns: [
                 [
                    { title: "指标"},
+                   { title: (year-2)+'-'+(year-1)+"年增长值对比", colspan:'3'},
 					{ title: year+"年预期目标值", colspan:'4'},
-                    { title: "月度目标值",colspan:'2'},
+                    { title: "月度目标值",colspan:'3'},
 
                 ],[
                     { title: "指标", field: "eventId" ,formatter:function(value,row,index){
                         return eventMap[value];
                     } },
+                    { title: (year-2)+"年实际值", field: "y_2_count"},
+					{ title: (year-1)+"年实际值", field: "y_1_count"},
+                    { title: "增长率", field: "y_count_rate"},
+
                     { title: "基本目标", field: "y_basicGoal"},
 					{ title: "提升目标", field: "y_raiseGoal"},
                     { title: "跃升目标", field: "y_zoomGoal"},
                     { title: "当前值", field: "y_count"},
+
                     { title: "月度目标", field: "m_basicGoal"},
-                    { title: "当月值", field: "m_count"}
+                    { title: "当月值", field: "m_count"},
+                    { title: "增长率", field: "m_countRate"}
                 ]
             ],
             data:data,
@@ -141,19 +151,66 @@
         })
     }
 
+    function initDataGrid(year){
+        table.bootstrapTable({
+            columns: [
+                [
+                   { title: "指标"},
+                    { title: (year-2)+'-'+(year-1)+"年增长值对比", colspan:'3'},
+					{ title: year+"年预期目标值", colspan:'4'},
+                    { title: "月度目标值",colspan:'3'},
+
+                ],[
+                    { title: "指标", field: "eventId" ,formatter:function(value,row,index){
+                        return eventMap[value];
+                    } },
+                    { title: (year-2)+"年实际值", field: "y_2_count"},
+					{ title: (year-1)+"年实际值", field: "y_1_count"},
+                    { title: "增长率", field: "y_count_rate"},
+
+                    { title: "基本目标", field: "y_basicGoal"},
+					{ title: "提升目标", field: "y_raiseGoal"},
+                    { title: "跃升目标", field: "y_zoomGoal"},
+                    { title: "当前值", field: "y_count"},
+
+                    { title: "月度目标", field: "m_basicGoal"},
+                    { title: "当月值", field: "m_count"},
+                    { title: "增长率", field: "m_countRate"}
+                ]
+            ],
+            data:[],
+            showColumns: false
+        })
+    }
+
+
    function formatData(){
         data=[];
         eventArr.forEach(function(element,index){
             /*<![CDATA[*/
-            var eventId=element,y_basicGoal='', y_raiseGoal='',y_zoomGoal='',y_count='', m_basicGoal='',m_count='';
+            var eventId=element,
+                y_2_count='',y_1_count='',y_count_rate='',
+                y_basicGoal='', y_raiseGoal='',y_zoomGoal='',y_count='',
+                m_basicGoal='',m_count='',m_countRate='';
             if(currentList){
                var y_totalNumArr= currentList[element+'y'];
-               if(y_totalNumArr.length>0){
+               if(y_totalNumArr&&y_totalNumArr.length>0){
                   y_count = y_totalNumArr[0].count;
                }
                var m_totalNumArr =currentList[element+'m'];
-               if(m_totalNumArr.length>0){
-                   y_count = m_totalNumArr[0].count;
+               if(m_totalNumArr&&m_totalNumArr.length>0){
+                   m_count = m_totalNumArr[0].count;
+               }
+               var y_1_countArr=currentList[element+'y-1'];
+               if(y_1_countArr&&y_1_countArr.length>0){
+                  y_1_count = y_1_countArr[0].count;
+               }
+               var y_2_countArr=currentList[element+'y-2']
+               if(y_2_countArr&&y_2_countArr.length>0){
+                  y_2_count = y_2_countArr[0].count;
+               }
+               if(y_2_count){
+                  y_count_rate=Math.round((y_1_count-y_2_count)/y_2_count)+'%';//计算上两年同比
                }
             }
             if(goalList){
@@ -167,12 +224,22 @@
                 if(monthGoalObj){
                     m_basicGoal = monthGoalObj.basicGoal;
                 }
+                //var lastYearMonthGoalObj=goalList[element+'ym-1'];
+                //if(lastYearMonthGoalObj&&lastYearMonthGoalObj.basicGoal&&m_basicGoal){
+                //    m_countRate=Math.round((m_count*100)/lastYearMonthGoalObj.basicGoal)+'%';
+                //}
+
             }
             data.push({"eventId":eventId,
+                "y_2_count":y_2_count,
+                "y_1_count":y_1_count,
+                "y_count_rate":y_count_rate,
+
                "y_basicGoal":y_basicGoal,
                 "y_raiseGoal":y_raiseGoal,
                 "y_zoomGoal":y_zoomGoal,
                 "y_count":y_count,
+
                 "m_basicGoal":m_basicGoal,
                 "m_count":m_count});
             table.bootstrapTable('load', data);

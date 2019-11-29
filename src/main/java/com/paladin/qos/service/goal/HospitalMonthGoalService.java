@@ -6,15 +6,19 @@ import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
+import com.paladin.framework.core.exception.BusinessException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.goal.HospitalMonthGoalMapper;
 import com.paladin.qos.model.goal.HospitalAnnualGoal;
 import com.paladin.qos.model.goal.HospitalMonthGoal;
+import com.paladin.qos.service.goal.dto.HospitalAnnualGoalQuery;
 import com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalDTO;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalQuery;
+import com.paladin.qos.service.goal.vo.HospitalAnnualGoalVO;
 import com.paladin.qos.service.goal.vo.HospitalMonthGoalVO;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +52,7 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
 
     @Transactional
     public int saveGoal(HospitalMonthGoal model) {
+        valid(model.getMonth(),model.getHospital(),model.getEventId());
         Date now=new Date();
         String user= QosUserSession.getCurrentUserSession().getUserName();
         model.setCreateTime(now);
@@ -58,6 +63,17 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
         return hospitalMonthGoalMapper.insert(model);
     }
 
+    private void valid(String month, String hospital, String eventId) {
+        HospitalMonthGoalQuery example=new HospitalMonthGoalQuery();
+        example.setMonth(month);
+        example.setHospital(hospital);
+        example.setEventId(eventId);
+        List<HospitalMonthGoalVO> list = hospitalMonthGoalMapper.findList(example);
+        if(CollectionUtils.isNotEmpty(list)){
+            throw new BusinessException("数据库中已存在相应的目标记录,请勿重复添加");
+        }
+    }
+    
     @Transactional
     public int updateGoal(HospitalMonthGoalDTO model, HospitalMonthGoal oldRecord) {
         Date now=new Date();
@@ -70,6 +86,7 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
         hospitalMonthGoalMapper.insert(oldRecord);
         // 保存
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(model, oldRecord);//保持原有ID
+        valid(model.getMonth(),model.getHospital(),model.getEventId());
         oldRecord.setState(HospitalAnnualGoal.BOOLEAN_YES);
         oldRecord.setCreateTime(now);
         oldRecord.setCreateUserId(updateUserId);
