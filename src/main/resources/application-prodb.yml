@@ -84,7 +84,7 @@ paladin:
       url: jdbc:sqlserver://10.1.1.36:1044;database=wcdbsz
       username: jswj
       password: jswj2019
-     source[16]:
+    source[16]:
       name: jcyl
       url: jdbc:oracle:thin:@//10.9.0.165:1521/ksdaga
       username: phis_wj

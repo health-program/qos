@@ -102,17 +102,21 @@
 					{ title: "实际占用总床日数",field: "ev60016", formatter:function (value, row, index) {
 						if(row.ev60016==null){
 							return 0;
-						}
+						}else{
+                            return row.ev60016;
+                        }
                     }},
 					{ title: "执业（助理）医师数",field: "evV90006", formatter:function (value, row, index) {
-						if(row.ev60016==null){
+						if(row.evV90006==null){
 							return 0;
-						}
+						}else{
+                            return row.evV90006;
+                        }
 					}},
 					{ title: "负担值",field: "", formatter:function (value, row, index) {
 						
 						if(row.ev60016==null||row.evV90006==null){
-							return "0%";
+							return "0";
 						}
 						var  startDate = Date.parse($("#startTime").val());
 						var  endDate = Date.parse($("#endTime").val());
@@ -133,8 +137,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "" ,formatter:function (value, row, index) {
-						if(row.ev60001==null||row.ev60001==null){
-							return "0%";
+						if(row.ev60001==null || row.ev60001==0 ||row.ev60002==null || row.ev60002==0){
+							return "0";
 						}
                         return (row.ev60001/row.ev60002*100).toFixed(2)
                     }},
@@ -151,8 +155,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "",formatter:function (value, row, index) {
-						if(row.ev60003==null||row.ev60004==null){
-							return "0%";
+						if(row.ev60003==null||row.ev60004==null||row.ev60003==0||row.ev60004==0){
+							return "0";
 						}
 						return (row.ev60003/row.ev60004*100).toFixed(2)
                     }},
@@ -169,7 +173,7 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "",formatter:function (value, row, index) {
-						if(row.ev60004==null||row.ev60005==null){
+						if(row.ev60004==null||row.ev60005==null||row.ev60004==0||row.ev60005==0){
 							return "0%";
 						}
 						return (row.ev60004/row.ev60005*100).toFixed(2)
@@ -187,8 +191,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "",formatter:function (value, row, index) {
-						if(row.ev60005==null||row.ev60006==null){
-							return "0%";
+						if(row.ev60005==null||row.ev60006==null||row.ev60005==0||row.ev60006==0){
+							return "0";
 						}
 						 return (row.ev60006/row.ev60005*100).toFixed(2)
                     }},
@@ -205,8 +209,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "",formatter:function (value, row, index) {
-						if(row.ev42004==null||row.ev60007==null){
-							return "0%";
+						if(row.ev42004==null||row.ev60007==null||row.ev42004==0||row.ev60007==0){
+							return "0";
 						}
 						return (row.ev42004/row.ev60007*100).toFixed(2)
                     }},
@@ -217,8 +221,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "%",field: "ev60009",formatter:function (value, row, index) {
-						if(row.ev60009==null||row.ev60007==null){
-							return "0%";
+						if(row.ev60009==null||row.ev60007==null||row.ev60009==0||row.ev60007==0){
+							return "0";
 						}
 						return (row.ev60009/row.ev60007*100).toFixed(2)
                     }},
@@ -235,8 +239,8 @@
 						return (value/100).toFixed(2)
                     }},
 					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
-						if(row.ev60005==null||row.ev6000501==null){
-							return "0%";
+						if(row.ev60005==null||row.ev6000501==null||row.ev60005==0||row.ev6000501==0){
+							return "0";
 						}
 					    return ((row.ev60005-row.ev6000501)/row.ev6000501*100).toFixed(2)
                     }},
@@ -247,14 +251,14 @@
 					    return (row.ev6000201/row.ev6001101/100).toFixed(2)
                     }},
 					{ title: "本期",field: "",formatter:function (value, row, index) {
-						if(row.ev60002==null||row.ev60011==null){
+						if(row.ev60002==null||row.ev60011==null||row.ev60002==0||row.ev60011==0){
 							return "0";
 						}
 					    return (row.ev60002/row.ev60011/100).toFixed(2)
                     }},
 					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
-						if(row.ev60011==null||row.ev60002==null||row.ev6000201==null||row.ev6001101==null){
-							return "0%";
+						if(row.ev60011==null||row.ev60002==null||row.ev6000201==null||row.ev6001101==null||row.ev60011==0||row.ev60002==0||row.ev6000201==0||row.ev6001101==0){
+							return "0";
 						}
 						return ((row.ev60002/row.ev60011-row.ev6000201/row.ev6001101)/(row.ev6000201/row.ev6001101)*100).toFixed(2)
                     }},
@@ -267,32 +271,32 @@
 					    return (row.ev6001501/row.ev5100301/100).toFixed(2)
                     }},
 					{ title: "本期",field: "",formatter:function (value, row, index) {
-						if(row.ev60015==null||row.ev51003==null){
+						if(row.ev60015==null||row.ev51003==null||row.ev60015==0||row.ev51003==0){
 							return "0";
 						}
 						return (row.ev60015/row.ev51003/100).toFixed(2)
                     }},
 					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
-						if(row.ev60015==null||row.ev51003==null||row.ev6001501==null||row.ev5100301==null){
-							return "0%";
+						if(row.ev60015==null||row.ev51003==null||row.ev6001501==null||row.ev5100301==null||row.ev60015==0||row.ev51003==0||row.ev6001501==0||row.ev5100301==0){
+							return "0";
 						}
 					    return ((row.ev60015/row.ev51003-row.ev6001501/row.ev5100301)/(row.ev6001501/row.ev5100301)*100).toFixed(2)
                     }},
 					{ title: "住院次均费用上年同期药品",field: "",formatter:function (value, row, index) {
-						if(row.ev6001401==null||row.ev5100301==null){
+						if(row.ev6001401==null||row.ev5100301==null||row.ev6001401==0||row.ev5100301==0){
 							return "0";
 						}
 					    return (row.ev6001401/row.ev5100301/100).toFixed(2)
                     }},
 					{ title: "本期",field: "",formatter:function (value, row, index) {
-						if(row.ev60014==null||row.ev51003==null){
+						if(row.ev60014==null||row.ev51003==null||row.ev60014==0||row.ev51003==0){
 							return "0";
 						}
 					    return (row.ev60014/row.ev51003/100).toFixed(2)
                     }},
 					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
-						if(row.ev60014==null||row.ev51003==null||row.ev6001401==null||row.ev5100301==null){
-							return "0%";
+						if(row.ev60014==null||row.ev51003==null||row.ev6001401==null||row.ev5100301==null||row.ev60014==0||row.ev51003==0||row.ev6001401==0||row.ev5100301==0){
+							return "0";
 						}
 					    return ((row.ev60014/row.ev51003-row.ev6001401/row.ev5100301)/(row.ev6001401/row.ev5100301)*100).toFixed(2)
                     }}
