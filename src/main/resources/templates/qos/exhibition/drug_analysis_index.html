@@ -161,6 +161,11 @@
 
             let month42004 = convertMonthChartData({"42004":res}, '42004', true);
 
+            if (month42004.valuesMap['total'].length === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
+
 
             option = {
                 tooltip : {
@@ -236,11 +241,9 @@
 
                 res.forEach( unit => {
                     unitName.push(unit.unitName);
-                    data.push(unit.rate)
+                    data.push(unit.rate || getRateNum(unit) )
                 })
             }
-
-
 
             chart.hideLoading();
             var isShowScroll = false;// 是否显示滚动条，默认false不显示
@@ -341,7 +344,7 @@
                     },
                     axisLabel: {
                         interval:0,
-                        rotate: unitName.length === 1 ? 0 : 40//角度顺时针计算的
+                        rotate: unitName.length === 1 ? 0 : 45//角度顺时针计算的
                     } ,
                 }
             ],
@@ -401,10 +404,15 @@
 
             let month42004 = convertDayChartData(res, '42004', true);
 
-            console.log(month42004)
+
 
             timeValue = month42004.day;
             dataValue = month42004.valuesMap['total'];
+
+            if (timeValue.length === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
 
             var isShowScroll = false;// 是否显示滚动条，默认false不显示
             var dataZoom_end;// 显示百分之多少的数据量，默认全部
@@ -532,7 +540,7 @@
             valuesMap = {},
             totalValues = [];
 
-        var first = true;
+        var first = day.length === 0;
 
         unitPoints && unitPoints.forEach(function(unitPoint) {
             var points = unitPoint.points,
@@ -567,7 +575,7 @@
                 }
             }
 
-            first = false;
+            first = day.length === 0;
         });
 
         var totalVals = [];
