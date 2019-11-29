@@ -378,6 +378,12 @@
                         	 $("#year").val(tYear-1);
                         	params.year = tYear-1;
                         } */
+                        if($("#year").val()==""||$("#year").val()==null){
+                            var now = new Date();
+                            var defaultYear=(now.getFullYear()-1).toString();
+                            $("#year").val(defaultYear);
+                            params.year=defaultYear;
+                        }
                         requestParams = params;
                         return params;
                     },
