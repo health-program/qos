@@ -181,6 +181,10 @@ public class DataDisplayController {
 
         Date startYear2=null;
         Date endYear2=null;
+
+        Date startMonthOfLastYear=null;
+        Date endMonthOfLastYear=null;
+
         if (!StringUtils.isEmpty(year)){
             if (year.contains("-")){
                 String[] date = year.split("-");
@@ -195,6 +199,10 @@ public class DataDisplayController {
 
                 startMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1]));
                 endMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1])+1);
+
+                startMonthOfLastYear=getMonthFirst(Integer.valueOf(date[0])-1,Integer.valueOf(date[1]));
+                endMonthOfLastYear=getMonthFirst(Integer.valueOf(date[0])-1,Integer.valueOf(date[1])+1);
+
             }else{
                 startYear=getYearFirst(Integer.valueOf(year));
                 endYear=getYearFirst(Integer.valueOf(year)+1);
@@ -231,6 +239,13 @@ public class DataDisplayController {
                                 if (!CollectionUtils.isEmpty(countUnitsMonth)) {
                                     getCountData(request, countUnitsMonth);
                                     map.put(eventId + "m", countUnitsMonth);
+                                }
+                            }
+                            if(null!=startMonthOfLastYear){
+                                List<DataCountUnit> countUnitsMonthOfLastYear=analysisService.countTotalNumByUnit(eventId, unitType, startMonthOfLastYear, endMonthOfLastYear, null);
+                                if (!CollectionUtils.isEmpty(countUnitsMonthOfLastYear)) {
+                                    getCountData(request, countUnitsMonthOfLastYear);
+                                    map.put(eventId + "ym-1", countUnitsMonthOfLastYear);
                                 }
                             }
                         }

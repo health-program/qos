@@ -189,29 +189,34 @@
         eventArr.forEach(function(element,index){
             /*<![CDATA[*/
             var eventId=element,
-                y_2_count='',y_1_count='',y_count_rate='',
+                y_2_count='',y_1_count='',y_count_rate='',ym_1_count='',
                 y_basicGoal='', y_raiseGoal='',y_zoomGoal='',y_count='',
                 m_basicGoal='',m_count='',m_countRate='';
             if(currentList){
                var y_totalNumArr= currentList[element+'y'];
                if(y_totalNumArr&&y_totalNumArr.length>0){
-                  y_count = y_totalNumArr[0].count;
+                  y_count = y_totalNumArr[0].count;//去年实际值
                }
                var m_totalNumArr =currentList[element+'m'];
                if(m_totalNumArr&&m_totalNumArr.length>0){
-                   m_count = m_totalNumArr[0].count;
+                   m_count = m_totalNumArr[0].count;//去年本月实际值
                }
                var y_1_countArr=currentList[element+'y-1'];
                if(y_1_countArr&&y_1_countArr.length>0){
-                  y_1_count = y_1_countArr[0].count;
+                  y_1_count = y_1_countArr[0].count;//上年实际值
                }
                var y_2_countArr=currentList[element+'y-2']
                if(y_2_countArr&&y_2_countArr.length>0){
-                  y_2_count = y_2_countArr[0].count;
+                  y_2_count = y_2_countArr[0].count;//前年实际值
                }
-               if(y_2_count){
+               if(y_2_count&&y_1_count){
                   y_count_rate=Math.round((y_1_count-y_2_count)/y_2_count)+'%';//计算上两年同比
                }
+               var ym_1_totalNumArr =currentList[element+'ym-1'];
+               if(ym_1_totalNumArr&&ym_1_totalNumArr.length>0){
+                    ym_1_count = ym_1_totalNumArr[0].count;  //去年本月
+               }
+
             }
             if(goalList){
                 var yearGoalObj=goalList[element+'y'];
@@ -225,6 +230,10 @@
                     m_basicGoal = monthGoalObj.basicGoal;
                 }
             }
+            if(ym_1_count&&m_count){
+                m_countRate=Math.round((m_count-ym_1_count)/ym_1_count)+'%';//计算月同比
+            }
+
             data.push({"eventId":eventId,
                 "y_2_count":y_2_count,
                 "y_1_count":y_1_count,
@@ -236,7 +245,8 @@
                 "y_count":y_count,
 
                 "m_basicGoal":m_basicGoal,
-                "m_count":m_count});
+                "m_count":m_count,
+                "m_countRate":m_countRate});
             table.bootstrapTable('load', data);
              /*]]>*/
         })
