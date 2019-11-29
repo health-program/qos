@@ -56,6 +56,14 @@
         initJxkhDataGrid();
     });
 
+    $(function() {
+        refresh();
+    });
+
+    function refresh() {
+        table ? table.refresh() : initJxkhDataGrid();
+    }
+
     function initStartDateTime() {
         if(!$("#startTime").val()){
             var date = new Date();
