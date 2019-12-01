@@ -2,6 +2,7 @@ package com.paladin.qos.service.goal;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
@@ -11,10 +12,13 @@ import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.goal.HospitalMonthGoalMapper;
 import com.paladin.qos.model.goal.HospitalAnnualGoal;
 import com.paladin.qos.model.goal.HospitalMonthGoal;
+import com.paladin.qos.service.goal.dto.HospitalAnnualGoalQuery;
 import com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalDTO;
 import com.paladin.qos.service.goal.dto.HospitalMonthGoalQuery;
+import com.paladin.qos.service.goal.vo.HospitalAnnualGoalVO;
 import com.paladin.qos.service.goal.vo.HospitalMonthGoalVO;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +77,11 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
     
     @Transactional
     public int updateGoal(HospitalMonthGoalDTO model, HospitalMonthGoal oldRecord) {
+        if(!(StringUtils.equals(oldRecord.getMonth(),model.getMonth())
+                &&StringUtils.equals(oldRecord.getHospital(),model.getHospital())
+                &&StringUtils.equals(oldRecord.getEventId(),model.getEventId()))) {
+            valid(oldRecord.getMonth(), oldRecord.getHospital(), oldRecord.getEventId());
+        }
         Date now=new Date();
         String updateUserId= QosUserSession.getCurrentUserSession().getUserId();
         // 先删除,为有记录可查，将原有数据更新id后，备份一下
@@ -83,7 +92,6 @@ public class HospitalMonthGoalService extends ServiceSupport<HospitalMonthGoal> 
         hospitalMonthGoalMapper.insert(oldRecord);
         // 保存
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(model, oldRecord);//保持原有ID
-        valid(model.getMonth(),model.getHospital(),model.getEventId());
         oldRecord.setState(HospitalAnnualGoal.BOOLEAN_YES);
         oldRecord.setCreateTime(now);
         oldRecord.setCreateUserId(updateUserId);

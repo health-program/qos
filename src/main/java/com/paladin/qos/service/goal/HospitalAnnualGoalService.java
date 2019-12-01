@@ -2,10 +2,13 @@ package com.paladin.qos.service.goal;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
+import com.paladin.framework.core.session.UserSession;
+import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.goal.HospitalAnnualGoalMapper;
@@ -14,6 +17,9 @@ import com.paladin.qos.service.goal.dto.HospitalAnnualGoalDTO;
 import com.paladin.qos.service.goal.dto.HospitalAnnualGoalQuery;
 import com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery;
 import com.paladin.qos.service.goal.vo.HospitalAnnualGoalVO;
+import com.paladin.qos.service.school.dto.OrgSchoolQuery;
+import com.paladin.qos.service.school.vo.OrgSchoolVO;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +79,11 @@ public class HospitalAnnualGoalService extends ServiceSupport<HospitalAnnualGoal
 
     @Transactional
     public int updateGoal(HospitalAnnualGoalDTO model, HospitalAnnualGoal oldRecord) {
+        if(!(StringUtils.equals(oldRecord.getAnnual(),model.getAnnual())
+                &&StringUtils.equals(oldRecord.getHospital(),model.getHospital())
+                    &&StringUtils.equals(oldRecord.getEventId(),model.getEventId()))){
+            valid(oldRecord.getAnnual(),oldRecord.getHospital(),oldRecord.getEventId());
+        }
         Date now=new Date();
         String updateUserId= QosUserSession.getCurrentUserSession().getUserId();
         // 先删除,为有记录可查，将原有数据更新id后，备份一下
@@ -83,7 +94,6 @@ public class HospitalAnnualGoalService extends ServiceSupport<HospitalAnnualGoal
         hospitalAnnualGoalMapper.insert(oldRecord);
         // 保存
         SimpleBeanCopier.SimpleBeanCopyUtil.simpleCopy(model, oldRecord);//保持原有ID
-        valid(oldRecord.getAnnual(),oldRecord.getHospital(),oldRecord.getEventId());
         oldRecord.setState(HospitalAnnualGoal.BOOLEAN_YES);
         oldRecord.setCreateTime(now);
         oldRecord.setCreateUserId(updateUserId);
