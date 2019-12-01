@@ -14,9 +14,9 @@
                 <form id="searchbar" class="form-horizontal form-search">
                 	<div class="form-group">
                         <div class="col-md-2">
-							 <select name="hospital" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.hospital}" >
+							 <select name="hospital" class="form-control tonto-select-constant" >
                                  <option value="">请选择医院</option>
-                                 <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                                 <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}" th:selected="${query?.hospital==unit.id}"></option>
                              </select>
 						</div>
 						<div class="col-md-2">
