@@ -119,7 +119,6 @@
              }
         });
 
-
         table.bootstrapTable("refreshOptions",{
             columns: [
                 [
@@ -234,6 +233,58 @@
                 m_countRate=Math.round((m_count-ym_1_count)/ym_1_count)+'%';//计算月同比
             }
 
+
+            //--------------待删除 begin----------------------------------------------------------------
+            //当查询昆山第一人民医院时，把值再改一下
+            //当查询数据是昆山第一人民医院时，部分数据先写死！！！2019-12-01
+            //2018 60004 住院收入669020663.16   （全年）
+            //2018 60002 门诊收入 550809745.94  （全年）
+            //2018 60011 门急诊挂号  2311909     （全年）
+            //2018 51003 出院人次   58003       （全年）
+            var lastYearMap=new Map();
+            lastYearMap['60004']=669020663.16;
+            lastYearMap['60002']=550809745.94;
+            lastYearMap['60011']=2311909;
+            lastYearMap['51003']=58003;
+
+            //2019 60004 住院收入 712438904.97  （1-11月份）
+            //2019 60002 门诊收入 579530726.39  （1-11月份）
+            //2019 60011 门急诊挂号  2342687     （1-11月份）
+            //2019 51003 出院人次   60644       （1-11月份）
+            var thisYearEndOf11Month=new Map();
+            thisYearEndOf11Month['60004']=712438904.97;
+            thisYearEndOf11Month['60002']=579530726.39;
+            thisYearEndOf11Month['60011']=2342687;
+            thisYearEndOf11Month['51003']=60644;
+
+            //2018年12月  住院收入  70130724.86
+            //2018年12月  门诊收入 51773045.33
+            //2018年12月  门急诊挂号  202532
+            //2018年12月  出院人次  5599
+            var lastYearDecMap=new Map();
+            lastYearDecMap['60004']=70130724.86;
+            lastYearDecMap['60002']=51773045.33;
+            lastYearDecMap['60011']=202532;
+            lastYearDecMap['51003']=5599;
+
+            var yearMonthValue=$('#year').val();
+            var year=yearMonthValue.substr(0,4);
+            var month=yearMonthValue.substr(5,2).replace(/^0/, '')
+            var lastYear=year-1;
+            var lastBeforeYear=year-2;
+            var hospital=$('#hospital').find('option:selected').val();
+            if(hospital=='320583467170249'&&year==2019&&month==12){
+                y_1_count=lastYearMap[eventId];
+                y_count=thisYearEndOf11Month[eventId]+m_count;
+                //重新计算一下月同比
+                ym_1_count=lastYearDecMap[eventId];
+                if(ym_1_count&&m_count){
+                    m_countRate=Math.round((m_count-ym_1_count)/ym_1_count)+'%';//计算月同比
+                }
+            }
+            //-----------------待删除 end-------------------------------------------------------------
+
+
             data.push({"eventId":eventId,
                 "y_2_count":y_2_count,
                 "y_1_count":y_1_count,
@@ -251,6 +302,49 @@
              /*]]>*/
         })
    }
+
+
+    /**
+    * 将数值四舍五入后格式化.
+    *
+    * @param num 数值(Number或者String)
+    * @param cent 要保留的小数位(Number)
+    * @param isThousand 是否需要千分位 0:不需要,1:需要(数值类型);
+    * @return 格式的字符串,如'1,234,567.45'
+    * @type String
+    */
+   function formatNumber(num,cent,isThousand) {
+        num = num.toString().replace(/\$|\,/g,'');
+
+        // 检查传入数值为数值类型
+         if(isNaN(num))
+          num = "0";
+
+        // 获取符号(正/负数)
+        sign = (num == (num = Math.abs(num)));
+
+        num = Math.floor(num*Math.pow(10,cent)+0.50000000001); // 把指定的小数位先转换成整数.多余的小数位四舍五入
+        cents = num%Math.pow(10,cent);       // 求出小数位数值
+        num = Math.floor(num/Math.pow(10,cent)).toString();  // 求出整数位数值
+        cents = cents.toString();        // 把小数位转换成字符串,以便求小数位长度
+
+        // 补足小数位到指定的位数
+        while(cents.length<cent)
+         cents = "0" + cents;
+
+        if(isThousand) {
+         // 对整数部分进行千分位格式化.
+         for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+          num = num.substring(0,num.length-(4*i+3))+','+ num.substring(num.length-(4*i+3));
+        }
+
+        if (cent > 0)
+         return (((sign)?'':'-') + num + '.' + cents);
+        else
+         return (((sign)?'':'-') + num);
+   }
+
+
     </script>
 
 </html>
