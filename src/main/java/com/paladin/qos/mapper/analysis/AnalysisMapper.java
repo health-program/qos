@@ -139,4 +139,11 @@ public interface AnalysisMapper {
 
 	List<Disease> findNameList();
 
+	List<DataCountUnit> countTotalNumByUnitDateWithHeadWithoutTail(
+			@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end, @Param("ignoreUnitIds") List<String> ignoreUnitIds);
+
+	List<AnalysisUnit> getAnalysisResultGroupByUnitDateWithHeadWithoutTail(
+			@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+			@Param("end") int end, @Param("ignoreUnitIds") List<String> ignoreUnitIds);
 }

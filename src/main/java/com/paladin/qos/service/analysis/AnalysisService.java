@@ -809,4 +809,20 @@ public class AnalysisService {
 
 		return analysisMapper.findNameList();
 	}
+
+	public List<DataCountUnit> countTotalNumByUnitDateWithHeadWithoutTail(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<DataCountUnit> result = analysisMapper.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+
+	}
+
+	public List<AnalysisUnit> getAnalysisResultByUnitDateWithHeadWithoutTail(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
+		List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnitDateWithHeadWithoutTail(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+				TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+		orderByUnit(result);
+		return result;
+
+	}
 }

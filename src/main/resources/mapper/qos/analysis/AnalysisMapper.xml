@@ -188,7 +188,28 @@
 		</if>   
 		GROUP BY `unit_id`
 	</select>
-	
+
+	<!-- 含头不含尾 -->
+	<select id="getAnalysisResultGroupByUnitDateWithHeadWithoutTail" resultType="com.paladin.qos.service.analysis.data.AnalysisUnit">
+		SELECT unit_id AS unitId,
+	       SUM(event_num) AS eventNum,
+	       SUM(total_num) AS totalNum
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt;#{end}
+		<if test="unitType != 0">
+		  AND unit_type=#{unitType}
+        </if>
+        <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
+		GROUP BY `unit_id`
+	</select>
+
 	
 	<select id="countTotalNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id AS unitId,
@@ -196,7 +217,7 @@
 		FROM data_processed_day
 		WHERE event_id=#{eventId}
 		  AND serial_number>=#{start}
-		  AND serial_number&lt;=#{end}
+		  AND serial_number&lt;= #{end}
 		 <if test="unitType != 0">
 		  AND unit_type=#{unitType}
          </if>
@@ -208,7 +229,27 @@
 		</if>        
 		GROUP BY unit_id
 	</select>
-	
+
+	<!-- 日期含头不含尾 -->
+	<select id="countTotalNumByUnitDateWithHeadWithoutTail" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
+		SELECT unit_id AS unitId,
+		       IFNULL(sum(total_num),0) AS count
+		FROM data_processed_day
+		WHERE event_id=#{eventId}
+		  AND serial_number>=#{start}
+		  AND serial_number&lt; #{end}
+		 <if test="unitType != 0">
+		  AND unit_type=#{unitType}
+         </if>
+         <if test="ignoreUnitIds != null and ignoreUnitIds.size() > 0">
+			AND unit_id NOT IN
+		 	<foreach collection="ignoreUnitIds" item="item" separator="," open="(" close=")">
+            	#{item}
+        	</foreach>
+		</if>
+		GROUP BY unit_id
+	</select>
+
 	<select id="countMaxNumByUnit" resultType="com.paladin.qos.service.analysis.data.DataCountUnit">
 		SELECT unit_id AS unitId,
 		       IFNULL(max(total_num),0) AS count

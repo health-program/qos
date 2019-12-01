@@ -189,18 +189,20 @@ public class DataDisplayController {
             if (year.contains("-")){
                 String[] date = year.split("-");
                 startYear=getYearFirst(Integer.valueOf(date[0]));
-                endYear=getYearFirst(Integer.valueOf(date[0])+1);
+                //endYear=getYearFirst(Integer.valueOf(date[0])+1);
+                endYear=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1])+1);
 
-                startYear1=getYearFirst(Integer.valueOf(date[0])-1);
+
+                startYear1=getYearFirst(Integer.valueOf(date[0])-1);//去年
                 endYear1=getYearFirst(Integer.valueOf(date[0]));
 
-                startYear2=getYearFirst(Integer.valueOf(date[0])-2);
+                startYear2=getYearFirst(Integer.valueOf(date[0])-2);//前年
                 endYear2=getYearFirst(Integer.valueOf(date[0])-1);
 
-                startMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1]));
+                startMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1]));//当月
                 endMonth=getMonthFirst(Integer.valueOf(date[0]),Integer.valueOf(date[1])+1);
 
-                startMonthOfLastYear=getMonthFirst(Integer.valueOf(date[0])-1,Integer.valueOf(date[1]));
+                startMonthOfLastYear=getMonthFirst(Integer.valueOf(date[0])-1,Integer.valueOf(date[1]));//去年同期当月
                 endMonthOfLastYear=getMonthFirst(Integer.valueOf(date[0])-1,Integer.valueOf(date[1])+1);
 
             }else{
@@ -224,9 +226,9 @@ public class DataDisplayController {
                     int eventType = event.getEventType();
                     int unitType = getUnitType(event);
                     if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-                        List<DataCountUnit> countUnits=analysisService.countTotalNumByUnit(eventId, unitType, startYear, endYear, null);
-                        List<DataCountUnit> countUnits1=analysisService.countTotalNumByUnit(eventId, unitType, startYear1, endYear1, null);
-                        List<DataCountUnit> countUnits2=analysisService.countTotalNumByUnit(eventId, unitType, startYear2, endYear2, null);
+                        List<DataCountUnit> countUnits=analysisService.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, startYear, endYear, null);
+                        List<DataCountUnit> countUnits1=analysisService.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, startYear1, endYear1, null);
+                        List<DataCountUnit> countUnits2=analysisService.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, startYear2, endYear2, null);
                         if (!CollectionUtils.isEmpty(countUnits)) {
                             getCountData(request,countUnits);
                             getCountData(request,countUnits1);
@@ -235,14 +237,14 @@ public class DataDisplayController {
                             map.put(eventId+"y-1", countUnits1);
                             map.put(eventId+"y-2", countUnits2);
                             if (null!=startMonth){
-                                List<DataCountUnit> countUnitsMonth=analysisService.countTotalNumByUnit(eventId, unitType, startMonth, endMonth, null);
+                                List<DataCountUnit> countUnitsMonth=analysisService.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, startMonth, endMonth, null);
                                 if (!CollectionUtils.isEmpty(countUnitsMonth)) {
                                     getCountData(request, countUnitsMonth);
                                     map.put(eventId + "m", countUnitsMonth);
                                 }
                             }
                             if(null!=startMonthOfLastYear){
-                                List<DataCountUnit> countUnitsMonthOfLastYear=analysisService.countTotalNumByUnit(eventId, unitType, startMonthOfLastYear, endMonthOfLastYear, null);
+                                List<DataCountUnit> countUnitsMonthOfLastYear=analysisService.countTotalNumByUnitDateWithHeadWithoutTail(eventId, unitType, startMonthOfLastYear, endMonthOfLastYear, null);
                                 if (!CollectionUtils.isEmpty(countUnitsMonthOfLastYear)) {
                                     getCountData(request, countUnitsMonthOfLastYear);
                                     map.put(eventId + "ym-1", countUnitsMonthOfLastYear);
@@ -250,9 +252,9 @@ public class DataDisplayController {
                             }
                         }
                     } else if(DataEvent.EVENT_TYPE_RATE == eventType) {
-                        List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear, endYear, null);
-                        List<AnalysisUnit> analysisUnits1=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear1, endYear1, null);
-                        List<AnalysisUnit> analysisUnits2=analysisService.getAnalysisResultByUnit(eventId, unitType, startYear2, endYear2, null);
+                        List<AnalysisUnit> analysisUnits=analysisService.getAnalysisResultByUnitDateWithHeadWithoutTail(eventId, unitType, startYear, endYear, null);
+                        List<AnalysisUnit> analysisUnits1=analysisService.getAnalysisResultByUnitDateWithHeadWithoutTail(eventId, unitType, startYear1, endYear1, null);
+                        List<AnalysisUnit> analysisUnits2=analysisService.getAnalysisResultByUnitDateWithHeadWithoutTail(eventId, unitType, startYear2, endYear2, null);
                         if (!CollectionUtils.isEmpty(analysisUnits)) {
                             getRateData(request,analysisUnits);
                             getRateData(request,analysisUnits1);
@@ -261,7 +263,7 @@ public class DataDisplayController {
                             map.put(eventId+"y-1", analysisUnits1);
                             map.put(eventId+"y-2", analysisUnits2);
                             if (null!=startMonth){
-                                List<AnalysisUnit> analysisUnitsMonth=analysisService.getAnalysisResultByUnit(eventId, unitType, startMonth, endMonth, null);
+                                List<AnalysisUnit> analysisUnitsMonth=analysisService.getAnalysisResultByUnitDateWithHeadWithoutTail(eventId, unitType, startMonth, endMonth, null);
                                 if (!CollectionUtils.isEmpty(analysisUnitsMonth)) {
                                     getRateData(request, analysisUnitsMonth);
                                     map.put(eventId + "m", analysisUnitsMonth);
