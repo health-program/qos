@@ -2,12 +2,10 @@ package com.paladin.qos.service.goal;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.paladin.common.specific.CommonUserSession;
 import com.paladin.framework.common.PageResult;
 import com.paladin.framework.core.ServiceSupport;
 import com.paladin.framework.core.copy.SimpleBeanCopier;
 import com.paladin.framework.core.exception.BusinessException;
-import com.paladin.framework.core.session.UserSession;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.goal.HospitalAnnualGoalMapper;
@@ -16,8 +14,6 @@ import com.paladin.qos.service.goal.dto.HospitalAnnualGoalDTO;
 import com.paladin.qos.service.goal.dto.HospitalAnnualGoalQuery;
 import com.paladin.qos.service.goal.dto.HospitalGoalAnalysisQuery;
 import com.paladin.qos.service.goal.vo.HospitalAnnualGoalVO;
-import com.paladin.qos.service.school.dto.OrgSchoolQuery;
-import com.paladin.qos.service.school.vo.OrgSchoolVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +41,7 @@ public class HospitalAnnualGoalService extends ServiceSupport<HospitalAnnualGoal
         Map<String,Object> params=new HashMap<>();
         params.put("id", id);
         params.put("updateTime", new Date());
-        params.put("updateUserId", CommonUserSession.getCurrentUserSession().getUserName());
+        params.put("updateUserId", QosUserSession.getCurrentUserSession().getUserName());
         params.put("state", HospitalAnnualGoal.BOOLEAN_NO);
         return hospitalAnnualGoalMapper.deleteById(params);
     }
