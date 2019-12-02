@@ -91,7 +91,7 @@
                        {title: "住院医保基金占比", colspan: 3},
                        {title: "住院收入占比",  colspan: 3},
                        {title: "医疗服务收入占比",  colspan: 3},
-                       {title: "药费用占比",  colspan: 5},
+                       {title: "药费用占比",  colspan: 3},
                        {title: "医疗收入",  colspan: 3},
                        {title: "门诊次均费用",  colspan: 3},
                        {title: "住院次均费用",  colspan: 3},
@@ -214,25 +214,25 @@
 						}
 						return (row.ev42004/row.ev60007*100).toFixed(2)
                     }},
-					{ title: "辅药收入",field: "ev60009",formatter:function (value, row, index) {
+					/* { title: "辅药收入",field: "ev60009",formatter:function (value, row, index) {
 						if(row.ev60009==null){
 							return "0";
 						}
 						return (value/100).toFixed(2)
-                    }},
-					{ title: "%",field: "ev60009",formatter:function (value, row, index) {
+                    }}, */
+					/* { title: "%",field: "ev60009",formatter:function (value, row, index) {
 						if(row.ev60009==null||row.ev60007==null||row.ev60009==0||row.ev60007==0){
 							return "0";
 						}
 						return (row.ev60009/row.ev60007*100).toFixed(2)
-                    }},
-					{ title: "医疗收入上年同期",field: "ev6000501",formatter:function (value, row, index) {
+                    }}, */
+					{ title: "医疗收入（上年同期）",field: "ev6000601",formatter:function (value, row, index) {
 						if(row.ev6000501==null){
 							return "0";
 						}
 						return (value/100).toFixed(2)
                     }},
-					{ title: "本期",field: "ev60005",formatter:function (value, row, index) {
+					{ title: "本期",field: "ev60006",formatter:function (value, row, index) {
 						if(row.ev60005==null){
 							return "0";
 						}
@@ -264,7 +264,7 @@
                     }},
                     
                     
-					{ title: "住院次均费用住院总费用（上年同期）",field: "",formatter:function (value, row, index) {
+					{ title: "住院次均费（上年同期）",field: "",formatter:function (value, row, index) {
 						if(row.ev6001501==null||row.ev5100301==null){
 							return "0";
 						}
@@ -282,7 +282,7 @@
 						}
 					    return ((row.ev60015/row.ev51003-row.ev6001501/row.ev5100301)/(row.ev6001501/row.ev5100301)*100).toFixed(2)
                     }},
-					{ title: "住院次均费用上年同期药品",field: "",formatter:function (value, row, index) {
+					{ title: "住院次均药品费用（上年同期）",field: "",formatter:function (value, row, index) {
 						if(row.ev6001401==null||row.ev5100301==null||row.ev6001401==0||row.ev5100301==0){
 							return "0";
 						}
@@ -340,7 +340,7 @@
                 convertCount2TableData(response, '60015', data);
                 convertCount2TableData(response, '60016', data);
                 
-                convertCount2TableData(response, '6000501', data);
+                convertCount2TableData(response, '6000601', data);
                 convertCount2TableData(response, '6000201', data);
                 convertCount2TableData(response, '6001101', data);
                 convertCount2TableData(response, '6001401', data);

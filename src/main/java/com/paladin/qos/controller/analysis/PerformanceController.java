@@ -117,9 +117,9 @@ public class PerformanceController {
 					int eventType = event.getEventType();
 					int unitType = getUnitType(event);
 					if (DataEvent.EVENT_TYPE_COUNT == eventType) {
-						if(eventId.equals("60005")){
+						if(eventId.equals("60006")){
 							Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDateLastYear, endDateLastYear, ignoreUnitIds);
-							map.put("6000501", item);//去年同期总收入
+							map.put("6000601", item);//去年同期总收入
 						}
 						if(eventId.equals("60002")){
 							Object item = analysisService.countTotalNumByUnit(eventId, unitType, startDateLastYear, endDateLastYear, ignoreUnitIds);
