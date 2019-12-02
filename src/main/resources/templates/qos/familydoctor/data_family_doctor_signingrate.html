@@ -442,7 +442,14 @@
 		var ev21011 = convertUnitChartData(data, 'V21011', true);
 
 		let orgData = ev21001.unit;
-
+        var isShowScroll = false; // 是否显示滚动条，默认false不显示
+        var dataZoom_end; // 显示百分之多少的数据量，默认全部
+        if (orgData.length > 5) {
+            dataZoom_end = 100 / (orgData.length / 10);
+            isShowScroll = true;
+        } else {
+            dataZoom_end = 100;
+        }
     		    var	option = {
    				    tooltip: {
 						trigger: 'axis',
@@ -470,6 +477,50 @@
    				        top: '5%',
    				        containLabel: true
    				    },
+                    dataZoom: [{
+                        start: 0, //默认为0
+                        end: dataZoom_end,
+                        type: 'slider',
+                        show: isShowScroll,
+                        xAxisIndex: [0],
+                        handleSize: 8, //滑动条的 左右2个滑动条的大小
+                        height: 10, //组件高度
+                        left: "center", //左边的距离
+                        bottom: 1,
+                        handleColor: '#ddd', //h滑动图标的颜色
+                        handleStyle: {
+                            borderColor: "#cacaca",
+                            borderWidth: "1",
+                            shadowBlur: 2,
+                            background: "#ddd",
+                            shadowColor: "#ddd",
+                        },
+                        fillerColor: new echarts.graphic.LinearGradient(1,
+                            0, 0, 0, [{
+                                //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                                //给第一个设置0，第四个设置1，就是垂直渐变
+                                offset: 0,
+                                color: '#1eb5e5'
+                            }, {
+                                offset: 1,
+                                color: '#5ccbb1'
+                            }]),
+                        zoomLock: true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                        backgroundColor: '#ddd', //两边未选中的滑动条区域的颜色
+                        showDataShadow: false, //是否显示数据阴影 默认auto
+                        showDetail: false, //即拖拽时候是否显示详细数值信息 默认true
+                        handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                        filterMode: 'filter'
+                    },
+                        //下面这个属性是里面拖到
+                        {
+                            type: 'inside',
+                            show: true,
+                            xAxisIndex: [0],
+                            start: 0, //默认为1
+                            end: 50
+                        }
+                    ],
    				    xAxis: {
    				        type: 'category',
    				        axisLabel: {
@@ -646,7 +697,7 @@
                         fill: 'black', //文字的颜色
                         width: 30,
                         height: 40,
-						fontSize: '140%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
                         fontFamily: "Microsoft YaHei"
                     }
@@ -722,12 +773,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage +'\n'+'高血压患者签约率',
+                        text: pieMessage +'\n'+'高血压患者'+'\n'+'签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '130%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -803,12 +854,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage +'\n'+'糖尿病患者签约率',
+                        text: pieMessage +'\n'+'糖尿病患者'+'\n'+'签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '115%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -889,7 +940,7 @@
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '150%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -965,12 +1016,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage+'\n'+'0~6周岁儿童签约率',
+                        text: pieMessage+'\n'+'0~6周岁儿童'+'\n'+'签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '110%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -1050,12 +1101,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage+'\n'+'65周岁及以上老年人签约率',
+                        text: pieMessage+'\n'+'65周岁及以上'+'\n'+'老年人签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '80%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -1135,7 +1186,7 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage+'\n'+'严重精神障碍患者签约率',
+                        text: pieMessage+'\n'+'严重精神障碍'+'\n'+'患者签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
@@ -1220,12 +1271,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage+'\n'+'肺结核患者签约率',
+                        text: pieMessage+'\n'+'肺结核患者'+'\n'+'签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '130%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }
@@ -1301,12 +1352,12 @@
                     left: 'center',
                     top: '45%',
                     style: {
-                        text: pieMessage+'\n'+'疾病筛查高危人员签约率',
+                        text: pieMessage+'\n'+'疾病筛查高危'+'\n'+'人员签约率',
                         textAlign: 'center',
                         fill: 'black', //文字的颜色
 						width: 30,
 						height: 40,
-						fontSize: '90%',
+						fontSize: '100%',
 						fontWeight : 'bolder',
 						fontFamily: "Microsoft YaHei"
                     }

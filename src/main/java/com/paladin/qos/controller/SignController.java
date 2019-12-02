@@ -74,7 +74,7 @@ public class SignController {
             if(!StringUtils.isEmpty(item)){
                 List<EntitySign> danganList = toBeanList(item,EntitySign.class);
                 List<EntitySign> newSignList=new ArrayList<>();
-                if (!StringUtils.isEmpty(year)&& !eventId.equals("V21001")){
+                if (!StringUtils.isEmpty(year)){
                     for (EntitySign entitySign:danganList){
                         if (!StringUtils.isEmpty(entitySign.getYear())&&entitySign.getYear().equals(year)){
                             newSignList.add(entitySign);
