@@ -227,22 +227,22 @@
 						return (row.ev60009/row.ev60007*100).toFixed(2)
                     }}, */
 					{ title: "医疗收入（上年同期）",field: "ev6000601",formatter:function (value, row, index) {
-						if(row.ev6000501==null){
+						if(row.ev6000601==null){
 							return "0";
 						}
 						return (value/100).toFixed(2)
                     }},
 					{ title: "本期",field: "ev60006",formatter:function (value, row, index) {
-						if(row.ev60005==null){
+						if(row.ev60006==null){
 							return "0";
 						}
 						return (value/100).toFixed(2)
                     }},
 					{ title: "增幅（%）",field: "",formatter:function (value, row, index) {
-						if(row.ev60005==null||row.ev6000501==null||row.ev60005==0||row.ev6000501==0){
+						if(row.ev60006==null||row.ev6000601==null||row.ev60006==0||row.ev6000601==0){
 							return "0";
 						}
-					    return ((row.ev60005-row.ev6000501)/row.ev6000501*100).toFixed(2)
+					    return ((row.ev60006-row.ev6000601)/row.ev6000601*100).toFixed(2)
                     }},
 					{ title: "门诊次均费用（上年同期）",field: "",formatter:function (value, row, index) {
 						if(row.ev6000201==null||row.ev6001101==null){
