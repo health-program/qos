@@ -93,11 +93,13 @@
                     { title: "医院感染总发生率", field: "totalInfection" , formatter: getRate},
                     { title: "与手术相关科室感染发生率", field: "operatingDepartmentsInfection" , formatter: getRate},
                     { title: "手术部位感染总发生率", field: "operatingPartInfection" , formatter: getRate},
-                    { title: "手术风险分级(NNIS分级)手术部位感染率", field: "operatingRiskInfection" , formatter: getRate},
+                    { title: "手术风险1级(NNIS分级)手术部位感染率", field: "operatingRiskInfection1" , formatter: getRate},
+                    { title: "手术风险2级(NNIS分级)手术部位感染率", field: "operatingRiskInfection2" , formatter: getRate},
+                    { title: "手术风险3级(NNIS分级)手术部位感染率", field: "operatingRiskInfection3" , formatter: getRate},
                     { title: "手术患者肺部感染发生率", field: "lungInfection" , formatter: getRate},
                     { title: "新生儿患者医院感染发生率", field: "newBornInfection" , formatter: getRate},
                     { title: "择期手术患者医院感染发生率", field: "selectiveOperationsInfection" , formatter: getRate},
-                    { title: "与血液透析相关血液感染发生率", field: "bloodInfection" , formatter: getRate},
+                   /*  { title: "与血液透析相关血液感染发生率", field: "bloodInfection" , formatter: getRate}, */
                     { title: "重症监护室相关感染率", field: "intensiveCareUnitInfection" , formatter: getRate}
                 ]
             ],
@@ -131,8 +133,13 @@
     }
     
     function getRate(value, row, index) {
-        if (value)
-        return value.toFixed(2) + "%";
+    	var a =0;
+        if (value){
+        	a=value.toFixed(2) + "%";
+        }else{
+        	a= a+'%';
+        }
+        return a;
     }
 
     function unitSelected(row) {
@@ -143,8 +150,8 @@
     var infection1Chart = echarts.init(document.getElementById('infectionChart1'));
     var infection2Chart = echarts.init(document.getElementById('infectionChart2'));
     
-    var dataLegend = ['医院感染总发生率', '与手术相关科室感染发生率','手术部位感染总发生率', '手术风险分级（NNIS分级）手术部位感染率', 
-          			 '手术患者肺部感染发生率', '新生儿患者医院感染发生率', '择期手术患者医院感染发生率', '与血液透析相关血液感染发生率','重症监护室相关感染率'];
+    var dataLegend = ['医院感染总发生率', '与手术相关科室感染发生率','手术部位感染总发生率', '手术风险1级(NNIS分级)手术部位感染率', '手术风险2级(NNIS分级)手术部位感染率', '手术风险3级(NNIS分级)手术部位感染率', 
+          			 '手术患者肺部感染发生率', '新生儿患者医院感染发生率', '择期手术患者医院感染发生率','重症监护室相关感染率'];
    
  	function infectionChart1(){
  		if(dataVal){
@@ -154,19 +161,21 @@
 		           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
 		       	}); 
  			
- 			var data1 = [],data2 = [],data3 = [],data4 = [],data5 = [],data6 = [],data7 = [],data8 = [],data9 = [];
+ 			var data1 = [],data2 = [],data3 = [],data4 = [],data5 = [],data6 = [],data7 = [],data8 = [],data9 = [],data10 = [],data11 = [];
  			var dataUnit = [];
  			dataVal.forEach(function(item){
  				dataUnit.push(item.unitName);
- 				data1.push({name:item.unitName,value:item.totalInfection});
- 				data2.push({name:item.unitName,value:item.operatingDepartmentsInfection});
- 				data3.push({name:item.unitName,value:item.operatingPartInfection});
- 				data4.push({name:item.unitName,value:item.operatingRiskInfection});
- 				data5.push({name:item.unitName,value:item.lungInfection});
- 				data6.push({name:item.unitName,value:item.newBornInfection});
- 				data7.push({name:item.unitName,value:item.selectiveOperationsInfection});
- 				data8.push({name:item.unitName,value:item.bloodInfection});
- 				data9.push({name:item.unitName,value:item.intensiveCareUnitInfection});
+ 				data1.push({name:item.unitName,value:(item.totalInfection).toFixed(2)});
+ 				data2.push({name:item.unitName,value:(item.operatingDepartmentsInfection).toFixed(2)});
+ 				data3.push({name:item.unitName,value:(item.operatingPartInfection).toFixed(2)});
+ 				data4.push({name:item.unitName,value:(item.operatingRiskInfection1).toFixed(2)});
+ 				data5.push({name:item.unitName,value:(item.operatingRiskInfection2).toFixed(2)});
+ 				data6.push({name:item.unitName,value:(item.operatingRiskInfection3).toFixed(2)});
+ 				data7.push({name:item.unitName,value:(item.lungInfection).toFixed(2)});
+ 				data8.push({name:item.unitName,value:(item.newBornInfection).toFixed(2)});
+ 				data9.push({name:item.unitName,value:(item.selectiveOperationsInfection).toFixed(2)});
+ 				data10.push({name:item.unitName,value:(item.bloodInfection).toFixed(2)});
+ 				data11.push({name:item.unitName,value:(item.intensiveCareUnitInfection).toFixed(2)});
  			}) 
  			
  			infection1Chart.hideLoading();
@@ -261,7 +270,7 @@
   				            },
 				            data: data3
 				        },{
-				            name: '手术风险分级（NNIS分级）手术部位感染率',
+				            name: '手术风险1级(NNIS分级)手术部位感染率',
 				            type: 'bar',
 				            barWidth : 4,
 				            itemStyle : {
@@ -271,6 +280,26 @@
   				            },
 				            data: data4
 				        },{
+				            name: '手术风险2级(NNIS分级)手术部位感染率',
+				            type: 'bar',
+				            barWidth : 4,
+				            itemStyle : {
+             	                    normal : {
+             							color: '#a3ccf8'
+             	                    }
+  				            },
+				            data: data5
+				        },{
+				            name: '手术风险3级(NNIS分级)手术部位感染率',
+				            type: 'bar',
+				            barWidth : 4,
+				            itemStyle : {
+             	                    normal : {
+             							color: '#a3ccf8'
+             	                    }
+  				            },
+				            data: data6
+				        },{
 				            name: '手术患者肺部感染发生率',
 				            type: 'bar',
 				            barWidth : 4,
@@ -279,7 +308,7 @@
              							color: '#47b8e2'
              	                    }
   				            },
-				            data: data5
+				            data: data7
 				        },{
 				            name: '新生儿患者医院感染发生率',
 				            type: 'bar',
@@ -289,7 +318,7 @@
              							color: '#6087bf'
              	                    }
   				            },
-				            data: data6
+				            data: data8
 				        },{
 				            name: '择期手术患者医院感染发生率',
 				            type: 'bar',
@@ -299,17 +328,7 @@
               							color: '#4a72c9'
               	                    }
    				            },
-				            data: data7
-				        },{
-				            name: '与血液透析相关血液感染发生率',
-				            type: 'bar',
-				            barWidth : 4,
-				            itemStyle : {
-              	                    normal : {
-              							color: '#6071c6'
-              	                    }
-   				            },
-				            data: data8
+				            data: data9
 				        },{
 				            name: '重症监护室相关感染率',
 				            type: 'bar',
@@ -319,7 +338,7 @@
             							color: '#78a9f2'
             	                    }
    				            },
-				            data: data9
+				            data: data11
 				        }
 				    ]
 				};
@@ -335,7 +354,7 @@
 		           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
 		       	}); 
 			
-			var data1 = [],data2 = [],data3 = [],data4 = [],data5 = [],data6 = [],data7 = [],data8 = [],data9 = [];
+			var data1 = [],data2 = [],data3 = [],data4 = [],data5 = [],data6 = [],data7 = [],data8 = [],data9 = [],data10 = [],data11 = [];
 				var createTime = $("#createTime").val();
 				var unitId = selectUnit;
 				$.get("/qos/infectioncomplication/infection/charts/count/yaer",{'unitId':unitId,'date':createTime},function(res){
@@ -346,15 +365,17 @@
 						for(var i=0; i<month.length;i++){
 							for(var j=0;j<dataValue.length;j++){
 							if(month[i] == dataValue[j].date){
-								data1.push({name:month[i],value:dataValue[j].totalInfection});
-								data2.push({name:month[i],value:dataValue[j].operatingDepartmentsInfection});
-								data3.push({name:month[i],value:dataValue[j].operatingPartInfection});
-								data4.push({name:month[i],value:dataValue[j].operatingRiskInfection});
-								data5.push({name:month[i],value:dataValue[j].lungInfection});
-								data6.push({name:month[i],value:dataValue[j].newBornInfection});
-								data7.push({name:month[i],value:dataValue[j].selectiveOperationsInfection});
-								data8.push({name:month[i],value:dataValue[j].bloodInfection});
-								data9.push({name:month[i],value:dataValue[j].intensiveCareUnitInfection}); 
+								data1.push({name:month[i],value:(dataValue[j].totalInfection).toFixed(2)});
+								data2.push({name:month[i],value:(dataValue[j].operatingDepartmentsInfection).toFixed(2)});
+								data3.push({name:month[i],value:(dataValue[j].operatingPartInfection).toFixed(2)});
+								data4.push({name:month[i],value:(dataValue[j].operatingRiskInfection1).toFixed(2)});
+								data5.push({name:month[i],value:(dataValue[j].operatingRiskInfection2).toFixed(2)});
+								data6.push({name:month[i],value:(dataValue[j].operatingRiskInfection3).toFixed(2)});
+								data7.push({name:month[i],value:(dataValue[j].lungInfection).toFixed(2)});
+								data8.push({name:month[i],value:(dataValue[j].newBornInfection).toFixed(2)});
+								data9.push({name:month[i],value:(dataValue[j].selectiveOperationsInfection).toFixed(2)});
+								data10.push({name:month[i],value:(dataValue[j].bloodInfection).toFixed(2)});
+								data11.push({name:month[i],value:(dataValue[j].intensiveCareUnitInfection).toFixed(2)}); 
 								dataName.push(month[i]);
                                 break;
 							}
@@ -368,6 +389,8 @@
 		                    	data7.push({ name: month[i],value: 0});
 		                    	data8.push({ name: month[i],value: 0});
 		                    	data9.push({ name: month[i],value: 0});
+		                    	data10.push({ name: month[i],value: 0});
+		                    	data11.push({ name: month[i],value: 0});
 								dataName.push(month[i]);
 							}
 							}
@@ -477,7 +500,7 @@
 						            areaStyle: {color: '#78a9f2'},
 						            data: data3
 						        },{
-						            name: '手术风险分级（NNIS分级）手术部位感染率',
+						            name: '手术风险1级(NNIS分级)手术部位感染率',
 						            type: 'line',
 						            barWidth : 4,
 						            smooth:0.3,
@@ -492,6 +515,36 @@
 						            areaStyle: {color: '#a3ccf8'},
 						            data: data4
 						        },{
+						            name: '手术风险2级(NNIS分级)手术部位感染率',
+						            type: 'line',
+						            barWidth : 4,
+						            smooth:0.3,
+						            itemStyle : {
+	            	                    normal : {
+	            							color: '#a3ccf8',
+	            	                        lineStyle:{
+	            	                            width:0
+	            	                        }
+	            	                    }
+						            },
+						            areaStyle: {color: '#a3ccf8'},
+						            data: data5
+						        },{
+						            name: '手术风险3级(NNIS分级)手术部位感染率',
+						            type: 'line',
+						            barWidth : 4,
+						            smooth:0.3,
+						            itemStyle : {
+	            	                    normal : {
+	            							color: '#a3ccf8',
+	            	                        lineStyle:{
+	            	                            width:0
+	            	                        }
+	            	                    }
+						            },
+						            areaStyle: {color: '#a3ccf8'},
+						            data: data6
+						        },{
 						            name: '手术患者肺部感染发生率',
 						            type: 'line',
 						            barWidth : 4,
@@ -505,7 +558,7 @@
 	            	                    }
 						            },
 						            areaStyle: {color: '#47b8e2'},
-						            data: data5
+						            data: data7
 						        },{
 						            name: '新生儿患者医院感染发生率',
 						            type: 'line',
@@ -520,7 +573,7 @@
 	            	                    }
 						            },
 						            areaStyle: {color: '#6087bf'},
-						            data: data6
+						            data: data8
 						        },{
 						            name: '择期手术患者医院感染发生率',
 						            type: 'line',
@@ -535,22 +588,7 @@
 	            	                        }
 	            	                    }
 						            },
-						            data: data7
-						        },{
-						            name: '与血液透析相关血液感染发生率',
-						            type: 'line',
-						            barWidth : 4,
-						            smooth:0.3,
-						            itemStyle : {
-	            	                    normal : {
-	            							color: '#6071c6',
-	            	                        lineStyle:{
-	            	                            width:0
-	            	                        }
-	            	                    }
-						            },
-						            areaStyle: {color: '#6071c6'},
-						            data: data8
+						            data: data9
 						        },{
 						            name: '重症监护室相关感染率',
 						            type: 'line',
@@ -565,7 +603,7 @@
 	            	                    }
 						            },
 						            areaStyle: {color: '#78a9f2'},
-						            data: data9
+						            data: data11
 						        }
 						    ]
 						};

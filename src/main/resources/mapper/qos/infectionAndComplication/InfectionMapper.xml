@@ -8,7 +8,9 @@
 		<result column="total_infection" jdbcType="VARCHAR" property="totalInfection" />
 		<result column="operating_departments_infection" jdbcType="DOUBLE" property="operatingDepartmentsInfection" />
 		<result column="operating_part_infection" jdbcType="DOUBLE" property="operatingPartInfection" />
-		<result column="operating_risk_infection" jdbcType="DOUBLE" property="operatingRiskInfection" />
+		<result column="operating_risk_infection1" jdbcType="DOUBLE" property="operatingRiskInfection1" />
+		<result column="operating_risk_infection2" jdbcType="DOUBLE" property="operatingRiskInfection2" />
+		<result column="operating_risk_infection3" jdbcType="DOUBLE" property="operatingRiskInfection3" />
 		<result column="lung_infection" jdbcType="DOUBLE" property="lungInfection" />
 		<result column="new_born_infection" jdbcType="DOUBLE" property="newBornInfection" />
 		<result column="selective_operations_infection" jdbcType="DOUBLE" property="selectiveOperationsInfection" />
@@ -26,7 +28,9 @@
         total_infection,
         operating_departments_infection,
         operating_part_infection,
-        operating_risk_infection,
+        operating_risk_infection1,
+        operating_risk_infection2,
+        operating_risk_infection3,
         lung_infection,
         new_born_infection,
         selective_operations_infection,
@@ -46,7 +50,9 @@
         total_infection,
         operating_departments_infection,
         operating_part_infection,
-        operating_risk_infection,
+        operating_risk_infection1,
+        operating_risk_infection2,
+        operating_risk_infection3,
         lung_infection,
         new_born_infection,
         selective_operations_infection,
@@ -60,7 +66,10 @@
         )
         values (#{id,jdbcType=VARCHAR},
         #{totalInfection,jdbcType=VARCHAR}, #{operatingDepartmentsInfection,jdbcType=DOUBLE}, #{operatingPartInfection,jdbcType=DOUBLE},
-        #{operatingRiskInfection,jdbcType=DOUBLE}, #{lungInfection,jdbcType=DOUBLE}, #{newBornInfection,jdbcType=DOUBLE},#{selectiveOperationsInfection,jdbcType=DOUBLE},
+        #{operatingRiskInfection1,jdbcType=DOUBLE},
+        #{operatingRiskInfection2,jdbcType=DOUBLE},
+        #{operatingRiskInfection3,jdbcType=DOUBLE},
+         #{lungInfection,jdbcType=DOUBLE}, #{newBornInfection,jdbcType=DOUBLE},#{selectiveOperationsInfection,jdbcType=DOUBLE},
         #{bloodInfection,jdbcType=DOUBLE}, #{intensiveCareUnitInfection,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP},
         #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR} ,#{unitId,jdbcType=VARCHAR})
     </insert>
@@ -70,7 +79,9 @@
         set total_infection = #{totalInfection,jdbcType=VARCHAR},
         operating_departments_infection = #{operatingDepartmentsInfection,jdbcType=DOUBLE},
         operating_part_infection = #{operatingPartInfection,jdbcType=DOUBLE},
-        operating_risk_infection =  #{operatingRiskInfection,jdbcType=DOUBLE},
+        operating_risk_infection1 =  #{operatingRiskInfection1,jdbcType=DOUBLE},
+        operating_risk_infection2 =  #{operatingRiskInfection2,jdbcType=DOUBLE},
+        operating_risk_infection3 =  #{operatingRiskInfection3,jdbcType=DOUBLE},
         lung_infection = #{lungInfection,jdbcType=DOUBLE},
         new_born_infection = #{newBornInfection,jdbcType=DOUBLE},
         selective_operations_infection = #{selectiveOperationsInfection,jdbcType=DOUBLE},
@@ -85,7 +96,11 @@
     </update>
 
     <select id="findInfectRecord" resultType="com.paladin.qos.service.infectioncomplication.vo.InfectionVO">
-        SELECT i.id,i.`total_infection` AS totalInfection,i.`operating_departments_infection` AS operatingDepartmentsInfection,i.`operating_part_infection` AS operatingPartInfection,i.`operating_risk_infection` AS operatingRiskInfection,i.`create_time` as createTime,i.`unit_id` as unitId, s.account AS createUserId
+        SELECT i.id,i.`total_infection` AS totalInfection,i.`operating_departments_infection` AS operatingDepartmentsInfection,i.`operating_part_infection` AS operatingPartInfection,
+        i.`operating_risk_infection1` AS operatingRiskInfection1,
+        i.`operating_risk_infection2` AS operatingRiskInfection2,
+        i.`operating_risk_infection3` AS operatingRiskInfection3,
+        i.`create_time` as createTime,i.`unit_id` as unitId, s.account AS createUserId
         FROM
         infection as i
         LEFT JOIN sys_user s ON i.create_user_id=s.id
@@ -137,7 +152,9 @@
 	sum(i.total_infection)as totalInfection,
 	sum(i.operating_departments_infection)as operatingDepartmentsInfection,
 	sum(i.operating_part_infection)as operatingPartInfection,
-	sum(i.operating_risk_infection)as operatingRiskInfection,
+	sum(i.operating_risk_infection1)as operatingRiskInfection1,
+	sum(i.operating_risk_infection2)as operatingRiskInfection2,
+	sum(i.operating_risk_infection3)as operatingRiskInfection3,
 	sum(i.lung_infection)as lungInfection,
 	sum(i.new_born_infection)as newBornInfection,
 	sum(i.selective_operations_infection)as selectiveOperationsInfection,
@@ -159,7 +176,9 @@
 	sum(i.total_infection) AS totalInfection,
 	sum(i.operating_departments_infection) AS operatingDepartmentsInfection,
 	sum(i.operating_part_infection) AS operatingPartInfection,
-	sum(i.operating_risk_infection) AS operatingRiskInfection,
+	sum(i.operating_risk_infection1) AS operatingRiskInfection1,
+	sum(i.operating_risk_infection2) AS operatingRiskInfection2,
+	sum(i.operating_risk_infection3) AS operatingRiskInfection3,
 	sum(i.lung_infection) AS lungInfection,
 	sum(i.new_born_infection) AS newBornInfection,
 	sum(i.selective_operations_infection) AS selectiveOperationsInfection,

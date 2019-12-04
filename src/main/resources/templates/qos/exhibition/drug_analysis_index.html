@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime" id="startTime" placeholder="请输入查询月份" autocomplete="off"   value="2019-01" type="text" class="form-control">
+                        <input name="startTime" id="startTime" placeholder="请输入查询月份" autocomplete="off"   type="text" class="form-control">
                     </div>
                   <!--  <div class="col-md-2">
                         <select name="dataSource" id="dataSource" class="form-control">
@@ -108,6 +108,7 @@
             showBottom: true, //是否出现底部栏
             trigger: 'click' //绑定多个
         });
+        initStartDateTime();
         generatorZbChart(zbChart);
         generatorPmChart(pmChart);
         generatorQsChart(qsChart);
@@ -137,6 +138,17 @@
     var pmChart = echarts.init(document.getElementById('pmChartDiv'));
     var qsChart = echarts.init(document.getElementById('qsChartDiv'));
     var gcChart = echarts.init(document.getElementById('gcChartDiv'));
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            month = month < 10 ? '0'+ month : month;
+            var time = year +"-"+ month;
+            $("#startTime").val(time);
+        }
+    }
 
     function generatorZbChart(chart) {
         chart.showLoading({
