@@ -86,7 +86,7 @@
             columns: [
                       [
                        { title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>",field: "unitName",rowspan:2},
-                       {title: "每执业医师日均住院工作负担", colspan: 3},
+                       /* {title: "每执业医师日均住院工作负担", colspan: 3}, */
                        {title: "门诊医保基金占比", colspan: 3},
                        {title: "住院医保基金占比", colspan: 3},
                        {title: "住院收入占比",  colspan: 3},
@@ -99,7 +99,7 @@
                    ],
                 [
 					
-					{ title: "实际占用总床日数",field: "ev60016", formatter:function (value, row, index) {
+					/* { title: "实际占用总床日数",field: "ev60016", formatter:function (value, row, index) {
 						if(row.ev60016==null){
 							return 0;
 						}else{
@@ -123,7 +123,7 @@
 					    var days=(endDate - startDate)/(1*24*60*60*1000);
                         var a = row.ev60016/row.evV90006;
                         return (a/days).toFixed(2)
-                    }},
+                    }}, */
 					{ title: "门诊医保费用",field: "ev60001" ,formatter:function (value, row, index) {
 						if(row.ev60001==null){
 							return "0";
