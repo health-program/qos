@@ -2,20 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.familydoctor.SignMapper">
 
-    <!--签约管理-->
-    <select id="getSignManageData" resultType="com.paladin.qos.model.familydoctor.FamilySign">
-
-
-
-    </select>
-    <!-- 健康管理服务包签约数(收费) -->
-    <select id="signingIsMoneyNum" resultType="long">
-        SELECT COUNT(1)
-        FROM g_fha_person_sign_main ps
-        LEFT JOIN g_fha_person_main pm
-        ON ps.CODE=pm.CODE AND ps.stateid = '0' AND pm.stateid = '1'
-        WHERE ps.LASTFLAG = '1' AND ps.FAMILYNEW = '1' and ps.CREATEDTIME &gt;= #{startTime}+0  and ps.CREATEDTIME &lt; #{endTime}+0 and pm.MANAGEDCENTERCODE = #{unitId}
-    </select>
     <!-- 健康管理服务包签约数(免费) -->
     <select id="signingNotMoneyNum" resultType="long">
         SELECT COUNT(1)
@@ -187,29 +173,5 @@
         and CREATEDTIME &lt; #{endTime}+0
         and CREATEDUNITCODE = #{unitId}
     </select>
-    <!-- 重精神障碍患者签约率 -->
-    <select id="mentalDisorderSigningRate" resultType="long">
-        SELECT COUNT(1) FROM g_fha_person_sign_main
-        WHERE signmemtype like '%D%'
-        and CREATEDTIME &gt;= #{startTime}+0
-        and CREATEDTIME &lt; #{endTime}+0
-        and CREATEDUNITCODE = #{unitId}
-    </select>
-    <!-- 疾病筛查高危人员签约率 -->
-    <select id="diseaseSiftSigningRate" resultType="long">
-        select count(1) from g_fha_person_sign_main m
-        left join g_fha_pre_scale_assess a on m.CODE=a.CODE
-        where a.RISKDESC is not null
-        and m.CREATEDTIME &gt;= #{startTime}+0
-        and m.CREATEDTIME &lt; #{endTime}+0
-        and m.CREATEDUNITCODE = #{unitId}
-    </select>
-    <!-- 离休干部签约率 -->
-    <select id="retirementCadreRate" resultType="long">
-        SELECT COUNT(1) FROM g_fha_person_sign_main
-        WHERE signmemtype like '%G%'
-        and CREATEDTIME &gt;= #{startTime}+0
-        and CREATEDTIME &lt; #{endTime}+0
-        and CREATEDUNITCODE = #{unitId}
-    </select>
+
 </mapper>

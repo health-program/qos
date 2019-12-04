@@ -2,11 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.paladin.qos.mapper.gongwei.ArchivesManagementMapper">
 
-    <!--档案管理-->
-    <!--建档率-->
-    <select id="getArchivesTotal" resultType="java.lang.Long">
-        select count(1) from g_fha_person_main where stateid='1';
-    </select>
 
     <select id="get12MonthArchives" resultType="com.paladin.qos.service.gongwei.vo.ArchivesMonthsVO">
         select  sum(total_num) as archivesNumber  from  data_processed_day

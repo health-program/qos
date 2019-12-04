@@ -123,13 +123,7 @@ public interface AnalysisMapper {
 
 	List<DataSigningMonth> populationSigningNum();//人口签约数
 
-	List<Sign> getSignInfo();
-
 	List<DataSigningMonth> getTwoYear();
-
-	List<DataSigningMonth> getArchivesRate();
-
-	Long getArchivesNumber(@Param("month") Date month);
 
 	String getTotalData(@Param("id") String id);
 
