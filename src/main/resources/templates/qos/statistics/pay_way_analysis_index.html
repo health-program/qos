@@ -18,33 +18,16 @@
 						<div class="col-md-2">
 								 <input name="startTime" id="startTime" placeholder="请选择月份" autocomplete="off"  type="text" class="form-control">
 						</div>
-						<!-- <div class="col-md-2">
-                       <select name="dataSource" class="form-control">
-                                <option value="yiyuan-dyrmyy">昆山市第一人民医院</option>
-                                <option value="yiyuan-zyyy">昆山市中医医院</option>
-                                <option value="yiyuan-dsrmyy">昆山市第三人民医院</option>
-                                <option value="yiyuan-jxrmyy">昆山市锦溪人民医院</option>
-                                <option value="yiyuan-qdrmyy">昆山市千灯人民医院</option>
-                                <option value="yiyuan-jswszx">昆山市精神卫生中心</option>
-                                <option value="yiyuan-ljrmyy">昆山市陆家人民医院</option>
-                                <option value="yiyuan-zsrmyy">昆山市周市人民医院</option>
-                                <option value="yiyuan-zxyjhyy">昆山市中西医结合医院</option>
-                                <option value="yiyuan-dshrmyy">昆山市淀山湖人民医院</option>
-                                <option value="yiyuan-zprmyy">昆山市张浦人民医院</option>
-                                <option value="yiyuan-zzrmyy">昆山市周庄人民医院</option>
-                                <option value="yiyuan-dermyy">昆山市第二人民医院</option>
-                            </select>
-                    </div> -->
-						<div class="col-md-8">
+						<div class="col-md-10">
 							<div class="pull-right">
 								<button type="button" style="width: 100px"
 									class="btn btn-primary tonto-btn-search" onclick="refresh()">
 									<i class="fa fa-search"></i>查询
 								</button>
-								<!-- <button type="button" style="width: 100px"
-									class="btn btn-default" onclick="$('#searchbar').resetSearch()">
+								 <button type="button" style="width: 100px"
+									class="btn btn-default" >
 									<i class="fa fa-repeat"></i>重置
-								</button> -->
+								</button> 
 							</div>
 						</div>
 					</div>
@@ -68,7 +51,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6" style="padding: 0 15px 0 0px;">
+			<div class="col-md-6" style="padding: 0 15px 0 15px;">
 				<div class="box box-solid">
 					<div class="box-body">
 						<table id="dataGrid"></table>
@@ -83,8 +66,8 @@
 							<div class="panel-body">
 								<div id="mzybfyzylzfybDiv" class="box-body"
 									style="height: 310px"></div>
-								<div style="text-align: center;">门诊医保费用总金额<span>1151843.79</span>元</div>
-								<div style="text-align: center;">医疗总费用<span>3703931.55</span>元</div>
+								<div style="text-align: center;">门诊医保费用总金额<span id='zfy'></span>元</div>
+								<div style="text-align: center;">医疗总费用<span id='ybzfy'></span>元</div>
 							</div>
 						</div>
 					</div>
@@ -120,6 +103,8 @@
 	        opdfxMian();
 			mzybsrpm();
 			mzybsrqsfx();
+			mzybfyzylzfyb();
+			opdfxMian();
 	        
 	    }
 		
@@ -137,7 +122,6 @@
 		mzybsrpm();
 		mzybsrqsfx();
 		mzybfyzylzfyb();
-		monthData();
 		initDataGrid();
 
 		});
@@ -145,38 +129,132 @@
 
 		
 		function initDataGrid() {
+			let sTime = $("#startTime").val();
+	        let split = sTime.split("-");
+	        var lastDay= new Date(split[0],split[1],0);
+	        var year = lastDay.getFullYear();
+	        var month = lastDay.getMonth() + 1;
+	        month = month < 10 ? '0'+ month : month;
+	        var day = lastDay.getDate();
+	        day = day < 10 ? '0'+day : day;
+	        let startTime = sTime + "-01";
+	        let endTime = year + "-"+ month +"-"+ day;
 		
-		
-			 var data= [
-					{i1:'门诊医保费用总金额',i2:'1273.72万元',i3:'1871.08万元',i4:'31.93',i5:'1841.98万元',i6:'30.85'},
-					{i1:'门诊医保个人负担金额',i2:'404.04万元',i3:'741.47万元',i4:'45.51',i5:'631.03万元',i6:'35.97'},
-					{i1:'门诊医保自费比例',i2:'31.72%',i3:'39.63%',i4:'19.96',i5:'34.26%',i6:'7.41'},
-					{i1:'门诊医保患者药占比',i2:'146.25%',i3:'122.80%',i4:'19.10',i5:'187.97%',i6:'22.20'}
-				]
-			$("#dataGrid").bootstrapTable({data: data,columns : [ [ {
-				"title" : "门诊医保费用指标分析",
-				"halign" : "left",
-				"align" : "left",
-				"colspan" : 6
-			} ], [ {
-				title : "指标名称",
-				field : "i1"
-			}, {
-				title : "本期(元)",
-				field : "i2"
-			}, {
-				title : "上期(元)",
-				field : "i3"
-			}, {
-				title : "环比%",
-				field : "i4"
-			}, {
-				title : "同期(元)",
-				field : "i5"
-			}, {
-				title : "同比%",
-				field : "i6"
-			}, ] ]}); 
+	        var eventIds1 ='42003,90013,90012'
+				 $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime,endTime : endTime, eventIds:eventIds1},function (res) {
+					 
+					 var eventIds2 ='42003,90013,90012'
+						 let sTime = $("#startTime").val();
+				        let split = sTime.split("-");
+				        var nowdays= new Date(split[0],split[1],0);
+					    var year = nowdays.getFullYear();
+					    var month = nowdays.getMonth();
+					    if(month==0){month=12;year=year-1;}
+					    if (month < 10) { month = "0" + month;}
+					    var firstDay = year + "-" + month + "-" + "01";//上个月的第一天
+					    var myDate = new Date(year, month, 0);
+					    var lastDay = year + "-" + month + "-" + myDate.getDate();//上个月的最后一天
+					 
+					 
+					 $.postAjax("/qos/analysis/data/get/total",{ startTime : firstDay,endTime : lastDay, eventIds:eventIds2},function (res1) {
+						 
+						 var eventIds3 ='42003,90013,90012'
+						 debugger;
+						 	let sTime = $("#startTime").val();
+					        let split = sTime.split("-");
+					        var lastDay= new Date(split[0],split[1],0);
+					        var year = lastDay.getFullYear();
+					        year = year-1;
+					        var month = lastDay.getMonth() + 1;
+					        month = month < 10 ? '0'+ month : month;
+					        var day = lastDay.getDate();
+					        day = day < 10 ? '0'+day : day;
+					        let startTime = year+"-"+ month+ "-01";
+					        let endTime = year + "-"+ month +"-"+ day;
+						 $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime,endTime : endTime, eventIds:eventIds3},function (res2) {
+							 debugger;
+							 var v42003 = res['42003']==0?0:res['42003']/100;
+							 var v90013 = res['90013']==0?0:res['90013']/100;
+							 var v90012 = res['90012']==0?0:res['90012']/100;
+							 var vrate = reta(v90013,v42003);
+							 var yzbrate = reta(v90012,v42003);
+							 var a1 = res1['42003']==0?0:res1['42003']/100;
+							 var b1 =res1['90013']==0?0:res1['90013']/100;
+							 var e1 = res1['90012']==0?0:res1['90012']/100;
+							 var c1 = reta(b1,a1);
+							 var d1 = reta(e1,a1);
+							 var a2 = res2['42003']==0?0:res2['42003']/100;
+							 var b2 =res2['90013']==0?0:res2['90013']/100;
+							 var e2 = res2['90012']==0?0:res2['90012'];
+							 var c2 = reta(b2,a2);
+							 var d2 = reta(e2,a2);
+							
+							 var vrate1 = (vrate-c2).toFixed(2);
+							 var yzbrate1 = (yzbrate-d2).toFixed(2);
+							 
+							 var hb1 =0,hb2=0;
+							 if(v42003 && a1){
+								 hb1 = ((v42003-a1)/a1*100).toFixed(2);
+							 }
+							 if(v90013 && b1){
+								 hb2 = ((v90013-b1)/b1*100).toFixed(2);
+							 }
+							 
+							 //（本期数－同期数）÷同期数×100%
+							 
+							 var tb1 =0,tb2=0;
+							 if(v42003 && a2){
+							 	tb1 =((v42003-a2)/a2*100).toFixed(2);
+							 }
+							 if(v90013 && b2){
+							 	tb2 = ((v90013-b2)/b1*100).toFixed(2);
+							 }
+							 
+							 
+							 
+							 var data= [
+										{i1:'门诊医保费用总金额',i2:v42003,i3:a1,i4:hb1,i5:a2,i6:tb1},
+										{i1:'门诊医保个人负担金额',i2:v90013,i3:b1,i4:hb2,i5:b2,i6:tb2},
+										{i1:'门诊医保自费比例',i2:vrate+'%',i3:c1+'%',i4:(vrate-c1).toFixed(2),i5:c2+'%',i6:vrate1},
+										{i1:'门诊医保患者药占比',i2:yzbrate+'%',i3:d1+'%',i4:(yzbrate-d1).toFixed(2),i5:d2+'%',i6:yzbrate1}
+									]
+								$("#dataGrid").bootstrapTable('destroy').bootstrapTable({data: data,columns : [ [ {
+									"title" : "门诊医保费用指标分析",
+									"halign" : "left",
+									"align" : "left",
+									"colspan" : 6
+								} ], [ {
+									title : "指标名称",
+									field : "i1"
+								}, {
+									title : "本期(元)",
+									field : "i2"
+								}, {
+									title : "上期(元)",
+									field : "i3"
+								}, {
+									title : "环比%",
+									field : "i4"
+								}, {
+									title : "同期(元)",
+									field : "i5"
+								}, {
+									title : "同比%",
+									field : "i6"
+								}, ] ]}); 
+							 
+						 })
+						
+						 
+						
+					 })
+					 
+					 
+				 })
+	        
+	        
+	        
+			
 		}
 		
 		
@@ -210,19 +288,12 @@
 
 
 	        $.postAjax("/qos/analysis/data/get/unit",{startTime : startTime,endTime: endTime,eventId:'42003'},function (res) {
-	        	debugger;
-	            if (res.length === 0) {
-	                showChartInfo(chart,'暂无数据');
-	                return false;
-	            }
-
 	            let  unitName = [];
 	            let data = [];
-
 	            if (res && res.length > 0) {
 	                res.sort( (u1,u2) => {
-	                     u1['rate'] =u1.count;
-	                     u2['rate'] =u2.count;
+	                     u1['rate'] =u1.totalNum/100;
+	                     u2['rate'] =u2.totalNum/100;
 	                    return   u2.rate - u1.rate
 	                } );
 
@@ -235,9 +306,6 @@
 	                    data.push(unit.rate)
 	                })
 	            }
-
-
-
 	            teamChart1.hideLoading();
 	            var isShowScroll = false;// 是否显示滚动条，默认false不显示
 	            var dataZoom_end;// 显示百分之多少的数据量，默认全部
@@ -247,7 +315,6 @@
 	            }else{
 	                dataZoom_end = 100;
 	            }
-
 
 	        var labelOption = {
 	            normal: {
@@ -268,7 +335,8 @@
 	        };
 	        option = {
 	        		title: {
-	    		        text: '全市医院门诊医保收入排名(万元)'
+	    		        text: '全市医院门诊医保收入排名(元)',
+	    		        top:-5
 	    		    },
 	            color: ['#3398DB'],
 	            tooltip: {
@@ -361,132 +429,6 @@
 
 	    }
 		
-		
-		/* function mzybsrpm(){
-			var xAxisData = [],yAxisDate = [];
-				$.get('/qos/pay/way/hospital',function(data){
-
-					for(var i=0;i<data.result.length;i++){
-						xAxisData.push(data.result[i].name);
-						yAxisDate.push({name:data.result[i].name,value:i+1+'000'});
-					}
-					var isShowScroll = false;// 是否显示滚动条，默认false不显示
-		            var dataZoom_end;// 显示百分之多少的数据量，默认全部
-		            if(xAxisData.length >5 ){
-		                dataZoom_end = 100/(xAxisData.length/5);
-		                isShowScroll = true;
-		            }else{
-		                dataZoom_end = 100;
-		            }
-					
-				 	var labelOption = {
-			                normal: {
-			                    show: true,
-			                    position: 'top',
-			                    distance: 12,
-			                    align: 'center',
-			                    verticalAlign: 'top',
-			                    rotate: 0,
-			                    formatter: '{c}',
-			                    fontSize: 12,
-			                    rich: {
-			                        name: {
-			                            textBorderColor: '#fff'
-			                        }
-			                    }
-			                }
-			            };
-					option = {
-			    		    color: ['#3398DB'],
-			    		    title: {
-			    		        text: '全市医院门诊医保收入排名(万元)'
-			    		    },
-			    		    tooltip : {
-			    		        trigger: 'axis',
-			    		        axisPointer : {            
-			    		            type : 'shadow'        
-			    		        }
-			    		    },
-			    		    grid: {
-			    		        left: '3%',
-			    		        right: '4%',
-			    		        bottom: '3%',
-			    		        containLabel: true
-			    		    },
-			    		    calculable: true,
-			    		    dataZoom: [   {
-			                    start:0,//默认为0
-			                    end: dataZoom_end,
-			                    type: 'slider',
-			                    show: isShowScroll,
-			                    xAxisIndex: [0],
-			                    handleSize: 8,//滑动条的 左右2个滑动条的大小
-			                    height: 10,//组件高度
-			                    left: "center", //左边的距离
-			                    bottom:0,
-			                    handleColor: '#ddd',//h滑动图标的颜色
-			                    handleStyle: {
-			                        borderColor: "#cacaca",
-			                        borderWidth: "1",
-			                        shadowBlur: 2,
-			                        background: "#ddd",
-			                        shadowColor: "#ddd",
-			                    },
-			                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-			                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-			                        //给第一个设置0，第四个设置1，就是垂直渐变
-			                        offset: 0,
-			                        color: '#1eb5e5'
-			                    }, {
-			                        offset: 1,
-			                        color: '#5ccbb1'
-			                    }]),
-			                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-			                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-			                    showDataShadow: false,//是否显示数据阴影 默认auto
-			                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-			                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-			                    filterMode: 'filter'
-			                },
-			                    //下面这个属性是里面拖到
-			                    {
-			                        type: 'inside',
-			                        show: true,
-			                        xAxisIndex: [0],
-			                        start: 0,//默认为1
-			                        end: 50
-			                    }],
-			    		    xAxis : [
-			    		        {
-			    		            type : 'category',
-			    		             axisLabel: {
-			    		                interval:0,
-			    		                rotate:50//角度顺时针计算的
-			    		                } , 
-			    		            data: xAxisData,
-			    		            axisTick: {
-			    		                alignWithLabel: true
-			    		            }
-			    		        }
-			    		    ],
-			    		    yAxis : [
-			    		        {
-			    		            type : 'value'
-			    		        }
-			    		    ],
-			    		    series : [
-			    		        {
-			    		            type:'bar',
-			    		            barWidth: '60%',
-			    		            label: labelOption,
-			    		            data:['2541230','372672','23562','323432','152452','53652','524152','314252','142521','255251','142542','524324','252452']
-			    		        }
-			    		    ]
-			    		};
-					teamChart1.setOption(option,true);	
-				})
-		} */
-		
 		var teamChart2 = echarts.init(document.getElementById('mzybsrqsfxDiv'));
 		
 		function mzybsrqsfx() {
@@ -516,7 +458,6 @@
 
 
 	        $.postAjax("/qos/analysis/data/get/day/instalments",{ startTime : startTime,endTime : endTime, eventId:'42003'},function (res) {
-
 	            let dataValue = [];
 	            let timeValue = [];
 
@@ -524,7 +465,7 @@
 
 	            timeValue = month42004.day;
 	            dataValue = month42004.valuesMap['total'];
-
+				
 	            var isShowScroll = false;// 是否显示滚动条，默认false不显示
 	            var dataZoom_end;// 显示百分之多少的数据量，默认全部
 	            if(timeValue.length >10 ){
@@ -554,7 +495,8 @@
 	            };
 	            option = {
 	            		title: {
-		    		        text: '门诊医保收入趋势分析'
+		    		        text: '门诊医保收入趋势分析',
+		    		        top:-5
 		    		    },
 	                color: ['#3398DB'],
 	                tooltip: {
@@ -634,7 +576,7 @@
 	                    {
 	                        name: '门诊医保收入趋势分析',
 	                        type: 'line',
-	                        smooth: true,
+	                        smooth: false,
 	                        label: labelOption,
 	                        barGap: 0,
 	                        data: dataValue,
@@ -645,263 +587,195 @@
 	        });
 	    }
 		
-		/* function mzybsrqsfx(){
-			
-			var a = monthData();
-			var xAxisData = [];	
-			var yAxisData = [];
-			
-			for(var i=0;i<a.length;i++){
-				xAxisData.push(a[i]);
-				yAxisData.push({name:a,value:Math.ceil(Math.random()*50000+200000)})
-			}
-			
-			var isShowScroll = false;// 是否显示滚动条，默认false不显示
-            var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(xAxisData.length >10 ){
-                dataZoom_end = 100/(xAxisData.length/10);
-                isShowScroll = true;
-            }else{
-                dataZoom_end = 100;
-            }
-            
-			var labelOption = {
-	                normal: {
-	                    show: true,
-	                    position: 'top',
-	                    distance: 12,
-	                    align: 'center',
-	                    verticalAlign: 'top',
-	                    rotate: 0,
-	                    formatter: '{c}',
-	                    fontSize: 12,
-	                    rich: {
-	                        name: {
-	                            textBorderColor: '#fff'
-	                        }
-	                    }
-	                }
-	            };
-			option = {
-	    		    color: ['#3398DB'],
-	    		    title: {
-	    		        text: '门诊医保收入趋势分析'
-	    		    },
-	    		    tooltip : {
-	    		        trigger: 'axis',
-	    		        axisPointer : {            
-	    		            type : 'shadow'        
-	    		        }
-	    		    },
-	    		    grid: {
-	    		        left: '3%',
-	    		        right: '4%',
-	    		        bottom: '3%',
-	    		        containLabel: true
-	    		    },
-	    		    xAxis : [
-	    		        {
-	    		            type : 'category',
-	    		             axisLabel: {
-	    		                interval:0,
-	    		                rotate:70//角度顺时针计算的
-	    		                } , 
-	    		            data: xAxisData,
-	    		            axisTick: {
-	    		                alignWithLabel: true
-	    		            }
-	    		        }
-	    		    ],
-	    		    calculable: true,
-	    		    dataZoom: [   {
-	                    start:0,//默认为0
-	                    end: dataZoom_end,
-	                    type: 'slider',
-	                    show: isShowScroll,
-	                    xAxisIndex: [0],
-	                    handleSize: 8,//滑动条的 左右2个滑动条的大小
-	                    height: 10,//组件高度
-	                    left: "center", //左边的距离
-	                    bottom:0,
-	                    handleColor: '#ddd',//h滑动图标的颜色
-	                    handleStyle: {
-	                        borderColor: "#cacaca",
-	                        borderWidth: "1",
-	                        shadowBlur: 2,
-	                        background: "#ddd",
-	                        shadowColor: "#ddd",
-	                    },
-	                    fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
-	                        //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
-	                        //给第一个设置0，第四个设置1，就是垂直渐变
-	                        offset: 0,
-	                        color: '#1eb5e5'
-	                    }, {
-	                        offset: 1,
-	                        color: '#5ccbb1'
-	                    }]),
-	                    zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
-	                    backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
-	                    showDataShadow: false,//是否显示数据阴影 默认auto
-	                    showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
-	                    handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
-	                    filterMode: 'filter'
-	                },
-	                    //下面这个属性是里面拖到
-	                    {
-	                        type: 'inside',
-	                        show: true,
-	                        xAxisIndex: [0],
-	                        start: 0,//默认为1
-	                        end: 50
-	                    }],
-	    		    yAxis : [
-	    		        {
-	    		            type : 'value'
-	    		        }
-	    		    ],
-	    		    series : [
-	    		        {
-	    		            type:'line',
-	    		            barWidth: '60%',
-	    		            label: labelOption,
-	    		            data:yAxisData
-	    		        }
-	    		    ]
-	    		};
-			teamChart2.setOption(option,true);
-		} */
 		
 		//门诊医保费用占医疗总费用比
 		var teamChart4 = echarts.init(document.getElementById('mzybfyzylzfybDiv'));
 		function mzybfyzylzfyb(){
-			 var option = {
-     	            tooltip: {
-     	                trigger: 'item',
-     	                formatter: "{a} <br/>{b}: {c} ({d}%)"
-     	            },
-     	            color: ['#3398DB','#999999'],
-     	            graphic: [{ //环形图中间添加文字
-     	                type: 'text', //通过不同top值可以设置上下显示
-     	                left: 'center',
-     	                top: '45%',
-     	                style: {
-     	                    text: '31.09%'+'\n'+'总费用比',
-     	                    textAlign: 'center',
-     	                    fill: 'black', //文字的颜色
-     	                    width: 30,
-     	                    height: 30,
-     	                    fontSize: 20,
-     	                    fontFamily: "Microsoft YaHei"
-     	                }
-     	            }],
-     	            series: [
-     	                {
-     	                    name:'门诊医保费用占医疗总费用比',
-     	                    type:'pie',
-     	                    radius: ['50%', '75%'],
-     						center : [ '50%', '50%' ],
-     	                    avoidLabelOverlap: false,
-     	                    label: {
-     	                        normal: {
-     	                            show: false,
-     	                            position: 'center'
-     	                        },
+			
+			  let sTime = $("#startTime").val();
 
-     	                    },
-     	                    labelLine: {
-     	                        normal: {
-     	                            show: false
-     	                        }
-     	                    },
-     	                    data:[
-     	                        {
-     	                            value:1151843.79,
-     	                            name:'药占比'
-     	                        },
-     	                        {
-     	                            value:3703931.55,
-     	                            name:'',
-     	                            hoverAnimation:false,
-     	                            tooltip:{//禁止鼠标悬停显示提示框
-     	                                show:false,
-     	                            },
-     	                        }
-     	                    ]
-     	                }
-     	            ]
-     	        };
-			 teamChart4.setOption(option, true);
+		        let split = sTime.split("-");
+
+		        var lastDay= new Date(split[0],split[1],0);
+
+		        var year = lastDay.getFullYear();
+		        var month = lastDay.getMonth() + 1;
+		        month = month < 10 ? '0'+ month : month;
+		        var day = lastDay.getDate();
+		        day = day < 10 ? '0'+day : day;
+
+		        let startTime = sTime + "-01";
+
+		        let endTime = year + "-"+ month +"-"+ day;
+			
+			
+			var eventIds ='42001,42003'
+			 $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime,endTime : endTime, eventIds:eventIds},function (res) {
+				  	var value42001=res[42001];
+				  	if(value42001){
+				  		value42001=value42001/100;
+				  	}
+				  	var value42003=res[42003];
+				  	if(value42003){
+				  		value42003=value42003/100;
+				  	}
+				 	c = 0;
+			        if (value42001 && value42003) {
+			            c = (value42003 / value42001 * 100).toFixed(2);
+			        }
+				 
+				 $("#zfy").text(value42003);
+				 $("#ybzfy").text(value42001);
+				 
+				 var option = {
+		     	            tooltip: {
+		     	                trigger: 'item',
+		     	                formatter: "{a} <br/>{b}: {c} ({d}%)"
+		     	            },
+		     	            color: ['#3398DB','#999999'],
+		     	            graphic: [{ //环形图中间添加文字
+		     	                type: 'text', //通过不同top值可以设置上下显示
+		     	                left: 'center',
+		     	                top: '45%',
+		     	                style: {
+		     	                    text: c+'%',
+		     	                    textAlign: 'center',
+		     	                    fill: 'black', //文字的颜色
+		     	                    width: 30,
+		     	                    height: 30,
+		     	                    fontSize: 30,
+		     	                    fontFamily: "Microsoft YaHei"
+		     	                }
+		     	            }],
+		     	            series: [
+		     	                {
+		     	                    name:'门诊医保费用占医疗总费用比',
+		     	                    type:'pie',
+		     	                    radius: ['50%', '75%'],
+		     						center : [ '50%', '50%' ],
+		     	                    avoidLabelOverlap: false,
+		     	                    label: {
+		     	                        normal: {
+		     	                            show: false,
+		     	                            position: 'center'
+		     	                        },
+
+		     	                    },
+		     	                    labelLine: {
+		     	                        normal: {
+		     	                            show: false
+		     	                        }
+		     	                    },
+		     	                    data:[
+		     	                        {
+		     	                            value:value42003,
+		     	                            name:'药占比'
+		     	                        },
+		     	                        {
+		     	                            value:value42001==0?'1':value42001,
+		     	                            name:'',
+		     	                            hoverAnimation:false,
+		     	                            tooltip:{//禁止鼠标悬停显示提示框
+		     	                                show:false,
+		     	                            },
+		     	                        }
+		     	                    ]
+		     	                }
+		     	            ]
+		     	        };
+					 teamChart4.setOption(option, true);
+			 });
+			
+			
 		}
 		
 		//门诊医保患者费用构成分析
 		var teamChart = echarts.init(document.getElementById('mzybhzfygcfxDiv'));
 		function opdfxMian() {
-			option = {
-				tooltip : {
-					trigger : 'item',
-					formatter : "{a} <br/>{b} : {c} ({d}%)"
-				},
-				 legend: {
-				        //orient: 'vertical',
-				        type:"scroll",
-				        x: 'left',
-				        data:['诊察费','检查费','化验费','治疗费','手术费','材料费','药品','西药费','中成药费','中草药费','服务费','其他收费'],
-				        bottom:0
-				    },
-				series : [ {
-					name : '',
-					type : 'pie',
-					radius : '60%',
-					center : [ '50%', '40%' ],
-					data : [ {
-						value : '229636',
-						name : '诊察费'
-					}, {
-						value : '170708.02',
-						name : '检查费'
-					}, {
-						value : '223621.3',
-						name : '化验费'
-					}, {
-						value : '135234.56',
-						name : '治疗费'
-					}, {
-						value : '321454.21',
-						name : '手术费'
-					}, {
-						value : '173542',
-						name : '材料费'
-					}, {
-						value : '567281',
-						name : '药品'
-					}, {
-						value : '137272',
-						name : '西药费'
-					}, {
-						value : '142673',
-						name : '中成药费'
-					}, {
-						value : '132632',
-						name : '手术费'
-					}, {
-						value : '372912',
-						name : '服务费'
-					}, {
-						value : '63782',
-						name : '其他收费'
-						
-					} ],
-					itemStyle : {
-						emphasis : {
-							shadowBlur : 10,
-							shadowOffsetX : 0,
-							shadowColor : 'rgba(0, 0, 0, 0.5)'
-						}
-					}
-				} ]
-			};
-			teamChart.setOption(option, true);
+			
+			let sTime = $("#startTime").val();
+
+	        let split = sTime.split("-");
+
+	        var lastDay= new Date(split[0],split[1],0);
+
+	        var year = lastDay.getFullYear();
+	        var month = lastDay.getMonth() + 1;
+	        month = month < 10 ? '0'+ month : month;
+	        var day = lastDay.getDate();
+	        day = day < 10 ? '0'+day : day;
+
+	        let startTime = sTime + "-01";
+
+	        let endTime = year + "-"+ month +"-"+ day;
+			
+			var eventIds='90001,90002,90003,90004,90005,90006,90007,90008,90009,90011,90012';
+			 $.postAjax("/qos/analysis/data/get/total",{ startTime : startTime,endTime : endTime, eventIds:eventIds},function (res) {
+				 debugger;
+				 option = {
+							tooltip : {
+								trigger : 'item',
+								formatter : "{a} <br/>{b} : {c} ({d}%)"
+							},
+							 legend: {
+							        //orient: 'vertical',
+							        type:"scroll",
+							        x: 'left',
+							        data:['诊察费','检查费','化验费','治疗费','手术费','材料费','药品','西药费','中成药费','中草药费','服务费','其他收费'],
+							        bottom:0
+							    },
+							series : [ {
+								name : '',
+								type : 'pie',
+								radius : '60%',
+								center : [ '50%', '40%' ],
+								data : [ {
+									value : res[90001]/100,
+									name : '诊察费'
+								}, {
+									value : res[90002]/100,
+									name : '检查费'
+								}, {
+									value : res[90003]/100,
+									name : '化验费'
+								}, {
+									value : res[90004]/100,
+									name : '治疗费'
+								}, {
+									value : res[90005]/100,
+									name : '手术费'
+								}, {
+									value : res[90006]/100,
+									name : '材料费'
+								}, {
+									value : res[90007]/100,
+									name : '药品'
+								}, {
+									value : res[90008]/100,
+									name : '西药费'
+								}, {
+									value : res[90009]/100,
+									name : '中成药费'
+								}, {
+									value : res[90011]/100,
+									name : '其他'
+								}, {
+									value : res[90012]/100,
+									name : '其他收费'
+									
+								} ],
+								itemStyle : {
+									emphasis : {
+										shadowBlur : 10,
+										shadowOffsetX : 0,
+										shadowColor : 'rgba(0, 0, 0, 0.5)'
+									}
+								}
+							} ]
+						};
+						teamChart.setOption(option, true);
+			 })
+			
 		}
 		
 		
@@ -953,7 +827,7 @@
 	        var totalVals = [];
 	        for (var j = 0; j < totalValues.length; j++) {
 	            var tv = totalValues[j];
-	            totalVals.push(tv.totalNum);
+	            totalVals.push(tv.totalNum/100);
 	        }
 
 	        valuesMap.total = totalVals;
@@ -964,28 +838,24 @@
 	    }
 		
 		
-	function monthData(){
-		var m = $("#monthInput").val();
-		if(m == null || m == '' ){
-			var date1 = new Date();
-			var month = date1.getMonth();
-			var year = date1.getFullYear(); 
-	    	m = year+'-'+month;
-			
-		}
-		var data=m.lastIndexOf("\-");
-		var month = m.substring(data+1,m.length);
-		var year  = m.substring(0,data);
-		
-        var day = new Date(year,month,0); 
-        var daycount = day.getDate(); 
-        
-        var monthDay = [];
-        for(var i=1;i<=daycount;i++){
-        	monthDay.push(month+'-'+i);
+	function reta(a,b){
+	 	var c = 0; 
+        if (a && b) {
+            c = (a / b * 100).toFixed(2);
         }
-        return monthDay;
+        return c;
 	}
+	
+	function getLastMonth(){//获取上个月日期
+		    var date = new Date; 
+		    var year = date.getFullYear();
+		    var month = date.getMonth();
+		    if(month == 0){
+		         year = year -1;
+		         month = 12; 
+		    }
+		    return year+"-"+month;
+		}
 	</script>
 </body>
 

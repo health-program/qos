@@ -88,7 +88,7 @@
 		function refresh() {
 			table ? table.refresh() : initTable();
 			referral();
-
+			initDayChart();
 		}
 
 		function initTable() {
@@ -125,7 +125,7 @@
 											}
 										},
 										{
-											title : "门急诊总<br/>费用(元)",
+											title : "门急诊药品<br/>总费用(元)",
 											field : "ev31002",
 											sortable : true,
 											sorter : function(fa, fb, ra, rb) {
@@ -147,7 +147,7 @@
 											}
 										},
 										{
-											title : "门急诊人<br/>均费用(元)",
+											title : "门急诊人均<br/>药品费用(元)",
 											field : "opdAvg",
 											sortable : true,
 											sorter : function(fa, fb, ra, rb) {
@@ -191,7 +191,7 @@
 											}
 										},
 										{
-											title : "住院费用(元)",
+											title : "住院药品<br/>费用(元)",
 											field : "ev31005",
 											sortable : true,
 											sorter : function(fa, fb, ra, rb) {
@@ -213,7 +213,7 @@
 											}
 										},
 										{
-											title : "住院人均<br/>费用(元)",
+											title : "住院人均<br/>药品费用(元)",
 											field : "inPatietAvg",
 											sortable : true,
 											sorter : function(fa, fb, ra, rb) {
@@ -349,7 +349,6 @@
 											}
 
 											var opdAvg = 0, inPatietAvg = 0;
-
 											var ev31002 = data[o].ev31002;
 											var ev31001 = data[o].ev31001;
 											if (ev31001 && ev31002)
@@ -372,6 +371,8 @@
 									}
 									data['total'].inPersonCount = inPersonTotal;
 									data['total'].outPersonCount = outPersonTotal;
+									data['total'].opdAvg=(data['total'].ev31002/data['total'].ev31001).toFixed(2);
+									data['total'].inPatietAvg=(opdAvg=data['total'].ev31005/data['total'].ev31004).toFixed(2);
 									result.push(data['total']);
 									arrValue = result;
 									chart2(drugFeeChart)
@@ -396,19 +397,36 @@
 		function convertRate2TableData(originData, eventId, data) {
 			var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0;
 			var eventData = originData[eventId];
-			eventData && eventData.forEach(function(item) {
-				var id = item.unitId;
-				unitData = data[id];
-				if (!unitData) {
-					unitData = {
-						unitId : id,
-						unitName : item.unitName,
-					};
-					data[id] = unitData;
-				}
-				unitData[fieldName] = item.count;
-				total += item.count;
-			});
+			
+			if(eventId =='31002' || eventId == '31005'){
+				eventData && eventData.forEach(function(item) {
+					var id = item.unitId;
+					unitData = data[id];
+					if (!unitData) {
+						unitData = {
+							unitId : id,
+							unitName : item.unitName,
+						};
+						data[id] = unitData;
+					}
+					unitData[fieldName] = item.count/100;
+					total += item.count/100;
+				});
+			}else{
+				eventData && eventData.forEach(function(item) {
+					var id = item.unitId;
+					unitData = data[id];
+					if (!unitData) {
+						unitData = {
+							unitId : id,
+							unitName : item.unitName,
+						};
+						data[id] = unitData;
+					}
+					unitData[fieldName] = item.count;
+					total += item.count;
+				});
+			}
 			var totalData = data['total'];
 			if (!totalData) {
 				totalData = {
@@ -417,7 +435,12 @@
 				}
 				data['total'] = totalData;
 			}
-			totalData[fieldName] = total;
+			if(eventId =='31002' || eventId == '31005'){
+				totalData[fieldName] = total.toFixed(2);
+			}else{
+				totalData[fieldName] = total;
+			}
+			
 		}
 
 		var drugChart = echarts.init(document.getElementById('drugsChartDiv'));
@@ -484,7 +507,6 @@
 						requestParams, initDayChart);
 				return;
 			}
-
 			month31001 = convertMonthChartData(response, '31001', true);
 			month31004 = convertMonthChartData(response, '31004', true);
 
@@ -572,7 +594,7 @@
 		function chart2() {
 			if (arrValue) {
 				var data = arrValue;
-				data.sort(compare('ev31001', 'desc'));
+				//data.sort(compare('ev31001', 'desc'));
 				var oPDCountSeries = [], oPDCountxAxis = [];
 				for (var i = 0; i < data.length; i++) {
 					if (data[i].unitId != 'total') {
