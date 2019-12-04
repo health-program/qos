@@ -12,7 +12,7 @@
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
                 <div class="form-group">
                     <div class="col-md-2">
-                        <input name="startTime" id="startTime" placeholder="请输入查询月份" autocomplete="off"   value="2019-10" type="text" class="form-control">
+                        <input name="startTime" id="startTime" placeholder="请输入查询月份" autocomplete="off"   value="2019-01" type="text" class="form-control">
                     </div>
                   <!--  <div class="col-md-2">
                         <select name="dataSource" id="dataSource" class="form-control">
@@ -139,6 +139,11 @@
     var gcChart = echarts.init(document.getElementById('gcChartDiv'));
 
     function generatorZbChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
 
         let sTime = $("#startTime").val();
 
@@ -166,6 +171,7 @@
                 return false;
             }
 
+            chart.hideLoading();
 
             option = {
                 tooltip : {
@@ -248,8 +254,8 @@
             chart.hideLoading();
             var isShowScroll = false;// 是否显示滚动条，默认false不显示
             var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(unitName.length >4){
-                dataZoom_end = 100/(unitName.length/4);
+            if(unitName.length >6){
+                dataZoom_end = 100/(unitName.length/6);
                 isShowScroll = true;
             }else{
                 dataZoom_end = 100;
