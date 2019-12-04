@@ -23,7 +23,11 @@ public class InfectionVO {
 
     private Double operatingPartInfection;//手术部位感染总发生率统计
 
-    private Double operatingRiskInfection;//手术风险分级（NNIS分级）手术部位感染率统计
+    private Double operatingRiskInfection1;//手术风险1级（NNIS分级）手术部位感染率统计
+
+    private Double operatingRiskInfection2;//手术风险2级（NNIS分级）手术部位感染率统计
+    
+    private Double operatingRiskInfection3;//手术风险3级（NNIS分级）手术部位感染率统计
 
     private Double lungInfection;//手术患者肺部感染发生率统计
 
@@ -94,14 +98,6 @@ public class InfectionVO {
 
     public void setOperatingPartInfection(Double operatingPartInfection) {
         this.operatingPartInfection = operatingPartInfection;
-    }
-
-    public Double getOperatingRiskInfection() {
-        return operatingRiskInfection;
-    }
-
-    public void setOperatingRiskInfection(Double operatingRiskInfection) {
-        this.operatingRiskInfection = operatingRiskInfection;
     }
 
     public Double getLungInfection() {
@@ -176,6 +172,29 @@ public class InfectionVO {
     public void setUpdateUserId(String updateUserId) {
         this.updateUserId = updateUserId;
     }
-    
+
+    public Double getOperatingRiskInfection1() {
+        return operatingRiskInfection1;
+    }
+
+    public void setOperatingRiskInfection1(Double operatingRiskInfection1) {
+        this.operatingRiskInfection1 = operatingRiskInfection1;
+    }
+
+    public Double getOperatingRiskInfection2() {
+        return operatingRiskInfection2;
+    }
+
+    public void setOperatingRiskInfection2(Double operatingRiskInfection2) {
+        this.operatingRiskInfection2 = operatingRiskInfection2;
+    }
+
+    public Double getOperatingRiskInfection3() {
+        return operatingRiskInfection3;
+    }
+
+    public void setOperatingRiskInfection3(Double operatingRiskInfection3) {
+        this.operatingRiskInfection3 = operatingRiskInfection3;
+    }
     
 }
