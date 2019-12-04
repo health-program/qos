@@ -10,11 +10,6 @@ import java.util.List;
 public interface SignMapper extends CustomMapper<FamilySign>{
 
     /**
-     * 综合健康管理服务包签约率（收费）
-     */
-    public long signingIsMoneyNum(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
-
-    /**
      * 综合健康管理服务包签约率（免费）
      */
     public long signingNotMoneyNum(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
@@ -123,13 +118,5 @@ public interface SignMapper extends CustomMapper<FamilySign>{
     /** 严重肺结核患者签约率 */
     public long tuberculosisSigningRate(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
 
-    /** 重精神障碍患者签约率 */
-    public long mentalDisorderSigningRate(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
 
-    /** 疾病筛查高危人员签约率 */
-    public long diseaseSiftSigningRate(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
-
-    /** 离休干部签约率 */
-    public long retirementCadreRate(@org.apache.ibatis.annotations.Param("startTime") Date startTime, @org.apache.ibatis.annotations.Param("endTime") Date endTime, @org.apache.ibatis.annotations.Param("unitId") String unitId);
-    
 }

@@ -478,6 +478,10 @@
             let data = [];
             data.push({value:total-earlyPregnancyCardNumber, name:'非早孕建卡数' },{value:earlyPregnancyCardNumber, name:'早孕建卡数'});
             let percentage = '0.00%';
+            if (total === 0) {
+                showChartInfo(chart,'暂无数据');
+                return false;
+            }
             if (total !== 0){
                 percentage = (Math.round(earlyPregnancyCardNumber  / total * 10000) / 100.00).toFixed(2) + '%';
             }

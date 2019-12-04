@@ -475,7 +475,7 @@
  	       	});
 
     		var xAxis = [],series = [];
-    		datas.sort(compare('drugAvgCount'));
+    		//datas.sort(compare('drugAvgCount'));
     		for(var i=0;i<datas.length;i++){
     			xAxis.push(datas[i].unitName);
     			series.push({name:datas[i].unitName,value:datas[i].drugAvgCount});
@@ -561,7 +561,7 @@
   	       	});
     		
     		var xAxis = [],series = [];
-    		datas.sort(compare('averageMoney'));
+    		//datas.sort(compare('averageMoney'));
     		for(var i=0;i<datas.length;i++){
     			xAxis.push(datas[i].unitName);
     			series.push({name:datas[i].unitName,value:datas[i].averageMoney});
@@ -648,20 +648,37 @@
       var eventData = originData[eventId],
           fieldName = 'ev' + eventId,
           total = 0;
-
-      eventData && eventData.forEach(function(item) {
-          var id = item.unitId;
-          unitData = data[id];
-          if (!unitData) {
-              unitData = {
-                  unitId: id,
-                  unitName: item.unitName
-              };
-              data[id] = unitData;
-          }
-          unitData[fieldName] = item.count;
-          total += item.count;
-      });
+	if(eventId =='31002' || eventId == '31005'){
+		debugger;
+		 eventData && eventData.forEach(function(item) {
+	          var id = item.unitId;
+	          unitData = data[id];
+	          if (!unitData) {
+	              unitData = {
+	                  unitId: id,
+	                  unitName: item.unitName
+	              };
+	              data[id] = unitData;
+	          }
+	          unitData[fieldName] = (item.count/100);
+	          total += item.count/100;
+	      });
+	}else{
+		 eventData && eventData.forEach(function(item) {
+	          var id = item.unitId;
+	          unitData = data[id];
+	          if (!unitData) {
+	              unitData = {
+	                  unitId: id,
+	                  unitName: item.unitName
+	              };
+	              data[id] = unitData;
+	          }
+	          unitData[fieldName] = item.count;
+	          total += item.count;
+	      });
+	}
+     
 
       var totalData = data['total'];
       if (!totalData) {
