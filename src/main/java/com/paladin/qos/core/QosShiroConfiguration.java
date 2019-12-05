@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,12 +56,14 @@ import java.util.Map;
  * <h2>shiro配置</h2>
  * <p>
  * 修改了部分shiro的代码，从而提高效率，减少session的重复读取
+ * 无法单点登录
  * </p>
  *
  * @author TontoZhou
  * @since 2018年3月21日
  */
 @Configuration
+@ConditionalOnProperty(prefix = "paladin", value = "nologin-enabled", havingValue = "true", matchIfMissing = false)
 @EnableConfigurationProperties(ShiroCasProperties.class)
 public class QosShiroConfiguration {
 
