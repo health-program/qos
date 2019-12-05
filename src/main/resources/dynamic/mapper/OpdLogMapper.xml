@@ -57,4 +57,10 @@ order by a.SEEDATE desc
 </select>
 
 
+<select id="findRegisterList" resultType="com.paladin.qos.model.register.Register">
+		 SELECT MED_REC_ID as regid,ORGAN_NAME as orgname,DPT_NAME as deptname,NAME as patientname,SEX as sexcode,SEE_DOC_DT as seedate
+		 FROM MedicalRecord
+	     ORDER BY SEE_DOC_DT desc 
+	     LIMIT 100
+	</select>
 </mapper>
