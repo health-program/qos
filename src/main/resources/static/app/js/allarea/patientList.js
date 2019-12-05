@@ -12,7 +12,7 @@
             html+='<li class="fz14 text-c1f3ff ellipsis47">'+formatName(data[i].patientname)+'</li>';
             html+='<li class="fz14 text-c1f3ff ellipsis47">'+isNull(data[i].sexcode)+'</li>';
             html+='<li class="fz14 text-c1f3ff ellipsis47">'+intercePt(data[i].seedate)+'</li>';
-            html+='<li class="fz14 text-c1f3ff ellipsis47">'+isNull(data[i].paykindname)+'</li>';
+            // html+='<li class="fz14 text-c1f3ff ellipsis47">'+isNull(data[i].paykindname)+'</li>';
             html+='</div>';
 	 }
          $("#familyTableUl").append(html);
