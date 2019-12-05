@@ -68,12 +68,11 @@
         if(!$("#startTime").val()){
             var date = new Date();
             var year = date .getFullYear();
-            var month = date .getMonth()+1;
+            var month = date .getMonth();
             var time = year+"-"+month+"-"+"01";
             $("#startTime").val(time);
-            var endDate = new Date(date.getTime() - 24*60*60*1000);
-            var endDay=endDate.getDate();
-            var endTime=year+"-"+month+"-"+endDay;
+            var myDate = new Date(year,month,0);
+            var endTime = year+'-'+month+'-'+myDate.getDate()
             $("#endTime").val(endTime);
         }
     }
