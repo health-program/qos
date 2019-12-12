@@ -277,10 +277,32 @@
             var date = new Date();
             var year = date .getFullYear();
             var month = date .getMonth()+1;
+            month = month < 10 ? ('0' + month) : month;
             var time = year+"-"+month+"-"+"01";
+            var startDate = new Date(year+"-"+month+"-"+"01");
+            var yesterdayDate = new Date(date-24*60*60*1000);
+            if (yesterdayDate < startDate) {
+                year = yesterdayDate.getFullYear();
+                month = yesterdayDate.getMonth() +1;
+                month = month < 10 ? ('0' + month) : month;
+                var day = yesterdayDate.getDate();
+                $("#startTime").val(year+"-"+month+"-"+"01");
+                $("#endTime").val(year+"-"+month+"-"+day);
+                return ;
+            }else if (yesterdayDate.getTime() ===  startDate.getTime()){
+                yesterdayDate = date;
+                year = yesterdayDate.getFullYear();
+                month = yesterdayDate.getMonth() +1;
+                month = month < 10 ? ('0' + month) : month;
+                var day = yesterdayDate.getDate();
+                day = day < 10 ? ('0' + day) : day;
+                $("#startTime").val(time);
+                $("#endTime").val(year+"-"+month+"-"+day);
+                return ;
+            }
             $("#startTime").val(time);
-            var endDate = new Date(date.getTime() - 24*60*60*1000);
-            var endDay=endDate.getDate();
+            var endDay=yesterdayDate.getDate();
+            endDay = endDay < 10 ? ('0' + endDay) : endDay;
             var endTime=year+"-"+month+"-"+endDay;
             $("#endTime").val(endTime);
 
@@ -636,8 +658,10 @@
                     align: 'center',
                     verticalAlign: 'top',
                     rotate: 0,
+                    color: '#1CD8A8',
+                    fontWeight: 'bold', // 加粗
                     formatter: '{c}',
-                    fontSize: 15,
+                    fontSize: 13,
                     rich: {
                         name: {
                             textBorderColor: '#fff'
@@ -694,9 +718,16 @@
                     {
                         name: '筛查人数',
                         type: 'bar',
-                        barWidth: '70%',
+                        barWidth: '60%',
                         label: labelOption,
                         barGap: 0,
+                        itemStyle: {
+                            barBorderRadius: [20, 20, 0, 0],// 圆角（左上、右上、右下、左下）
+                            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                '#2FAEF2',
+                                '#1CD8A8'
+                            ].map((color, offset) => ({color, offset}))), // 渐变
+                        },
                         data: datas,
                     }
                 ]
@@ -802,8 +833,10 @@
                 normal: {
                     show: true,
                     position: 'top',
+                    color: '#1CD8A8',
                     distance: 15,
                     align: 'center',
+                    fontWeight: 'bold', // 加粗
                     verticalAlign: 'top',
                     rotate: 0,
                     formatter: '{c}',
@@ -865,6 +898,23 @@
                         name: '检查人数',
                         type: 'line',
                         smooth: true,
+                        symbol: 'circle', // 数值点类型('circle', 'rectangle', 'triangle', 'diamond', 'emptyCircle', 'emptyRectangle', 'emptyTriangle', 'emptyDiamond')
+                        showSymbol: true,
+                        symbolSize: 8, // 数值点的大小
+                        itemStyle: {
+                            color: ['#1CD8A8']
+                        },// 数值点的颜色
+                        lineStyle: {
+                            width: 2,
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{offset: 0, color: '#2FAEF2'},{offset: 1, color: '#1CD8A8'}])
+                        }, // 线条渐变
+                        areaStyle: {
+                            color: new echarts.graphic.LinearGradient(0, 1, 0, 0, [
+                                {offset: 0, color: 'rgba(47,174,242,0)'},
+                                {offset: 0.5, color: 'rgba(34,202,192,0.04)'},
+                                {offset: 1, color: 'rgba(28,216,168,0.52)'}]
+                            )
+                        }, // 线条区域渐变
                         label: labelOption,
                         barGap: 0,
                         data: dataValue,
