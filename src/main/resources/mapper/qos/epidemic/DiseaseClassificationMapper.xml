@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.epidemic.DiseaseClassificationMapper">
+
+    <select id="searchOutbreakHappening"
+            resultType="com.paladin.qos.service.epidemic.vo.DiseaseClassificationVO">
+        SELECT
+            e.region,
+            COUNT( DISTINCT e.incident_unit ) AS gardensNumber,
+            SUM( e.total ) AS peoplesNumber,
+            COUNT( 1 ) AS epidemicNumber,
+            SUM( e.suspend_people_number ) AS involvedPeoplesNumber,
+            AVG( e.total ) AS peoplesAvgNumber,
+            SUM( e.first_week ) AS startPeoplesNumber,
+            SUM( t.total ) AS totalPeoplesNumber
+        FROM
+        epidemic_situation e
+        inner join org_school t on e.incident_unit=t.parent_school_id  WHERE  1 = 1
+            <if test="startTime != null">
+                AND e.suspend_data >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND e.suspend_data  <![CDATA[<]]>  #{endTime}
+            </if>
+            <if test="sickness != null and sickness != ''">
+                AND e.sickness_classify = #{sickness}
+            </if>
+            <if test="codes != null">
+                AND  t.nature IN
+                <foreach collection="codes" item="code" open="(" close=")" separator=",">
+                    #{code}
+                </foreach>
+            </if>
+        GROUP BY  e.region
+
+    </select>
+</mapper>
