@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.paladin.common.mapper.syst.SysSwitchMapper">
+
+
+	<select id="findAll" resultType="com.paladin.common.model.syst.SysSwitch">
+	select id,ip,login_action as loginAction,account,update_time as updateTime,state
+	from sys_switch
+	order by update_time desc
+	</select>
+
+	<select id="getLastOne" resultType="com.paladin.common.model.syst.SysSwitch">
+	select id,ip,login_action as loginAction,account,update_time as updateTime,state
+	from sys_switch
+	order by update_time desc
+	limit 1
+	</select>
+	
+	<insert id="save"  parameterType="com.paladin.common.model.syst.SysSwitch">
+	insert into sys_switch values(#{id},#{ip},#{loginAction},#{account},#{updateTime},#{state})
+	</insert>
+</mapper>
