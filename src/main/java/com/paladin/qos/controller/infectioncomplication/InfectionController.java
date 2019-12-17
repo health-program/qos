@@ -82,8 +82,9 @@ public class InfectionController extends ControllerSupport {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-		if(!infectionService.canAdd(infectionDTO.getUnitId())){
-			return CommonResponse.getErrorResponse("添加记录未满半年");
+		int b = infectionService.judgeDate(infectionDTO.getUnitId(),infectionDTO.getInputDate());
+		if(b>0){
+			return CommonResponse.getErrorResponse("该月已添加记录，可以前去修改！");
 		}
 		String id = UUIDUtil.createUUID();
 		infectionDTO.setId(id);

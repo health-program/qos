@@ -38,6 +38,7 @@
 					{ title: "住院患者使用抗菌药物的百分率", field: "userRate",align: "left",required: "required",name: "userRate",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
 					{ title: "住院患者抗菌药物占总费用百分率", field: "rateOfTotal",align: "left",required: "required",name: "rateOfTotal",inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100}},
 					{ title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/selectHospital"},
+                    { title: "录入时间", name: "inputDate", required: "required", inputType: "DATE", attr:{class: "form-control tonto-datepicker-month",disabled:"true"} },
 	 				     ]
 	 					}
 	 					var model, itemId;

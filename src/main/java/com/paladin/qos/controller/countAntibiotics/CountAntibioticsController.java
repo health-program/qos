@@ -97,33 +97,24 @@ public class CountAntibioticsController extends ControllerSupport {
 		String unitId=request.getUnitId();
 
 		String monthStr=request.getMonth();
-		Date month=null;
-		if (!StringUtils.isEmpty(monthStr)){
-			monthStr=monthStr+"-01";
-			DateFormat format=new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				month=format.parse(monthStr);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
 
 
-		return CommonResponse.getSuccessResponse(countAntibioticsService.getReportByQuery(unitId,month));
+
+		return CommonResponse.getSuccessResponse(countAntibioticsService.getReportByQuery(unitId,monthStr));
 	}
 
 	@PostMapping("/save")
 	@SysControllerLog(action = "新增抗菌药物使用统计")
 	@ResponseBody
-	public Object save(@Valid CountAntibioticsDTO CountAntibioticsDTO, BindingResult bindingResult) {
+	public Object save(@Valid CountAntibioticsDTO countAntibioticsDTO, BindingResult bindingResult) {
 		if (bindingResult.hasErrors()) {
 			return validErrorHandler(bindingResult);
 		}
-		int b = countAntibioticsService.judge(CountAntibioticsDTO.getUnitId());
+		int b = countAntibioticsService.judgeDate(countAntibioticsDTO.getUnitId(),countAntibioticsDTO.getInputDate());
 		if(b>0){
-		    return CommonResponse.getErrorResponse("添加记录未满一个月");
+		    return CommonResponse.getErrorResponse("该月已添加记录，可以前去修改！");
 		}
-		CountAntibiotics model = beanCopy(CountAntibioticsDTO, new CountAntibiotics());
+		CountAntibiotics model = beanCopy(countAntibioticsDTO, new CountAntibiotics());
 		String id = UUIDUtil.createUUID();
 		model.setId(id);
 		if (countAntibioticsService.save(model) > 0) {

@@ -18,10 +18,11 @@ public interface CountAntibioticsMapper extends CustomMapper<CountAntibiotics> {
 	public List<CountAntibioticsVO> selecttoAll(CountAntibioticsQuery query);
 
 	public int judge(@Param("unitId") String unitId);
+	public int judgeDate(@Param("unitId") String unitId,@Param("inputDate") String inputDate);
 
 	public Object queryById(String id);
 
-	public List<CountAntibioticsVO> getReportByQuery(@Param("unitId") String unitId, @Param("month") Date month);
+	public List<CountAntibioticsVO> getReportByQuery(@Param("unitId") String unitId, @Param("month") String month);
 
 	public List<CountAntibioticsPercentVO> percent();
 }

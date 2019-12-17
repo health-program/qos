@@ -39,7 +39,8 @@
 					{title: "择期手术患者医院感染发生率", name: "selectiveOperationsInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
                     /* {title: "与血液透析相关血液感染发生率", name: "bloodInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"}, */
                     {title: "重症监护室相关感染率", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
-                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/selectHospital"}
+                { title: "单位", name: "unitId", inputType: "SELECT-SERVER", multiple: false,url: "/qos/data/unit/find/selectHospital"},
+                { title: "录入时间", name: "inputDate", required: "required", inputType: "DATE", attr:{class: "form-control tonto-datepicker-month",disabled:"true"} },
 				     ]
 					}
 					var model, itemId;

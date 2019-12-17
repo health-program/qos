@@ -122,7 +122,7 @@
 
     function maxYear(){
         var now = new Date();
-        return now.getFullYear()-1+"-"+"12"+"-"+"31";
+        return now.getFullYear()+"-"+"12"+"-"+"31";
     }
 
 
@@ -145,7 +145,7 @@
                                 field: "unitName"
                             },
                             {
-                                title: "高血压患病数",
+                                title: "高血压新增数",
                                 field: "ev1V30009",
                                 sortable: true,
                                 sorter: function(fa, fb, ra, rb) {
@@ -168,7 +168,7 @@
                             },
                             {
                                 title: "高血压管理数",
-                                field: "evV30009",
+                                field: "ev2V30009",
                                 sortable: true,
                                 sorter: function(fa, fb, ra, rb) {
                                     if (ra.unitName == '合计')
@@ -188,44 +188,66 @@
                                     return fa - fb;
                                 }
                             },
-                            {
-                                title: "高血压随访数",
-                                field: "ev1V30009",
-                                visible: false,
-                                sortable: true,
-                                sorter: function(fa, fb, ra, rb) {
-                                    if (ra.unitName == '合计')
-                                        return table.options.sortOrder == 'desc' ? -1 :
-                                            1;
-                                    if (rb.unitName == '合计')
-                                        return table.options.sortOrder == 'desc' ? 1 :
-                                            -1;
-
-                                    if (fa == '-')
-                                        return table.options.sortOrder == 'desc' ? -1 :
-                                            1;
-                                    if (fb == '-')
-                                        return table.options.sortOrder == 'desc' ? 1 :
-                                            -1;
-
-                                    return fa - fb;
-                                }
-                            },
+                            // {
+                            //     title: "高血压随访数",
+                            //     field: "ev3V30009",
+                            //     visible: false,
+                            //     sortable: true,
+                            //     sorter: function(fa, fb, ra, rb) {
+                            //         if (ra.unitName == '合计')
+                            //             return table.options.sortOrder == 'desc' ? -1 :
+                            //                 1;
+                            //         if (rb.unitName == '合计')
+                            //             return table.options.sortOrder == 'desc' ? 1 :
+                            //                 -1;
+                            //
+                            //         if (fa == '-')
+                            //             return table.options.sortOrder == 'desc' ? -1 :
+                            //                 1;
+                            //         if (fb == '-')
+                            //             return table.options.sortOrder == 'desc' ? 1 :
+                            //                 -1;
+                            //
+                            //         return fa - fb;
+                            //     }
+                            // },
                             {
                                 title: "管理人群血压<br>控制率（总）",
-                                field: "evV30004",
+                                field: "pressureControlRate",
+                                formatter: function(value, row,
+                                                    index) {
+                                    if (row.ev3V30009 == 0 ||
+                                        row.ev4V30009 == null) {
+                                        return "0%"
+                                    } else {
+                                        return (row.ev4V30009 /
+                                            row.ev3V30009 * 100)
+                                                .toFixed(2) *
+                                            1 + "%";
+                                    }
+                                },
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                    if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                    fa = ra.ev4V30009 / ra.ev3V30009;
+                                    fb = rb.ev4V30009 / rb.ev3V30009;
+
+                                    return fa - fb;
+                                }
                             },
                             {
                                 title: "高血压患者规范<br>管理率",
                                 field: "pressureManageRate",
                                 formatter: function(value, row,
                                     index) {
-                                    if (row.ev1V30009 == 0 ||
-                                        row.ev1V30009 == null) {
+                                    if (row.ev3V30009 == 0 ||
+                                        row.ev2V30009 == null) {
                                         return "0%"
                                     } else {
-                                        return (row.evV30009 /
-                                                row.ev1V30009 * 100)
+                                        return (row.ev2V30009 /
+                                                row.ev3V30009 * 100)
                                             .toFixed(2) *
                                             1 + "%";
                                     }
@@ -235,14 +257,14 @@
 		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
 		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
 
-		                            fa = ra.evV30009 / ra.ev1V30009;
-		                            fb = rb.evV30009 / rb.ev1V30009;
+		                            fa = ra.ev2V30009 / ra.ev3V30009;
+		                            fb = rb.ev2V30009 / rb.ev3V30009;
 
 		                            return fa - fb;
 		                        }
                             },
                             {
-                                title: "糖尿病患病数",
+                                title: "糖尿病新增数",
                                 field: "ev1V30010",
                                 sortable: true,
                                 sorter: function(fa, fb, ra, rb) {
@@ -265,7 +287,7 @@
                             },
                             {
                                 title: "糖尿病管理数",
-                                field: "evV30010",
+                                field: "ev2V30010",
                                 sortable: true,
                                 sorter: function(fa, fb, ra, rb) {
                                     if (ra.unitName == '合计')
@@ -285,68 +307,80 @@
                                     return fa - fb;
                                 }
                             },
-                            {
-                                title: "糖尿病随访数",
-                                field: "ev1V30010",
-                                visible: false,
-                                sortable: true,
-                                sorter: function(fa, fb, ra, rb) {
-                                    if (ra.unitName == '合计')
-                                        return table.options.sortOrder == 'desc' ? -1 :
-                                            1;
-                                    if (rb.unitName == '合计')
-                                        return table.options.sortOrder == 'desc' ? 1 :
-                                            -1;
-
-                                    if (fa == '-')
-                                        return table.options.sortOrder == 'desc' ? -1 :
-                                            1;
-                                    if (fb == '-')
-                                        return table.options.sortOrder == 'desc' ? 1 :
-                                            -1;
-
-                                    return fa - fb;
-                                }
-                            },
+                            // {
+                            //     title: "糖尿病随访数",
+                            //     field: "ev1V30010",
+                            //     visible: false,
+                            //     sortable: true,
+                            //     sorter: function(fa, fb, ra, rb) {
+                            //         if (ra.unitName == '合计')
+                            //             return table.options.sortOrder == 'desc' ? -1 :
+                            //                 1;
+                            //         if (rb.unitName == '合计')
+                            //             return table.options.sortOrder == 'desc' ? 1 :
+                            //                 -1;
+                            //
+                            //         if (fa == '-')
+                            //             return table.options.sortOrder == 'desc' ? -1 :
+                            //                 1;
+                            //         if (fb == '-')
+                            //             return table.options.sortOrder == 'desc' ? 1 :
+                            //                 -1;
+                            //
+                            //         return fa - fb;
+                            //     }
+                            // },
                             {
                                 title: "管理人群血糖<br>控制率（总）",
-                                field: "evV30005",
-		                        sortable: true,
-		                        sorter: function(fa, fb, ra, rb) {
-		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
-		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+                                field: "sugarControlRate",
+                                formatter: function(value, row,
+                                                    index) {
+                                    if (row.ev3V30010 == 0 ||
+                                        row.ev4V30010 == null) {
+                                        return "0%"
+                                    } else {
+                                        return (row.ev4V30010 /
+                                            row.ev3V30010 * 100)
+                                                .toFixed(2) *
+                                            1 + "%";
+                                    }
+                                },
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                    if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
 
-		                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
-		                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                                    fa = ra.ev4V30010 / ra.ev3V30010;
+                                    fb = rb.ev4V30010 / rb.ev3V30010;
 
-		                            return fa - fb;
-		                        }
+                                    return fa - fb;
+                                }
                             },
                             {
                                 title: "糖尿病患者规范<br>管理率",
                                 field: "sugarManageRate",
                                 formatter: function(value, row,
-                                    index) {
-                                    if (row.ev1V30010 == 0 ||
-                                        row.ev1V30010 == null) {
+                                                    index) {
+                                    if (row.ev3V30010 == 0 ||
+                                        row.ev2V30010 == null) {
                                         return "0%"
                                     } else {
-                                        return (row.evV30010 /
-                                                row.ev1V30010 * 100)
-                                            .toFixed(2) *
+                                        return (row.ev2V30010 /
+                                            row.ev3V30010 * 100)
+                                                .toFixed(2) *
                                             1 + "%";
                                     }
                                 },
-		                        sortable: true,
-		                        sorter: function(fa, fb, ra, rb) {
-		                            if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
-		                            if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+                                sortable: true,
+                                sorter: function(fa, fb, ra, rb) {
+                                    if (ra.unitName == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                    if (rb.unitName == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
 
-		                            fa = ra.evV30010 / ra.ev1V30010;
-		                            fb = rb.evV30010 / rb.ev1V30010;
+                                    fa = ra.ev2V30010 / ra.ev3V30010;
+                                    fb = rb.ev2V30010 / rb.ev3V30010;
 
-		                            return fa - fb;
-		                        }
+                                    return fa - fb;
+                                }
                             }
                         ]
                     ],
@@ -392,25 +426,63 @@
                             return null;
                         }
                         var data = {};
-                        convertCount2TableData(response, 'V30009',
-                            data); //高血压管理数
-                        convertCount1TableData(response, 'V30009',
-                            data); //高血压随访数
+                        convertCountTableData(response, 'V30009',
+                            data,'1','addNumber'); //高血压新增数
+                        convertCountTableData(response, 'V30009',
+                            data,'2','mangerNumber'); //高血压管理数
+                        convertCountTableData(response, 'V30009',
+                            data,'3','followNumber'); //高血压随访数
+                        convertCountTableData(response, 'V30009',
+                            data,'4','recentNumber'); //高血压最近一次达标数
 
-                        convertCount3TableData(response, 'V30010',
-                            data); //糖尿病管理数
-                        convertCount4TableData(response, 'V30010',
-                            data); //糖尿病随访数
-                        convertRate1TableData(response, 'V30004',
-                            data); //管理人群血压
-                        convertRate2TableData(response, 'V30005',
-                            data); //管理人群糖尿病
+
+                        convertCountTableData(response, 'V30010',
+                            data,'1','addNumber'); //糖尿病新增数
+                        convertCountTableData(response, 'V30010',
+                            data,'2','mangerNumber'); //糖尿病管理数
+                        convertCountTableData(response, 'V30010',
+                            data,'3','followNumber'); //糖尿病随访数
+                        convertCountTableData(response, 'V30010',
+                            data,'4','recentNumber'); //糖尿病最近一次达标数
 
                         var result = []
+                        var totalPressureAddNumber=0;
+                        var totalPressureMangerNumber=0;
+                        var totalPressureFollowNumber=0;
+                        var totalPressureRecentNumber=0;
+                        var totalSugarAddNumber=0;
+                        var totalSugarMangerNumber=0;
+                        var totalSugarFollowNumber=0;
+                        var totalSugarRecentNumber=0;
                         for (var o in data) {
+                            totalPressureAddNumber+=data.ev1V30009;
+                            totalPressureMangerNumber+=data.ev2V30009;
+                            totalPressureFollowNumber+=data.ev3V30009;
+                            totalPressureRecentNumber+=data.ev4V30009;
+
+                            totalSugarAddNumber+=data.ev1V30009;
+                            totalSugarMangerNumber+=data.ev2V30009;
+                            totalSugarFollowNumber+=data.ev3V30009;
+                            totalSugarRecentNumber+=data.ev4V30009;
                             result.push(data[o]);
                         }
                         charResult = result;
+                        // var total={
+                        //     "unitId":"total",
+                        //     "unitName" : "合计",
+                        //     "ev1V30009" :totalPressureAddNumber,
+                        //     "ev2V30009":totalPressureMangerNumber,
+                        //     "ev3V30009":totalPressureFollowNumber,
+                        //     "ev4V30009":totalPressureRecentNumber,
+                        //
+                        //     "ev1V30010" :totalSugarAddNumber,
+                        //     "ev2V30010":totalSugarMangerNumber,
+                        //     "ev3V30010":totalSugarFollowNumber,
+                        //     "ev4V30010":totalSugarRecentNumber,
+                        //
+                        // }
+                        // debugger;
+                        // result.push(total);
                         initPieChart1();
                         initPieChart2();
                         initPieChart3();
@@ -422,10 +494,11 @@
                 });
     }
 
-    function convertCount5TableData(originData, eventId, data) {
+
+    function convertCountTableData(originData, eventId, data,index,name) {
         var eventData = originData[eventId],
-            fieldName = 'ev1' + eventId,
-            total = 0;
+            fieldName = 'ev'+index + eventId,
+            total=0;
 
         eventData && eventData.forEach(function(item) {
             var id = item.unitId;
@@ -437,8 +510,21 @@
                 };
                 data[id] = unitData;
             }
-            unitData[fieldName] = parseFloat(item.total);
-            total += parseFloat(item.total);
+            if (name=='addNumber'){
+                unitData[fieldName] = parseFloat(item.addNumber);
+                total += parseFloat(item.addNumber);
+            }else if(name=='mangerNumber'){
+                unitData[fieldName] = parseFloat(item.mangerNumber);
+                total += parseFloat(item.mangerNumber);
+            }else if (name=='followNumber'){
+                unitData[fieldName] = parseFloat(item.followNumber);
+                total += parseFloat(item.followNumber);
+            }else if (name=='recentNumber'){
+                unitData[fieldName] = parseFloat(item.recentNumber);
+                total += parseFloat(item.recentNumber);
+            }
+
+
         });
 
         var totalData = data['total'];
@@ -450,162 +536,10 @@
             data['total'] = totalData;
         }
         totalData[fieldName] = total;
+
     }
 
-    function convertCount2TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0;
 
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.pressuremanagenumber;
-            total += item.pressuremanagenumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
-    }
-
-    function convertCount1TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev1' + eventId,
-            total = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.pressurefollownumber;
-            total += item.pressurefollownumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
-    }
-
-    function convertCount3TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.sugarmanagenumber;
-            total += item.sugarmanagenumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
-    }
-
-    function convertCount4TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev1' + eventId,
-            total = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = item.sugarfollownumber;
-            total += item.sugarfollownumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = total;
-    }
-
-    function convertRate1TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0,
-            reachnumber = 0;
-
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = getRate(item);
-            total += parseFloat(item.total);
-            reachnumber += item.reachnumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = getRate({
-            total: total,
-            reachnumber: reachnumber
-        });
-    }
 
     function getRate(item, fixed) {
         var a = parseFloat(item.total),
@@ -618,40 +552,7 @@
         return c.toFixed(fixed || 2) + '%';
     }
 
-    function convertRate2TableData(originData, eventId, data) {
-        var eventData = originData[eventId],
-            fieldName = 'ev' + eventId,
-            total = 0,
-            sugarnumber = 0;
 
-        eventData && eventData.forEach(function(item) {
-            var id = item.unitId;
-            unitData = data[id];
-            if (!unitData) {
-                unitData = {
-                    unitId: id,
-                    unitName: item.unitName
-                };
-                data[id] = unitData;
-            }
-            unitData[fieldName] = getRate1(item);
-            total += parseFloat(item.total);
-            sugarnumber += item.sugarnumber;
-        });
-
-        var totalData = data['total'];
-        if (!totalData) {
-            totalData = {
-                unitId: 'total',
-                unitName: '合计',
-            }
-            data['total'] = totalData;
-        }
-        totalData[fieldName] = getRate1({
-            total: total,
-            sugarnumber: sugarnumber
-        });
-    }
 
     function getRate1(item, fixed) {
         var a = parseFloat(item.total),
@@ -761,11 +662,11 @@
         }
         var it = total[total.length - 1];
         var rate = 0;
-        if ("undefined" == typeof(it.evV30009) ||
-            "undefined" == typeof(it.ev1V30009)) {
+        if ("undefined" == typeof(it.ev2V30009) ||
+            "undefined" == typeof(it.ev3V30009)) {
             rate = 0 + '%'
         } else {
-            rate = (it.evV30009 / it.ev1V30009 * 100).toFixed(2) + '%';
+            rate = (it.ev2V30009 / it.ev3V30009 * 100).toFixed(2) + '%';
         }
         rate = rate.replace("%", "") * 1;
         remainRate = (100 - rate).toFixed(2);
@@ -788,7 +689,13 @@
         var pieName = "血压控制率";
         var remainRate = 0;
         var it = total[total.length - 1];
-        var rate = it.evV30004;
+        var rate = 0;
+        if ("undefined" == typeof(it.ev4V30009) ||
+            "undefined" == typeof(it.ev3V30009)) {
+            rate = 0 + '%'
+        } else {
+            rate = (it.ev4V30009 / it.ev3V30009 * 100).toFixed(2) + '%';
+        }
         rate = rate.replace("%", "") * 1;
         remainRate = (100 - rate).toFixed(2);
         initPieChart(pieChart2, pieName, rate, remainRate);
@@ -811,11 +718,11 @@
         var remainRate = 0;
         var it = total[total.length - 1];
         var rate = 0;
-        if ("undefined" == typeof(it.evV30010) ||
-            "undefined" == typeof(it.ev1V30010)) {
+        if ("undefined" == typeof(it.ev2V30010) ||
+            "undefined" == typeof(it.ev3V30010)) {
             rate = 0 + '%'
         } else {
-            rate = (it.evV30010 / it.ev1V30010 * 100).toFixed(2) + '%';
+            rate = (it.ev2V30010 / it.ev3V30010 * 100).toFixed(2) + '%';
         }
         rate = rate.replace("%", "") * 1;
         remainRate = (100 - rate).toFixed(2);
@@ -838,7 +745,13 @@
         var pieName = "血糖控制率";
         var remainRate = 0;
         var it = total[total.length - 1];
-        var rate = it.evV30005;
+        var rate = 0;
+        if ("undefined" == typeof(it.ev4V30010) ||
+            "undefined" == typeof(it.ev3V30010)) {
+            rate = 0 + '%'
+        } else {
+            rate = (it.ev4V30010 / it.ev3V30010 * 100).toFixed(2) + '%';
+        }
         rate = rate.replace("%", "") * 1;
         remainRate = (100 - rate).toFixed(2);
         initPieChart(pieChart4, pieName, rate, remainRate);
@@ -952,7 +865,7 @@
                         }
                     },
 
-                    data: number
+                    data: manageNumber
                 },
 
             ],
@@ -964,7 +877,7 @@
     function initColumnDiv1() {
 
         var managedName = [];
-        var pressureNumberValue = [];
+        var pressureAddNumberValue = [];
         var pressureManageNumberValue = [];
 
         for (var i = 0; i < charResult.length - 1; i++) {
@@ -974,22 +887,25 @@
             //pressureNumberValue.push({name:item.unitName,value:item.pressureNumber});
             pressureManageNumberValue.push({
                 name: charResult[i].unitName,
-                value: charResult[i].evV30009
+                value: charResult[i].ev2V30009
+            });
+            pressureAddNumberValue.push({
+                name: charResult[i].unitName,
+                value: charResult[i].ev1V30009
             });
         }
-
         var divName = "辖区高血压管理柱状图";
-        var columnName1 = "高血压患病数";
+        var columnName1 = "高血压新增数";
         var columnName2 = "高血压管理数";
         initColumnDiv(barChart1, divName, managedName,
-            pressureManageNumberValue, pressureManageNumberValue,
+            pressureAddNumberValue, pressureManageNumberValue,
             columnName1, columnName2);
     }
 
     function initColumnDiv2() {
 
         var managedName = [];
-        var sugarNumberValue = [];
+        var sugarAddNumberValue = [];
         var sugarManageNumberValue = [];
 
         /*   charResult.forEach(function(item){
@@ -1007,15 +923,19 @@
             //sugarNumberValue.push({name:item.unitName,value:item.sugarNumber});
             sugarManageNumberValue.push({
                 name: charResult[i].unitName,
-                value: charResult[i].evV30010
+                value: charResult[i].ev2V30010
+            });
+            sugarAddNumberValue.push({
+                name: charResult[i].unitName,
+                value: charResult[i].ev1V30010
             });
         }
 
-        var divName = "辖区糖尿病管理排名柱状图";
-        var columnName1 = "糖尿病患病数";
+        var divName = "辖区糖尿病管理柱状图";
+        var columnName1 = "糖尿病新增数";
         var columnName2 = "糖尿病管理数";
         initColumnDiv(barChart2, divName, managedName,
-            sugarManageNumberValue, sugarManageNumberValue,
+            sugarAddNumberValue, sugarManageNumberValue,
             columnName1, columnName2);
     }
 
@@ -1043,6 +963,7 @@
         sumChart.hideLoading();
         sumChart.setOption(msgOption)
     };
+
     </script>
 </body>
 

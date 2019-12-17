@@ -43,7 +43,11 @@ public class CountAntibioticsService extends ServiceSupport<CountAntibiotics> {
 		return countAntibioticsMapper.judge(unitId);
 	}
 
-	public List<CountAntibioticsVO> getReportByQuery(String unitId, Date month) {
+	public int judgeDate(String unitId,String inputDate) {
+		return countAntibioticsMapper.judgeDate(unitId,inputDate);
+	}
+
+	public List<CountAntibioticsVO> getReportByQuery(String unitId, String month) {
 		return countAntibioticsMapper.getReportByQuery(unitId, month);
 	}
 

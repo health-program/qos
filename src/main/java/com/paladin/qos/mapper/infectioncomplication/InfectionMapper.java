@@ -33,4 +33,6 @@ public interface InfectionMapper extends CustomMapper<Infection>{
         List<InfectionVO> infectionCount(@Param("query")InfectionQuery query);
         
         List<InfectionVO> infectionCountYaer(@Param("query")InfectionQuery query);
+
+        public int judgeDate(@org.apache.ibatis.annotations.Param("unitId") String unitId, @org.apache.ibatis.annotations.Param("inputDate") String inputDate);
 }

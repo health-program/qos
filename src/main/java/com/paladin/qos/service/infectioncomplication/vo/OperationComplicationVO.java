@@ -19,7 +19,15 @@ public class OperationComplicationVO {
     private String unitId;
     private String date;
     private String unitName;
+    private String inputDate;
 
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
+    }
     public void setUnitName(String unitName) {
         this.unitName = unitName;
     }
