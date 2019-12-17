@@ -41,6 +41,7 @@
             /* {title: "与血液透析相关血液感染发生率", name: "bloodInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"}, */
             {title: "重症监护室相关感染率", name: "intensiveCareUnitInfection", inputType: "NUMBER",unit:"%",attr:{'min':0,'max':100},required: "required"},
             { title: "单位", field: "unitId",name: "unitId", inputType: "SELECT-SERVER",required: "required",multiple: false,url: "/qos/data/unit/find/selectHospital"},
+            { title: "录入时间", name: "inputDate", required: "required", inputType: "DATE", attr:{class: "form-control tonto-datepicker-month"} },
                 ]
 					}
 

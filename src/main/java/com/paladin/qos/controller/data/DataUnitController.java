@@ -64,6 +64,16 @@ public class DataUnitController extends ControllerSupport {
 		types.add(DataUnit.TYPE_HOSPITAL);
 		return CommonResponse.getSuccessResponse(dataUnitService.selectData(types));}
 
+	//选择录入时间段
+	@RequestMapping(value = "/select/inputDate", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseBody
+	public Object selectInputDate() {
+		List<Integer> types = new ArrayList<>();
+		types.add(DataUnit.TYPE_HOSPITAL);
+		return CommonResponse.getSuccessResponse(dataUnitService.selectData(types));}
+
+
+
 	@GetMapping("/get")
 	@ResponseBody
 	public Object getDetail(@RequestParam String id, Model model) {

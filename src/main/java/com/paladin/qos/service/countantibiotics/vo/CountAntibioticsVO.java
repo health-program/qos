@@ -13,10 +13,19 @@ public class CountAntibioticsVO {
     private Double rateOfTotal;
     private String unitId;
     private String unitName;
+    private String inputDate;
     private Date createTime;
     private String createUserId;
     private Date updateTime;
     private String updateUserId;
+
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
+    }
 
     public void setUnitName(String unitName) {
         this.unitName = unitName;

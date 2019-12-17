@@ -21,6 +21,7 @@
 		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 		<result column="update_user_id" jdbcType="VARCHAR" property="updateUserId" />
         <result column="unit_id" jdbcType="VARCHAR" property="unitId" />
+        <result column="input_date" jdbcType="VARCHAR" property="inputDate" />
 	</resultMap>
 
     <sql id="Base_Column_List">
@@ -40,7 +41,8 @@
         create_user_id,
         update_time,
         update_user_id,
-        unit_id
+        unit_id,
+        input_date
     </sql>
 
 
@@ -62,7 +64,8 @@
         create_user_id,
         update_time,
         update_user_id,
-        unit_id
+        unit_id,
+        input_date
         )
         values (#{id,jdbcType=VARCHAR},
         #{totalInfection,jdbcType=VARCHAR}, #{operatingDepartmentsInfection,jdbcType=DOUBLE}, #{operatingPartInfection,jdbcType=DOUBLE},
@@ -71,7 +74,7 @@
         #{operatingRiskInfection3,jdbcType=DOUBLE},
          #{lungInfection,jdbcType=DOUBLE}, #{newBornInfection,jdbcType=DOUBLE},#{selectiveOperationsInfection,jdbcType=DOUBLE},
         #{bloodInfection,jdbcType=DOUBLE}, #{intensiveCareUnitInfection,jdbcType=DOUBLE}, #{createTime,jdbcType=TIMESTAMP},
-        #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR} ,#{unitId,jdbcType=VARCHAR})
+        #{createUserId,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=VARCHAR} ,#{unitId,jdbcType=VARCHAR},#{inputDate,jdbcType=VARCHAR})
     </insert>
 
     <update id="update" parameterType="com.paladin.qos.model.infectioncomplication.Infection">
@@ -91,7 +94,8 @@
         create_user_id = #{createUserId,jdbcType=VARCHAR},
         update_time =  #{updateTime,jdbcType=TIMESTAMP},
         update_user_id = #{updateUserId,jdbcType=VARCHAR},
-        unit_id = #{unitId,jdbcType=VARCHAR}
+        unit_id = #{unitId,jdbcType=VARCHAR},
+         input_date = #{inputDate,jdbcType=VARCHAR},
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
@@ -100,7 +104,8 @@
         i.`operating_risk_infection1` AS operatingRiskInfection1,
         i.`operating_risk_infection2` AS operatingRiskInfection2,
         i.`operating_risk_infection3` AS operatingRiskInfection3,
-        i.`create_time` as createTime,i.`unit_id` as unitId, s.account AS createUserId
+        i.`create_time` as createTime,i.`unit_id` as unitId, s.account AS createUserId,
+        i.input_date as inputDate
         FROM
         infection as i
         LEFT JOIN sys_user s ON i.create_user_id=s.id
@@ -195,5 +200,10 @@
 	</if>
 	GROUP BY DATE_FORMAT(i.create_time,'%Y');
     </select>
+
+    <select id="judgeDate" resultType="int">
+        SELECT count(1) FROM infection WHERE unit_id=#{unitId} and input_date=#{inputDate};
+    </select>
+
 
 </mapper>

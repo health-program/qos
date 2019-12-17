@@ -13,6 +13,15 @@ public class CountAntibiotics extends BaseModel {
     private Double userRate;
     private Double rateOfTotal;
     private String unitId;
+    private String inputDate;
+
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
+    }
 
     public String getId() {
 	return id;

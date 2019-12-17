@@ -102,6 +102,10 @@ public class InfectionService extends ServiceSupport<Infection> {
         return true;
     }
 
+    public int judgeDate(String unitId,String inputDate) {
+        return infectionMapper.judgeDate(unitId,inputDate);
+    }
+
     public List<InfectionVO> infectionCount(InfectionQuery query) {
         return infectionMapper.infectionCount(query);
     }

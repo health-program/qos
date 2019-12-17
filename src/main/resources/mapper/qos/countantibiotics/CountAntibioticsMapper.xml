@@ -13,7 +13,8 @@
 		c.create_time AS createTime,
 		c.create_time AS createTime,
 		c.update_time AS updateTime,
-		c.update_user_id AS updateUserId
+		c.update_user_id AS updateUserId,
+		c.input_date as inputDate
 		FROM
 		count_antibiotics AS c
 		WHERE 1 = 1
@@ -38,6 +39,11 @@
 	SELECT count(1) FROM count_antibiotics WHERE unit_id=#{unitId} and (DATE_FORMAT(create_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m')) ORDER BY create_time desc LIMIT 1;
 	</select>
 
+	<select id="judgeDate" resultType="int">
+		SELECT count(1) FROM count_antibiotics WHERE unit_id=#{unitId} and input_date=#{inputDate};
+	</select>
+
+
 	<select id="getReportByQuery" resultType="com.paladin.qos.service.countantibiotics.vo.CountAntibioticsVO" >
 		SELECT
 		c.id,
@@ -57,7 +63,7 @@
 			and c.unit_id =#{unitId}
 		</if>
 		<if test="month != null">
-			and (DATE_FORMAT(c.create_time,'%Y%m') = DATE_FORMAT(#{month},'%Y%m'))
+			and input_date=#{month}
 		</if>
 	</select>
 	

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="region-type" />
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>疾病分类</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <select name="sickness" class="form-control">
+                            <option value="">请选择疾病名称</option>
+                            <option value="1">上呼吸道感染</option>
+                            <option value="14">手足口病</option>
+                            <option value="10">急性胃肠炎</option>
+                            <option value="2">水痘</option>
+                            <option value="16">疱疹性咽颊炎</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="codes"  class="form-control">
+                            <option value="">请选机构类型</option>
+                            <option value="1,2">托幼</option>
+                            <option value="3">小学</option>
+                            <option value="4,5,6,7,8,9,10">初中及以上</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body" style="max-height: 550px">
+                    <table id="yqDataGrid"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5" style="padding-right: 0">
+            <div class="box box-solid">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">疫情构成情况</h3>
+                </div>
+                <div id="yqgcChartDiv" class="box-body no-padding" style="height: 350px">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-7">
+            <div class="box box-solid">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3 class="box-title" style="letter-spacing: 3px">传染病疫情情况</h3>
+                </div>
+                <div id="crbChartDiv" class="box-body no-padding" style="height: 350px">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var data, table;
+    $(function () {
+        initYqDataGrid();
+    });
+
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        yqgcChart.resize();
+        crbChart.resize();
+    });
+
+    var yqgcChart = echarts.init(document.getElementById('yqgcChartDiv'));
+
+    var crbChart = echarts.init(document.getElementById('crbChartDiv'));
+
+
+    function initYqDataGrid() {
+        table = $.createTable("#yqDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "区域", field: "region",enumcode: "region-type",footerFormatter: function (data) {
+                            return '总计';
+                        }},
+                    {title: "园数", field: "gardensNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "人数", field: "peoplesNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "疫情数", field: "epidemicNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "涉及人数", field: "involvedPeoplesNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "疫情构成比（%）", field: "rate",formatter:function (value, row, index) {
+                            let number = row.epidemicNumber ? row.epidemicNumber : 0;
+                            let number1 = row.epidemicTotalNumber ? row.epidemicTotalNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c* 10000) / 100.00 .toFixed(2);
+                        },sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.epidemicNumber / ra.epidemicTotalNumber;
+                            fb = rb.epidemicNumber / rb.epidemicTotalNumber;
+                            return fa - fb;
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.epidemicNumber ? row.epidemicNumber : 0;
+                                let number1 = row.epidemicTotalNumber ? row.epidemicTotalNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + c;
+                            }, 0.00);
+                            return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
+                        }},
+                    {title: "人数构成比（%）", field: "rate1", formatter:function (value, row, index) {
+                            let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                            let number1 = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c* 10000) / 100.00 .toFixed(2);
+                        },sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.peoplesNumber / ra.involvedPeoplesNumber;
+                            fb = rb.peoplesNumber / rb.involvedPeoplesNumber;
+                            return fa - fb;
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                                let number1 = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + c;
+                            }, 0.00);
+                            return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
+                        }},
+                    {title: "园均疫情数", field: "peoplesAvgNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "园均人数", field: "avg", formatter:function (value, row, index) {
+                            let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                            let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c) ;
+                        },sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.peoplesNumber / ra.gardensNumber;
+                            fb = rb.peoplesNumber / rb.gardensNumber;
+                            return fa - fb;
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + Math.round(c);
+                            }, 0);
+                            return result === 0 ? '0' : result;
+                        }},
+                    {title: "起均人数", field: "startPeoplesNumber",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "罹患率（%）", field: "lhv", formatter:function (value, row, index) {
+                            let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                            let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c* 10000) / 100.00 .toFixed(2) ;
+                        },sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.peoplesNumber / ra.totalPeoplesNumber;
+                            fb = rb.peoplesNumber / rb.totalPeoplesNumber;
+                            return fa - fb;
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                                let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + c;
+                            }, 0.00);
+                            return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
+                        }},
+                ]
+            ],
+            url: '/qos/epidemic/disease/find/page',
+            showFooter:true,
+            pagination: false,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                //unitSelected(row);
+            },
+            //clickToSelect: true,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            responseHandler: function(res) {
+               let constantEnum = $.getConstantEnum("region-type");
+                let total = 0;
+                constantEnum && constantEnum.forEach( region => {
+                    let isNotPresence = false;
+                   let row = res.find(d => d.region === region.key);
+                   if (row){
+                       total += row.epidemicNumber;
+                   }else {
+                       isNotPresence = true;
+                   }
+
+                   if (isNotPresence) {
+                       let data = {};
+                       data['region'] = region.key;
+                       data['gardensNumber'] = 0;
+                       data['peoplesNumber'] = 0;
+                       data['epidemicNumber'] = 0;
+                       data['involvedPeoplesNumber'] = 0;
+                       data['peoplesAvgNumber'] = 0;
+                       data['startPeoplesNumber'] = 0;
+                       data['totalPeoplesNumber'] = 0;
+                       res.push(data)
+                   }
+               });
+               res.forEach(row => row['epidemicTotalNumber'] = total);
+               data = res || [];
+                generatorGcChart(yqgcChart);
+                generatorCrbChart(crbChart);
+                return data;
+            }
+        });
+    }
+
+    function generatorGcChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: {fontSize: 30, color: '#444'},
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+
+        let chartData = [];
+
+        let nameData = [];
+
+        if (data && data.length === 0) {
+            showChartInfo(chart, '暂无数据');
+            return false;
+        }
+
+        data.forEach(row => {
+            let name = $.getConstantEnumValue("region-type",row.region);
+            chartData.push({name : name,value: row.epidemicNumber});
+            nameData.push(name)
+        });
+
+
+        chart.hideLoading();
+
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c}人 ({d}%)"
+            },
+            legend: {
+                data: nameData,
+                left: 'left',
+                orient: 'vertical'
+            },
+            series: [{
+                name: '',
+                type: 'pie',
+                radius: '75%',
+                center: ['55%', '55%'],
+                data: chartData,
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }]
+        };
+        chart.setOption(option, true);
+
+
+    }
+
+
+    function generatorCrbChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let data0= [] ,data1=[],data2=[],data3=[],orgData=[];
+        if (data && data.length=== 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
+        if (data) {
+            data.forEach(data => {
+                let name = $.getConstantEnumValue("region-type",data.region);
+                orgData.push(name);
+                data0.push({name:name,value:data.gardensNumber});
+                data1.push({name:name,value:data.peoplesNumber});
+                data2.push({name:name,value:data.epidemicNumber});
+                data3.push({name:name,value:data.involvedPeoplesNumber});
+            });
+
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            let  option = {
+                color: ['#3398DB','#6087BF','#6071C6'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        let html = params[0].name + '：';
+                        for (var i = 0; i < params.length; i++) {
+                            var param = params[i];
+                            html += '<br/>' + param.marker + param.seriesName + '：' + param.data.value;
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    left: '1%',
+                    right: '2%',
+                    top: '5%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'bottom',
+                    data:[ '园数', '人数','疫情数','涉及人数']
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: orgData,
+                        axisLabel: {
+                            interval:0,
+                            rotate:0//角度顺时针计算的
+                        } ,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '园数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data0
+                    },{
+                        name: '人数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data1
+                    },{
+                        name: '疫情数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data2
+                    },{
+                        name: '涉及人数',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data3
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        }
+    }
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
+    function unitSelected(row) {
+        selectUnit = [];
+        selectUnit.push(row.unitId);
+        generatorZyjkChart(zyjkChart);
+        generatorYffsChart(yffsChart);
+    }
+
+    function sumTotalFormatterModal(data) {
+        field = this.field;
+        var result = data.reduce(function(sum, row) {
+            return sum + (row[field]) *1;
+        }, 0);
+        return result === 0 ? '0' : result;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>

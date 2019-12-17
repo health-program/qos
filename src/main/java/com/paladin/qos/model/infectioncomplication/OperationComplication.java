@@ -17,7 +17,16 @@ public class OperationComplication extends BaseModel {
     private Double operativeComplications;
     private Double anaesthesia;
     private String unitId;
-    
+    private String inputDate;
+
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
+    }
+
     public String getId() {
         return id;
     }

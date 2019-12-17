@@ -39,6 +39,16 @@ public class InfectionDTO {
 
     private String unitId;
 
+    private String inputDate;
+
+    public String getInputDate() {
+        return inputDate;
+    }
+
+    public void setInputDate(String inputDate) {
+        this.inputDate = inputDate;
+    }
+
     public String getUnitId() {
         return unitId;
     }
