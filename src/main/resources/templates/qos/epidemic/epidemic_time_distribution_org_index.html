@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="nature-type" />
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>时间分布-机构</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime" id="startTime" placeholder="请输入开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <select name="sickness" class="form-control">
+                            <option value="">请选择疾病名称</option>
+                            <option value="1">上呼吸道感染</option>
+                            <option value="14">手足口病</option>
+                            <option value="10">急性胃肠炎</option>
+                            <option value="2">水痘</option>
+                            <option value="16">疱疹性咽颊炎</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="type" id="type" class="form-control">
+                            <option value="1">疫情</option>
+                            <option value="2">人数</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-header with-border" style="padding-top: 5px;padding-bottom: 5px">
+                    <h3 class="box-title" id="dataText"  style="letter-spacing: 3px"></h3>
+                </div>
+                <div class="box-body" style="max-height: 550px">
+                    <table id="yqDataGrid"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-header with-border" style="padding-top: 5px">
+                    <h3  id="chartText"  class="box-title" style="letter-spacing: 3px"></h3>
+                </div>
+                <div id="sjChartDiv" class="box-body no-padding" style="height: 400px">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var data, table;
+    $(function () {
+        initYqDataGrid();
+    });
+
+    //图表自适应大小
+    window.addEventListener("resize", function () {
+        sjChart.resize();
+    });
+
+    var sjChart = echarts.init(document.getElementById('sjChartDiv'));
+
+    function initYqDataGrid() {
+        table = $.createTable("#yqDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "<span style='display: inline-block;width:120px;height: 64px;text-align: center;line-height: 64px'>学校类别</span>", field: "name",footerFormatter: function (data) {
+                            return '总计';
+                        },  rowspan: 2},
+                    {title: "月份", colspan: 12},
+                ],
+                [
+                    {title: "一月", field: "01",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "二月", field: "02",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "三月", field: "03",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "四月", field: "04",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "五月", field: "05",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "六月", field: "06",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "七月", field: "07",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "八月", field: "08",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "九月", field: "09",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "十月", field: "10",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "十一月", field: "11",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                    {title: "十二月", field: "12",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        },footerFormatter: sumTotalFormatterModal},
+                ]
+            ],
+            url: '/qos/epidemic/time/find/page',
+            showFooter:true,
+            pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                //unitSelected(row);
+            },
+            //clickToSelect: true,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            responseHandler: function(res) {
+                let schoolClass = [];
+                schoolClass.push({code:[1,2],name:'托幼机构'});
+                schoolClass.push({code:[3],name:'小学'});
+                schoolClass.push({code:[4,5,6,7,8,9,10],name:'初中及以上'});
+                schoolClass.forEach( t => {
+                    t['01'] = 0;
+                    t['02'] = 0;
+                    t['03'] = 0;
+                    t['04'] = 0;
+                    t['05'] = 0;
+                    t['06'] = 0;
+                    t['07'] = 0;
+                    t['08'] = 0;
+                    t['09'] = 0;
+                    t['10'] = 0;
+                    t['11'] = 0;
+                    t['12'] = 0;
+                    let newData = res.filter(d => t.code.indexOf(d.codes) > -1);
+                    if (newData.length > 0) {
+                        newData.forEach( n => {
+                            t['01']+= n['01'];
+                            t['02']+= n['02'];
+                            t['03']+= n['03'];
+                            t['04']+= n['04'];
+                            t['05']+= n['05'];
+                            t['06']+= n['06'];
+                            t['07']+= n['07'];
+                            t['08']+= n['08'];
+                            t['09']+= n['09'];
+                            t['10']+= n['10'];
+                            t['11']+= n['11'];
+                            t['12']+= n['12'];
+                        })
+                    }
+                });
+                data =  schoolClass || [];
+                if ( $("#type").val() == '1') {
+                    $("#dataText").text("疫情时间分布情况表")
+                }else {
+                    $("#dataText").text("人数时间分布情况表")
+                }
+                generatorSjChart(sjChart);
+                return data;
+            }
+        });
+    }
+
+    function generatorSjChart(chart) {
+        chart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+        let data0=[],data1=[],data2=[],data3=[],data4=[],data5=[],data6=[],data7=[],data8=[],data9=[],data10=[],data11=[],orgData=[];
+        if (data && data.length=== 0) {
+            showChartInfo(chart,'暂无数据');
+            return false;
+        }
+        if (data) {
+            data.forEach(data => {
+                orgData.push(data.name);
+                data0.push({name:data.name,value:data['01']});
+                data1.push({name:data.name,value:data['02']});
+                data2.push({name:data.name,value:data['03']});
+                data3.push({name:data.name,value:data['04']});
+                data4.push({name:data.name,value:data['05']});
+                data5.push({name:data.name,value:data['06']});
+                data6.push({name:data.name,value:data['07']});
+                data7.push({name:data.name,value:data['08']});
+                data8.push({name:data.name,value:data['09']});
+                data9.push({name:data.name,value:data['10']});
+                data10.push({name:data.name,value:data['11']});
+                data11.push({name:data.name,value:data['12']});
+            });
+
+            if ( $("#type").val() == '1') {
+                $("#chartText").text("疫情时间分布情况柱状图")
+            }else {
+                $("#chartText").text("人数时间分布情况柱状图")
+            }
+
+            chart.hideLoading();
+            var labelOption = {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    distance: 15,
+                    align: 'center',
+                    verticalAlign: 'top',
+                    rotate: 0,
+                    formatter: '{c}',
+                    fontSize: 10,
+                    rich: {
+                        name: {
+                            textBorderColor: '#fff'
+                        }
+                    }
+                }
+            };
+            let  option = {
+                color: ['#3398DB','#6087BF','#6071C6'],
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                        type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    },
+                    formatter: function (params) {
+                        let html = params[0].name + '：';
+                        for (var i = 0; i < params.length; i++) {
+                            var param = params[i];
+                            html += '<br/>' + param.marker + param.seriesName + '：' + param.data.value;
+                        }
+                        return html;
+                    }
+                },
+                grid: {
+                    left: '1%',
+                    right: '2%',
+                    top: '5%',
+                    containLabel: true
+                },
+                legend: {
+                    top: 'bottom',
+                    data:[ '一月', '二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+                },
+                calculable: true,
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: orgData,
+                        axisLabel: {
+                            interval:0,
+                            rotate:0//角度顺时针计算的
+                        } ,
+                        axisTick: {
+                            alignWithLabel: true
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name: '一月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data0
+                    },{
+                        name: '二月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data1
+                    },{
+                        name: '三月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data2
+                    },{
+                        name: '四月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data3
+                    },{
+                        name: '五月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data4
+                    },{
+                        name: '六月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data5
+                    },{
+                        name: '七月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data6
+                    },{
+                        name: '八月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data7
+                    },{
+                        name: '九月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data8
+                    },{
+                        name: '十月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data9
+                    },{
+                        name: '十一月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data10
+                    },{
+                        name: '十二月',
+                        type: 'bar',
+                        label: labelOption,
+                        barGap: 0,
+                        data: data11
+                    }
+                ]
+            };
+            chart.setOption(option,true);
+        }
+    }
+
+    function sumTotalFormatterModal(data) {
+        field = this.field;
+        var result = data.reduce(function(sum, row) {
+            return sum + (row[field]) *1;
+        }, 0);
+        return result === 0 ? '0' : result;
+    }
+
+    var showChartInfo = function (chart, infoStr) {
+        var msgOption = {
+            title: {
+                show: true,
+                textStyle:{
+                    color:'grey',
+                    fontSize:20
+                },
+                text: infoStr,
+                left: 'center',
+                top: 'center'
+            },
+            xAxis: {
+                show: false
+            },
+            yAxis: {
+                show: false
+            },
+            series: []
+        };
+        chart.clear() ;//initChart(divId): get echarts instance, you can get it by using other method
+        chart.hideLoading();
+        chart.setOption(msgOption)
+    };
+
+    /*]]>*/
+</script>
+</body>
+</html>

@@ -1,10 +1,8 @@
 package com.paladin.qos.controller.epidemic;
 
 import com.paladin.framework.core.ControllerSupport;
-import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.service.epidemic.DiseaseClassificationService;
-import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +26,6 @@ public class DiseaseClassificationController extends ControllerSupport {
     private DiseaseClassificationService diseaseClassificationService;
 
     @RequestMapping("/index")
-    @QueryInputMethod(queryClass = EpidemicSituationQueryDTO.class)
     public String index() {
         return "/qos/epidemic/epidemic_disease_classification_index";
     }

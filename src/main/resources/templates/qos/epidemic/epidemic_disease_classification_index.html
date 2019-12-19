@@ -254,6 +254,8 @@
             url: '/qos/epidemic/disease/find/page',
             showFooter:true,
             pagination: false,
+            showExport: true,
+            exportTypes: ['excel'],
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');

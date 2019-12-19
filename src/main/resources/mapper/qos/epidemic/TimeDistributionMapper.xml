@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.epidemic.TimeDistributionMapper">
+
+
+    <select id="searchEpidemicDataByMonth" resultType="map">
+        SELECT
+            t.nature AS codes,
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '01' THEN 1 ELSE 0 END ) AS '01',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '02' THEN 1 ELSE 0 END ) AS '02',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '03' THEN 1 ELSE 0 END ) AS '03',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '04' THEN 1 ELSE 0 END ) AS '04',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '05' THEN 1 ELSE 0 END ) AS '05',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '06' THEN 1 ELSE 0 END ) AS '06',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '07' THEN 1 ELSE 0 END ) AS '07',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '08' THEN 1 ELSE 0 END ) AS '08',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '09' THEN 1 ELSE 0 END ) AS '09',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '10' THEN 1 ELSE 0 END ) AS '10',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '11' THEN 1 ELSE 0 END ) AS '11',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '12' THEN 1 ELSE 0 END ) AS '12'
+        FROM
+            epidemic_situation e
+                INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+        WHERE 1 = 1
+        <if test="startTime != null">
+            AND e.suspend_data >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND e.suspend_data  <![CDATA[<]]>  #{endTime}
+        </if>
+        <if test="sickness != null and sickness != ''">
+            AND e.sickness_classify = #{sickness}
+        </if>
+        GROUP BY
+            t.nature
+    </select>
+    <select id="searchPeoplesDataByMonth" resultType="map">
+        SELECT
+            t.nature AS codes,
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '01' THEN e.total ELSE 0 END ) AS '01',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '02' THEN e.total ELSE 0 END ) AS '02',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '03' THEN e.total ELSE 0 END ) AS '03',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '04' THEN e.total ELSE 0 END ) AS '04',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '05' THEN e.total ELSE 0 END ) AS '05',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '06' THEN e.total ELSE 0 END ) AS '06',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '07' THEN e.total ELSE 0 END ) AS '07',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '08' THEN e.total ELSE 0 END ) AS '08',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '09' THEN e.total ELSE 0 END ) AS '09',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '10' THEN e.total ELSE 0 END ) AS '10',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '11' THEN e.total ELSE 0 END ) AS '11',
+            sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '12' THEN e.total ELSE 0 END ) AS '12'
+        FROM
+            epidemic_situation e
+                INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+        WHERE  1 = 1
+        <if test="startTime != null">
+            AND e.suspend_data >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND e.suspend_data  <![CDATA[<]]>  #{endTime}
+        </if>
+        <if test="sickness != null and sickness != ''">
+            AND e.sickness_classify = #{sickness}
+        </if>
+        GROUP BY
+            t.nature
+    </select>
+
+
+    <select id="searchRegionEpidemicDataByMonth" resultType="map">
+        SELECT
+            tb1.codes,
+            tb1.`name`,
+            IFNULL(一月,0) AS '01',
+            IFNULL(二月,0) AS '02',
+            IFNULL(三月,0) AS '03',
+            IFNULL(四月,0) AS '04',
+            IFNULL(五月,0) AS '05',
+            IFNULL(六月,0) AS '06',
+            IFNULL(七月,0) AS '07',
+            IFNULL(八月,0) AS '08',
+            IFNULL(九月,0) AS '09',
+            IFNULL(十月,0) AS '10',
+            IFNULL(十一月,0) AS '11',
+            IFNULL(十二月,0) AS '12'
+        FROM
+            ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'region-type' ) AS tb1
+                LEFT JOIN (
+                SELECT
+                    e.region AS codes,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '01' THEN 1 ELSE 0 END ) AS 一月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '02' THEN 1 ELSE 0 END ) AS 二月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '03' THEN 1 ELSE 0 END ) AS 三月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '04' THEN 1 ELSE 0 END ) AS 四月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '05' THEN 1 ELSE 0 END ) AS 五月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '06' THEN 1 ELSE 0 END ) AS 六月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '07' THEN 1 ELSE 0 END ) AS 七月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '08' THEN 1 ELSE 0 END ) AS 八月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '09' THEN 1 ELSE 0 END ) AS 九月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '10' THEN 1 ELSE 0 END ) AS 十月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '11' THEN 1 ELSE 0 END ) AS 十一月,
+                    sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '12' THEN 1 ELSE 0 END ) AS 十二月
+                FROM
+                    epidemic_situation e
+                        INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+                WHERE 1 = 1
+                <if test="startTime != null">
+                    AND e.suspend_data >= #{startTime}
+                </if>
+                <if test="endTime != null">
+                    AND e.suspend_data  <![CDATA[<]]>  #{endTime}
+                </if>
+                <if test="sickness != null and sickness != ''">
+                    AND e.sickness_classify = #{sickness}
+                </if>
+                GROUP BY
+                    e.region
+            ) AS tb2 ON tb1.codes = tb2.codes
+    </select>
+
+    <select id="searchRegionPeoplesDataByMonth" resultType="map">
+        SELECT
+        tb1.codes,
+        tb1.`name`,
+        IFNULL(一月,0) AS '01',
+        IFNULL(二月,0) AS '02',
+        IFNULL(三月,0) AS '03',
+        IFNULL(四月,0) AS '04',
+        IFNULL(五月,0) AS '05',
+        IFNULL(六月,0) AS '06',
+        IFNULL(七月,0) AS '07',
+        IFNULL(八月,0) AS '08',
+        IFNULL(九月,0) AS '09',
+        IFNULL(十月,0) AS '10',
+        IFNULL(十一月,0) AS '11',
+        IFNULL(十二月,0) AS '12'
+        FROM
+        ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'region-type' ) AS tb1
+        LEFT JOIN (
+        SELECT
+        e.region AS codes,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '01' THEN e.total ELSE 0 END ) AS 一月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '02' THEN e.total ELSE 0 END ) AS 二月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '03' THEN e.total ELSE 0 END ) AS 三月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '04' THEN e.total ELSE 0 END ) AS 四月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '05' THEN e.total ELSE 0 END ) AS 五月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '06' THEN e.total ELSE 0 END ) AS 六月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '07' THEN e.total ELSE 0 END ) AS 七月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '08' THEN e.total ELSE 0 END ) AS 八月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '09' THEN e.total ELSE 0 END ) AS 九月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '10' THEN e.total ELSE 0 END ) AS 十月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '11' THEN e.total ELSE 0 END ) AS 十一月,
+        sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '12' THEN e.total ELSE 0 END ) AS 十二月
+        FROM
+        epidemic_situation e
+        INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+        WHERE 1 = 1
+        <if test="startTime != null">
+            AND e.suspend_data >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND e.suspend_data  <![CDATA[<]]>  #{endTime}
+        </if>
+        <if test="sickness != null and sickness != ''">
+            AND e.sickness_classify = #{sickness}
+        </if>
+        GROUP BY
+        e.region
+        ) AS tb2 ON tb1.codes = tb2.codes
+    </select>
+</mapper>
