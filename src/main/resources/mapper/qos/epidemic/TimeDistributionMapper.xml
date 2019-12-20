@@ -5,7 +5,7 @@
 
     <select id="searchEpidemicDataByMonth" resultType="map">
         SELECT
-            t.nature AS codes,
+            t.school_section	 AS codes,
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '01' THEN 1 ELSE 0 END ) AS '01',
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '02' THEN 1 ELSE 0 END ) AS '02',
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '03' THEN 1 ELSE 0 END ) AS '03',
@@ -20,7 +20,7 @@
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '12' THEN 1 ELSE 0 END ) AS '12'
         FROM
             epidemic_situation e
-                INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+                INNER JOIN org_school_people t ON e.grade = t.id
         WHERE 1 = 1
         <if test="startTime != null">
             AND e.suspend_data >= #{startTime}
@@ -32,11 +32,11 @@
             AND e.sickness_classify = #{sickness}
         </if>
         GROUP BY
-            t.nature
+        t.school_section
     </select>
     <select id="searchPeoplesDataByMonth" resultType="map">
         SELECT
-            t.nature AS codes,
+            t.school_section AS codes,
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '01' THEN e.total ELSE 0 END ) AS '01',
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '02' THEN e.total ELSE 0 END ) AS '02',
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '03' THEN e.total ELSE 0 END ) AS '03',
@@ -51,7 +51,7 @@
             sum( CASE DATE_FORMAT( e.suspend_data, '%m' ) WHEN '12' THEN e.total ELSE 0 END ) AS '12'
         FROM
             epidemic_situation e
-                INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+                INNER JOIN org_school_people t ON e.grade = t.id
         WHERE  1 = 1
         <if test="startTime != null">
             AND e.suspend_data >= #{startTime}
@@ -63,7 +63,7 @@
             AND e.sickness_classify = #{sickness}
         </if>
         GROUP BY
-            t.nature
+            t.school_section
     </select>
 
 
@@ -102,7 +102,7 @@
                     sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '12' THEN 1 ELSE 0 END ) AS 十二月
                 FROM
                     epidemic_situation e
-                        INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+                        INNER JOIN org_school_people t ON e.grade = t.id
                 WHERE 1 = 1
                 <if test="startTime != null">
                     AND e.suspend_data >= #{startTime}
@@ -153,7 +153,7 @@
         sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '12' THEN e.total ELSE 0 END ) AS 十二月
         FROM
         epidemic_situation e
-        INNER JOIN org_school t ON e.incident_unit = t.parent_school_id
+        INNER JOIN org_school_people t ON e.grade = t.id
         WHERE 1 = 1
         <if test="startTime != null">
             AND e.suspend_data >= #{startTime}

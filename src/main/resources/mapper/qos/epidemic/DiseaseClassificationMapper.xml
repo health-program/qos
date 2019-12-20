@@ -5,17 +5,18 @@
     <select id="searchOutbreakHappening"
             resultType="com.paladin.qos.service.epidemic.vo.DiseaseClassificationVO">
         SELECT
-            e.region,
-            COUNT( DISTINCT e.incident_unit ) AS gardensNumber,
-            SUM( e.total ) AS peoplesNumber,
-            COUNT( 1 ) AS epidemicNumber,
-            SUM( e.suspend_people_number ) AS involvedPeoplesNumber,
-            AVG( e.total ) AS peoplesAvgNumber,
-            SUM( e.first_week ) AS startPeoplesNumber,
-            SUM( t.total ) AS totalPeoplesNumber
-        FROM
-        epidemic_situation e
-        inner join org_school t on e.incident_unit=t.parent_school_id  WHERE  1 = 1
+        e.region,
+        COUNT( DISTINCT e.incident_unit ) AS gardensNumber,
+        SUM( e.total ) AS peoplesNumber,
+        COUNT( 1 ) AS epidemicNumber,
+        SUM( e.suspend_people_number ) AS involvedPeoplesNumber,
+        AVG( e.total ) AS peoplesAvgNumber,
+        SUM( e.first_week ) AS startPeoplesNumber,
+        SUM(  t.total ) AS totalPeoplesNumber
+        FROM org_school t
+        INNER JOIN  org_school_people p  ON  t.id  = p.school_id
+        INNER JOIN  epidemic_situation e ON  p.id  = e.grade
+        WHERE  1 = 1
             <if test="startTime != null">
                 AND e.suspend_data >= #{startTime}
             </if>
