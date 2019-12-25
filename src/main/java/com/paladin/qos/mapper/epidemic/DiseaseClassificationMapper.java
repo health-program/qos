@@ -4,6 +4,7 @@ import com.paladin.framework.core.configuration.mybatis.CustomMapper;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
 import com.paladin.qos.service.epidemic.vo.DiseaseClassificationVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * @author Huangguochen
  * @create 2019/12/13 11:10
  */
+@Repository
 public interface DiseaseClassificationMapper extends CustomMapper<EpidemicSituation> {
 
     List<DiseaseClassificationVO> searchOutbreakHappening(@Param("sickness") String sickness, @Param("codes") List<Integer> codes, @Param("startTime") Date startTime, @Param("endTime") Date endTime);

@@ -10,9 +10,7 @@
         SUM( e.total ) AS peoplesNumber,
         COUNT( 1 ) AS epidemicNumber,
         SUM( e.suspend_people_number ) AS involvedPeoplesNumber,
-        AVG( e.total ) AS peoplesAvgNumber,
-        SUM( e.first_week ) AS startPeoplesNumber,
-        SUM(  t.total ) AS totalPeoplesNumber
+        SUM(  p.total ) AS totalPeoplesNumber
         FROM org_school t
         INNER JOIN  org_school_people p  ON  t.id  = p.school_id
         INNER JOIN  epidemic_situation e ON  p.id  = e.grade

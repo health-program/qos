@@ -183,12 +183,31 @@
                             }, 0.00);
                             return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
                         }},
-                    {title: "园均疫情数", field: "peoplesAvgNumber",sortable: true,
+                    {title: "园均疫情数", field: "peoplesAvgNumber",formatter:function (value, row, index) {
+                            let number = row.epidemicNumber ? row.epidemicNumber : 0;
+                            let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c) ;
+                        },sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
                             return fa - fb;
-                        },footerFormatter: sumTotalFormatterModal},
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.epidemicNumber ? row.epidemicNumber : 0;
+                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + Math.round(c);
+                            }, 0);
+                            return result === 0 ? '0' : result;
+                        }},
                     {title: "园均人数", field: "avg", formatter:function (value, row, index) {
                             let number = row.peoplesNumber ? row.peoplesNumber : 0;
                             let number1 = row.gardensNumber ? row.gardensNumber : 0;
@@ -216,12 +235,31 @@
                             }, 0);
                             return result === 0 ? '0' : result;
                         }},
-                    {title: "起均人数", field: "startPeoplesNumber",sortable: true,
+                    {title: "起均人数", field: "qjrs",formatter:function (value, row, index) {
+                            let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                            let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c) ;
+                        },sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
                             return fa - fb;
-                        },footerFormatter: sumTotalFormatterModal},
+                        },footerFormatter: function (data) {
+                            var result = data.reduce(function(sum, row) {
+                                let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                                let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
+                                let c = 0;
+                                if (number && number1) {
+                                    c = number /number1;
+                                }
+                                return sum + Math.round(c);
+                            }, 0);
+                            return result === 0 ? '0' : result;
+                        }},
                     {title: "罹患率（%）", field: "lhv", formatter:function (value, row, index) {
                             let number = row.peoplesNumber ? row.peoplesNumber : 0;
                             let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
