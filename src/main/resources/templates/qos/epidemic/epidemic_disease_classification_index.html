@@ -8,6 +8,7 @@
     <h1>疾病分类</h1>
 </section>
 <section class="content">
+    <input type="hidden" id="agentId" th:value="${agentId}">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
         <div class="box-body no-pad-top" >
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -48,6 +49,23 @@
             </form>
         </div>
     </div>
+<!--    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid" style="margin-bottom: 5px">
+                <div class="box-body no-padding">
+                    <div class="alert alert-info alert-dismissible no-margin" role="alert" style="padding-top: 0;padding-bottom: 0">
+                        <button type="button" onclick="this.parentNode.parentNode.removeChild(this.parentNode);"
+                                class="close" data-dismiss="alert">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span></button>
+                        <marquee scrollamount="0" id="pm">
+
+                        </marquee>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
     <div class="row">
         <div class="col-md-12">
             <div class="box box-solid">
@@ -56,8 +74,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
+
         <div class="col-md-5" style="padding-right: 0">
             <div class="box box-solid">
                 <div class="box-header with-border" style="padding-top: 5px">
@@ -157,8 +174,8 @@
                             return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
                         }},
                     {title: "人数构成比（%）", field: "rate1", formatter:function (value, row, index) {
-                            let number = row.peoplesNumber ? row.peoplesNumber : 0;
-                            let number1 = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                            let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                            let number1 = row.peoplesNumber ? row.peoplesNumber : 0;
                             let c = 0;
                             if (number && number1) {
                                 c = number /number1;
@@ -168,20 +185,27 @@
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
-                            fa = ra.peoplesNumber / ra.involvedPeoplesNumber;
-                            fb = rb.peoplesNumber / rb.involvedPeoplesNumber;
+                            fa = ra.involvedPeoplesNumber / ra.peoplesNumber;
+                            fb = rb.involvedPeoplesNumber / rb.peoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
                             var result = data.reduce(function(sum, row) {
-                                let number = row.peoplesNumber ? row.peoplesNumber : 0;
-                                let number1 = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
-                                let c = 0;
-                                if (number && number1) {
-                                    c = number /number1;
-                                }
-                                return sum + c;
-                            }, 0.00);
-                            return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
+                                let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                                return sum + number;
+                            }, 0);
+
+                            var result1 = data.reduce(function(sum, row) {
+                                let number1 = row.peoplesNumber ? row.peoplesNumber : 0;
+                                return sum + number1;
+                            }, 0);
+
+                            let c = 0;
+
+                            if (result && result1) {
+                                c = result /result1;
+                            }
+
+                            return result === 0  &&  result1 === 0 ? '0.00' : Math.round(c* 10000) / 100.00 .toFixed(2);
                         }},
                     {title: "园均疫情数", field: "peoplesAvgNumber",formatter:function (value, row, index) {
                             let number = row.epidemicNumber ? row.epidemicNumber : 0;
@@ -195,18 +219,27 @@
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.epidemicNumber / ra.gardensNumber;
+                            fb = rb.epidemicNumber / rb.gardensNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
                             var result = data.reduce(function(sum, row) {
                                 let number = row.epidemicNumber ? row.epidemicNumber : 0;
-                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
-                                let c = 0;
-                                if (number && number1) {
-                                    c = number /number1;
-                                }
-                                return sum + Math.round(c);
+                                return sum + number;
                             }, 0);
-                            return result === 0 ? '0' : result;
+
+                            var result1 = data.reduce(function(sum, row) {
+                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                                return sum + number1;
+                            }, 0);
+
+                            let c = 0;
+
+                            if (result && result1) {
+                                c = result /result1;
+                            }
+
+                            return result === 0  &&  result1 === 0 ? '0' : Math.round(c);
                         }},
                     {title: "园均人数", field: "avg", formatter:function (value, row, index) {
                             let number = row.peoplesNumber ? row.peoplesNumber : 0;
@@ -226,14 +259,21 @@
                         },footerFormatter: function (data) {
                             var result = data.reduce(function(sum, row) {
                                 let number = row.peoplesNumber ? row.peoplesNumber : 0;
-                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
-                                let c = 0;
-                                if (number && number1) {
-                                    c = number /number1;
-                                }
-                                return sum + Math.round(c);
+                                return sum + number;
                             }, 0);
-                            return result === 0 ? '0' : result;
+
+                            var result1 = data.reduce(function(sum, row) {
+                                let number1 = row.gardensNumber ? row.gardensNumber : 0;
+                                return sum + number1;
+                            }, 0);
+
+                            let c = 0;
+
+                            if (result && result1) {
+                                c = result /result1;
+                            }
+
+                            return result === 0  &&  result1 === 0 ? '0' : Math.round(c);
                         }},
                     {title: "起均人数", field: "qjrs",formatter:function (value, row, index) {
                             let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
@@ -247,21 +287,30 @@
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = ra.involvedPeoplesNumber / ra.epidemicNumber;
+                            fb = rb.involvedPeoplesNumber / rb.epidemicNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
                             var result = data.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
-                                let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
-                                let c = 0;
-                                if (number && number1) {
-                                    c = number /number1;
-                                }
-                                return sum + Math.round(c);
+                                return sum + number;
                             }, 0);
-                            return result === 0 ? '0' : result;
+
+                            var result1 = data.reduce(function(sum, row) {
+                                let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
+                                return sum + number1;
+                            }, 0);
+
+                            let c = 0;
+
+                            if (result && result1) {
+                                c = result /result1;
+                            }
+
+                            return result === 0  &&  result1 === 0 ? '0' : Math.round(c);
                         }},
                     {title: "罹患率（%）", field: "lhv", formatter:function (value, row, index) {
-                            let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                            let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                             let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
                             let c = 0;
                             if (number && number1) {
@@ -272,20 +321,27 @@
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
-                            fa = ra.peoplesNumber / ra.totalPeoplesNumber;
-                            fb = rb.peoplesNumber / rb.totalPeoplesNumber;
+                            fa = ra.involvedPeoplesNumber / ra.totalPeoplesNumber;
+                            fb = rb.involvedPeoplesNumber / rb.totalPeoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
                             var result = data.reduce(function(sum, row) {
-                                let number = row.peoplesNumber ? row.peoplesNumber : 0;
+                                let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
+                                return sum + number;
+                            }, 0);
+
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
-                                let c = 0;
-                                if (number && number1) {
-                                    c = number /number1;
-                                }
-                                return sum + c;
-                            }, 0.00);
-                            return result === 0.00 ? '0.00' : Math.round(result* 10000) / 100.00 .toFixed(2);
+                                return sum + number1;
+                            }, 0);
+
+                            let c = 0;
+
+                            if (result && result1) {
+                                c = result /result1;
+                            }
+
+                            return result === 0  &&  result1 === 0 ? '0.00' : Math.round(c* 10000) / 100.00 .toFixed(2);
                         }},
                 ]
             ],
@@ -303,38 +359,102 @@
             sidePagination: 'client',
             searchbar: '#searchbar',
             responseHandler: function(res) {
+                let arr =  res || [];
+
                let constantEnum = $.getConstantEnum("region-type");
                 let total = 0;
+                let newArr = [];
+                let val = $("#agentId").val();
+                if (val) {
+                    arr = arr.filter( row => val === row.agencyId)
+                }
                 constantEnum && constantEnum.forEach( region => {
                     let isNotPresence = false;
-                   let row = res.find(d => d.region === region.key);
-                   if (row){
-                       total += row.epidemicNumber;
-                   }else {
+                   let rows = arr.filter(d => d.region === region.key);
+                    if (rows && rows.length > 0){
+                        rows.reduce((newArr, row) => {
+                            total += row.epidemicNumber;
+                            let originObj = newArr.find(point => point.region === region.key);
+                            if (originObj) {
+                                originObj.gardensNumber += row.gardensNumber;
+                                originObj.peoplesNumber += row.peoplesNumber;
+                                originObj.epidemicNumber += row.epidemicNumber;
+                                originObj.involvedPeoplesNumber += row.involvedPeoplesNumber;
+                                originObj.totalPeoplesNumber += row.totalPeoplesNumber;
+                            }else {
+                                newArr.push(row)
+                            }
+                            return newArr;
+                        },newArr);
+                    }else {
                        isNotPresence = true;
                    }
 
-                   if (isNotPresence) {
+                   if (isNotPresence && !val) {
                        let data = {};
                        data['region'] = region.key;
-                       data['gardensNumber'] = 0;
-                       data['peoplesNumber'] = 0;
-                       data['epidemicNumber'] = 0;
-                       data['involvedPeoplesNumber'] = 0;
-                       data['peoplesAvgNumber'] = 0;
-                       data['startPeoplesNumber'] = 0;
-                       data['totalPeoplesNumber'] = 0;
-                       res.push(data)
+                           data['gardensNumber'] = 0;
+                           data['peoplesNumber'] = 0;
+                           data['epidemicNumber'] = 0;
+                           data['involvedPeoplesNumber'] = 0;
+                           data['totalPeoplesNumber'] = 0;
+
+                       newArr.push(data)
                    }
                });
-               res.forEach(row => row['epidemicTotalNumber'] = total);
-               data = res || [];
+                newArr.forEach(row => row['epidemicTotalNumber'] = total);
+               data = newArr || [];
                 generatorGcChart(yqgcChart);
                 generatorCrbChart(crbChart);
                 return data;
             }
         });
     }
+
+
+function initPmDiv(arr) {
+    let yqNumber = 0;
+    let yjyqNumber = 0;
+    let lhlNumber = 0;
+    arrYqSort(arr);
+    $.each(arr,function (index, row) {
+        if ( row.agencyId === $("#agentId").val())
+            yqNumber = index+1;
+    });
+    arrYjyqSort(arr);
+    $.each(arr,function (index, row) {
+        if ( row.agencyId === $("#agentId").val())
+            yjyqNumber = index+1;
+    });
+    arrLhlSort(arr);
+    $.each(arr,function (index, row) {
+        if ( row.agencyId === $("#agentId").val())
+            lhlNumber = index+1;
+    });
+    let html = "";
+    html += '<p style="font-family: Impact, Charcoal, sans-serif; font-size: 15px">目前社区的疫情数在全市排名为第' +yjyqNumber+'名' + '</p>';
+    $("#pm").html(html)
+}
+
+function arrYqSort(arr) {
+    if (arr && arr.length > 0) {
+        arr.sort((r1,r2) => r2["epidemicNumber"] - r1["epidemicNumber"])
+    }
+}
+
+function arrYjyqSort(arr) {
+    if (arr && arr.length > 0) {
+        arr.sort((r1,r2) => r2["epidemicNumber"]/r2["gardensNumber"] - r1["epidemicNumber"]/r1["gardensNumber"])
+    }
+}
+
+
+function arrLhlSort(arr) {
+    if (arr && arr.length > 0) {
+        arr.sort((r1,r2) => r2["involvedPeoplesNumber"]/r2["totalPeoplesNumber"] - r1["involvedPeoplesNumber"]/r1["totalPeoplesNumber"])
+    }
+}
+
 
     function generatorGcChart(chart) {
         chart.showLoading({

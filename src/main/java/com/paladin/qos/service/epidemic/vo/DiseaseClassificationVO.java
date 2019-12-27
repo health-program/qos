@@ -24,6 +24,8 @@ public class DiseaseClassificationVO {
 
     private  Integer totalPeoplesNumber;
 
+    private String agencyId;
+
     public String getRegion() {
         return region;
     }
@@ -86,5 +88,13 @@ public class DiseaseClassificationVO {
 
     public void setTotalPeoplesNumber(Integer totalPeoplesNumber) {
         this.totalPeoplesNumber = totalPeoplesNumber;
+    }
+
+    public String getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String agencyId) {
+        this.agencyId = agencyId;
     }
 }

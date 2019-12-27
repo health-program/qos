@@ -6,10 +6,11 @@
             resultType="com.paladin.qos.service.epidemic.vo.DiseaseClassificationVO">
         SELECT
         e.region,
+        t.business_district AS agencyId,
         COUNT( DISTINCT e.incident_unit ) AS gardensNumber,
-        SUM( e.total ) AS peoplesNumber,
+        SUM( e.suspend_people_number ) AS peoplesNumber,
         COUNT( 1 ) AS epidemicNumber,
-        SUM( e.suspend_people_number ) AS involvedPeoplesNumber,
+        SUM( e.total ) AS involvedPeoplesNumber,
         SUM(  p.total ) AS totalPeoplesNumber
         FROM org_school t
         INNER JOIN  org_school_people p  ON  t.id  = p.school_id
@@ -30,7 +31,7 @@
                     #{code}
                 </foreach>
             </if>
-        GROUP BY  e.region
+        GROUP BY  e.region,agencyId
 
     </select>
 </mapper>

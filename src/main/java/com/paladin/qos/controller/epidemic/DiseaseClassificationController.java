@@ -2,9 +2,11 @@ package com.paladin.qos.controller.epidemic;
 
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.web.response.CommonResponse;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.service.epidemic.DiseaseClassificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +28,14 @@ public class DiseaseClassificationController extends ControllerSupport {
     private DiseaseClassificationService diseaseClassificationService;
 
     @RequestMapping("/index")
-    public String index() {
+    public String index(Model model)
+    {
+        QosUserSession userSession = QosUserSession.getCurrentUserSession();
+        String[] agencyIds = userSession.getAgencyIds();
+        String agentId = null;
+        if ( agencyIds != null &&  agencyIds.length == 1)
+            agentId = agencyIds[0];
+        model.addAttribute("agentId",agentId);
         return "/qos/epidemic/epidemic_disease_classification_index";
     }
 
