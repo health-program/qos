@@ -5,210 +5,223 @@ import com.paladin.framework.common.BaseModel;
 import javax.persistence.Id;
 import java.util.Date;
 
-public class EpidemicSituation extends BaseModel{
-    
+public class EpidemicSituation extends BaseModel {
+
     @Id
     private String id;
 
-    private String incidentUnit;//事发单位名称
-    
-    private String schoolYear;//学年
+    private String incidentUnit;// 事发单位名称
 
-    private String reportUnit;//报告单位（医疗机构为1，事发学校为2，家长为3，其他为4）
+    private String schoolYear;// 学年
 
-    private String sicknessClassify;//病种分类
-    
-    private String grade;//班级
+    private String reportUnit;// 报告单位（医疗机构为1，事发学校为2，家长为3，其他为4）
 
-    private String region;//区域
+    private String sicknessClassify;// 病种分类
 
-    private Integer firstWeek;//发病人数（首周）
+    private String grade;// 班级
 
-    private Integer total;//发病人数（累计）
+    private String region;// 区域
 
-    private Integer vaccinationGradeNumber;//应急接种班级数
+    private Integer firstWeek;// 发病人数（首周）
 
-    private Integer vaccinationPeopleNumber;//应急接种人数
+    private Integer total;// 发病人数（累计）
 
-    private Integer suspendGradeNumber;//停课班级数
+    private Integer vaccinationGradeNumber;// 应急接种班级数
 
-    private Integer suspendPeopleNumber;//停课人数
+    private Integer vaccinationPeopleNumber;// 应急接种人数
 
-    private Date suspendData;//停课时间
+    private Integer suspendGradeNumber;// 停课班级数
 
-    private Integer municipalLeveNumber;//出动人次数(市级专业部门)
+    private Integer suspendPeopleNumber;// 停课人数
 
-    private Integer districtTownNumber;//出动人次数(区镇级专业部门)
+    private Date suspendData;// 停课时间
 
-    private Integer isEarlyWarningValue;//是否预警值(是为1，否为2)
+    private Date resumptionTime;// 复课时间
 
-    private Integer isReasonTraceability;//是否原因溯源(是为1，否为2)
+    private Integer municipalLeveNumber;// 出动人次数(市级专业部门)
 
-    private Integer isTraceabilityClear;//溯源是否清楚(是为1，否为2)
+    private Integer districtTownNumber;// 出动人次数(区镇级专业部门)
 
-    private String remarks;//备注
+    private Integer isEarlyWarningValue;// 是否预警值(是为1，否为2)
+
+    private Integer isReasonTraceability;// 是否原因溯源(是为1，否为2)
+
+    private Integer isTraceabilityClear;// 溯源是否清楚(是为1，否为2)
+
+    private String remarks;// 备注
 
     public String getId() {
-        return id;
+	return id;
     }
 
     public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+	this.id = id == null ? null : id.trim();
     }
 
     public String getIncidentUnit() {
-        return incidentUnit;
+	return incidentUnit;
     }
 
     public void setIncidentUnit(String incidentUnit) {
-        this.incidentUnit = incidentUnit == null ? null : incidentUnit.trim();
+	this.incidentUnit = incidentUnit == null ? null : incidentUnit.trim();
     }
 
     public String getReportUnit() {
-        return reportUnit;
+	return reportUnit;
     }
 
     public void setReportUnit(String reportUnit) {
-        this.reportUnit = reportUnit == null ? null : reportUnit.trim();
+	this.reportUnit = reportUnit == null ? null : reportUnit.trim();
     }
 
     public String getSicknessClassify() {
-        return sicknessClassify;
+	return sicknessClassify;
     }
 
     public void setSicknessClassify(String sicknessClassify) {
-        this.sicknessClassify = sicknessClassify == null ? null : sicknessClassify.trim();
+	this.sicknessClassify = sicknessClassify == null ? null
+		: sicknessClassify.trim();
     }
 
     public String getGrade() {
-        return grade;
+	return grade;
     }
 
     public void setGrade(String grade) {
-        this.grade = grade == null ? null : grade.trim();
+	this.grade = grade == null ? null : grade.trim();
     }
 
     public String getRegion() {
-        return region;
+	return region;
     }
 
     public void setRegion(String region) {
-        this.region = region == null ? null : region.trim();
+	this.region = region == null ? null : region.trim();
     }
 
     public Integer getFirstWeek() {
-        return firstWeek;
+	return firstWeek;
     }
 
     public void setFirstWeek(Integer firstWeek) {
-        this.firstWeek = firstWeek;
+	this.firstWeek = firstWeek;
     }
 
     public Integer getTotal() {
-        return total;
+	return total;
     }
 
     public void setTotal(Integer total) {
-        this.total = total;
+	this.total = total;
     }
 
     public Integer getVaccinationGradeNumber() {
-        return vaccinationGradeNumber;
+	return vaccinationGradeNumber;
     }
 
     public void setVaccinationGradeNumber(Integer vaccinationGradeNumber) {
-        this.vaccinationGradeNumber = vaccinationGradeNumber;
+	this.vaccinationGradeNumber = vaccinationGradeNumber;
     }
 
     public Integer getVaccinationPeopleNumber() {
-        return vaccinationPeopleNumber;
+	return vaccinationPeopleNumber;
     }
 
     public void setVaccinationPeopleNumber(Integer vaccinationPeopleNumber) {
-        this.vaccinationPeopleNumber = vaccinationPeopleNumber;
+	this.vaccinationPeopleNumber = vaccinationPeopleNumber;
     }
 
     public Integer getSuspendGradeNumber() {
-        return suspendGradeNumber;
+	return suspendGradeNumber;
     }
 
     public void setSuspendGradeNumber(Integer suspendGradeNumber) {
-        this.suspendGradeNumber = suspendGradeNumber;
+	this.suspendGradeNumber = suspendGradeNumber;
     }
 
     public Integer getSuspendPeopleNumber() {
-        return suspendPeopleNumber;
+	return suspendPeopleNumber;
     }
 
     public void setSuspendPeopleNumber(Integer suspendPeopleNumber) {
-        this.suspendPeopleNumber = suspendPeopleNumber;
+	this.suspendPeopleNumber = suspendPeopleNumber;
     }
 
     public Date getSuspendData() {
-        return suspendData;
+	return suspendData;
     }
 
     public void setSuspendData(Date suspendData) {
-        this.suspendData = suspendData;
+	this.suspendData = suspendData;
     }
 
     public Integer getMunicipalLeveNumber() {
-        return municipalLeveNumber;
+	return municipalLeveNumber;
     }
 
     public void setMunicipalLeveNumber(Integer municipalLeveNumber) {
-        this.municipalLeveNumber = municipalLeveNumber;
+	this.municipalLeveNumber = municipalLeveNumber;
     }
 
     public Integer getDistrictTownNumber() {
-        return districtTownNumber;
+	return districtTownNumber;
     }
 
     public void setDistrictTownNumber(Integer districtTownNumber) {
-        this.districtTownNumber = districtTownNumber;
+	this.districtTownNumber = districtTownNumber;
     }
 
     public Integer getIsEarlyWarningValue() {
-        return isEarlyWarningValue;
+	return isEarlyWarningValue;
     }
 
     public void setIsEarlyWarningValue(Integer isEarlyWarningValue) {
-        this.isEarlyWarningValue = isEarlyWarningValue;
+	this.isEarlyWarningValue = isEarlyWarningValue;
     }
 
     public Integer getIsReasonTraceability() {
-        return isReasonTraceability;
+	return isReasonTraceability;
     }
 
     public void setIsReasonTraceability(Integer isReasonTraceability) {
-        this.isReasonTraceability = isReasonTraceability;
+	this.isReasonTraceability = isReasonTraceability;
     }
 
     public Integer getIsTraceabilityClear() {
-        return isTraceabilityClear;
+	return isTraceabilityClear;
     }
 
     public void setIsTraceabilityClear(Integer isTraceabilityClear) {
-        this.isTraceabilityClear = isTraceabilityClear;
+	this.isTraceabilityClear = isTraceabilityClear;
     }
 
     public String getRemarks() {
-        return remarks;
+	return remarks;
     }
 
     public void setRemarks(String remarks) {
-        this.remarks = remarks == null ? null : remarks.trim();
+	this.remarks = remarks == null ? null : remarks.trim();
     }
 
-	public String getSchoolYear() {
-		return schoolYear;
-	}
+    public String getSchoolYear() {
+	return schoolYear;
+    }
 
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
-	}
+    public void setSchoolYear(String schoolYear) {
+	this.schoolYear = schoolYear;
+    }
+
+    public Date getResumptionTime() {
+	return resumptionTime;
+    }
+
+    public void setResumptionTime(Date resumptionTime) {
+	this.resumptionTime = resumptionTime;
+    }
 
     @Override
-    public String toString() { return "学校疫情ID:" + id ; }
-    
+    public String toString() {
+	return "学校疫情ID:" + id;
+    }
+
 }

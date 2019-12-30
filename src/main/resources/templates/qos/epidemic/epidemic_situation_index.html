@@ -13,6 +13,9 @@
             <div class="box-body">
                 <form id="searchbar" class="form-horizontal form-search">
                    	<div class="form-group">
+                   	<div class="col-md-2">
+                        	<input name="schoolYear" id="schoolYear" placeholder="学年" autocomplete="off" type="text" class="form-control tonto-datepicker-year">
+	                    </div>
                         <div class="col-md-2">
                             <input type="text" id="incidentUnit" name="incidentUnit" class="form-control" th:value="${query?.incidentUnit}" placeholder="请输入事发单位名称" >
                         </div>
@@ -31,7 +34,7 @@
 								<option value="">请选病种分类</option>
 							</select>
 						</div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
 		                    <div class="pull-right">
 		                        <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
 		                        <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar')[0].reset()"><i class="fa fa-repeat"></i>重置</button>
@@ -81,7 +84,7 @@
                 [
                     //{ title: "事发单位名称", align: "center", field: "incidentUnit" },
                     { title: "学年", align: "center", field: "schoolYear"},
-                    { title: "班级", field: "grade",width: "350px",
+                    { title: "班级", field: "grade",width: "400px",
     					formatter:function(v, row, index){
     						var g = function(items, str) {
                                 for (var i = 0; i < items.length; i++) {
@@ -103,7 +106,7 @@
                     { title: "报告单位", align: "center", field: "reportUnit",enumcode: "report-unit-type"},
                     { title: "区域", align: "center", field: "region",enumcode:"region-type" },
                     { title: "病种分类", align: "center", field: "sicknessClassify",enumcode:"sickness-type"},
-                    { title: "创建时间", align: "center", field: "createTime",formatter: "datetime" },
+                    { title: "停课时间", align: "center", field: "suspendData",formatter: "date" },
                     {
                         title: "操作",
                         align: "center",

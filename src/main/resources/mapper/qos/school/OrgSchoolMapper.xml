@@ -6,6 +6,15 @@
 	SELECT o.id, school_year as schoolYear, n.`school_full_name`AS parentSchoolId,o.`address`,o.`affiliation`,o.`district`,o.business_district AS businessDistrict,o.`nature`,o.`create_Time` AS createTime FROM 
 	org_school AS o 
 	LEFT JOIN org_school_name AS n ON o.`parent_school_id`=n.`id` where 1=1 
+	
+	<if test="agencyId !=null and agencyId.length > 0">
+            AND o.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+	
 	<if test="schoolName !=null and schoolName != '' ">
 	 AND n.`school_full_name` LIKE CONCAT('%',#{schoolName},'%') 
 	</if>
@@ -21,7 +30,10 @@
 	<if test="businessDistrict !=null and businessDistrict != '' ">
 	 AND business_district = #{businessDistrict}
 	</if>
-	ORDER BY o.create_time DESC
+	<if test="schoolYear !=null and schoolYear != '' ">
+	 AND school_year = #{schoolYear}
+	</if>
+	ORDER BY school_year DESC
 </select>
 
 <select id="parentSchoolId" resultType="com.paladin.qos.service.school.vo.OrgSchoolVO">

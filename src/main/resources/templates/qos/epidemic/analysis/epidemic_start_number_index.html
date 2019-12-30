@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="sickness-type2"/>
+ <section class="content-header">
+    <h1>疫情起均人数统计</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top">
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+            	<div class="form-group">
+            			<div class="col-md-2">
+                        	<input name="startTime" id="startTime" placeholder="开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+	                    <div class="col-md-2">
+                        	<input name="endTime" id="endTime" placeholder="结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+						<div class="col-md-8">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+   </div>
+   <div class="row">
+   	<div class="col-sm-12">
+   	<div class="box box-solid">
+   		<div class="box-body">
+			<table id="dataGrid" style="height: 300px"></table>
+		</div>
+   		</div>
+   	</div>
+   </div>
+     <div class="row">
+   	<div class="col-sm-6">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">疫情起均人数</h3>
+		</div>
+		<div id="echart" class="box-body no-padding" style="height: 350px">
+		</div>
+	</div>
+   	</div>
+   	<div class="col-sm-6">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">疫情起均人数罹患率(%)</h3>
+		</div>
+		<div id="echart1" class="box-body no-padding" style="height: 350px">
+		</div>
+	</div>
+   </div> 
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+
+	var value = $.parseJSON($("#tonto_constant_value").text());
+	var job = value["sickness-type2"];
+
+	 var table, dataVal, requestParams,selectUnit;
+	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		myChart.resize();
+		myChart1.resize();
+	});
+	
+	$(function() {
+		initTable();
+	});
+	
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+[
+ { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>传染病疫情起均人数与罹串率情况统计表</span>",colspan:17}
+],
+                      [
+                       { title: "<span style='display: inline-block;width:100px;height: 64px;text-align: center;line-height: 64px'>报告病种</span>",field: "sickness",rowspan:2},
+                       {title: "事件量", colspan: 4},
+                       {title: "涉及人数", colspan: 4},
+                       {title: "起均人数", colspan: 4},
+                       {title: "罹患率(%)", colspan: 4},
+                       
+                   ],
+                [
+                    { title: "托幼", field: "nurseries",
+                   	  sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                   	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    return fa - fb;
+                   	}},
+                    { title: "小学", field: "primarySchool" ,
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "初中及以上", field: "juniorUpperSchool",
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "小计", field: "subtotal", 
+                      		sortable: true,
+                         	  sorter: function(fa, fb, ra, rb) {
+                           	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    return fa - fb;
+                           	}},
+                    { title: "托幼机构", field: "nurseries1",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "小学", field: "primarySchool1",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "初中及以上", field: "juniorUpperSchool1",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "小计", field: "subtotal1",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}}, { title: "托幼", field: "nurseries2",
+                         	  sortable: true,
+                           	  sorter: function(fa, fb, ra, rb) {
+                           	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    return fa - fb;
+                           	}},
+                            { title: "小学", field: "primarySchool2" ,
+                            	 sortable: true,
+                              	  sorter: function(fa, fb, ra, rb) {
+                              	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              	    return fa - fb;
+                              	}},
+                            { title: "初中及以上", field: "juniorUpperSchool2",
+                            	 sortable: true,
+                              	  sorter: function(fa, fb, ra, rb) {
+                              	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                              	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                              	    return fa - fb;
+                              	}},
+                            { title: "小计", field: "subtotal2", 
+                              		sortable: true,
+                                 	  sorter: function(fa, fb, ra, rb) {
+                                   	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                   	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                   	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                   	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                   	    return fa - fb;
+                                   	}},{ title: "托幼", field: "nurseries3",
+                                   	  sortable: true,
+                                   	  sorter: function(fa, fb, ra, rb) {
+                                   	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                   	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                   	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                   	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                   	 	fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                                     	fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                                   	    
+                                   	    return fa - fb;
+                                   	}},
+                                    { title: "小学", field: "primarySchool3" ,
+                                    	 sortable: true,
+                                      	  sorter: function(fa, fb, ra, rb) {
+                                      	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      	  	fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                                          	fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                                      	    
+                                      	    return fa - fb;
+                                      	}},
+                                    { title: "初中及以上", field: "juniorUpperSchool3",
+                                    	 sortable: true,
+                                      	  sorter: function(fa, fb, ra, rb) {
+                                      	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                      	  	fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                                          	fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                                      	    
+                                      	    return fa - fb;
+                                      	}},
+                                    { title: "小计", field: "lhlxj", 
+                                      		sortable: true,
+                                         	  sorter: function(fa, fb, ra, rb) {
+                                           	    if (ra.sickness == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                           	    if (rb.sickness == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                           	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                                           	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                                           	 	fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                                             	fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                                           	    
+                                           	    return fa - fb;
+                                           	}}
+                    
+                ]
+            ],
+            url: '/qos/org/school/analysis/start/number',
+            pagination: false,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            clickToSelect: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+                //unitSelected(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(response) {
+            	var data = response;
+            	var result = [],nurseriesTotal=0,primarySchoolTotal=0,juniorUpperSchoolTotal=0,subtotals=0,
+            	nurseriesTotal1=0,primarySchoolTotal1=0,juniorUpperSchoolTotal1=0,subtotals1=0,
+            	nurseriesTotal2=0,primarySchoolTotal2=0,juniorUpperSchoolTotal2=0,subtotals2=0,
+            	nurseriesTotal3=0,primarySchoolTotal3=0,juniorUpperSchoolTotal3=0;
+            	for (var i = 0; i < job.length; i++) {
+            		if(response.length > 0){
+            			for (var j = 0; j < response.length; j++) {
+                			if(job[i].key == response[j].sicknessClassify){
+                				nurseriesTotal += data[j].nurseries;
+                				primarySchoolTotal += data[j].primarySchool;
+                				juniorUpperSchoolTotal+=data[j].juniorUpperSchool;
+                				subtotals += data[j].subtotal;
+                				
+                				nurseriesTotal1 += data[j].nurseries1;
+                				primarySchoolTotal1 += data[j].primarySchool1;
+                				juniorUpperSchoolTotal1 +=data[j].juniorUpperSchool1;
+                				subtotals1 += data[j].subtotal1;
+                				
+                				nurseriesTotal2 += data[j].nurseries2;
+                				primarySchoolTotal2 += data[j].primarySchool2;
+                				juniorUpperSchoolTotal2 +=data[j].juniorUpperSchool2;
+                				subtotals2 += data[j].subtotal2;
+                				
+                				nurseriesTotal3 += data[j].nurseries3;
+                				primarySchoolTotal3 += data[j].primarySchool3;
+                				juniorUpperSchoolTotal3 +=data[j].juniorUpperSchool3;
+                				
+                				result.push({
+                					sicknessClassify:job[i].key,
+                        			sickness: job[i].value,
+                        			nurseries:data[j].nurseries,
+                        			primarySchool:data[j].primarySchool,
+                        			juniorUpperSchool:data[j].juniorUpperSchool,
+                        			subtotal:data[j].subtotal,
+                        			nurseries1:data[j].nurseries1,
+                        			primarySchool1:data[j].primarySchool1,
+                        			juniorUpperSchool1:data[j].juniorUpperSchool1,
+                        			subtotal1:data[j].subtotal1,
+                        			nurseries2:rate(data[j].nurseries1,data[j].nurseries,false),
+                        			primarySchool2:rate(data[j].primarySchool1,data[j].primarySchool,false),
+                        			juniorUpperSchool2:rate(data[j].juniorUpperSchool1,data[j].juniorUpperSchool,false),
+                        			subtotal2:rate(data[j].subtotal1,data[j].subtotal),
+                        			nurseries3:rate(data[j].nurseries3,data[j].nurseries2,true),
+                        			primarySchool3:rate(data[j].primarySchool3,data[j].primarySchool2,true),
+                        			juniorUpperSchool3:rate(data[j].juniorUpperSchool3,data[j].juniorUpperSchool2,true),
+                        			lhlxj:data[j].lhlxj
+             	    		   })
+             	    		  break;
+                			}
+                			if(j == response.length-1){
+                				result.push({
+                					sicknessClassify:job[i].key,
+                        			sickness: job[i].value,
+                        			nurseries:0,
+                        			primarySchool:0,
+                        			juniorUpperSchool:0,
+                        			subtotal:0,
+                        			nurseries1:0,
+                        			primarySchool1:0,
+                        			juniorUpperSchool1:0,
+                        			subtotal1:0,
+                        			nurseries2:0,
+                        			primarySchool2:0,
+                        			juniorUpperSchool2:0,
+                        			subtotal2:0,
+                        			nurseries3:0,
+                        			primarySchool3:0,
+                        			juniorUpperSchool3:0,
+                        			lhlxj:0
+             	    		   })
+                			}
+                		}
+            		}else{
+            			result.push({ 
+            				sickness: job[i].value,
+            			})
+            		}
+            	}
+            	if(response.length > 0){
+            		debugger;
+            		var a = nurseriesTotal3+primarySchoolTotal3+juniorUpperSchoolTotal3;
+            		result.push({
+            			sickness: '合计',
+            			nurseries:nurseriesTotal,
+            			primarySchool:primarySchoolTotal,
+            			juniorUpperSchool:juniorUpperSchoolTotal,
+            			subtotal:subtotals,
+            			nurseries1:nurseriesTotal1,
+            			primarySchool1:primarySchoolTotal1,
+            			juniorUpperSchool1:juniorUpperSchoolTotal1,
+            			subtotal1:subtotals1,
+            			nurseries2:rate(nurseriesTotal1,nurseriesTotal),
+            			primarySchool2:rate(primarySchoolTotal1,primarySchoolTotal),
+            			juniorUpperSchool2:rate(primarySchoolTotal1,primarySchoolTotal),
+            			subtotal2:rate(subtotals1,subtotals),
+            			nurseries3:rate(nurseriesTotal3,nurseriesTotal2,true),
+            			primarySchool3:rate(primarySchoolTotal3,primarySchoolTotal2,true),
+            			juniorUpperSchool3:rate(juniorUpperSchoolTotal3,juniorUpperSchoolTotal2,true),
+            			lhlxj:rate(a,subtotals1,true)
+    	    		   })
+            	}
+            	dataVal = result;
+                chart();
+                chart1();
+                return result;
+            }
+        });
+    }
+	
+    
+    function rate(a,b,isBoolean){
+    	var data = 0;
+    	if(a && b){
+    		if(isBoolean){
+    			data = ((a/b)*100).toFixed(2);
+    		}else{
+    			data = (a/b).toFixed(1);
+    		}
+    	}
+    	return data;
+    }
+    	
+    function unitSelected(row) {
+        selectUnit = row.sicknessClassify;
+        chart1();
+    }
+
+	var myChart = echarts.init(document.getElementById('echart'));
+	function chart() {
+		var jobName = [],nurseries=[],primarySchool=[],juniorUpperSchool=[];
+		for (var j = 0; j < job.length; j++) {
+			jobName.push(job[j].value)
+			for (var i = 0; i < dataVal.length; i++) {
+				if(dataVal[i].sickness != '合计'){
+					if(job[j].value == dataVal[i].sickness){
+						debugger;
+						nurseries.push({name:job[j].value,value:dataVal[i].nurseries2})
+						primarySchool.push({name:job[j].value,value:dataVal[i].primarySchool2})
+						juniorUpperSchool.push({name:job[j].value,value:dataVal[i].juniorUpperSchool2})
+					}
+				}
+			}
+		}
+		var labelOption = {
+	            normal: {
+	                show: true,
+	                position: 'top',
+	                distance: 15,
+	                align: 'center',
+	                verticalAlign: 'top',
+	                rotate: 0,
+	                formatter: '{c}',
+	                fontSize: 12,
+	                rich: {
+	                    name: {
+	                        textBorderColor: '#fff'
+	                    }
+	                }
+	            }
+	        };
+		var option = {
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'shadow'
+				}
+			},
+			legend : {
+				data : [ '托幼', '小学', '初中及以上' ]
+			},
+			toolbox : {
+				show : true,
+				feature : {
+					restore : {
+						show : true
+					},
+					saveAsImage : {
+						show : true
+					},magicType: {
+	                    type: ['line', 'bar']
+	                }
+				}
+			},
+			grid : {
+				left : '3%',
+				right : '3%',
+				bottom : '0%',
+				containLabel : true
+			},
+			xAxis : {
+				type : 'category',
+				axisLabel : {
+					interval : 0,
+					rotate : 0
+				//角度顺时针计算的
+				},
+				axisTick : {
+					alignWithLabel : true
+				},
+				data : jobName
+			},
+			yAxis : {
+				type : 'value',
+				axisLabel : {
+					show : true
+				}
+			},
+			series : [ {
+				name : '托幼',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : nurseries
+			}, {
+				name : '小学',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : primarySchool
+			}, {
+				name : '初中及以上',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : juniorUpperSchool
+			} ]
+		};
+		myChart.setOption(option);
+	}
+
+	var myChart1 = echarts.init(document.getElementById('echart1'));
+	function chart1() {
+		var jobName = [],nurseries=[],primarySchool=[],juniorUpperSchool=[];
+		for (var j = 0; j < job.length; j++) {
+			jobName.push(job[j].value)
+			for (var i = 0; i < dataVal.length; i++) {
+				debugger;
+				if(dataVal[i].sickness != '合计'){
+					if(job[j].value == dataVal[i].sickness){
+						debugger;
+						nurseries.push({name:job[j].value,value:dataVal[i].nurseries3})
+						primarySchool.push({name:job[j].value,value:dataVal[i].primarySchool3})
+						juniorUpperSchool.push({name:job[j].value,value:dataVal[i].juniorUpperSchool3})
+					}
+				}
+			}
+		}
+		var labelOption = {
+	            normal: {
+	                show: true,
+	                position: 'top',
+	                distance: 15,
+	                align: 'center',
+	                verticalAlign: 'top',
+	                rotate: 0,
+	                formatter: '{c}',
+	                fontSize: 12,
+	                rich: {
+	                    name: {
+	                        textBorderColor: '#fff'
+	                    }
+	                }
+	            }
+	        };
+		var option = {
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'shadow'
+				}
+			},
+			legend : {
+				data : [ '托幼', '小学', '初中及以上' ]
+			},
+			toolbox : {
+				show : true,
+				feature : {
+					restore : {
+						show : true
+					},
+					saveAsImage : {
+						show : true
+					},magicType: {
+	                    type: ['line', 'bar']
+	                }
+				}
+			},
+			grid : {
+				left : '3%',
+				right : '3%',
+				bottom : '0%',
+				containLabel : true
+			},
+			xAxis : {
+				type : 'category',
+				axisLabel : {
+					interval : 0,
+					rotate : 0
+				//角度顺时针计算的
+				},
+				axisTick : {
+					alignWithLabel : true
+				},
+				data : jobName
+			},
+			yAxis : {
+				type : 'value',
+				axisLabel : {
+					show : true
+				}
+			},
+			series : [ {
+				name : '托幼',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : nurseries
+			}, {
+				name : '小学',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : primarySchool
+			}, {
+				name : '初中及以上',
+				type : 'bar',
+				barWidth : 18,
+				label: labelOption,
+				data : juniorUpperSchool
+			} ]
+		};
+		myChart1.setOption(option);
+	}
+	//无数据展示
+	var showChartInfo = function(traceability, infoStr) {
+		var msgOption = {
+			title : {
+				show : true,
+				textStyle : {
+					color : 'grey',
+					fontSize : 20
+				},
+				text : infoStr,
+				left : 'center',
+				top : 'center'
+			},
+			xAxis : {
+				show : false
+			},
+			yAxis : {
+				show : false
+			},
+			series : []
+		};
+		traceability.clear();
+		traceability.hideLoading();
+		traceability.setOption(msgOption)
+	};
+
+	//]]>
+</script>
+</body>
+
+</html>

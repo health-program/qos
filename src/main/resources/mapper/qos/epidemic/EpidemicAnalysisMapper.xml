@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.epidemic.EpidemicAnalysisMapper">
+
+    <!-- 疫情事件量 -->
+    <select id="schoolepidemicquantity" resultType="map">
+        SELECT
+        e.sickness_classify AS sicknessClassify,
+        coalesce(sum(o.school_section in('1','7')),0) AS nurseries,
+        coalesce(sum(o.school_section = '2'),0) AS primarySchool,
+        coalesce(sum(o.school_section in('3','4','5','6','8')),0) AS juniorUpperSchool,
+        ROUND((coalesce(sum(o.school_section in('1','7')),0)/count(1))*100,2) AS nurseriesRate,
+        ROUND((coalesce(sum(o.school_section = '2'),0)/count(1))*100,2) AS primarySchoolRate,
+        ROUND((coalesce(sum(o.school_section in('3','4','5','6','8')),0)/count(1))*100,2) AS juniorUpperSchoolRate,
+        count(1) AS subtotal,
+        (SELECT count(1) FROM epidemic_situation)as total
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school as s ON o.school_id = s.id
+        where 1=1 
+        
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        
+        GROUP BY
+        e.sickness_classify;
+    </select>
+
+    <!-- 疫情构成比 -->
+    <select id="schoolepidemicRate" resultType="map">
+        SELECT
+        coalesce(sum(o.school_section in('1','7')),0) AS nurseries,
+        coalesce(sum(o.school_section = '2'),0) AS primarySchool,
+        coalesce(sum(o.school_section in('3','4','5','6','8')),0) AS juniorUpperSchool,
+        coalesce(SUM(e.suspend_people_number),0) AS total
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school as s ON o.school_id = s.id
+        where 1=1
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        
+        <if test="sicknessClassify !=null and sicknessClassify !='' ">
+            AND e.sickness_classify = #{sicknessClassify}
+        </if>
+    </select>
+
+    <!-- 疫情涉及人数 -->
+    <select id="schoolepidemicnumber" resultType="map">
+        SELECT
+        e.sickness_classify AS sicknessClassify,
+        sum(if(o.school_section in('1','7'),e.total,0))AS nurseries,
+        sum(if(o.school_section = '2',e.total,0))AS primarySchool,
+        sum(if(o.school_section in('3','4','5','6','8'),e.total,0))AS juniorUpperSchool,
+        ROUND(sum(if(o.school_section in('1','7'),e.total,0))/SUM(e.total)*100,2) AS nurseriesRate,
+        ROUND(sum(if(o.school_section = '2',e.total,0))/SUM(e.total)*100,2) AS primarySchoolRate,
+        ROUND(sum(if(o.school_section  in('3','4','5','6','8'),e.total,0))/SUM(.e.total)*100,2) AS juniorUpperSchoolRate,
+        SUM(e.total) AS subtotal,
+        (SELECT SUM(total) FROM epidemic_situation)as total
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school as s ON o.school_id = s.id where 1=1 
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY
+        e.sickness_classify;
+    </select>
+
+    <select id="schoolepidemicnumberRate" resultType="map">
+        SELECT
+        coalesce(sum(if(o.school_section in('1','7'),e.total,0)),0)AS nurseries,
+        coalesce(sum(if(o.school_section = '2',e.total,0)),0)AS primarySchool,
+        coalesce(sum(if(o.school_section in('3','4','5','6','8'),e.total,0)),0)AS juniorUpperSchool,
+        coalesce(SUM(e.total),0) AS total
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school as s ON o.school_id = s.id 
+        where 1=1  
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        
+        <if test="sicknessClassify !=null and sicknessClassify !='' ">
+            AND e.sickness_classify = #{sicknessClassify}
+        </if>
+    </select>
+
+    <!-- 疫情涉及起均人数 -->
+    <select id="schoolPersonnelStartNumber" resultType="map">
+        SELECT
+         e.sickness_classify AS sicknessClassify,
+        coalesce(sum(o.school_section in('1','7')),0) AS nurseries,
+        coalesce(sum(o.school_section = '2'),0) AS primarySchool,
+        coalesce(sum(o.school_section in('3','4','5','6','8')),0) AS juniorUpperSchool,
+        count(1) AS subtotal,
+        coalesce(sum(if(o.school_section in('1','7'),e.total,0)),0)AS nurseries1,
+        coalesce(sum(if(o.school_section = '2',e.total,0)),0)AS primarySchool1,
+        coalesce(sum(if(o.school_section in('3','4','5','6','8'),e.total,0)),0)AS juniorUpperSchool1,
+        SUM(e.total) AS subtotal1,
+		coalesce(sum(if(o.school_section in('1','7'),e.suspend_people_number,0)),0)AS nurseries2,
+        coalesce(sum(if(o.school_section = '2',e.suspend_people_number,0)),0)AS primarySchool2,
+        coalesce(sum(if(o.school_section in('3','4','5','6','8'),e.suspend_people_number,0)),0)AS juniorUpperSchool2,
+        SUM(e.first_week) AS subtotal2,
+        coalesce(sum(if(o.school_section in('1','7'),e.total,0)),0)AS nurseries3,
+        coalesce(sum(if(o.school_section = '2',e.total,0)),0)AS primarySchool3,
+        coalesce(sum(if(o.school_section in('3','4','5','6','8'),e.total,0)),0)AS juniorUpperSchool3,
+        ROUND((SUM(e.total)/SUM(e.suspend_people_number))*100,2) AS lhlxj
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school AS s ON o.school_id = s.id
+        where 1=1 
+        
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY
+        e.sickness_classify;
+    </select> 
+
+    <!-- 疫情人群分布 -->
+    <select id="schoolPersonnelcrowd" resultType="map">
+        SELECT
+        e.sickness_classify AS sicknessClassify,
+        count( distinct incident_unit) as xys,
+        coalesce(sum(e.suspend_people_number),0) AS rs,
+        count(1) as qs,
+        coalesce(sum(e.total),0) as sjrs,
+        ROUND(count(1)/(SELECT count(1) FROM epidemic_situation)*100,2) qsgcb,
+        ROUND(coalesce(sum(e.suspend_people_number),0)/(SELECT coalesce(sum(suspend_people_number),0) FROM epidemic_situation)*100,2) AS rsgcb,
+        ROUND(count(1)/count( distinct incident_unit),2) as yjyqs,
+        coalesce(sum(e.first_week),0) as qjrs,
+        ROUND(coalesce(sum(e.total),0)/coalesce(SUM(e.suspend_people_number),0)*100,2)  as lhl,
+        coalesce(SUM(o.total),0) as total,
+        coalesce(SUM(e.suspend_people_number),0) AS totals
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school AS s ON o.school_id = s.id where 1=1 
+        
+        <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        
+        <if test="schoolSectionIds !=null and schoolSectionIds.length > 0">
+            and s.nature in 
+            <foreach collection="schoolSectionIds" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        GROUP BY e.sickness_classify;
+    </select>
+
+    <!-- 区域疫情量构成比 -->
+    <select id="schoolPersonnelRegion" resultType="map">
+        SELECT 
+        region,
+        count(sickness_classify = '1'or null) AS sg,
+        count(sickness_classify ='10'or null) AS jxwcy,
+        count(sickness_classify ='14'or null) AS szkb,
+        count(sickness_classify ='2'or null) AS sd,
+        count(sickness_classify ='16'or null) AS bzxyjy,
+        count(sickness_classify ='3'or null) AS fjh,
+        count(1) AS xj,
+        ROUND(count(sickness_classify = '1'or null)/count(1)*100,2) AS sg1,
+        ROUND(count(sickness_classify ='10'or null)/count(1)*100,2) AS jxwcy1,
+        ROUND(count(sickness_classify ='14'or null)/count(1)*100,2) AS szkb1,
+        ROUND(count(sickness_classify ='2'or null)/count(1)*100,2) AS sd1,
+        ROUND(count(sickness_classify ='16'or null)/count(1)*100,2) AS bzxyjy1,
+        ROUND(count(sickness_classify ='3'or null)/count(1)*100,2) AS fjh1,
+        ROUND(count(1)/(SELECT count(1) FROM epidemic_situation) * 100,2) gcb
+        FROM epidemic_situation AS e
+		INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id 
+		where 1=1 
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="startTime !=null and startTime !='' ">
+            AND suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY region 
+    </select>   
+
+    <!-- 区域涉及人数构成比 -->
+    <select id="schoolPersonnelRegion1" resultType="map">
+        SELECT 
+        e.region AS regionId,
+        e.region AS region,
+        sum(if(e.sickness_classify = '1',e.total,0))AS sg,
+        sum(if(e.sickness_classify = '10',e.total,0))AS jxwcy,
+        sum(if(e.sickness_classify = '14',e.total,0))AS szkb,
+        sum(if(e.sickness_classify = '2',e.total,0))AS sd,
+        sum(if(e.sickness_classify = '16',e.total,0))AS bzxyjy,
+        sum(if(e.sickness_classify = '3',e.total,0))AS fjh,
+        SUM(e.total) AS xj,
+        ROUND(sum(if(e.sickness_classify = '1',e.total,0))/SUM(e.total)*100,2) AS sg1,
+        ROUND(sum(if(e.sickness_classify = '10',e.total,0))/SUM(e.total)*100,2) AS jxwcy1,
+        ROUND(sum(if(e.sickness_classify = '14',e.total,0))/SUM(e.total)*100,2) AS szkb1,
+        ROUND(sum(if(e.sickness_classify = '2',e.total,0))/SUM(e.total)*100,2) AS sd1,
+        ROUND(sum(if(e.sickness_classify = '16',e.total,0))/SUM(e.total)*100,2) AS bzxyjy1,
+        ROUND(sum(if(e.sickness_classify = '3',e.total,0))/SUM(e.total)*100,2) AS fjh1,
+        ROUND(SUM(e.total)/(SELECT SUM(total) FROM epidemic_situation) * 100,2) gcb
+        FROM epidemic_situation AS e
+		INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id 
+		where 1=1 
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="startTime !=null and startTime !='' ">
+            AND suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY region
+    </select> 
+    
+    <!-- 区域涉及人数构成比详情 -->
+    <select id="schoolPersonnelRegion1details" resultType="map">
+    SELECT 
+		distinct(e.incident_unit),
+		n.school_full_name AS schoolName,
+        sum(if(e.sickness_classify = '1',e.total,0))AS sg,
+        sum(if(e.sickness_classify = '10',e.total,0))AS jxwcy,
+        sum(if(e.sickness_classify = '14',e.total,0))AS szkb,
+        sum(if(e.sickness_classify = '2',e.total,0))AS sd,
+        sum(if(e.sickness_classify = '16',e.total,0))AS bzxyjy,
+        sum(if(e.sickness_classify = '3',e.total,0))AS fjh,
+        SUM(e.total) AS xj,
+        ROUND(sum(if(e.sickness_classify = '1',e.total,0))/SUM(e.total)*100,2) AS sg1,
+        ROUND(sum(if(e.sickness_classify = '10',e.total,0))/SUM(e.total)*100,2) AS jxwcy1,
+        ROUND(sum(if(e.sickness_classify = '14',e.total,0))/SUM(e.total)*100,2) AS szkb1,
+        ROUND(sum(if(e.sickness_classify = '2',e.total,0))/SUM(e.total)*100,2) AS sd1,
+        ROUND(sum(if(e.sickness_classify = '16',e.total,0))/SUM(e.total)*100,2) AS bzxyjy1,
+        ROUND(sum(if(e.sickness_classify = '3',e.total,0))/SUM(e.total)*100,2) AS fjh1,
+        ROUND(SUM(e.total)/(SELECT SUM(total) FROM epidemic_situation) * 100,2) gcb
+        FROM epidemic_situation AS e
+		INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id
+		INNER JOIN org_school_name AS n ON s.parent_school_id=n.id
+		where 1=1 AND e.region =#{regionId} 
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>		
+		GROUP BY e.incident_unit
+    </select>
+
+    <!-- 区域均起人数统计 -->
+    <select id="schoolPersonnelstartNum" resultType="map">
+       SELECT 
+         e.region,
+        count(e.sickness_classify = '1'or null)AS sg,
+        count(e.sickness_classify = '10'or null)AS jxwcy,
+        count(e.sickness_classify = '14'or null)AS szkb,
+        count(e.sickness_classify = '2'or null)AS sd,
+        count(e.sickness_classify = '16'or null)AS bzxyjy,
+        count(e.sickness_classify = '3'or null)AS fjh,
+		sum(if(e.sickness_classify = '1',e.total,0))AS sg1,
+        sum(if(e.sickness_classify = '10',e.total,0))AS jxwcy1,
+        sum(if(e.sickness_classify = '14',e.total,0))AS szkb1,
+        sum(if(e.sickness_classify = '2',e.total,0))AS sd1,
+        sum(if(e.sickness_classify = '16',e.total,0))AS bzxyjy1,
+        sum(if(e.sickness_classify = '3',e.total,0))AS fjh1,
+        count(1) AS xj,
+        SUM(e.total) AS xj1       
+        FROM epidemic_situation AS e
+		INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id 
+		where 1=1 
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>  
+
+        <if test="startTime !=null and startTime !='' ">
+            AND suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND suspend_data &lt;= #{endTime}
+        </if>
+
+        GROUP BY region
+    </select>
+
+    <!-- 区域罹患率统计 -->
+    <select id="schoolPersonnelincidence" resultType="map">
+		SELECT 
+        e.region,
+        SUM(e.suspend_people_number) AS total,
+        SUM(e.total) AS subtotal,
+        ROUND(sum(if(e.sickness_classify = '1',e.total,0))/SUM(e.suspend_people_number)*100,2) AS sg,
+        ROUND(sum(if(e.sickness_classify = '10',e.total,0))/SUM(e.suspend_people_number)*100,2) AS jxwcy,
+        ROUND(sum(if(e.sickness_classify = '14',e.total,0))/SUM(e.suspend_people_number)*100,2) AS szkb,
+        ROUND(sum(if(e.sickness_classify = '2',e.total,0))/SUM(e.suspend_people_number)*100,2) AS sd,
+        ROUND(sum(if(e.sickness_classify = '16',e.total,0))/SUM(e.suspend_people_number)*100,2) AS bzxyjy,
+        ROUND(sum(if(e.sickness_classify = '3',e.total,0))/SUM(e.suspend_people_number)*100,2) AS fjh,
+        ROUND(SUM(e.total)/SUM(e.suspend_people_number)*100,2) AS xj
+        FROM epidemic_situation AS e
+		INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id 
+		where 1=1 
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY e.region
+
+    </select>
+
+    <!-- 警戒值分析-疾病分类 -->
+    <select id="schoolPersonneldisease" resultType="map">
+        SELECT
+        e.sickness_classify AS sicknessClassify,
+        count(1) as yqzyql,
+        count( e.is_early_warning_value ='1' AND o.school_section in('1','7') or null)AS yqtyjg,
+        count( e.is_early_warning_value ='1' AND o.school_section = '2' or null)AS yqxx,
+        count( e.is_early_warning_value ='1' AND o.school_section in('3','4','5','6','8') or null)AS yqczjys,
+        count( e.is_early_warning_value ='1' or null) as yqxj,
+        ROUND(count( e.is_early_warning_value ='1' or null)/count(1)*100,2) as yqgcb,
+        SUM(e.total) zrs,
+        sum(if(o.school_section in('1','7') AND e.is_early_warning_value ='1',e.total,0))AS rstyjg,
+        sum(if(o.school_section = '2' AND e.is_early_warning_value ='1',e.total,0))AS rsxx,
+        sum(if(o.school_section in('3','4','5','6','8') AND e.is_early_warning_value ='1',e.total,0))AS rsczjys,
+        SUM(if(e.is_early_warning_value ='1',e.total,0)) rsxj,
+        ROUND(SUM(if(e.is_early_warning_value ='1',e.total,0))/SUM(e.total)*100,2) rsyqb,
+        ROUND(coalesce(SUM(e.total)/SUM(if(e.is_early_warning_value ='1',e.total,0)),0),2) pjrs
+        FROM
+        epidemic_situation AS e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+        INNER JOIN org_school AS s ON o.school_id = s.id where 1=1 
+        
+         <if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        
+        GROUP BY e.sickness_classify
+    </select>
+
+	<!-- 警戒值分析-区镇分布 -->
+    <select id="schoolPersonnelSurpassRegion" resultType="map">
+       SELECT
+		s.business_district AS businessDistrict,
+        e.region,
+		count(*) AS yqs,
+		SUM(if(e.is_early_warning_value ='1',e.suspend_people_number,0)) AS rs,
+        count( e.is_early_warning_value ='1' or null) AS sjs,
+        SUM(if(e.is_early_warning_value ='1',e.total,0)) sjrs,
+        (SELECT count(is_early_warning_value ='1' or null) FROM epidemic_situation) AS sjstotal,
+		(SELECT sum(if(is_early_warning_value ='1',total,0)) FROM epidemic_situation) AS sjrstotal
+        FROM
+        epidemic_situation e
+        INNER JOIN org_school_people AS o ON e.grade = o.id 
+		INNER JOIN org_school as s ON o.school_id = s.id 
+		where 1=1 
+		
+		<if test="agencyId !=null and agencyId.length > 0">
+            AND s.business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+		
+        <if test="startTime !=null and startTime !='' ">
+            AND e.suspend_data  &gt;= #{startTime}
+        </if>
+        
+        <if test="endTime !=null and endTime !='' ">
+            AND e.suspend_data &lt;= #{endTime}
+        </if>
+        GROUP BY  e.region
+    </select>
+</mapper>

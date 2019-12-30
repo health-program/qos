@@ -682,7 +682,17 @@
              calendar: true, //开启公历节日
              theme: 'molv', //墨绿主题
              showBottom: true, //是否出现底部栏
-             trigger: 'click' //绑定多个
+             trigger: 'click', //绑定多个
+             ready: function(date){
+                 $('.layui-laydate li').click(function () {
+                    $('.laydate-btns-confirm').trigger('click');
+                 });
+             },
+             change: function(value, date, endDate){
+                 $('.layui-laydate li').click(function () {
+                     $('.laydate-btns-confirm').trigger('click');
+                 });
+             }
          });
      });
 

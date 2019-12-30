@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="region-type"/>
+ <section class="content-header">
+    <h1>区域起均人数统计</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top">
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+            	<div class="form-group">
+            			<div class="col-md-2">
+                        	<input name="startTime" id="startTime" placeholder="开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+	                    <div class="col-md-2">
+                        	<input name="endTime" id="endTime" placeholder="结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+						<div class="col-md-8">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+   </div>
+   <div class="row">
+   	<div class="col-sm-7">
+   	<div class="box box-solid">
+   		<div class="box-body">
+			<table id="dataGrid" style="height: 250px"></table>
+		</div>
+   		</div>
+   	</div>
+   	<div class="col-sm-5">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">起均人数展示</h3>
+		</div>
+		<div id="echart1" class="box-body no-padding" style="height: 450px">
+		</div>
+	</div>
+   	</div>
+   </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+
+	var value = $.parseJSON($("#tonto_constant_value").text());
+	var job = value["region-type"];
+
+	 var table, dataVal, requestParams,selectUnit;
+	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		myChart1.resize();
+	});
+	
+	$(function() {
+		initTable();
+	});
+	
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+					[
+					 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>传染病疫情地区起均人数统计表</span>",colspan:10}
+					],
+                [
+                 	{title: "区域", field: "region"},
+                    { title: "上呼吸道感染", field: "sg3",
+                   	  sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                   	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    return fa - fb;
+                   	}},
+                    { title: "急性胃肠炎", field: "jxwcy3" ,
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "手足口病", field: "szkb3",
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "疱疹性咽颊炎", field: "bzxyjy3", 
+                      		sortable: true,
+                         	  sorter: function(fa, fb, ra, rb) {
+                           	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    return fa - fb;
+                           	}},
+                    { title: "水痘", field: "sd3",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "肺结核", field: "fjh3",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "小计", field: "xj3",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}}
+                    
+                ]
+            ],
+            url: '/qos/org/school/analysis/region/start/num',
+            pagination: false,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            clickToSelect: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+               // unitSelected(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	let data = [];
+            	let constantEnum = $.getConstantEnum("region-type");
+                constantEnum && constantEnum.forEach( region => {
+                    let isNotPresence = false;
+                    let val ={};
+                    let sgnum =0,jxwcynum =0,szkbnum =0,sdnum =0,bzxyjynum =0,fjhnum =0,xjnum =0;
+                   let row = res.find(d => d.region === region.key);
+                   if (row){
+                       sgnum = rate(row.sg1,row.sg);
+                       jxwcynum = rate(row.jxwcy1,row.jxwcy);
+                       szkbnum = rate(row.szkb1,row.szkb);
+                       bzxyjynum = rate(row.bzxyjy1,row.bzxyjy);
+                       fjhnum = rate(row.fjh1,row.fjh);
+                       sdnum = rate(row.sd1,row.sd);
+                       xjnum = rate(row.xj1,row.xj);
+                       val['region'] = region.value;;
+                       val['sg3'] = sgnum;
+                       val['jxwcy3'] = jxwcynum;
+                       val['szkb3'] = szkbnum;
+                       val['sd3'] = sdnum;
+                       val['bzxyjy3'] = bzxyjynum;
+                       val['fjh3'] = fjhnum;
+                       val['xj3'] = xjnum;
+                       data.push(val);
+                   }else {
+                       isNotPresence = true;
+                   }
+                 /*   if (isNotPresence) {
+                	   val['region'] = region.value;
+                	   val['sg3'] = 0;
+                	   val['jxwcy3'] = 0;
+                	   val['szkb3'] = 0;
+                	   val['sd3'] = 0;
+                	   val['bzxyjy3'] = 0;
+                	   val['fjh3'] = 0;
+                	   val['xj3'] = 0;
+                	   data.push(val);
+                   } */
+               });
+                
+            	var sg =0,jxwcy =0,szkb =0,sd =0,bzxyjy =0,fjh =0,xj =0;
+            	var sg1 =0,jxwcy1 =0,szkb1 =0,sd1 =0,bzxyjy1 =0,fjh1 =0,xj1 =0;
+            	res && res.forEach( r => {
+            		sg+=r.sg;jxwcy+=r.jxwcy;szkb+=r.szkb;sd+=r.sd;bzxyjy+=r.bzxyjy;fjh+=r.fjh;xj+=r.xj;
+            		sg1+=r.sg1;jxwcy1+=r.jxwcy1;szkb1+=r.szkb1;sd1+=r.sd1;bzxyjy1+=r.bzxyjy1;fjh1+=r.fjh1;xj1+=r.xj1;
+            	});
+            	
+            	let data1 = {};
+                data1['region'] = '合计';
+                data1['sg3'] = rate(sg1,sg);
+                data1['jxwcy3'] = rate(jxwcy1,jxwcy);
+                data1['szkb3'] = rate(szkb1,szkb);
+                data1['sd3'] = rate(sd1,sd);
+                data1['bzxyjy3'] = rate(bzxyjy1,bzxyjy);
+                data1['fjh3'] = rate(fjh1,fjh);
+                data1['xj3'] = rate(xj1,xj);
+                data.push(data1) 
+                dataVal = data || [];
+                chart1();
+                return data;
+            }
+        });
+    }
+	
+    
+    function rate(a,b){
+    	var data = 0;
+    	if(a && b){
+    		data = (a/b).toFixed(1);
+    	}
+    	return data;
+    }
+	
+    function unitSelected(row) {
+        selectUnit = row.sicknessClassify;
+        chart1();
+    }
+
+	var myChart1 = echarts.init(document.getElementById('echart1'));
+	function chart1(){
+		myChart1.showLoading({
+	           text: '数据正在努力加载...',
+	           textStyle: {fontSize: 30, color: '#444'},
+	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+	       });
+		
+		 if (dataVal && dataVal.length === 0) {
+	            showChartInfo(chart, '暂无数据');
+	            return false;
+	        }
+		 let gcb =[],orgData=[];
+		for (var j = 0; j < job.length; j++) {
+ 		orgData.push(job[j].value)
+			for (var i = 0; i < dataVal.length; i++) {
+				if(dataVal[i].sickness != '合计'){
+					if(job[j].value == dataVal[i].region){
+						 gcb.push({name:job[j].value,value:dataVal[i].xj3});
+					}
+				}
+			}
+		}
+		
+		 myChart1.hideLoading();
+		 option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        formatter: {name},
+				        data : []
+				    },
+				    toolbox : {
+						show : true,
+						feature : {
+							restore : {
+								show : true
+							},
+							saveAsImage : {
+								show : true
+							}
+						}
+					},
+				    series : [
+				        {
+				        	name:'',
+				            type: 'pie',
+				            radius : '70%',
+				            center: ['50%', '50%'],
+				            label:{
+				            	normal:{
+				            		show:true,
+				            		formatter:"{a} \n{b} : {c} ({d}%)"
+				            	}
+				            },
+				            data:gcb,
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+			myChart1.setOption(option);
+	}
+	//无数据展示
+	var showChartInfo = function(traceability, infoStr) {
+		var msgOption = {
+			title : {
+				show : true,
+				textStyle : {
+					color : 'grey',
+					fontSize : 20
+				},
+				text : infoStr,
+				left : 'center',
+				top : 'center'
+			},
+			xAxis : {
+				show : false
+			},
+			yAxis : {
+				show : false
+			},
+			series : []
+		};
+		traceability.clear();
+		traceability.hideLoading();
+		traceability.setOption(msgOption)
+	};
+
+	//]]>
+</script>
+</body>
+
+</html>

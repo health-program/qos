@@ -35,6 +35,7 @@ import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.StringUtil;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.school.OrgSchoolMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.school.OrgSchool;
@@ -67,6 +68,9 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     
     public PageResult<OrgSchoolVO> searchFindPage(OrgSchoolQuery query) {
 	Page<OrgSchoolVO> page = PageHelper.offsetPage(query.getOffset(),query.getLimit());
+	QosUserSession userSession = QosUserSession.getCurrentUserSession();
+	String[] agencyId = userSession.getAgencyIds();
+	query.setAgencyId(agencyId);
 	orgSchoolMapper.findSchool(query);
 	return new PageResult<>(page);
     }
@@ -244,7 +248,7 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     
 	while (reader.hasNext()) {
 	    i++;
-	    if (i > 500) {
+	    if (i > 1000) {
 		break;
 	    }
 	    ExcelOrgSchool excelOrgSchool = null;

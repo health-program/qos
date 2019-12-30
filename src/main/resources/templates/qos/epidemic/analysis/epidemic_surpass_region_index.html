@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/qos/header" />
+
+<body>
+<tt:constant enumcode="region-type"/>
+ <section class="content-header">
+    <h1>区镇分布</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top">
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+            	<div class="form-group">
+            			<div class="col-md-2">
+                        	<input name="startTime" id="startTime" placeholder="开始时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+	                    <div class="col-md-2">
+                        	<input name="endTime" id="endTime" placeholder="结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+	                    </div>
+						<div class="col-md-8">
+                  <div class="pull-right">
+                      <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                      <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                  </div>
+              </div>
+             </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+            <input type="hidden" id="pageLimit" th:value="${query?.limit}" />
+            <input type="hidden" id="pageOffset" th:value="${query?.offset}" />
+        </div>
+   </div>
+   <div class="row">
+   	<div class="col-sm-12">
+   	<div class="box box-solid">
+   		<div class="box-body">
+			<table id="dataGrid" style="height: 250px"></table>
+		</div>
+   		</div>
+   	</div>
+   </div>
+    <div class="row">
+   	<div class="col-sm-3">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">事件数构成比(%)</h3>
+		</div>
+		<div id="echart" class="box-body no-padding" style="height: 300px">
+		</div>
+	</div>
+   	</div>
+   	<div class="col-sm-3">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">事件数占比(%)</h3>
+		</div>
+		<div id="echart1" class="box-body no-padding" style="height: 300px">
+		</div>
+	</div>
+   	</div>
+   	<div class="col-sm-3">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">涉及人数构成比(%)</h3>
+		</div>
+		<div id="echart2" class="box-body no-padding" style="height: 300px">
+		</div>
+	</div>
+   	</div>
+   	<div class="col-sm-3">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">涉及人数占比(%)</h3>
+		</div>
+		<div id="echart3" class="box-body no-padding" style="height: 300px">
+		</div>
+	</div>
+   	</div>
+   </div> 
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+
+	var value = $.parseJSON($("#tonto_constant_value").text());
+	var job = value["region-type"];
+
+	 var table, dataVal, requestParams,selectUnit;
+	//<![CDATA[
+	//图表自适应大小      
+	window.addEventListener("resize", function() {
+		myChart.resize();
+		myChart1.resize();
+		myChart2.resize();
+		myChart3.resize();
+	});
+	
+	$(function() {
+		initTable();
+	});
+	
+    function initTable() {
+        table = $.createTable("#dataGrid", {
+            idField: "id",
+            columns: [
+					[
+					 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>各区镇警戒值疫情情况</span>",colspan:9}
+					],
+                [
+                 	{title: "区域", field: "region",formatter: function (data) {
+                 	   if(data != '合计'){
+                		   return $.getConstantEnumValue("region-type",data);
+                	   }else{
+                		   return '合计';
+                	   }
+                   }},
+                    { title: "疫情数", field: "yqs",
+                   	  sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                   	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                   	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                   	    return fa - fb;
+                   	}},
+                    { title: "人数", field: "rs" ,
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "事件数", field: "sjs",
+                    	 sortable: true,
+                      	  sorter: function(fa, fb, ra, rb) {
+                      	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                      	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                      	    return fa - fb;
+                      	}},
+                    { title: "构成比(%)", field: "yqgcb", 
+                      		sortable: true,
+                         	  sorter: function(fa, fb, ra, rb) {
+                           	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                           	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                           	    return fa - fb;
+                           	},formatter:function (value, row, index) {
+                           		var d = 0;
+                           		if(row.region == '合计'){
+                           			d = 100;
+                           		}else{
+                           			d = rate(row.sjs,row.sjstotal);
+                           		}
+                                return d;
+                            }},
+                    { title: "占比(%)", field: "yqzb",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	},formatter:function (value, row, index) {
+                            return rate(row.sjs,row.yqs);
+                        }},
+                    { title: "涉及人数", field: "sjrs",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	}},
+                    { title: "构成比(%)", field: "rsgcb",
+                    	sortable: true,
+                   	  sorter: function(fa, fb, ra, rb) {
+                     	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                     	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                     	    return fa - fb;
+                     	},formatter:function (value, row, index) {
+                       		var d = 0;
+                       		if(row.region == '合计'){
+                       			d = 100;
+                       		}else{
+                       			d = rate(row.sjrs,row.sjrstotal);
+                       		}
+                            return d;
+                        }},
+                     	{ title: "占比(%)", field: "rszb",
+                        	sortable: true,
+                       	  sorter: function(fa, fb, ra, rb) {
+                         	    if (ra.region == '合计') return table.options.sortOrder == 'desc' ? -1 : 1;
+                         	    if (rb.region == '合计') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                         	    if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                         	    if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+
+                         	    return fa - fb;
+                         	},formatter:function (value, row, index) {
+                                return rate(row.sjrs,row.rs);
+                            }}
+                    
+                ]
+            ],
+            url: '/qos/org/school/analysis//surpass/region',
+            pagination: false,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            clickToSelect: false,
+            showExport: true,
+            exportTypes: ['excel'],
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+               // unitSelected(row);
+            },
+            queryParams: function(params) {
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+            	let constantEnum = $.getConstantEnum("region-type");
+            	let yqs = 0,sjrs = 0,rs =0,sjs = 0;
+                constantEnum && constantEnum.forEach( region => {
+                    let isNotPresence = false;
+                   let row = res.find(d => d.region === region.key);
+                   if (row){
+                       row.region =region.key;
+                       yqs += row.yqs;
+                       sjrs += row.sjrs;
+                       rs += row.rs;
+                       sjs += row.sjs;
+                   }else {
+                       isNotPresence = true;
+                   }
+                   /* if (isNotPresence) {
+                       let data = {};
+                       data['region'] = region.key;
+                       data['yqs'] = 0;
+                       data['sjrs'] = 0;
+                       res.push(data)
+                   } */
+               });
+            	let data1 = {};
+                data1['region'] = '合计';
+                data1['yqs'] = yqs;
+                data1['sjrs'] = sjrs;
+                data1['rs'] = rs;
+                data1['sjs'] = sjs;
+                data1['yqgcb'] = 100;
+                
+                
+                data1['rsgcb'] = 100;
+                res.push(data1)
+               data = res || [];
+                chart();
+                chart1();
+                chart2();
+                chart3();
+                return data;
+            }
+        });
+    }
+	
+    function rate(a,b){
+    	var data = 0;
+    	if(a && b){
+    		data = ((a/b)*100).toFixed(2);
+    	}
+    	return data;
+    }
+    
+	
+    function unitSelected(row) {
+        selectUnit = row.sicknessClassify;
+        chart();
+    }
+
+	var myChart = echarts.init(document.getElementById('echart'));
+	function chart(){
+		myChart.showLoading({
+	           text: '数据正在努力加载...',
+	           textStyle: {fontSize: 30, color: '#444'},
+	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+	       });
+		
+		 if (data && data.length === 0) {
+	            showChartInfo(chart, '暂无数据');
+	            return false;
+	        }
+		 let gcb =[],orgData=[];
+		for (var j = 0; j < job.length; j++) {
+ 		orgData.push(job[j].value)
+			for (var i = 0; i < data.length; i++) {
+				if(data[i].sickness != '合计'){
+					if(job[j].key == data[i].region){
+						var sjgcb = rate(data[i].sjs,data[i].sjstotal)
+						 gcb.push({name:job[j].value,value:sjgcb});
+					}
+				}
+			}
+		}
+		
+		 myChart.hideLoading();
+		 option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        formatter: {name},
+				        data :[]
+				    },
+				    toolbox : {
+						show : true,
+						feature : {
+							restore : {show : true},
+							saveAsImage : {show : true}
+						}
+					},
+				    series : [
+				        {
+				        	name:'',
+				            type: 'pie',
+				            radius : '60%',
+				            center: ['50%', '50%'],
+				            label:{
+				            	normal:{
+				            		show:true,
+				            		formatter:"{a} \n{b}:{d}%"
+				            	}
+				            },
+				            data:gcb,
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+			myChart.setOption(option);
+	}
+	
+	var myChart1 = echarts.init(document.getElementById('echart1'));
+	function chart1(){
+		myChart1.showLoading({
+	           text: '数据正在努力加载...',
+	           textStyle: {fontSize: 30, color: '#444'},
+	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+	       });
+		
+		 if (data && data.length === 0) {
+	            showChartInfo(chart, '暂无数据');
+	            return false;
+	        }
+		 let gcb =[],orgData=[];
+		for (var j = 0; j < job.length; j++) {
+ 		orgData.push(job[j].value)
+			for (var i = 0; i < data.length; i++) {
+				if(data[i].sickness != '合计'){
+					if(job[j].key == data[i].region){
+						var sjzb = rate(data[i].sjs,data[i].yqs)
+						 gcb.push({name:job[j].value,value:sjzb});
+					}
+				}
+			}
+		}
+		
+		 myChart1.hideLoading();
+		 option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        formatter: {name},
+				        data :[]
+				    },
+				    toolbox : {
+						show : true,
+						feature : {
+							restore : {show : true},
+							saveAsImage : {show : true}
+						}
+					},
+				    series : [
+				        {
+				        	name:'',
+				            type: 'pie',
+				            radius : '60%',
+				            center: ['50%', '50%'],
+				            label:{
+				            	normal:{
+				            		show:true,
+				            		formatter:"{a} \n{b}:{d}%"
+				            	}
+				            },
+				            data:gcb,
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+			myChart1.setOption(option);
+	}
+	
+	var myChart2 = echarts.init(document.getElementById('echart2'));
+	function chart2(){
+		myChart2.showLoading({
+	           text: '数据正在努力加载...',
+	           textStyle: {fontSize: 30, color: '#444'},
+	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+	       });
+		
+		 if (data && data.length === 0) {
+	            showChartInfo(chart, '暂无数据');
+	            return false;
+	        }
+		 let gcb =[],orgData=[];
+		for (var j = 0; j < job.length; j++) {
+ 		orgData.push(job[j].value)
+			for (var i = 0; i < data.length; i++) {
+				if(data[i].sickness != '合计'){
+					if(job[j].key == data[i].region){
+						var sjrsgcb = rate(data[i].sjrs,data[i].sjrstotal)
+						 gcb.push({name:job[j].value,value:sjrsgcb});
+					}
+				}
+			}
+		}
+		
+		 myChart2.hideLoading();
+		 option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        formatter: {name},
+				        data :[]
+				    },
+				    toolbox : {
+						show : true,
+						feature : {
+							restore : {show : true},
+							saveAsImage : {show : true}
+						}
+					},
+				    series : [
+				        {
+				        	name:'',
+				            type: 'pie',
+				            radius : '60%',
+				            center: ['50%', '50%'],
+				            label:{
+				            	normal:{
+				            		show:true,
+				            		formatter:"{a} \n{b}:{d}%"
+				            	}
+				            },
+				            data:gcb,
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+			myChart2.setOption(option);
+	}
+	
+	var myChart3 = echarts.init(document.getElementById('echart3'));
+	function chart3(){
+		myChart3.showLoading({
+	           text: '数据正在努力加载...',
+	           textStyle: {fontSize: 30, color: '#444'},
+	           effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+	       });
+		
+		 if (data && data.length === 0) {
+	            showChartInfo(chart, '暂无数据');
+	            return false;
+	        }
+		 let gcb =[],orgData=[];
+		for (var j = 0; j < job.length; j++) {
+ 		orgData.push(job[j].value)
+			for (var i = 0; i < data.length; i++) {
+				if(data[i].sickness != '合计'){
+					if(job[j].key == data[i].region){
+						var sjrszb = rate(data[i].sjrs,data[i].rs)
+						 gcb.push({name:job[j].value,value:sjrszb});
+					}
+				}
+			}
+		}
+		
+		 myChart3.hideLoading();
+		 option = {
+				    tooltip : {
+				        trigger: 'item',
+				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				    },
+				    legend: {
+				        orient: 'vertical',
+				        left: 'left',
+				        formatter: {name},
+				        data :[]
+				    },
+				    toolbox : {
+						show : true,
+						feature : {
+							restore : {show : true},
+							saveAsImage : {show : true}
+						}
+					},
+				    series : [
+				        {
+				        	name:'',
+				            type: 'pie',
+				            radius : '60%',
+				            center: ['50%', '50%'],
+				            label:{
+				            	normal:{
+				            		show:true,
+				            		formatter:"{a} \n{b}:{d}%"
+				            	}
+				            },
+				            data:gcb,
+				            itemStyle: {
+				                emphasis: {
+				                    shadowBlur: 10,
+				                    shadowOffsetX: 0,
+				                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+				                }
+				            }
+				        }
+				    ]
+				};
+			myChart3.setOption(option);
+	}
+	
+	//无数据展示
+	var showChartInfo = function(traceability, infoStr) {
+		var msgOption = {
+			title : {
+				show : true,
+				textStyle : {
+					color : 'grey',
+					fontSize : 20
+				},
+				text : infoStr,
+				left : 'center',
+				top : 'center'
+			},
+			xAxis : {
+				show : false
+			},
+			yAxis : {
+				show : false
+			},
+			series : []
+		};
+		traceability.clear();
+		traceability.hideLoading();
+		traceability.setOption(msgOption)
+	};
+
+	//]]>
+</script>
+</body>
+
+</html>

@@ -30,6 +30,7 @@ import com.paladin.framework.excel.read.ExcelReadException;
 import com.paladin.framework.excel.read.ExcelReader;
 import com.paladin.framework.excel.read.ReadColumn;
 import com.paladin.framework.utils.uuid.UUIDUtil;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.mapper.epidemic.EpidemicSituationMapper;
 import com.paladin.qos.mapper.school.OrgSchoolNameMapper;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
@@ -66,10 +67,11 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
     @Autowired
     private OrgSchoolNameService orgSchoolNameService;
 
-    public PageResult<EpidemicSituationVO> searchFindPage(
-	    EpidemicSituationQueryDTO query) {
-	Page<EpidemicSituationVO> page = PageHelper.offsetPage(
-		query.getOffset(), query.getLimit());
+    public PageResult<EpidemicSituationVO> searchFindPage(EpidemicSituationQueryDTO query) {
+	Page<EpidemicSituationVO> page = PageHelper.offsetPage(query.getOffset(), query.getLimit());
+	QosUserSession userSession = QosUserSession.getCurrentUserSession();
+	String[] agencyId = userSession.getAgencyIds();
+	query.setAgencyId(agencyId);
 	epidemicSituationMapper.searchFindPage(query);
 	return new PageResult<>(page);
     }
@@ -160,6 +162,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 		excelEpidemicSituation = reader.readRow();
 	    } catch (ExcelReadException e) {
 		errors.add(new ExcelImportError(i, e));
+		continue;
+	    }
+	    
+	    if(excelEpidemicSituation == null){
 		continue;
 	    }
 	    EpidemicSituation situation = new EpidemicSituation();
