@@ -15,6 +15,8 @@ public class OrgSchoolQuery extends OffsetPage {
     private String schoolYear;
     
     private String businessDistrict;
+    
+    private String[] agencyId;
 
     public String getSchoolName() {
         return schoolName;
@@ -62,6 +64,14 @@ public class OrgSchoolQuery extends OffsetPage {
 
     public void setBusinessDistrict(String businessDistrict) {
         this.businessDistrict = businessDistrict;
+    }
+
+    public String[] getAgencyId() {
+        return agencyId;
+    }
+
+    public void setAgencyId(String[] agencyId) {
+        this.agencyId = agencyId;
     }
     
 }

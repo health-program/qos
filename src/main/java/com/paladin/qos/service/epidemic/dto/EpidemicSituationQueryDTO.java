@@ -2,60 +2,70 @@ package com.paladin.qos.service.epidemic.dto;
 
 import com.paladin.framework.common.OffsetPage;
 
-/**   
+/**
  * @author 黄伟华
- * @version 2019年6月11日 下午4:14:28 
+ * @version 2019年6月11日 下午4:14:28
  */
-public class EpidemicSituationQueryDTO extends OffsetPage{
+public class EpidemicSituationQueryDTO extends OffsetPage {
 
-    private String incidentUnit;//事发单位名称
-    
-    private String reportUnit;//报告单位
-    
-    private String schoolYear;//学年
-    
-    private String region;//区域
-    
-    private String sicknessClassify;//病种分类
+    private String incidentUnit;// 事发单位名称
+
+    private String reportUnit;// 报告单位
+
+    private String schoolYear;// 学年
+
+    private String region;// 区域
+
+    private String sicknessClassify;// 病种分类
+
+    private String[] agencyId;
 
     public String getIncidentUnit() {
-        return incidentUnit;
+	return incidentUnit;
     }
 
     public void setIncidentUnit(String incidentUnit) {
-        this.incidentUnit = incidentUnit;
+	this.incidentUnit = incidentUnit;
     }
 
     public String getReportUnit() {
-        return reportUnit;
+	return reportUnit;
     }
 
     public void setReportUnit(String reportUnit) {
-        this.reportUnit = reportUnit;
+	this.reportUnit = reportUnit;
     }
 
     public String getRegion() {
-        return region;
+	return region;
     }
 
     public void setRegion(String region) {
-        this.region = region;
+	this.region = region;
     }
 
     public String getSicknessClassify() {
-        return sicknessClassify;
+	return sicknessClassify;
     }
 
     public void setSicknessClassify(String sicknessClassify) {
-        this.sicknessClassify = sicknessClassify;
+	this.sicknessClassify = sicknessClassify;
     }
 
-	public String getSchoolYear() {
-		return schoolYear;
-	}
+    public String getSchoolYear() {
+	return schoolYear;
+    }
 
-	public void setSchoolYear(String schoolYear) {
-		this.schoolYear = schoolYear;
-	}
-    
+    public void setSchoolYear(String schoolYear) {
+	this.schoolYear = schoolYear;
+    }
+
+    public String[] getAgencyId() {
+	return agencyId;
+    }
+
+    public void setAgencyId(String[] agencyId) {
+	this.agencyId = agencyId;
+    }
+
 }
