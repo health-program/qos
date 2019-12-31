@@ -98,7 +98,7 @@
 <div th:include="/qos/footer" />
 <script type="text/javascript">
     /*<![CDATA[*/
-    var data, table;
+    var data, table,hideRowIndexs,parentRowClickFlag;
     $(function () {
         initYqDataGrid();
     });
@@ -119,7 +119,19 @@
             idField: "id",
             columns: [
                 [
-                    {title: "区域", field: "region",enumcode: "region-type",footerFormatter: function (data) {
+                    {title: "区域", field: "region",enumcode: "region-type",  formatter: function (value, row, index) {
+                            row.index = index;
+                            if (row.teamStyle === 1){
+                                if (row.gardensNumber === 0 ) {
+                                    return  $.getConstantEnumValue("region-type",value);
+                                }else {
+                                    return "<div><i class='fa fa-sort-up' onclick='treeGridClick("+ row.region +")' style='cursor:pointer' id='"+ row.region +"'></i>&nbsp;"+ $.getConstantEnumValue("region-type",value) +"</div>";
+                                }
+                            } else {
+                                return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + row.schoolFullName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                            }
+
+                        },footerFormatter: function (data) {
                             return '总计';
                         }},
                     {title: "园数", field: "gardensNumber",sortable: true,
@@ -162,7 +174,8 @@
                             fb = rb.epidemicNumber / rb.epidemicTotalNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.epidemicNumber ? row.epidemicNumber : 0;
                                 let number1 = row.epidemicTotalNumber ? row.epidemicTotalNumber : 0;
                                 let c = 0;
@@ -189,12 +202,13 @@
                             fb = rb.involvedPeoplesNumber / rb.peoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = data.reduce(function(sum, row) {
+                            var result1 = arr.reduce(function(sum, row) {
                                 let number1 = row.peoplesNumber ? row.peoplesNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -223,12 +237,13 @@
                             fb = rb.epidemicNumber / rb.gardensNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.epidemicNumber ? row.epidemicNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = data.reduce(function(sum, row) {
+                            var result1 = arr.reduce(function(sum, row) {
                                 let number1 = row.gardensNumber ? row.gardensNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -257,12 +272,13 @@
                             fb = rb.peoplesNumber / rb.gardensNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.peoplesNumber ? row.peoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = data.reduce(function(sum, row) {
+                            var result1 = arr.reduce(function(sum, row) {
                                 let number1 = row.gardensNumber ? row.gardensNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -291,12 +307,13 @@
                             fb = rb.involvedPeoplesNumber / rb.epidemicNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = data.reduce(function(sum, row) {
+                            var result1 = arr.reduce(function(sum, row) {
                                 let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -325,12 +342,13 @@
                             fb = rb.involvedPeoplesNumber / rb.totalPeoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            var result = data.reduce(function(sum, row) {
+                            let arr = data.filter( row => row.pregion === "");
+                            var result = arr.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = data.reduce(function(sum, row) {
+                            var result1 = arr.reduce(function(sum, row) {
                                 let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -355,7 +373,6 @@
                 $(tr).addClass('selected');
                 //unitSelected(row);
             },
-            //clickToSelect: true,
             sidePagination: 'client',
             searchbar: '#searchbar',
             responseHandler: function(res) {
@@ -381,8 +398,13 @@
                                 originObj.epidemicNumber += row.epidemicNumber;
                                 originObj.involvedPeoplesNumber += row.involvedPeoplesNumber;
                                 originObj.totalPeoplesNumber += row.totalPeoplesNumber;
+                                newArr.push({region : "",pregion:region.key,gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
+                                    ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,schoolFullName:row.schoolFullName})
                             }else {
-                                newArr.push(row)
+                                newArr.push({region : region.key,pregion:"",gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
+                                ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,teamStyle :1});
+                                newArr.push({region : "",pregion:region.key,gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
+                                    ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,schoolFullName:row.schoolFullName})
                             }
                             return newArr;
                         },newArr);
@@ -398,19 +420,79 @@
                            data['epidemicNumber'] = 0;
                            data['involvedPeoplesNumber'] = 0;
                            data['totalPeoplesNumber'] = 0;
+                           data['pregion'] = "";
+                           data['teamStyle'] = 1;
 
-                       newArr.push(data)
+                       newArr.push(data);
+
                    }
                });
-                newArr.forEach(row => row['epidemicTotalNumber'] = total);
-               data = newArr || [];
+                hideRowIndexs = [];// 需隐藏的行（即二级数据所在行）
+                parentRowClickFlag = [];// 父级行是否展开过的标识数组
+                $.each(newArr, function (i, item) {
+                    item['epidemicTotalNumber'] = total;
+                    if (item.pregion !== "") {
+                        hideRowIndexs.push(i);
+                    } else {
+                        parentRowClickFlag.push({"region": item.region, "isShow": false});
+                    }
+
+                });
+               data =  newArr  || [];
+                return newArr;
+            },
+            onLoadSuccess:function (data) {
+                // 渲染完成后隐藏子级行
+                if (hideRowIndexs.length > 0){
+                    $.each(hideRowIndexs,function (i,index) {
+                        // 隐藏行
+                        table.hideRow({index:index})
+                    })
+                }
                 generatorGcChart(yqgcChart);
                 generatorCrbChart(crbChart);
-                return data;
             }
         });
     }
 
+    /**
+     * 展开折叠点击方法
+     * @param teamId:该行数据的id
+     */
+    treeGridClick = function(region){
+        // 获取该行是否点击过状态
+        let currentRow = {};
+        $.each(parentRowClickFlag,function (i,row) {
+            if (region == row.region){
+                currentRow = row;
+                return false;
+            }
+        })
+        // 控制行的显示隐藏来模拟展开折叠
+        if (!currentRow['isShow']){// 开
+            $.each(data,function (i,da) {
+                if (region == da.pregion){
+                    table.showRow({index:da.index});
+                }
+            });
+            currentRow['isShow'] = true;
+        } else {// 合
+            $.each(data,function (i,da) {
+                if (region == da.pregion){
+                    table.hideRow({index:da.index});
+                }
+            });
+            currentRow['isShow'] = false;
+        }
+        // 统一改变展开折叠的箭头样式
+        $.each(parentRowClickFlag,function (i,row) {
+            if (row.isShow){
+                $("#" + row.region).attr("class","fa fa-sort-down");
+            } else {
+                $("#" + row.region).attr("class","fa fa-sort-up");
+            }
+        })
+    };
 
 function initPmDiv(arr) {
     let yqNumber = 0;
@@ -472,7 +554,9 @@ function arrLhlSort(arr) {
             return false;
         }
 
-        data.forEach(row => {
+        let filters = data.filter(row => row.pregion === "");
+
+        filters.forEach(row => {
             let name = $.getConstantEnumValue("region-type",row.region);
             chartData.push({name : name,value: row.epidemicNumber});
             nameData.push(name)
@@ -523,8 +607,10 @@ function arrLhlSort(arr) {
             showChartInfo(chart,'暂无数据');
             return false;
         }
-        if (data) {
-            data.forEach(data => {
+
+        let filters = data.filter(row => row.pregion === "");
+        if (filters) {
+            filters.forEach(data => {
                 let name = $.getConstantEnumValue("region-type",data.region);
                 orgData.push(name);
                 data0.push({name:name,value:data.gardensNumber});
@@ -662,8 +748,9 @@ function arrLhlSort(arr) {
 
     function sumTotalFormatterModal(data) {
         field = this.field;
-        var result = data.reduce(function(sum, row) {
-            return sum + (row[field]) *1;
+        let arr = data.filter( row => row.pregion === "");
+        let result = arr.reduce(function(sum, row) {
+            return   sum + (row[field]) *1;
         }, 0);
         return result === 0 ? '0' : result;
     }

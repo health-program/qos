@@ -7,6 +7,7 @@
         SELECT
         e.region,
         t.business_district AS agencyId,
+        n.school_full_name AS  schoolFullName,
         COUNT( DISTINCT e.incident_unit ) AS gardensNumber,
         SUM( e.suspend_people_number ) AS peoplesNumber,
         COUNT( 1 ) AS epidemicNumber,
@@ -15,6 +16,7 @@
         FROM org_school t
         INNER JOIN  org_school_people p  ON  t.id  = p.school_id
         INNER JOIN  epidemic_situation e ON  p.id  = e.grade
+        INNER JOIN  org_school_name n ON  e.incident_unit  =  n.id
         WHERE  1 = 1
             <if test="startTime != null">
                 AND e.suspend_data >= #{startTime}
@@ -31,7 +33,7 @@
                     #{code}
                 </foreach>
             </if>
-        GROUP BY  e.region,agencyId
+        GROUP BY  e.region,agencyId,e.incident_unit
 
     </select>
 </mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.paladin.qos.mapper.count.HospitalDataScoreMapper">
+
+
+    <select id="findData" resultType="map">
+        SELECT
+            concat( d.`year`, '-', d.`month`, '-', d.`day` ) AS time,
+            e.content AS tableName
+        FROM
+            data_processed_day d
+                INNER JOIN data_event e ON d.event_id = e.id
+        WHERE  d.total_num = 0
+        <if test="eventIds != null and eventIds.size() != 0 ">
+            AND  d.event_id IN
+            <foreach collection="eventIds" item="eventId" open="(" close=")" separator=",">
+                #{eventId}
+            </foreach>
+        </if>
+        <if test="startTime != null">
+            AND d.serial_number >= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND d.serial_number <![CDATA[<=]]> #{endTime}
+        </if>
+        <if test="unitId != null and unitId != ''">
+            AND d.unit_id = #{unitId}
+        </if>
+    </select>
+</mapper>

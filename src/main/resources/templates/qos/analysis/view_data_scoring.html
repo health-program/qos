@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:include="/qos/header" />
+<style type="text/css">
+    tr{
+        text-align: center;
+    }
+
+    th{
+        text-align: center;
+    }
+
+    caption {
+        text-align: center;
+        font-size: 18px;
+    }
+
+</style>
+<body>
+
+<section class="content-header" style="padding-bottom: 3px">
+    <h1>公立医院上传数据评分</h1>
+</section>
+<section class="content">
+    <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
+        <div class="box-body no-pad-top" >
+            <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
+                <div class="form-group">
+                    <div class="col-md-2">
+                        <input name="startTime"  id="startTime" placeholder="请输入查询时间" autocomplete="off"   type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-2">
+                        <input name="endTime" id="endTime" placeholder="请输入结束时间" autocomplete="off" type="text" class="form-control tonto-datepicker-date">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="pull-right">
+                            <button type="button" style="width:100px" class="btn btn-primary tonto-btn-search" onclick="table.refresh()"><i class="fa fa-search"></i>查询</button>
+                            <button type="button" style="width:100px" class="btn btn-default" onclick="$('#searchbar').resetSearch()"><i class="fa fa-repeat"></i>重置</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 表单仅有一个text-input时回车会提交表单，这里添加一个无用的防止回车提交 -->
+                <input type="text" style="display:none">
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <table id="scoreDataGrid"></table>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+<div th:include="/qos/footer" />
+<script type="text/javascript">
+    /*<![CDATA[*/
+    var table,requestParams;
+    $(function () {
+        initStartDateTime()
+        initScoreDataGrid();
+    });
+
+    function initStartDateTime() {
+        if(!$("#startTime").val()){
+            var date = new Date();
+            var year = date .getFullYear();
+            var month = date .getMonth()+1;
+            month = month < 10 ? ('0' + month) : month;
+            var time = year+"-"+month+"-"+"01";
+            var startDate = new Date(year+"-"+month+"-"+"01");
+            var yesterdayDate = new Date(date-24*60*60*1000);
+            if (yesterdayDate < startDate) {
+                year = yesterdayDate.getFullYear();
+                month = yesterdayDate.getMonth() +1;
+                month = month < 10 ? ('0' + month) : month;
+                var day = yesterdayDate.getDate();
+                $("#startTime").val(year+"-"+month+"-"+"01");
+                $("#endTime").val(year+"-"+month+"-"+day);
+                return ;
+            }else if (yesterdayDate.getTime() ===  startDate.getTime()){
+                yesterdayDate = date;
+                year = yesterdayDate.getFullYear();
+                month = yesterdayDate.getMonth() +1;
+                month = month < 10 ? ('0' + month) : month;
+                var day = yesterdayDate.getDate();
+                day = day < 10 ? ('0' + day) : day;
+                $("#startTime").val(time);
+                $("#endTime").val(year+"-"+month+"-"+day);
+                return ;
+            }
+            $("#startTime").val(time);
+            var endDay=yesterdayDate.getDate();
+            endDay = endDay < 10 ? ('0' + endDay) : endDay;
+            var endTime=year+"-"+month+"-"+endDay;
+            $("#endTime").val(endTime);
+
+        }
+    }
+
+    function initScoreDataGrid() {
+        table = $.createTable("#scoreDataGrid", {
+            idField: "id",
+            columns: [
+                [
+                    {title: "医疗机构", field: "agencyName"},
+                    {title: "日期", field: "zyjk"},
+                    {title: "总得分", field: "yfjk",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {title: "关联性得分", field: "yffs",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {title: "规范性得分", field: "yffs",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {title: "完整性得分", field: "yffs",sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {title: "连续性得分", field: "lxx",formatter: function (value, row, index) {
+                            let number = Math.floor((value/row.count)*1000)/1000;
+                            let score = (number * 20).toFixed(1);
+                            if (score < 20) {
+                                return  '<a   href="javascript:void(0)" onclick="searchScoreDetail(\''+ row.eventIds+ '\'' +  ','+ row.unitId+'' +',\''+row.agencyName+ '\')" >'+score+ '</a>'
+                            } else {
+                                return score
+                            }
+                        },sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }}
+                ]
+            ],
+            url: '/qos/analysis/data/get/unit',
+            pagination: false,
+            sidePagination: 'client',
+            searchbar: '#searchbar',
+            queryParams: function(params) {
+                params.eventIds = '91001,91002,91003,91004,91005';
+                requestParams = params;
+                return params;
+            },
+            responseHandler: function(res) {
+                let data = [
+                    {'name':'91001','data':res['91001'] || [],'total':'lxx'},
+                    {'name':'91002','data':res['91002'] || [],'total':'lxx'},
+                    {'name':'91003','data':res['91003'] || [],'total':'lxx'},
+                    {'name':'91004','data':res['91004'] || [],'total':'lxx'},
+                    {'name':'91005','data':res['91005'] || [],'total':'lxx'}
+                    ];
+                let d = initTableData(data);
+                console.log(d)
+                return d ;
+
+            }
+        });
+    }
+
+    function searchScoreDetail(eventIds,unitId,agencyName) {
+        let startTime = $("#startTime").val();
+        let endTime = $("#endTime").val();
+        $.postAjax('/qos/hospital/data/score/find/data',{startTime : startTime, endTime : endTime,'eventIds':eventIds,'unitId':unitId},function(res) {
+            let html = "";
+            html += "<table class='table table-bordered'><caption>上传数据缺失信息</caption><tbody>";
+            html += "<tr><th>日期</th><th>表名</th></tr>";
+            if (res) {
+                res.forEach(row => {
+                    html += "<tr><td>" + row['time']+ "</td><td>" + row['tableName']+ "</td></tr>";
+                })
+            }
+            html += "</tbody></table>";
+            layer.alert(html, {title:agencyName,area: ['600px', '400px'] },function (index) {
+                layer.close(index);
+            });
+        });
+    }
+
+    function  getDaysBetween(){
+        let dateString1 = $("#startTime").val();
+        let dateString2 = $("#endTime").val();
+        var  startDate = Date.parse(dateString1);
+        var  endDate = Date.parse(dateString2);
+        let number = endDate - startDate;
+        return   number > 0 ? ((endDate - startDate) / (24 * 60 * 60 * 1000)) + 1 : 0;
+    }
+
+    function initTableData(data) {
+        let d = [];
+        let eventIds = requestParams.eventIds.split(",");
+        console.log(eventIds)
+        let daysBetween = getDaysBetween();
+        if (eventIds && eventIds.length > 0) {
+            eventIds.forEach(function (eventId, index) {
+                if (index === 0) {
+                    let value = data.find(d => d.name === eventId);
+                    let totalFiled = value.total;
+                    value.data.forEach(f => {
+                        let x = {};
+                        x['agencyName'] = f.unitName;
+                        x['unitId'] = f.unitId;
+                        x[totalFiled] = f.count;
+                        x['count'] = daysBetween * eventIds.length;
+                        if (f.count < daysBetween)  x['eventIds'] = eventId;
+                        d.push(x)
+                    });
+                }else {
+                    d.forEach(c =>{
+                        let value = data.find(d => d.name === eventId);
+                        let totalFiled = value.total;
+                        let obj = value.data.find(a => a.unitId === c['unitId']);
+                        if (obj) {
+                            c[totalFiled] += obj.count;
+                            c['count'] = daysBetween * eventIds.length;
+                            if (obj.count < daysBetween)  c.eventIds += "," +  eventId;
+                        }
+                    });
+                }
+            });
+        }
+        return d;
+    }
+
+    /*]]>*/
+</script>
+</body>
+</html>
