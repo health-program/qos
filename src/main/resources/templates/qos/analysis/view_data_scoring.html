@@ -114,12 +114,15 @@
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
                             return fa - fb;
                         }},
-                    {title: "关联性得分", field: "yffs",sortable: true,
-                        sorter: function(fa, fb, ra, rb) {
-                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
-                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
-                            return fa - fb;
-                        }},
+                    {title: "关联性得分", field: "glx",formatter: function (value, row, index) {
+                    	
+                    	if(row.eventNum==null||row.eventNum==""||row.eventNum==0||row.totalNum==null||row.totalNum==""||row.totalNum==0){
+                    		return 0;
+                    	}else{
+                    		return (row.eventNum/row.totalNum*50).toFixed(1);
+                    	}
+                        
+                    },sortable: true},
                     {title: "规范性得分", field: "yffs",sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
@@ -153,17 +156,22 @@
             sidePagination: 'client',
             searchbar: '#searchbar',
             queryParams: function(params) {
-                params.eventIds = '91001,91002,91003,91004,91005';
+                params.eventIds = '91001,91002,91003,91004,91005,92000,92001,92002,92003,92004';
                 requestParams = params;
                 return params;
             },
             responseHandler: function(res) {
                 let data = [
-                    {'name':'91001','data':res['91001'] || [],'total':'lxx'},
-                    {'name':'91002','data':res['91002'] || [],'total':'lxx'},
-                    {'name':'91003','data':res['91003'] || [],'total':'lxx'},
-                    {'name':'91004','data':res['91004'] || [],'total':'lxx'},
-                    {'name':'91005','data':res['91005'] || [],'total':'lxx'}
+                    {'name':'91001','data':res['91001'] || [],'total':'lxx','number':5},
+                    {'name':'91002','data':res['91002'] || [],'total':'lxx','number':5},
+                    {'name':'91003','data':res['91003'] || [],'total':'lxx','number':5},
+                    {'name':'91004','data':res['91004'] || [],'total':'lxx','number':5},
+                    {'name':'91005','data':res['91005'] || [],'total':'lxx','number':5},
+                    {'name':'92000','data':res['92000'] || [],'total':'glx','number':5},
+                    {'name':'92001','data':res['92001'] || [],'total':'glx','number':5},
+                    {'name':'92002','data':res['92002'] || [],'total':'glx','number':5},
+                    {'name':'92003','data':res['92003'] || [],'total':'glx','number':5},
+                    {'name':'92004','data':res['92004'] || [],'total':'glx','number':5}
                     ];
                 let d = initTableData(data);
                 console.log(d)
@@ -200,11 +208,13 @@
         let number = endDate - startDate;
         return   number > 0 ? ((endDate - startDate) / (24 * 60 * 60 * 1000)) + 1 : 0;
     }
+    
 
     function initTableData(data) {
         let d = [];
         let eventIds = requestParams.eventIds.split(",");
         console.log(eventIds)
+        
         let daysBetween = getDaysBetween();
         if (eventIds && eventIds.length > 0) {
             eventIds.forEach(function (eventId, index) {
@@ -216,24 +226,33 @@
                         x['agencyName'] = f.unitName;
                         x['unitId'] = f.unitId;
                         x[totalFiled] = f.count;
-                        x['count'] = daysBetween * eventIds.length;
+                        x['count'] = daysBetween * value.number;
                         if (f.count < daysBetween)  x['eventIds'] = eventId;
                         d.push(x)
                     });
                 }else {
                     d.forEach(c =>{
                         let value = data.find(d => d.name === eventId);
-                        let totalFiled = value.total;
+                        
                         let obj = value.data.find(a => a.unitId === c['unitId']);
                         if (obj) {
-                            c[totalFiled] += obj.count;
-                            c['count'] = daysBetween * eventIds.length;
-                            if (obj.count < daysBetween)  c.eventIds += "," +  eventId;
+                        	if(eventId=="91001"||eventId=="91002"||eventId=="91003"||eventId=="91004"||eventId=="91005"){
+                        		let totalFiled = value.total;
+                        		c[totalFiled] += obj.count;
+                                c['count'] = daysBetween * value.number;
+                                if (obj.count < daysBetween)  c.eventIds += "," +  eventId;
+                        	}else{
+                        		c['totalNum']+=obj.totalNum;
+                        		c['eventNum']+=obj.eventNum;
+                        	}
+                            
                         }
                     });
                 }
             });
         }
+        
+        
         return d;
     }
 
