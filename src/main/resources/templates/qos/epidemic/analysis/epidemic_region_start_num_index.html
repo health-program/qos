@@ -4,7 +4,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="region-type"/>
+<tt:constant enumcode="region-type,business-region-type"/>
  <section class="content-header">
     <h1>区域起均人数统计</h1>
 </section>
@@ -34,13 +34,25 @@
         </div>
    </div>
    <div class="row">
-   	<div class="col-sm-7">
+   	<div class="col-sm-12">
    	<div class="box box-solid">
    		<div class="box-body">
 			<table id="dataGrid" style="height: 250px"></table>
 		</div>
    		</div>
    	</div>
+   	</div>
+   	 <div class="row">
+   	<div class="col-sm-7">
+   	<div class="box box-solid">
+		<div class="box-header with-border" style="padding-top: 5px">
+			<h3 class="box-title" style="letter-spacing: 3px">区域起均人数展示</h3>
+		</div>
+		<div id="echart" class="box-body no-padding" style="height: 450px">
+		</div>
+	</div>
+   	</div>
+   	
    	<div class="col-sm-5">
    	<div class="box box-solid">
 		<div class="box-header with-border" style="padding-top: 5px">
@@ -50,13 +62,14 @@
 		</div>
 	</div>
    	</div>
+   	
    </div>
 </section>
 <div th:include="/qos/footer" />
 <script type="text/javascript">
 
 	var value = $.parseJSON($("#tonto_constant_value").text());
-	var job = value["region-type"];
+	var job = value["business-region-type"];
 
 	 var table, dataVal, requestParams,selectUnit;
 	//<![CDATA[
@@ -77,7 +90,16 @@
 					 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>传染病疫情地区起均人数统计表</span>",colspan:10}
 					],
                 [
-                 	{title: "区域", field: "region"},
+                 	{title: "区域", field: "region",
+                 		formatter: function (data) {
+                     	   if(data != '合计'){
+                     		   	var w=data.indexOf("社");
+                               	var name =data.substring(3, w);
+                     		   return name;
+                     	   }else{
+                     		   return '合计';
+                     	   }
+                        }},
                     { title: "上呼吸道感染", field: "sg3",
                    	  sortable: true,
                    	  sorter: function(fa, fb, ra, rb) {
@@ -176,7 +198,7 @@
             },
             responseHandler: function(res) {
             	let data = [];
-            	let constantEnum = $.getConstantEnum("region-type");
+            	let constantEnum = $.getConstantEnum("business-region-type");
                 constantEnum && constantEnum.forEach( region => {
                     let isNotPresence = false;
                     let val ={};
@@ -234,6 +256,7 @@
                 data.push(data1) 
                 dataVal = data || [];
                 chart1();
+                chart();
                 return data;
             }
         });
@@ -253,6 +276,199 @@
         chart1();
     }
 
+	var myChart = echarts.init(document.getElementById('echart'));
+	function chart() {
+		myChart.showLoading({
+            text: '数据正在努力加载...',
+            textStyle: { fontSize : 30 , color: '#444' },
+            effectOption: {backgroundColor: 'rgba(0, 0, 0, 0)'}
+        });
+		
+        let sg= [] ,jxwcy=[],szkb=[],sd=[],bzxyjy=[],fjh=[],orgData=[];
+        if (dataVal && dataVal.length=== 0) {
+            showChartInfo(myChart,'暂无数据');
+            return false;
+        }
+    	for (var j = 0; j < job.length; j++) {
+			for (var i = 0; i < dataVal.length; i++) {
+				if(dataVal[i].sickness != '合计'){
+					if(job[j].value == dataVal[i].region){
+						orgData.push(job[j].value)
+						 sg.push({name:job[j].value,value:dataVal[i].sg3});
+				         jxwcy.push({name:job[j].value,value:dataVal[i].jxwcy3});
+				         szkb.push({name:job[j].value,value:dataVal[i].szkb3});
+				         sd.push({name:job[j].value,value:dataVal[i].sd3});
+				         bzxyjy.push({name:job[j].value,value:dataVal[i].bzxyjy3});
+				         fjh.push({name:job[j].value,value:dataVal[i].fjh3});
+					}
+				}
+			}
+		}
+    	
+    	 var isShowScroll = false;// 是否显示滚动条，默认false不显示
+         var dataZoom_end;// 显示百分之多少的数据量，默认全部
+         if(orgData.length >5 ){
+             dataZoom_end = 100/(orgData.length/5);
+             isShowScroll = true;
+         }else{
+             dataZoom_end = 100;
+         }
+
+        myChart.hideLoading();
+		var labelOption = {
+	            normal: {
+	                show: true,
+	                position: 'top',
+	                distance: 15,
+	                align: 'center',
+	                verticalAlign: 'top',
+	                rotate: 0,
+	                formatter: '{c}\n',
+	                fontSize: 12,
+	                rich: {
+	                    name: {
+	                        textBorderColor: '#fff'
+	                    }
+	                }
+	            }
+	        };
+		var option = {
+			tooltip : {
+				trigger : 'axis',
+				axisPointer : {
+					type : 'shadow'
+				}
+			},
+			legend : {
+				data : [ '上感', '急性胃肠炎', '手足口病', '疱疹性咽颊炎', '水痘', '肺结核' ]
+			},
+			toolbox : {
+				show : true,
+				feature : {
+					restore : {
+						show : true
+					},
+					saveAsImage : {
+						show : true
+					}/* ,magicType: {
+	                    type: ['line', 'bar']
+	                } */
+				}
+			},
+			grid : {
+				left : '3%',
+				right : '3%',
+				bottom : '10%',
+				containLabel : true
+			},
+			 calculable: true,
+             dataZoom: [   {
+                 start:0,//默认为0
+                 end: dataZoom_end,
+                 type: 'slider',
+                 show: isShowScroll,
+                 xAxisIndex: [0],
+                 handleSize: 8,//滑动条的 左右2个滑动条的大小
+                 height: 10,//组件高度
+                 left: "center", //左边的距离
+                 bottom:10,
+                 handleColor: '#ddd',//h滑动图标的颜色
+                 handleStyle: {
+                     borderColor: "#cacaca",
+                     borderWidth: "1",
+                     shadowBlur: 2,
+                     background: "#ddd",
+                     shadowColor: "#ddd",
+                 },
+                 fillerColor: new echarts.graphic.LinearGradient(1, 0, 0, 0, [{
+                     //给颜色设置渐变色 前面4个参数，给第一个设置1，第四个设置0 ，就是水平渐变
+                     //给第一个设置0，第四个设置1，就是垂直渐变
+                     offset: 0,
+                     color: '#1eb5e5'
+                 }, {
+                     offset: 1,
+                     color: '#5ccbb1'
+                 }]),
+                 zoomLock:true, //是否锁定选择区域（或叫做数据窗口）的大小。如果设置为 true 则锁定选择区域的大小，也就是说，只能平移，不能缩放。
+                 backgroundColor: '#ddd',//两边未选中的滑动条区域的颜色
+                 showDataShadow: false,//是否显示数据阴影 默认auto
+                 showDetail: false,//即拖拽时候是否显示详细数值信息 默认true
+                 handleIcon: 'M-292,322.2c-3.2,0-6.4-0.6-9.3-1.9c-2.9-1.2-5.4-2.9-7.6-5.1s-3.9-4.8-5.1-7.6c-1.3-3-1.9-6.1-1.9-9.3c0-3.2,0.6-6.4,1.9-9.3c1.2-2.9,2.9-5.4,5.1-7.6s4.8-3.9,7.6-5.1c3-1.3,6.1-1.9,9.3-1.9c3.2,0,6.4,0.6,9.3,1.9c2.9,1.2,5.4,2.9,7.6,5.1s3.9,4.8,5.1,7.6c1.3,3,1.9,6.1,1.9,9.3c0,3.2-0.6,6.4-1.9,9.3c-1.2,2.9-2.9,5.4-5.1,7.6s-4.8,3.9-7.6,5.1C-285.6,321.5-288.8,322.2-292,322.2z',
+                 filterMode: 'filter'
+             },
+                 //下面这个属性是里面拖到
+                 {
+                     type: 'inside',
+                     show: true,
+                     xAxisIndex: [0],
+                     start: 0,//默认为1
+                     end: 50
+                 }],
+			xAxis : {
+				type : 'category',
+				axisLabel : {
+					interval : 0,
+					rotate : 0,
+					formatter: function(value) {
+                       	var w=value.indexOf("社");
+                       	var name =value.substring(3, w);
+                   	return name;
+                    }
+				//角度顺时针计算的
+				},
+				axisTick : {
+					alignWithLabel : true
+				},
+				data : orgData
+			},
+			yAxis : {
+				type : 'value',
+				axisLabel : {
+					show : true
+				}
+			},
+			series : [ {
+				name : '上感',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : sg
+			}, {
+				name : '急性胃肠炎',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : jxwcy
+			}, {
+				name : '手足口病',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : szkb
+			}, {
+				name : '疱疹性咽颊炎',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : bzxyjy
+			}, {
+				name : '水痘',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : sd
+			}, {
+				name : '肺结核',
+				type : 'bar',
+				//barWidth : 8,
+				label: labelOption,
+				data : fjh
+			} ]
+		};
+		myChart.setOption(option);
+	}
+    
+    
 	var myChart1 = echarts.init(document.getElementById('echart1'));
 	function chart1(){
 		myChart1.showLoading({
@@ -271,7 +487,9 @@
 			for (var i = 0; i < dataVal.length; i++) {
 				if(dataVal[i].sickness != '合计'){
 					if(job[j].value == dataVal[i].region){
-						 gcb.push({name:job[j].value,value:dataVal[i].xj3});
+						var w=job[j].value.indexOf("社");
+                       	var name =job[j].value.substring(3, w);
+						 gcb.push({name:name,value:dataVal[i].xj3});
 					}
 				}
 			}
@@ -281,7 +499,7 @@
 		 option = {
 				    tooltip : {
 				        trigger: 'item',
-				        formatter: "{a} <br/>{b} : {c} ({d}%)"
+				        formatter: "{a} <br/>{b} : {c}人({d}%)"
 				    },
 				    legend: {
 				        orient: 'vertical',
@@ -309,7 +527,7 @@
 				            label:{
 				            	normal:{
 				            		show:true,
-				            		formatter:"{a} \n{b} : {c} ({d}%)"
+				            		formatter:"{a} \n{b} : {c}人({d}%)"
 				            	}
 				            },
 				            data:gcb,

@@ -8,7 +8,7 @@
 <section class="content-header">
     <h1>全市疫情分析</h1>
 </section>
-<section class="content no-padding">
+<section class="content">
     <div class="box box-solid" style="height: 45px;margin-bottom: 5px">
         <div class="box-body no-pad-top" >
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -60,7 +60,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid">
-                       	<div id="epidemicCountsChartDiv" class="box-body no-padding" style="height: 400px"></div>
+                       	<div id="epidemicCountsChartDiv" class="box-body no-padding" style="height: 500px"></div>
                     </div>
                 </div>
             </div>
@@ -81,7 +81,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="box box-solid">
-                       	<div id="epidemicPeopleCountsChartDiv" class="box-body no-padding" style="height: 400px"></div>
+                       	<div id="epidemicPeopleCountsChartDiv" class="box-body no-padding" style="height: 500px"></div>
                     </div>
                 </div>
             </div>
@@ -146,7 +146,7 @@
             columns: [
                 [
                     { title: "学校", field: "name" },
-					{ title: "疫情发生次数", field: "value" }
+					{ title: "疫情发生人数", field: "value" }
                 ]
             ],
             url: '/qos/org/school/statistic/epidemic/people/counts',
@@ -180,11 +180,34 @@
         chart.hideLoading();
         option = {
               color: ['#3398DB'],
+              grid: {
+                  left: '3%',
+                  right: '3%',
+                  top: '10%',
+                  containLabel: true
+              },
+              toolbox : {
+  				show : true,
+  				feature : {
+  					restore : {
+  						show : true
+  					},
+  					saveAsImage : {
+  						show : true
+  					}/* ,magicType: {
+  	                    type: ['line', 'bar']
+  	                } */
+  				}
+  			},
               xAxis: {
                   type: 'category',
                   axisLabel: {
                       interval:0,
-                      rotate:20//角度顺时针计算的
+                      formatter: function (value) {
+                          //x轴的文字改为竖版显示
+                          var str = value.split("");
+                          return str.join("\n");
+                        }
                   } ,
                   axisTick : {
                       alignWithLabel : true

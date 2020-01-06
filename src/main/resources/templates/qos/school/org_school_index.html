@@ -25,9 +25,10 @@
                              </select>
 						</div>
 						<div class="col-md-2">
-							 <select name="businessDistrict" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.businessDistrict}" enumcode="business-region-type">
-                                 <option value="">请选择业务管理区域</option>
-                             </select>
+						<select name="businessDistrict" class="form-control">
+                            <option value="">请选择业务管理区域</option>
+                            <option th:each="unit : ${unit}" th:value="${unit.id}" th:text="${unit.name}"></option>
+                        </select>
 						</div>
 						<div class="col-md-2">
 	                        <select name="affiliation" class="form-control tonto-select-constant" th:attr="selectedvalue=${query?.affiliation}" enumcode="subordination-type">

@@ -235,7 +235,7 @@
     <!-- 区域疫情量构成比 -->
     <select id="schoolPersonnelRegion" resultType="map">
         SELECT 
-        region,
+        s.business_district as region,
         count(sickness_classify = '1'or null) AS sg,
         count(sickness_classify ='10'or null) AS jxwcy,
         count(sickness_classify ='14'or null) AS szkb,
@@ -269,14 +269,14 @@
         <if test="endTime !=null and endTime !='' ">
             AND suspend_data &lt;= #{endTime}
         </if>
-        GROUP BY region 
+        GROUP BY s.business_district
     </select>   
 
     <!-- 区域涉及人数构成比 -->
     <select id="schoolPersonnelRegion1" resultType="map">
         SELECT 
-        e.region AS regionId,
-        e.region AS region,
+        s.business_district AS regionId,
+        s.business_district AS region,
         sum(if(e.sickness_classify = '1',e.total,0))AS sg,
         sum(if(e.sickness_classify = '10',e.total,0))AS jxwcy,
         sum(if(e.sickness_classify = '14',e.total,0))AS szkb,
@@ -310,7 +310,7 @@
         <if test="endTime !=null and endTime !='' ">
             AND suspend_data &lt;= #{endTime}
         </if>
-        GROUP BY region
+        GROUP BY s.business_district
     </select> 
     
     <!-- 区域涉及人数构成比详情 -->
@@ -336,7 +336,7 @@
 		INNER JOIN org_school_people AS o ON e.grade = o.id 
 		INNER JOIN org_school as s ON o.school_id = s.id
 		INNER JOIN org_school_name AS n ON s.parent_school_id=n.id
-		where 1=1 AND e.region =#{regionId} 
+		where 1=1 AND s.business_district =#{regionId} 
 		<if test="agencyId !=null and agencyId.length > 0">
             AND s.business_district in 
             <foreach collection="agencyId" index="index" item="item"
@@ -350,7 +350,7 @@
     <!-- 区域均起人数统计 -->
     <select id="schoolPersonnelstartNum" resultType="map">
        SELECT 
-         e.region,
+         s.business_district AS region,
         count(e.sickness_classify = '1'or null)AS sg,
         count(e.sickness_classify = '10'or null)AS jxwcy,
         count(e.sickness_classify = '14'or null)AS szkb,
@@ -385,13 +385,13 @@
             AND suspend_data &lt;= #{endTime}
         </if>
 
-        GROUP BY region
+        GROUP BY s.business_district
     </select>
 
     <!-- 区域罹患率统计 -->
     <select id="schoolPersonnelincidence" resultType="map">
 		SELECT 
-        e.region,
+       s.business_district AS region,
         SUM(e.suspend_people_number) AS total,
         SUM(e.total) AS subtotal,
         ROUND(sum(if(e.sickness_classify = '1',e.total,0))/SUM(e.suspend_people_number)*100,2) AS sg,
@@ -419,7 +419,7 @@
         <if test="endTime !=null and endTime !='' ">
             AND e.suspend_data &lt;= #{endTime}
         </if>
-        GROUP BY e.region
+        GROUP BY s.business_district
 
     </select>
 
@@ -467,7 +467,7 @@
     <select id="schoolPersonnelSurpassRegion" resultType="map">
        SELECT
 		s.business_district AS businessDistrict,
-        e.region,
+        s.business_district as region,
 		count(*) AS yqs,
 		SUM(if(e.is_early_warning_value ='1',e.suspend_people_number,0)) AS rs,
         count( e.is_early_warning_value ='1' or null) AS sjs,
@@ -495,6 +495,6 @@
         <if test="endTime !=null and endTime !='' ">
             AND e.suspend_data &lt;= #{endTime}
         </if>
-        GROUP BY  e.region
+        GROUP BY  s.business_district
     </select>
 </mapper>

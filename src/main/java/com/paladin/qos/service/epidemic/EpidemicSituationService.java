@@ -76,8 +76,10 @@ public class EpidemicSituationService extends ServiceSupport<EpidemicSituation> 
 	return new PageResult<>(page);
     }
 
-    public List<DataEpidemicSituationVO> dataTraceabilityRate(
-	    EpidemicSituationQueryDTO query) {
+    public List<DataEpidemicSituationVO> dataTraceabilityRate( EpidemicSituationQueryDTO query) {
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyId = userSession.getAgencyIds();
+		query.setAgencyId(agencyId);
 	return epidemicSituationMapper.dataTraceabilityRate(query);
     }
 

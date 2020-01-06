@@ -82,6 +82,12 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
     	return searchOne(conditions);
     }
     
+    public List<OrgSchool> orgSchoolList(){
+	QosUserSession userSession = QosUserSession.getCurrentUserSession();
+	String[] agencyId = userSession.getAgencyIds();
+	return orgSchoolMapper.orgSchoolList(agencyId);
+    }
+    
     public OrgSchoolVO getSchool(String id){
 	if(StringUtil.isEmpty(id)){
 	    throw new BusinessException("找不到对应学校信息");
@@ -203,6 +209,9 @@ public class OrgSchoolService extends ServiceSupport<OrgSchool> {
      * @see [类、类#方法、类#成员]
      */
     public List<OrgSchoolDoctorCountVO> schoolDoctorCount(OrgSchoolQuery query){
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyId = userSession.getAgencyIds();
+		query.setAgencyId(agencyId);
 	return orgSchoolMapper.schoolDoctorCount(query);
     }
     

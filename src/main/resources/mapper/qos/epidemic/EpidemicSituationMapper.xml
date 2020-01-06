@@ -16,6 +16,7 @@
 	FROM epidemic_situation AS e
 	LEFT JOIN org_school_people AS p ON e.grade = p.id
 	LEFT JOIN org_school AS s ON p.school_id = s.id
+	LEFT JOIN org_school_name AS n ON s.parent_school_id = n.id
 	where 1=1 
 	<if test="agencyId !=null and agencyId.length > 0">
             AND s.business_district in 
@@ -89,30 +90,20 @@
     </select>
 
      <select id="dataTraceabilityRate" resultType="com.paladin.qos.service.epidemic.vo.DataEpidemicSituationVO">
-	<!-- SELECT
-		s.school_full_name as schoolName,
-		TRUNCATE (
-		(
-		sum(
-		is_early_warning_value = '1'
-		AND is_reason_traceability = '1'
-		) / count(1)
-		) * 100,
-		2
-		) as rate
-	FROM
-		epidemic_situation AS e
-	LEFT JOIN org_school_name AS s ON e.incident_unit = s.id
-	where 1=1 -->
-	
-	SELECT
-		s.school_full_name as schoolName,
-		count(1) total,
-		sum(is_early_warning_value = '1'AND is_reason_traceability = '1') as count
-	FROM
-		epidemic_situation AS e
-	LEFT JOIN org_school_name AS s ON e.incident_unit = s.id
+		 SELECT
+		 s.school_full_name as schoolName,
+		 count(1) total,
+		 sum(is_early_warning_value = '1'AND is_reason_traceability = '1') as count
+		 FROM	epidemic_situation AS e
+		 LEFT JOIN org_school_name AS s ON e.incident_unit = s.id
 	where 1=1
+	 <if test="agencyId !=null and agencyId.length > 0">
+		 AND s.region in
+		 <foreach collection="agencyId" index="index" item="item"
+				  open="(" separator="," close=")">
+			 #{item}
+		 </foreach>
+	 </if>
 
 	<if test="region !=null and region !='' ">
 		and e.region =#{region}

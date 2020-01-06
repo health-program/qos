@@ -37,7 +37,7 @@ public class OrgSchoolPeopleController {
 	@ResponseBody
 	public Object findListBySchoolId() {
 		Map<String, Object> result = new HashMap<>();
-		result.put("schoolYear", orgSchoolService.findAll());
+		result.put("schoolYear", orgSchoolService.orgSchoolList());
 		result.put("schoolName", orgSchoolNameService.findAll());
 		result.put("schoolPeople", orgSchoolPeopleService.findAll());
 

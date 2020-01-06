@@ -9,7 +9,9 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.school.dto.OrgSchoolExportCondition;
+import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.school.OrgSchoolService;
 import com.paladin.qos.service.school.dto.OrgSchoolDTO;
 import com.paladin.qos.service.school.dto.OrgSchoolQuery;
@@ -23,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * < 学校基础情况管理>
@@ -36,10 +40,14 @@ public class OrgSchoolController extends ControllerSupport {
     @Autowired
     private OrgSchoolService orgSchoolService;
 
+    @Autowired
+	private DataUnitService dataUnitService;
+
     @GetMapping("/index")
     @QueryInputMethod(queryClass = OrgSchoolQuery.class)
-    public String index() {
-	return "/qos/school/org_school_index";
+    public String index(Model model) {
+		model.addAttribute("unit", dataUnitService.byDataUnit());
+		return "/qos/school/org_school_index";
     }
 
     @RequestMapping(value = "/find/page", method = { RequestMethod.GET, RequestMethod.POST })
@@ -48,6 +56,12 @@ public class OrgSchoolController extends ControllerSupport {
     public Object findPage(OrgSchoolQuery query) {
 	return CommonResponse.getSuccessResponse(orgSchoolService.searchFindPage(query));
     }
+
+	@GetMapping("/data/unit")
+	@ResponseBody
+	public Object selectDataUnit() {
+		return CommonResponse.getSuccessResponse(dataUnitService.byDataUnit());
+	}
 
     @GetMapping("/get")
     @ResponseBody

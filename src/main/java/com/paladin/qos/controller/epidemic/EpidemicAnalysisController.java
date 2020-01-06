@@ -200,4 +200,27 @@ public class EpidemicAnalysisController extends ControllerSupport {
     public Object schoolPersonnelSurpassRegion(EpidemicAnalysisQueryDTO query) {
 	return CommonResponse.getSuccessResponse(epidemicAnalysisService.schoolPersonnelSurpassRegion(query));
     }
+
+
+    /**
+     * 年度情况-疾病类别
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    @RequestMapping(value = "/year/disease/index")
+    public String yearCategoryIndex() {
+        return "/qos/epidemic/analysis/epidemic_year_disease_index";
+    }
+
+
+    /**
+     * 年度情况-区镇分布
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    @RequestMapping(value = "/year/region/index")
+    public String yearSurpassRegionIndex() {
+        return "/qos/epidemic/analysis/epidemic_year_region_index";
+    }
+
 }

@@ -2,6 +2,7 @@ package com.paladin.qos.service.school;
 
 import java.util.List;
 
+import com.paladin.qos.core.QosUserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +29,13 @@ public class OrgSchoolNameService extends ServiceSupport<OrgSchoolName> {
     public List<OrgSchoolName> findSchoolName(String parentId) {
 	return searchAll(new Condition(OrgSchoolName.COLUMN_PARENT_ID,QueryType.EQUAL, parentId));
     }
-    
+
+    public List<OrgSchoolName> searchFind(){
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyId = userSession.getAgencyIds();
+		return orgSchoolNameMapper.searchFind(agencyId);
+	}
+
     public SchoolNameVO judge(String schoolFullName){
 	return orgSchoolNameMapper.getSchoolName(schoolFullName);
     }

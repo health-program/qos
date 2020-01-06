@@ -10,6 +10,7 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.school.dto.OrgSchoolNameExportCondition;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.dto.OrgSchoolNameDTO;
@@ -52,7 +53,7 @@ public class OrgSchoolNameController extends ControllerSupport {
     @RequestMapping(value = "/find/all", method = { RequestMethod.GET, RequestMethod.POST })
     @ResponseBody
     public Object findAll() {
-        return CommonResponse.getSuccessResponse(orgSchoolNameService.findAll());
+    	return CommonResponse.getSuccessResponse(orgSchoolNameService.searchFind());
     }
     
     @GetMapping("/get")
@@ -89,6 +90,11 @@ public class OrgSchoolNameController extends ControllerSupport {
 	}
 	model.setId(id);
 	if (orgSchoolNameService.save(model) > 0) {
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyId = userSession.getAgencyIds();
+		if(agencyId.length >0 && agencyId != null){
+			model.setRegion(agencyId);
+		}
 	    return CommonResponse.getSuccessResponse(beanCopy(orgSchoolNameService.get(id), new OrgSchoolNameVO()));
 	}
 	return CommonResponse.getFailResponse();

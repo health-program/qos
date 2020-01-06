@@ -37,4 +37,15 @@
 
     </select>
 
+    <select id="byDataUnit" resultType="com.paladin.qos.model.data.DataUnit">
+    SELECT id,`name` FROM data_unit WHERE 1=1 AND type ='2' AND `id` != '320583810343'
+        <if test="array !=null and array !='' ">
+            and id in
+            <foreach collection="array" index="index" item="item"
+                     open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
 </mapper>

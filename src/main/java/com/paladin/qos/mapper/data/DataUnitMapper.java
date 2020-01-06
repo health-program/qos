@@ -17,4 +17,6 @@ public interface DataUnitMapper extends CustomMapper<DataUnit>{
                                        @Param("startMonth") int startMonth,@Param("endYear") int endYear,@Param("endMonth") int endMonth);
 
     List<DataUnitVO> selectData(@Param("array")String[] array,@Param("typeList")List<Integer> typeList);
+
+    List<DataUnit> byDataUnit(@Param("array")String[] array);
 }

@@ -77,7 +77,15 @@
 	  `org_school` AS s 
 	  LEFT JOIN org_school_name AS n 
 	    ON s.`parent_school_id` = n.`id` 
-	   WHERE 1 = 1 
+	   WHERE 1 = 1
+	<if test="agencyId !=null and agencyId.length > 0">
+		AND business_district in
+		<foreach collection="agencyId" index="index" item="item"
+				 open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</if>
+
 	<if test="district != null and district !='' ">
 		AND  s.`district` =#{district}
 	</if>
@@ -197,5 +205,16 @@
 		where t.id=#{0}
 		
 	</update>
+	
+	<select id="orgSchoolList" resultType="com.paladin.qos.model.school.OrgSchool">
+	SELECT id,school_year AS schoolYear,parent_school_id as parentSchoolId FROM org_school where 1=1 
+	<if test="agencyId !=null and agencyId.length > 0">
+            AND business_district in 
+            <foreach collection="agencyId" index="index" item="item"
+                open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>	
+	</select>
 
 </mapper>

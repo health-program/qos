@@ -13,4 +13,15 @@ SELECT id,school_full_name AS name from org_school_name where school_full_name =
 <select id="schoolIdNameFind" resultType="com.paladin.qos.service.school.vo.OrgSchoolIdNameVO">
 	SELECT s.id ,o.`school_full_name`AS name FROM org_school AS s LEFT JOIN org_school_name AS o ON s.`parent_school_id`=o.id 
 </select>
+
+	<select id="searchFind" resultType="com.paladin.qos.model.school.OrgSchoolName">
+		SELECT id, school_full_name AS schoolFullName,parent_id AS parentId,region FROM org_school_name where 1=1
+		<if test="array !=null and array.length > 0">
+			AND region in
+			<foreach collection="array" index="index" item="item"
+					 open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+	</select>
 </mapper>

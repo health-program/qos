@@ -35,7 +35,8 @@
 				{ title: "性质", name: "nature", enum: "nature-type",required: "required", inputType: "SELECT" },
 				{ title: "隶属关系", name: "affiliation",enum:"subordination-type",required: "required", inputType: "SELECT" },
 				{ title: "行政区域", name: "district",enum:"region-type",required: "required", inputType: "SELECT" },
-				{ title: "业务管理区域", name: "businessDistrict",enum:"business-region-type",required: "required", inputType: "SELECT" },
+				{ title: "业务管理区域",isListData:false, name: "businessDistrict",required: "required",multiple: false, inputType: "SELECT-SERVER", idField:'id',nameField:'name',url:"/qos/org/school/data/unit" },
+				/* { title: "业务管理区域", name: "businessDistrict",enum:"business-region-type",required: "required", inputType: "SELECT" }, */
 				{ title: "主要领导姓名", name: "mainLeaderName", inputType: "TEXT" },
 				{ title: "主要领导电话", name: "mainLeaderCellphone", inputType: "TEXT" },
 				{ title: "分管领导姓名", name: "chargeLeaderName", inputType: "TEXT" },

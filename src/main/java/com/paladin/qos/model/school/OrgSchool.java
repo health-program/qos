@@ -9,6 +9,9 @@ public class OrgSchool extends BaseModel {
 	public static final String PARENT_SCHOOL_ID ="parentSchoolId";
 	
 	public static final String SCHOOL_YEAR ="schoolYear";
+	
+	public static final String BUSINESS_DISTRICT ="businessDistrict";
+	
 	// 
 	@Id
 	private String id;

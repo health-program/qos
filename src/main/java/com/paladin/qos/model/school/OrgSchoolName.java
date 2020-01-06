@@ -21,6 +21,8 @@ public class OrgSchoolName extends BaseModel {
 	//级别
 	private String level;
 
+	private String[] region;
+
 	public String getId() {
 		return id;
 	}
@@ -53,4 +55,11 @@ public class OrgSchoolName extends BaseModel {
 	    this.level = level;
 	}
 
+	public String[] getRegion() {
+		return region;
+	}
+
+	public void setRegion(String[] region) {
+		this.region = region;
+	}
 }

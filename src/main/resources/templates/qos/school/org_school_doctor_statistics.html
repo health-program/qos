@@ -91,8 +91,8 @@
 	}
 
 	$(function() {
-		myChart();
 		$('input[name="schoolYear"]').val(getCurrentSchoolYear(new Date()));
+		myChart();
 	});
 
 	var schoolDoctor = echarts.init(document.getElementById('main'));
@@ -149,8 +149,8 @@
 			
 			var isShowScroll = false;// 是否显示滚动条，默认false不显示
             var dataZoom_end;// 显示百分之多少的数据量，默认全部
-            if(schoolDoctorName.length >10 ){
-                dataZoom_end = 100/(schoolDoctorName.length/10);
+            if(schoolDoctorName.length >20 ){
+                dataZoom_end = 100/(schoolDoctorName.length/20);
                 isShowScroll = true;
             }else{
                 dataZoom_end = 100;
@@ -247,7 +247,11 @@
                         data: schoolDoctorName,
                         axisLabel: {
                             interval:0,
-                            rotate:60,//角度顺时针计算的
+                            formatter: function (value) {
+                                //x轴的文字改为竖版显示
+                                var str = value.split("");
+                                return str.join("\n");
+                              },
                             textStyle: {
                             	color:function(params){
 			                    	var a = reslut;
@@ -309,36 +313,7 @@
 			                }
 			            },
                         data: schoolDoctorFullValue
-                    }/* ,{
-                    	name: '校医(兼职)',
-                        type: 'bar',
-                        label: labelOption,
-                        barGap: 0,
-                        itemStyle:{
-			                normal:{
-			                    barBorderRadius:2,
-			                    color:function(params){
-			                    	var a = reslut;
-			                    	for(var i=0;i<a.length;i++){
-			                    		if(a[i].schoolFullName == params.name){
-			                    			var total=0;
-			                    			if(a[i].nature == '1'){
-			                    				total=(a[i].total/300).toFixed(0);
-			                    			}else{
-			                    				total=(a[i].total/600).toFixed(0);
-			                    			}
-			                    			 var b = a[i].schoolDoctorFull+a[i].schoolDoctorPart;
-			                    			if(b>total){
-			                    				 return "#63b6ec";
-			                    			}
-			                    			return "#f37e7e";
-			                    		}
-			                    	}
-          	                    }
-			                }
-			            },
-                        data: schoolDoctorPartValue
-                    } */
+                    }
                 ]
             };
 			
@@ -371,7 +346,7 @@
             let  option2 = {
                 color: ['#3398DB','#6087BF','#6071C6'],
                 title: {
-			        text: '校医配备情况图',
+			        text: '保健老师配备情况图',
 			    },
                 tooltip: {
                     trigger: 'axis',
@@ -443,7 +418,11 @@
                         data: schoolDoctorName,
                         axisLabel: {
                             interval:0,
-                            rotate:60,//角度顺时针计算的
+                            formatter: function (value) {
+                                //x轴的文字改为竖版显示
+                                var str = value.split("");
+                                return str.join("\n");
+                              },
                             color:function(params){
 		                    	var a = reslut;
 		                    	for(var i=0;i<a.length;i++){

@@ -4,9 +4,9 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="region-type,business-region-type"/>
+<tt:constant enumcode="region-type"/>
  <section class="content-header">
-    <h1>区镇分布</h1>
+    <h1>区域分布</h1>
 </section>
 <section class="content">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -85,7 +85,7 @@
 <script type="text/javascript">
 
 	var value = $.parseJSON($("#tonto_constant_value").text());
-	var job = value["business-region-type"];
+	var job = value["region-type"];
 
 	 var table, dataVal, requestParams,selectUnit;
 	//<![CDATA[
@@ -106,15 +106,12 @@
             idField: "id",
             columns: [
 					[
-					 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>各区镇警戒值疫情情况</span>",colspan:9}
+					 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>各区镇传染病空发公共卫生事件情况</span>",colspan:9}
 					],
                 [
                  	{title: "区域", field: "region",formatter: function (data) {
                  	   if(data != '合计'){
-                 		   var enumValue = $.getConstantEnumValue("business-region-type",data);
-                 		  	var w=enumValue.indexOf("社");
-                        	var name =enumValue.substring(3, w);
-                		   return name;
+                		   return $.getConstantEnumValue("region-type",data);
                 	   }else{
                 		   return '合计';
                 	   }
@@ -247,7 +244,7 @@
                 return params;
             },
             responseHandler: function(res) {
-            	let constantEnum = $.getConstantEnum("business-region-type");
+            	let constantEnum = $.getConstantEnum("region-type");
             	let yqs = 0,sjrs = 0,rs =0,sjs = 0;
                 constantEnum && constantEnum.forEach( region => {
                     let isNotPresence = false;
@@ -322,11 +319,8 @@
 			for (var i = 0; i < data.length; i++) {
 				if(data[i].sickness != '合计'){
 					if(job[j].key == data[i].region){
-						debugger;
-						var w=job[j].value.indexOf("社");
-                      	var name =job[j].value.substring(3, w);
 						var sjgcb = rate(data[i].sjs,data[i].sjstotal)
-						 gcb.push({name:name,value:sjgcb});
+						 gcb.push({name:job[j].value,value:sjgcb});
 					}
 				}
 			}
@@ -395,10 +389,8 @@
 			for (var i = 0; i < data.length; i++) {
 				if(data[i].sickness != '合计'){
 					if(job[j].key == data[i].region){
-						var w=job[j].value.indexOf("社");
-                      	var name =job[j].value.substring(3, w);
 						var sjzb = rate(data[i].sjs,data[i].yqs)
-						 gcb.push({name:name,value:sjzb});
+						 gcb.push({name:job[j].value,value:sjzb});
 					}
 				}
 			}
@@ -467,10 +459,8 @@
 			for (var i = 0; i < data.length; i++) {
 				if(data[i].sickness != '合计'){
 					if(job[j].key == data[i].region){
-						var w=job[j].value.indexOf("社");
-                      	var name =job[j].value.substring(3, w);
 						var sjrsgcb = rate(data[i].sjrs,data[i].sjrstotal)
-						 gcb.push({name:name,value:sjrsgcb});
+						 gcb.push({name:job[j].value,value:sjrsgcb});
 					}
 				}
 			}
@@ -539,10 +529,8 @@
 			for (var i = 0; i < data.length; i++) {
 				if(data[i].sickness != '合计'){
 					if(job[j].key == data[i].region){
-						var w=job[j].value.indexOf("社");
-                      	var name =job[j].value.substring(3, w);
 						var sjrszb = rate(data[i].sjrs,data[i].rs)
-						 gcb.push({name:name,value:sjrszb});
+						 gcb.push({name:job[j].value,value:sjrszb});
 					}
 				}
 			}

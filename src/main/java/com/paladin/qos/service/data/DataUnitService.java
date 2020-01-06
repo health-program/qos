@@ -42,4 +42,10 @@ public class DataUnitService extends ServiceSupport<DataUnit> {
 		}
 		return dataUnitMapper.selectData(ids,type);
 	}
+
+	public List<DataUnit> byDataUnit(){
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyId = userSession.getAgencyIds();
+		return dataUnitMapper.byDataUnit(agencyId);
+	}
 }

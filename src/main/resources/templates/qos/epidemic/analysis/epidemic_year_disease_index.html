@@ -6,7 +6,7 @@
 <body>
 <tt:constant enumcode="sickness-type2"/>
  <section class="content-header">
-    <h1>疾病分类</h1>
+    <h1>疾病类别</h1>
 </section>
 <section class="content">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
@@ -86,7 +86,7 @@
             idField: "id",
             columns: [
 						[
-						 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>幼托及中小学警戒值疫情情况</span>",colspan:14}
+						 { title: "<span style='height: 24px;font-size: 20px;text-align: center;line-height: 24px'>幼托及中小学突发公共卫生事件情况</span>",colspan:14}
 						],
                       [
                        { title: "<span style='display: inline-block;width:100px;height: 64px;text-align: center;line-height: 64px'>报告病种</span>",
@@ -98,7 +98,7 @@
                     	   }
                        }},
                        {title: "总疫情",field: "yqzyql", rowspan: 2},
-                       {title: "警戒值疫情", colspan: 5},
+                       {title: "事件数", colspan: 5},
                        {title: "总人数",field:'zrs',rowspan: 2},
                        {title: "涉及人数", colspan: 5},
                        { title: "均次人数", field: "pjrs",rowspan:2,
@@ -407,18 +407,33 @@
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#4a72c9'
+					}
+				},
 				data : nurseries
 			}, {
 				name : '小学',
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#88a9f1'
+					}
+				},
 				data : primarySchool
 			}, {
 				name : '初中及以上',
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#068af3'
+					}
+				},
 				data : juniorUpperSchool
 			} ]
 		};
@@ -509,18 +524,33 @@
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#4a72c9'
+					}
+				},
 				data : nurseries
 			}, {
 				name : '小学',
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#88a9f1'
+					}
+				},
 				data : primarySchool
 			}, {
 				name : '初中及以上',
 				type : 'bar',
 				//barWidth : 20,
 				label: labelOption,
+				itemStyle : {
+					normal : {
+						color : '#068af3'
+					}
+				},
 				data : juniorUpperSchool
 			} ]
 		};

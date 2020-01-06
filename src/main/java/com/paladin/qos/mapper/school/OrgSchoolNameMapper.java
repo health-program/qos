@@ -16,4 +16,6 @@ public interface OrgSchoolNameMapper extends CustomMapper<OrgSchoolName>{
     public SchoolNameVO getSchoolName(@Param("schoolName") String schoolName);
 
 	public List<OrgSchoolIdNameVO> schoolIdNameFind();
+
+    public List<OrgSchoolName> searchFind(@Param("array") String[] agencyId);
 }
