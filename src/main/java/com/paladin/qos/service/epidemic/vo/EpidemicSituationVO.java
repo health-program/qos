@@ -42,7 +42,9 @@ public class EpidemicSituationVO {
 
     private Integer districtTownNumber;// 出动人次数(区镇级专业部门)
 
-    private Integer isEarlyWarningValue;// 是否预警值(是为1，否为2)
+    private Integer isEarlyWarningValue;// 首周是否预警值(是为1，否为2)
+    
+    private Integer isEarlyWarningValue2;// 累计是否预警值(是为1，否为2)
 
     private Integer isReasonTraceability;// 是否原因溯源(是为1，否为2)
 
@@ -226,6 +228,14 @@ public class EpidemicSituationVO {
 
     public void setResumptionTime(Date resumptionTime) {
 	this.resumptionTime = resumptionTime;
+    }
+
+    public Integer getIsEarlyWarningValue2() {
+        return isEarlyWarningValue2;
+    }
+
+    public void setIsEarlyWarningValue2(Integer isEarlyWarningValue2) {
+        this.isEarlyWarningValue2 = isEarlyWarningValue2;
     }
 
 }

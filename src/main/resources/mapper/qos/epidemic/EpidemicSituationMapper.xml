@@ -46,7 +46,7 @@
 	 AND e.school_year = #{schoolYear}
 	</if>
 	
-	ORDER BY e.school_year DESC
+	ORDER BY e.create_time DESC,e.school_year DESC
 	</select>
     
     <select id="epidemicCountsGroupByUnit" resultType="com.paladin.qos.service.school.vo.OrgSchoolCountsGroupByNatureVO"
