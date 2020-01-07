@@ -1,25 +1,21 @@
 package com.paladin.qos.controller.analysis;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.analysis.DataConstantContainer;
 import com.paladin.qos.analysis.DataConstantContainer.Event;
 import com.paladin.qos.analysis.TimeUtil;
+import com.paladin.qos.core.QosUserSession;
 import com.paladin.qos.model.data.DataEvent;
 import com.paladin.qos.service.analysis.AnalysisService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/qos/analysis")
@@ -34,7 +30,12 @@ public class AnalysisController {
 	}
 
 	@GetMapping("/view/{name}")
-	public Object viewInex(@PathVariable("name") String name) {
+	public Object viewInex(@PathVariable("name") String name, Model model) {
+		QosUserSession userSession = QosUserSession.getCurrentUserSession();
+		String[] agencyIds = userSession.getAgencyIds();
+		if ( agencyIds != null && agencyIds.length == 1){
+			model.addAttribute("agencyId",agencyIds[0]);
+		}
 		return "/qos/analysis/view_" + name;
 	}
 

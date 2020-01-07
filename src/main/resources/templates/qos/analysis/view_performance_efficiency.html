@@ -10,6 +10,7 @@
     <h1>运营效率</h1>
     </section>
     <section class="content">
+        <input type="hidden" id="agencyId" th:value="${agencyId}">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -69,10 +70,16 @@
             var date = new Date();
             var year = date .getFullYear();
             var month = date .getMonth();
+            if(month === 0){
+                year = year -1;
+                month = 12;
+            }
+            month = month < 10 ? '0'+ month : month;
             var time = year+"-"+month+"-"+"01";
             $("#startTime").val(time);
-            var myDate = new Date(year,month,0);
-            var endTime = year+'-'+month+'-'+myDate.getDate()
+            var endDate = new Date(year,month,0);
+            var endDay=endDate.getDate();
+            var endTime=year+"-"+month+"-"+endDay;
             $("#endTime").val(endTime);
         }
     }
@@ -350,11 +357,14 @@
                 
                 convertRate2TableData(response, '42004', data);
                 
-                var result = []
+                var result = [];
                 for (var o in data) {
                     result.push(data[o]);
                 }
-                
+                let agencyId = $("#agencyId").val();
+                if (agencyId && agencyId.length > 0) {
+                    result = result.filter( row => row.unitId === agencyId)
+                }
                 return result;
             }
         });

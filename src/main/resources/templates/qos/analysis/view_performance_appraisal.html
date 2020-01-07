@@ -7,6 +7,7 @@
     <h1>公立医院绩效考核</h1>
 </section>
 <section class="content">
+    <input type="hidden" id="agencyId" th:value="${agencyId}">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
         <div class="box-body no-pad-top" >
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -78,8 +79,8 @@
                     {title: "转诊人次",  rowspan: 2,field: 'ev70002', formatter:function (value, row, index) {return value ? value : 0 ;}},
                     {title: "出院者手术",  colspan: 2},
                     {title: "三四级手术",  colspan: 2},
-                    {title: "手术并发症",  colspan: 2},
-                    {title: "Ⅰ类切口手术",  colspan: 3},
+                   /* {title: "手术并发症",  colspan: 2},*/
+                    {title: "Ⅰ类切口手术",  colspan: 1},
                     {title: "临床路径管理",  colspan: 2},
                     {title: "预约诊疗",  colspan: 3},
                 ],
@@ -135,16 +136,16 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'strDefault2', title: '人数', formatter:function (value, row, index) {return 0 ;}},
+    /*                {field: 'strDefault2', title: '人数', formatter:function (value, row, index) {return 0 ;}},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {return 0.00 ;}},
-                    {field: 'ev70006', title: '感染人次数', formatter:function (value, row, index) {return value ? value : 0 ;}},
+                    {field: 'ev70006', title: '感染人次数', formatter:function (value, row, index) {return value ? value : 0 ;}},*/
                     {field: 'ev70005', title: '手术台数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
                             return fa - fb;
                         }},
-                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
+/*                    {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
                             let number = row.ev70006 ? row.ev70006 : 0;
                             let number1 = row.ev70005 ? row.ev70005 : 0;
                             let c = 0;
@@ -152,7 +153,7 @@
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
-                        }},
+                        }},*/
                     {field: 'ev70007', title: '入组数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
@@ -213,7 +214,7 @@
                 convertCount2TableData(response, '70002', data);
                 convertCount2TableData(response, '70003', data);
                 convertCount2TableData(response, '70004', data);
-                convertCount2TableData(response, '70006', data);
+                //convertCount2TableData(response, '70006', data);
                 convertCount2TableData(response, '70005', data);
                 convertCount2TableData(response, '70007', data);
                 convertCount2TableData(response, '51003', data);
@@ -226,6 +227,10 @@
                         result.push(data[o]);
                     }
 
+                }
+                let agencyId = $("#agencyId").val();
+                if (agencyId && agencyId.length > 0) {
+                    result = result.filter( row => row.unitId === agencyId)
                 }
                 return   result;
             }
