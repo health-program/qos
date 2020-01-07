@@ -83,6 +83,15 @@
                     {title: "Ⅰ类切口手术",  colspan: 1},
                     {title: "临床路径管理",  colspan: 2},
                     {title: "预约诊疗",  colspan: 3},
+                    {field: 'ev70008', title: '中医科重要处方数占比',rowspan: 2,
+                        sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
+                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
+                            return fa - fb;
+                        }},
                 ],
                 [
                     {field: 'ev70001', title: '门诊人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
@@ -189,10 +198,12 @@
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
-                        }},
+                        }}
                 ]
             ],
             url: '/qos/analysis/data/get/unit',
+            showExport: true,
+            exportTypes: ['excel'],
             pagination: false,
             //height:520,
             sidePagination: 'client',
@@ -200,7 +211,7 @@
             fixedNumber:1,
             searchbar: '#searchbar',
             queryParams: function(params) {
-                params.eventIds = '70001,70002,70003,70004,70005,70006,70007,51003,41001,41002';
+                params.eventIds = '70001,70002,70003,70004,70005,70006,70007,70008,51003,41001,41002';
                 requestParam = params;
                 return params;
             },
@@ -217,6 +228,7 @@
                 //convertCount2TableData(response, '70006', data);
                 convertCount2TableData(response, '70005', data);
                 convertCount2TableData(response, '70007', data);
+                convertRate2TableData(response, '70008',data);
                 convertCount2TableData(response, '51003', data);
                 convertCount2TableData(response, '41001', data);
                 convertCount2TableData(response, '41002', data);
@@ -237,9 +249,38 @@
         });
     }
 
+
+    function convertRate2TableData(originData, eventId, data) {
+        var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, event = 0;
+
+        eventData && eventData.forEach(function(item) {
+            var id = item.unitId;
+            unitData = data[id];
+            if (!unitData) {
+                unitData = {
+                    unitId : id,
+                    unitName : item.unitName
+                };
+                data[id] = unitData;
+            }
+            unitData[fieldName] = getRate(item);
+        });
+
+    }
+
+    function getRateNum(item, fixed) {
+        var a = item.eventNum,
+            b = item.totalNum,
+            c = 0;
+        if (a && b) {
+            c = a / b * 100;
+        }
+        return c.toFixed(fixed|| 2) + '%';
+    }
+
     function convertCount2TableData(originData, eventId, data) {
         var eventData = originData[eventId],
-            fieldName = 'ev' + eventId
+            fieldName = 'ev' + eventId;
 
         eventData && eventData.forEach(function(item) {
             var id = item.unitId;
@@ -263,7 +304,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed || 2) + '%';
+        return c.toFixed(fixed || 2) + '%' ;
     }
 
     /*]]>*/
