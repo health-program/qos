@@ -3,7 +3,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="region-type" />
+<tt:constant enumcode="region-type,business-region-type" />
 <section class="content-header" style="padding-bottom: 3px">
     <h1>疾病分类</h1>
 </section>
@@ -119,18 +119,12 @@
             idField: "id",
             columns: [
                 [
-                    {title: "区域", field: "region",enumcode: "region-type",  formatter: function (value, row, index) {
-                            row.index = index;
-                            if (row.teamStyle === 1){
-                                if (row.gardensNumber === 0 ) {
-                                    return  $.getConstantEnumValue("region-type",value);
-                                }else {
-                                    return "<div><i class='fa fa-sort-up' onclick='treeGridClick("+ row.region +")' style='cursor:pointer' id='"+ row.region +"'></i>&nbsp;"+ $.getConstantEnumValue("region-type",value) +"</div>";
-                                }
-                            } else {
-                                return "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + row.schoolFullName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                            }
-
+                    {title: "区域", field: "agencyId",  formatter: function (value, row, index) {
+                         if (value) {
+                             let enumValue = $.getConstantEnumValue("business-region-type",value);
+                             let w=enumValue.indexOf("社");
+                             return enumValue.substring(3, w);
+                         }
                         },footerFormatter: function (data) {
                             return '总计';
                         }},
@@ -174,8 +168,7 @@
                             fb = rb.epidemicNumber / rb.epidemicTotalNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.epidemicNumber ? row.epidemicNumber : 0;
                                 let number1 = row.epidemicTotalNumber ? row.epidemicTotalNumber : 0;
                                 let c = 0;
@@ -202,13 +195,12 @@
                             fb = rb.involvedPeoplesNumber / rb.peoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = arr.reduce(function(sum, row) {
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.peoplesNumber ? row.peoplesNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -237,13 +229,12 @@
                             fb = rb.epidemicNumber / rb.gardensNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.epidemicNumber ? row.epidemicNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = arr.reduce(function(sum, row) {
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.gardensNumber ? row.gardensNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -272,13 +263,12 @@
                             fb = rb.peoplesNumber / rb.gardensNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.peoplesNumber ? row.peoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = arr.reduce(function(sum, row) {
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.gardensNumber ? row.gardensNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -307,13 +297,12 @@
                             fb = rb.involvedPeoplesNumber / rb.epidemicNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = arr.reduce(function(sum, row) {
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.epidemicNumber ? row.epidemicNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -342,13 +331,12 @@
                             fb = rb.involvedPeoplesNumber / rb.totalPeoplesNumber;
                             return fa - fb;
                         },footerFormatter: function (data) {
-                            let arr = data.filter( row => row.pregion === "");
-                            var result = arr.reduce(function(sum, row) {
+                            var result = data.reduce(function(sum, row) {
                                 let number = row.involvedPeoplesNumber ? row.involvedPeoplesNumber : 0;
                                 return sum + number;
                             }, 0);
 
-                            var result1 = arr.reduce(function(sum, row) {
+                            var result1 = data.reduce(function(sum, row) {
                                 let number1 = row.totalPeoplesNumber ? row.totalPeoplesNumber : 0;
                                 return sum + number1;
                             }, 0);
@@ -378,7 +366,7 @@
             responseHandler: function(res) {
                 let arr =  res || [];
 
-               let constantEnum = $.getConstantEnum("region-type");
+               let constantEnum = $.getConstantEnum("business-region-type");
                 let total = 0;
                 let newArr = [];
                 let val = $("#agentId").val();
@@ -387,24 +375,19 @@
                 }
                 constantEnum && constantEnum.forEach( region => {
                     let isNotPresence = false;
-                   let rows = arr.filter(d => d.region === region.key);
+                   let rows = arr.filter(d => d.agencyId === region.key);
                     if (rows && rows.length > 0){
                         rows.reduce((newArr, row) => {
                             total += row.epidemicNumber;
-                            let originObj = newArr.find(point => point.region === region.key);
+                            let originObj = newArr.find(point => point.agencyId === region.key);
                             if (originObj) {
                                 originObj.gardensNumber += row.gardensNumber;
                                 originObj.peoplesNumber += row.peoplesNumber;
                                 originObj.epidemicNumber += row.epidemicNumber;
                                 originObj.involvedPeoplesNumber += row.involvedPeoplesNumber;
                                 originObj.totalPeoplesNumber += row.totalPeoplesNumber;
-                                newArr.push({region : "",pregion:region.key,gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
-                                    ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,schoolFullName:row.schoolFullName})
                             }else {
-                                newArr.push({region : region.key,pregion:"",gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
-                                ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,teamStyle :1});
-                                newArr.push({region : "",pregion:region.key,gardensNumber:row.gardensNumber,peoplesNumber:row.peoplesNumber,epidemicNumber:row.epidemicNumber
-                                    ,involvedPeoplesNumber:row.involvedPeoplesNumber,totalPeoplesNumber:row.totalPeoplesNumber,schoolFullName:row.schoolFullName})
+                                newArr.push(row);
                             }
                             return newArr;
                         },newArr);
@@ -414,20 +397,19 @@
 
                    if (isNotPresence && !val) {
                        let data = {};
-                       data['region'] = region.key;
+                       data['agencyId'] = region.key;
                            data['gardensNumber'] = 0;
                            data['peoplesNumber'] = 0;
                            data['epidemicNumber'] = 0;
                            data['involvedPeoplesNumber'] = 0;
                            data['totalPeoplesNumber'] = 0;
-                           data['pregion'] = "";
-                           data['teamStyle'] = 1;
 
                        newArr.push(data);
 
                    }
                });
-                hideRowIndexs = [];// 需隐藏的行（即二级数据所在行）
+                newArr.map(value => value['epidemicTotalNumber'] = total);
+/*                hideRowIndexs = [];// 需隐藏的行（即二级数据所在行）
                 parentRowClickFlag = [];// 父级行是否展开过的标识数组
                 $.each(newArr, function (i, item) {
                     item['epidemicTotalNumber'] = total;
@@ -437,18 +419,18 @@
                         parentRowClickFlag.push({"region": item.region, "isShow": false});
                     }
 
-                });
+                });*/
                data =  newArr  || [];
                 return newArr;
             },
             onLoadSuccess:function (data) {
-                // 渲染完成后隐藏子级行
+           /*     // 渲染完成后隐藏子级行
                 if (hideRowIndexs.length > 0){
                     $.each(hideRowIndexs,function (i,index) {
                         // 隐藏行
                         table.hideRow({index:index})
                     })
-                }
+                }*/
                 generatorGcChart(yqgcChart);
                 generatorCrbChart(crbChart);
             }
@@ -554,10 +536,10 @@ function arrLhlSort(arr) {
             return false;
         }
 
-        let filters = data.filter(row => row.pregion === "");
-
-        filters.forEach(row => {
-            let name = $.getConstantEnumValue("region-type",row.region);
+        data.forEach(row => {
+            let name1 = $.getConstantEnumValue("business-region-type",row.agencyId);
+            var w=name1.indexOf("社");
+            var name =name1.substring(3, w);
             chartData.push({name : name,value: row.epidemicNumber});
             nameData.push(name)
         });
@@ -608,10 +590,11 @@ function arrLhlSort(arr) {
             return false;
         }
 
-        let filters = data.filter(row => row.pregion === "");
-        if (filters) {
-            filters.forEach(data => {
-                let name = $.getConstantEnumValue("region-type",data.region);
+        if (data) {
+            data.forEach(data => {
+                let name1 = $.getConstantEnumValue("business-region-type",data.agencyId);
+                var w=name1.indexOf("社");
+                var name =name1.substring(3, w);
                 orgData.push(name);
                 data0.push({name:name,value:data.gardensNumber});
                 data1.push({name:name,value:data.peoplesNumber});
@@ -748,8 +731,7 @@ function arrLhlSort(arr) {
 
     function sumTotalFormatterModal(data) {
         field = this.field;
-        let arr = data.filter( row => row.pregion === "");
-        let result = arr.reduce(function(sum, row) {
+        let result = data.reduce(function(sum, row) {
             return   sum + (row[field]) *1;
         }, 0);
         return result === 0 ? '0' : result;
