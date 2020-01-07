@@ -84,10 +84,10 @@
             IFNULL(十一月,0) AS '11',
             IFNULL(十二月,0) AS '12'
         FROM
-            ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'region-type' ) AS tb1
+            ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'business-region-type' ) AS tb1
                 LEFT JOIN (
                 SELECT
-                    e.region AS codes,
+                    s.business_district AS codes,
                     sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '01' THEN 1 ELSE 0 END ) AS 一月,
                     sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '02' THEN 1 ELSE 0 END ) AS 二月,
                     sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '03' THEN 1 ELSE 0 END ) AS 三月,
@@ -103,7 +103,8 @@
                 FROM
                     epidemic_situation e
                         INNER JOIN org_school_people t ON e.grade = t.id
-                WHERE 1 = 1
+						INNER JOIN org_school as s ON t.school_id = s.id
+                WHERE 1 = 1 
                 <if test="startTime != null">
                     AND e.suspend_data >= #{startTime}
                 </if>
@@ -113,8 +114,8 @@
                 <if test="sickness != null and sickness != ''">
                     AND e.sickness_classify = #{sickness}
                 </if>
-                GROUP BY
-                    e.region
+               GROUP BY
+                    s.business_district
             ) AS tb2 ON tb1.codes = tb2.codes
     </select>
 
@@ -135,10 +136,10 @@
         IFNULL(十一月,0) AS '11',
         IFNULL(十二月,0) AS '12'
         FROM
-        ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'region-type' ) AS tb1
+        ( SELECT `code` AS codes, `name` FROM sys_constant WHERE type = 'business-region-type' ) AS tb1
         LEFT JOIN (
         SELECT
-        e.region AS codes,
+        s.business_district AS codes,
         sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '01' THEN e.total ELSE 0 END ) AS 一月,
         sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '02' THEN e.total ELSE 0 END ) AS 二月,
         sum( CASE DATE_FORMAT( suspend_data, '%m' ) WHEN '03' THEN e.total ELSE 0 END ) AS 三月,
@@ -154,6 +155,7 @@
         FROM
         epidemic_situation e
         INNER JOIN org_school_people t ON e.grade = t.id
+        INNER JOIN org_school as s ON t.school_id = s.id
         WHERE 1 = 1
         <if test="startTime != null">
             AND e.suspend_data >= #{startTime}
@@ -165,7 +167,7 @@
             AND e.sickness_classify = #{sickness}
         </if>
         GROUP BY
-        e.region
+        s.business_district
         ) AS tb2 ON tb1.codes = tb2.codes
     </select>
 </mapper>

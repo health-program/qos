@@ -3,7 +3,7 @@
 <head th:include="/qos/header" />
 
 <body>
-<tt:constant enumcode="nature-type" />
+<tt:constant enumcode="nature-type,business-region-type" />
 <section class="content-header" style="padding-bottom: 3px">
     <h1>时间分布-区域</h1>
 </section>
@@ -185,6 +185,12 @@
             searchbar: '#searchbar',
             responseHandler: function(res) {
                 data =  res || [];
+                data.forEach(data => {
+                	var w=data.name.indexOf("社");
+                  	var name =data.name.substring(3, w);
+                	data.name = name;
+                });
+                
                 if ( $("#type").val() == '1') {
                     $("#dataText").text("疫情时间分布情况表")
                 }else {
@@ -209,7 +215,9 @@
         }
         if (data) {
             data.forEach(data => {
-                orgData.push(data.name);
+            	var w=data.name.indexOf("社");
+              	var name =data.name.substring(3, w);
+                orgData.push(name);
                 data0.push({name:data.name,value:data['01']});
                 data1.push({name:data.name,value:data['02']});
                 data2.push({name:data.name,value:data['03']});
