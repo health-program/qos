@@ -140,4 +140,10 @@ public interface AnalysisMapper {
 	List<AnalysisUnit> getAnalysisResultGroupByUnitDateWithHeadWithoutTail(
 			@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
 			@Param("end") int end, @Param("ignoreUnitIds") List<String> ignoreUnitIds);
+
+	List<DataCountUnit> countTotalNumByUnitAndUserName(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start, @Param("end") int end,
+											@Param("ignoreUnitIds") List<String> ignoreUnitIds,@Param("userName") String userName);
+
+	List<AnalysisUnit> getAnalysisResultGroupByUnitAndUserName(@Param("eventId") String eventId, @Param("unitType") int unitType, @Param("start") int start,
+													@Param("end") int end, @Param("ignoreUnitIds") List<String> ignoreUnitIds,@Param("userName")String userName);
 }

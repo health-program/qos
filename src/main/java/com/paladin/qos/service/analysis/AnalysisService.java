@@ -10,6 +10,7 @@ import com.paladin.qos.model.gongwei.Disease;
 import com.paladin.qos.model.gongwei.EntityGongwei;
 import com.paladin.qos.model.register.Register;
 import com.paladin.qos.service.analysis.data.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -764,5 +765,19 @@ public class AnalysisService {
         orderByUnit(result);
         return result;
 
+    }
+
+	public List<DataCountUnit> countTotalNumByUnitAndUserName(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds,String userName) {
+        List<DataCountUnit> result = analysisMapper.countTotalNumByUnitAndUserName(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+                TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds,userName);
+        orderByUnit(result);
+        return result;
+    }
+
+	public List<AnalysisUnit> getAnalysisResultByUnitAndUserName(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds,String userName) {
+        List<AnalysisUnit> result = analysisMapper.getAnalysisResultGroupByUnitAndUserName(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
+                TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds,userName);
+        orderByUnit(result);
+        return result;
     }
 }
