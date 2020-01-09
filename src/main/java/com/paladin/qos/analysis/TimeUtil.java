@@ -139,6 +139,29 @@ public class TimeUtil {
 		return year * 10000 + month * 100 + day;
 	}
 
+
+	public static int getFirstDayOfMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int begin = c.getActualMinimum(Calendar.DAY_OF_MONTH);
+		c.set(Calendar.DAY_OF_MONTH, begin);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		return year * 10000 + month * 100 + day;
+	}
+
+	public static int getLastDayOfMonth(Date date) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(date);
+		int end = c.getActualMaximum(Calendar.DAY_OF_MONTH);
+		c.set(Calendar.DAY_OF_MONTH, end);
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		return year * 10000 + month * 100 + day;
+	}
+
 	/**
 	 * 获取月流水号
 	 * 

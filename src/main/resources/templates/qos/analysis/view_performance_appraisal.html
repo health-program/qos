@@ -82,16 +82,9 @@
                    /* {title: "手术并发症",  colspan: 2},*/
                     {title: "Ⅰ类切口手术",  colspan: 1},
                     {title: "临床路径管理",  colspan: 2},
-                    {title: "预约诊疗",  colspan: 3},
-                    {field: 'ev70008', title: '中医科重要处方数占比',rowspan: 2,
-                        sortable: true,
-                        sorter: function(fa, fb, ra, rb) {
-                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
-                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
-                            fa = fa ? fa.substring(0, fa.length - 1) * 1 : 0;
-                            fb = fb ? fb.substring(0, fb.length - 1) * 1 : 0;
-                            return fa - fb;
-                        }},
+                    {title: "预约诊疗",  colspan: 4},
+                    {title: '中医科中医处方数占比',colspan: 3},
+                    {title: '平均住院天数',colspan: 3},
                 ],
                 [
                     {field: 'ev70001', title: '门诊人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
@@ -178,7 +171,13 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev41001', title: '预约人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                    {field: 'ev70010', title: '预约人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev41001', title: '成功挂号人次', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -191,13 +190,52 @@
                             return fa - fb;
                         }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
-                            let number = row.ev41001 ? row.ev41001 : 0;
+                            let number = row.ev70010 ? row.ev70010 : 0;
                             let number1 = row.ev70001 ? row.ev70001 : 0;
                             let c = 0;
                             if (number && number1) {
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
+                        }},
+                    {field: 'ev_event70008', title: '中医科中药处方数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev_total70008', title: '中医科门诊处方数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev70008', title: '%', sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev70011', title: '出院者占用总床日', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'ev51003', title: '出院人数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
+                    {field: 'strDefault3', title: '天数', formatter:function (value, row, index) {
+                            let number = row.ev70011 ? row.ev70011 : 0;
+                            let number1 = row.ev51003 ? row.ev51003 : 0;
+                            let c = 0;
+                            if (number && number1) {
+                                c = number /number1;
+                            }
+                            return Math.round(c) ;
                         }}
                 ]
             ],
@@ -205,13 +243,17 @@
             showExport: true,
             exportTypes: ['excel'],
             pagination: false,
+            onClickRow: function(row, tr) {
+                $("#dataGrid").find(".selected").removeClass('selected');
+                $(tr).addClass('selected');
+            },
             //height:520,
             sidePagination: 'client',
             fixedColumns: true,//固定列
             fixedNumber:1,
             searchbar: '#searchbar',
             queryParams: function(params) {
-                params.eventIds = '70001,70002,70003,70004,70005,70006,70007,70008,70009,51003,41001,41002';
+                params.eventIds = '70001,70002,70003,70004,70005,70006,70007,70008,70009,70010,70011,51003,41001,41002';
                 requestParam = params;
                 return params;
             },
@@ -229,6 +271,8 @@
                 convertCount2TableData(response, '70005', data);
                 convertCount2TableData(response, '70007', data);
                 convertCount2TableData(response, '70009', data);
+                convertCount2TableData(response, '70010', data);
+                convertCount2TableData(response, '70011', data);
                 convertRate2TableData(response, '70008',data);
                 convertCount2TableData(response, '51003', data);
                 convertCount2TableData(response, '41001', data);
@@ -245,6 +289,7 @@
                 if (agencyId && agencyId.length > 0) {
                     result = result.filter( row => row.unitId === agencyId)
                 }
+                console.log(result)
                 return   result;
             }
         });
@@ -252,7 +297,11 @@
 
 
     function convertRate2TableData(originData, eventId, data) {
-        var eventData = originData[eventId], fieldName = 'ev' + eventId, total = 0, event = 0;
+        let eventData = originData[eventId], fieldName = 'ev' + eventId;
+
+        let totalFieldName = 'ev_total' + eventId;
+
+        let eventFieldName = 'ev_event' + eventId;
 
         eventData && eventData.forEach(function(item) {
             var id = item.unitId;
@@ -264,6 +313,9 @@
                 };
                 data[id] = unitData;
             }
+            if ( eventId === "70008")
+                unitData[totalFieldName] = item.totalNum;
+                unitData[eventFieldName] = item.eventNum;
             unitData[fieldName] = getRate(item);
         });
 
@@ -305,7 +357,7 @@
         if (a && b) {
             c = a / b * 100;
         }
-        return c.toFixed(fixed || 2) + '%' ;
+        return c.toFixed(fixed || 2) ;
     }
 
     /*]]>*/

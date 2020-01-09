@@ -353,8 +353,8 @@ public class AnalysisService {
      * @return
      */
     public List<DataCountUnit> countTotalNumByUnit(String eventId, int unitType, Date startDate, Date endDate, List<String> ignoreUnitIds) {
-        List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, unitType, TimeUtil.getSerialNumberByDay(startDate),
-                TimeUtil.getSerialNumberByDay(endDate), ignoreUnitIds);
+        List<DataCountUnit> result = analysisMapper.countTotalNumByUnit(eventId, unitType, "70011".equals(eventId) ? TimeUtil.getFirstDayOfMonth(startDate) : TimeUtil.getSerialNumberByDay(startDate),
+                "70011".equals(eventId) ?  TimeUtil.getLastDayOfMonth(endDate) :TimeUtil.getSerialNumberByDay(endDate) , ignoreUnitIds);
         orderByUnit(result);
         return result;
     }
