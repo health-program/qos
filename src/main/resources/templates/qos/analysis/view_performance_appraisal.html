@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:include="/qos/header" />
-
+<link rel="stylesheet"
+      href="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.css">
 <body>
 <section class="content-header" style="padding-bottom: 3px">
     <h1>公立医院绩效考核</h1>
 </section>
 <section class="content">
     <input type="hidden" id="agencyId" th:value="${agencyId}">
+    <input type="hidden" id="userName" th:value="${userName}">
     <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
         <div class="box-body no-pad-top" >
             <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -32,16 +34,18 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <div class="box box-solid" style="margin-bottom: 15px">
+            <div class="box box-solid">
                 <div class="box-body" style="max-height: 800px;overflow: auto">
                     <h3 class="box-title" style="letter-spacing: 3px;text-align: center;font-size: 25px;font-weight: bold;margin-top: 10px">昆山市公立医院绩效考核表（医疗质量）</h3>
-                    <table id="jxkhDataGrid"></table>
+                    <table id="dataGrid"></table>
                 </div>
             </div>
         </div>
     </div>
 </section>
 <div th:include="/qos/footer" />
+<script type="text/javascript" src="/static/js/chart.js"></script>
+<script src="/static/assets/bootstrap-table/extensions/fixed-columns/bootstrap-table-fixed-columns.js"></script>
 <script type="text/javascript">
     /*<![CDATA[*/
     var table;
@@ -70,7 +74,7 @@
     }
 
     function initJxkhDataGrid() {
-        table = $.createTable("#jxkhDataGrid", {
+        table = $.createTable("#dataGrid", {
             idField: "id",
             columns: [
                 [
@@ -79,7 +83,6 @@
                     {title: "转诊人次",  rowspan: 2,field: 'ev70002', formatter:function (value, row, index) {return value ? value : 0 ;}},
                     {title: "出院者手术",  colspan: 2},
                     {title: "三四级手术",  colspan: 2},
-                   /* {title: "手术并发症",  colspan: 2},*/
                     {title: "Ⅰ类切口手术",  colspan: 1},
                     {title: "临床路径管理",  colspan: 2},
                     {title: "预约诊疗",  colspan: 4},
@@ -235,23 +238,22 @@
                             if (number && number1) {
                                 c = number /number1;
                             }
-                            return Math.round(c) ;
+                            return c.toFixed(2)  ;
                         }}
                 ]
             ],
             url: '/qos/analysis/data/get/unit?userName='+$("#userName").val()+'',
+            pagination: false,
+            fixedColumns: true,//固定列
+            fixedNumber:1,
+            searchbar: '#searchbar',
             showExport: true,
             exportTypes: ['excel'],
-            pagination: false,
+            clickToSelect: true,
             onClickRow: function(row, tr) {
                 $("#dataGrid").find(".selected").removeClass('selected');
                 $(tr).addClass('selected');
             },
-            //height:520,
-            sidePagination: 'client',
-            fixedColumns: true,//固定列
-            fixedNumber:1,
-            searchbar: '#searchbar',
             queryParams: function(params) {
                 params.eventIds = '70001,70002,70003,70004,70005,70006,70007,70008,70009,70010,70011,51003,41001,41002';
                 requestParam = params;
@@ -289,7 +291,6 @@
                 if (agencyId && agencyId.length > 0) {
                     result = result.filter( row => row.unitId === agencyId)
                 }
-                console.log(result)
                 return   result;
             }
         });
