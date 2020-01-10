@@ -11,6 +11,7 @@
     </section>
     <section class="content">
         <input type="hidden" id="agencyId" th:value="${agencyId}">
+        <input type="hidden" id="userName" th:value="${userName}">
         <div class="box box-solid" style="height: 45px;margin-bottom: 10px">
             <div class="box-body no-pad-top">
                 <form id="searchbar" class="form-horizontal form-search" style="margin-top: 5px;margin-left: 0;margin-right: 0">
@@ -309,7 +310,7 @@
                     
                 ]
             ],
-            url: '/qos/performance/search/all',
+            url: '/qos/performance/search/all?userName='+$("#userName").val()+'',
             pagination: false,
             fixedColumns: true,//固定列
             fixedNumber:1,

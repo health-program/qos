@@ -51,12 +51,13 @@ public class AnalysisController {
 	}
 	
 	@GetMapping("/view/{name}")
-	public Object viewInex(@PathVariable("name") String name, Model model) {
+	public Object viewInex(@PathVariable("name") String name, Model model,String userName) {
 		QosUserSession userSession = QosUserSession.getCurrentUserSession();
 		String[] agencyIds = userSession.getAgencyIds();
 		if ( agencyIds != null && agencyIds.length == 1){
 			model.addAttribute("agencyId",agencyIds[0]);
 		}
+		model.addAttribute("userName", userName);
 		return "/qos/analysis/view_" + name;
 	}
 
