@@ -123,7 +123,7 @@ public class PerformanceController {
         Calendar d = Calendar.getInstance();
 		d.setTime(endDate);
         d.add(Calendar.YEAR, -1);
-        Date endDateLastYear = c.getTime();
+        Date endDateLastYear = d.getTime();
         List<String> userNameList = new ArrayList<String>();
 		userNameList.add("KSDYRMYY");userNameList.add("KSDERMYY");userNameList.add("KSZYY");userNameList.add("KSDSRMYY");
 		userNameList.add("KSJXRMYY");userNameList.add("KSQDRMYY");userNameList.add("KSBCRMYY");userNameList.add("KSDSIRMYY");
