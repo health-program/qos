@@ -81,7 +81,7 @@
                     {title: "<span style='display: inline-block;width:150px;height: 64px;text-align: center;line-height: 64px'>医疗机构</span>", field: "unitName",  rowspan: 2},
                     {title: "门诊出院", colspan: 3},
                     {title: "转诊人次",  rowspan: 2,field: 'ev70002', formatter:function (value, row, index) {return value ? value : 0 ;}},
-                    {title: "出院者手术",  colspan: 2},
+                    {title: "出院者手术",  colspan: 3},
                     {title: "三四级手术",  colspan: 2},
                     {title: "Ⅰ类切口手术",  colspan: 1},
                     {title: "临床路径管理",  colspan: 2},
@@ -111,7 +111,7 @@
                             }
                             return c.toFixed(2) ;
                         }},
-                    {field: 'ev70003', title: '手术数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                    {field: 'ev70003', title: '手术人数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
                             if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
@@ -125,6 +125,12 @@
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
+                        }},
+                    {field: 'ev70009', title: '手术例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
                         }},
                     {field: 'ev70004', title: '例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
