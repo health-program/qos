@@ -9,7 +9,6 @@ import com.paladin.framework.excel.write.ExcelWriteException;
 import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.school.dto.OrgSchoolExportCondition;
-import com.paladin.qos.model.data.DataUnit;
 import com.paladin.qos.model.school.OrgSchool;
 import com.paladin.qos.service.data.DataUnitService;
 import com.paladin.qos.service.school.OrgSchoolService;
@@ -25,8 +24,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * < 学校基础情况管理>

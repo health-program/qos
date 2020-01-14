@@ -2,6 +2,8 @@ package com.paladin.qos.controller.epidemic;
 
 import com.paladin.common.controller.syst.SysControllerLog;
 import com.paladin.common.core.export.ExportUtil;
+import com.paladin.framework.common.Condition;
+import com.paladin.framework.common.QueryType;
 import com.paladin.framework.core.ControllerSupport;
 import com.paladin.framework.core.query.QueryInputMethod;
 import com.paladin.framework.core.query.QueryOutputMethod;
@@ -10,12 +12,15 @@ import com.paladin.framework.utils.uuid.UUIDUtil;
 import com.paladin.framework.web.response.CommonResponse;
 import com.paladin.qos.controller.epidemic.dto.EpidemicExportCondition;
 import com.paladin.qos.model.epidemic.EpidemicSituation;
+import com.paladin.qos.model.school.DiseaseManage;
 import com.paladin.qos.model.school.OrgSchool;
+import com.paladin.qos.model.school.OrgSchoolName;
 import com.paladin.qos.model.school.OrgSchoolPeople;
 import com.paladin.qos.service.epidemic.EpidemicSituationService;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationDTO;
 import com.paladin.qos.service.epidemic.dto.EpidemicSituationQueryDTO;
 import com.paladin.qos.service.epidemic.vo.EpidemicSituationVO;
+import com.paladin.qos.service.school.DiseaseManageService;
 import com.paladin.qos.service.school.OrgSchoolNameService;
 import com.paladin.qos.service.school.OrgSchoolPeopleService;
 import com.paladin.qos.service.school.OrgSchoolService;
@@ -41,17 +46,19 @@ public class EpidemicController extends ControllerSupport {
 
     @Autowired
     private EpidemicSituationService epidemicSituationService;
-
     @Autowired
     private OrgSchoolNameService orgSchoolNameService;
     @Autowired
     private OrgSchoolPeopleService orgSchoolPeopleService;
     @Autowired
     private OrgSchoolService orgSchoolService;
+    @Autowired
+	private DiseaseManageService diseaseManageService;
 
     @RequestMapping("/index")
     @QueryInputMethod(queryClass = EpidemicSituationQueryDTO.class)
-    public String index() {
+    public String index(Model model) {
+    	model.addAttribute("disease",diseaseManageService.findAll());
 	return "/qos/epidemic/epidemic_situation_index";
     }
 
@@ -131,7 +138,17 @@ public class EpidemicController extends ControllerSupport {
 
 	eSituation.setSchoolYear(orgSchool.getSchoolYear());
 	eSituation.setIncidentUnit(orgSchool.getParentSchoolId());
-
+	Integer firstWarning = 0;
+	Integer totalWarning = 0;
+	DiseaseManage first = diseaseManageService.searchOne(new Condition(DiseaseManage.DISEASE_MANAGE_CODE,QueryType.EQUAL,dto.getSicknessClassify()));
+	if(dto.getFirstWeek() >= first.getWarningValue()){
+		firstWarning = 1;
+	}
+	if(dto.getTotal() >= first.getWarningValue()){
+		totalWarning = 1;
+	}
+	eSituation.setIsEarlyWarningValue(firstWarning);
+	eSituation.setIsEarlyWarningValue2(totalWarning);
 	if (epidemicSituationService.save(eSituation) > 0) {
 	    return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id),new EpidemicSituationVO()));
 	}
@@ -169,6 +186,18 @@ public class EpidemicController extends ControllerSupport {
 
 	    eSituation.setSchoolYear(orgSchool.getSchoolYear());
 	    eSituation.setIncidentUnit(orgSchool.getParentSchoolId());
+
+		Integer firstWarning = 0;
+		Integer totalWarning = 0;
+		DiseaseManage first = diseaseManageService.searchOne(new Condition(DiseaseManage.DISEASE_MANAGE_CODE,QueryType.EQUAL,dto.getSicknessClassify()));
+		if(dto.getFirstWeek() >= first.getWarningValue()){
+			firstWarning = 1;
+		}
+		if(dto.getTotal() >= first.getWarningValue()){
+			totalWarning = 1;
+		}
+		eSituation.setIsEarlyWarningValue(firstWarning);
+		eSituation.setIsEarlyWarningValue2(totalWarning);
 
 	    if (epidemicSituationService.update(eSituation) > 0) {
 		return CommonResponse.getSuccessResponse(beanCopy(epidemicSituationService.get(id),new EpidemicSituationVO()));

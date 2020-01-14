@@ -30,9 +30,10 @@
 						</select>
 						</div>
 						<div class="col-md-2">
-							<select id="sicknessClassify" name="sicknessClassify"class="form-control tonto-select-constant"th:attr="selectedvalue=${query?.sicknessClassify}"enumcode="sickness-type">
-								<option value="">请选病种分类</option>
-							</select>
+                            <select name="sicknessClassify" class="form-control">
+                                <option value="">请选择业务管理区域</option>
+                                <option th:each="disease : ${disease}" th:value="${disease.code}" th:text="${disease.name}"></option>
+                            </select>
 						</div>
                         <div class="col-md-2">
 		                    <div class="pull-right">

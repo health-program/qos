@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/header" />
+
+<body>
+<tt:constant enumcode="boolean-type,role-level-type" />
+<section class="content-header">
+    <h1>病种详情</h1>
+    <ol class="breadcrumb">
+        <li><a href="/qos/disease/manage/index"><i class="fa fa-list-alt"></i>病种列表</a></li>
+        <li class="active">病种详情</li>
+    </ol>
+</section>
+<section class="content">
+</section>
+<div class="col-sm-2 col-sm-offset-5 btn-back">
+    <a href="/qos/disease/manage/index" class="btn btn-primary btn-block">返回</a>
+</div>
+<input type="hidden" id="id" th:value="${id}" />
+<div th:include="/common/footer" />
+<script type="text/javascript">
+    $(function() {
+        var options = {
+            id: "model",
+            name: "详情",
+            url: "/qos/disease/manage/update?id="+$("#id").val(),
+            columns: [
+                { title: "病种名称",name: "name", inputType: "TEXT",required: "required"},
+                { title: "预警值", name: "warningValue", inputType: "NUMBER", required:"required",attr:{'min':0} },
+            ]
+        }
+
+        $.getAjax("/qos/disease/manage/get?id=" + $("#id").val(), function(data) {
+            var html = generateHtml(options);
+            $(".content").html(html);
+            $.initComponment($(".content"));
+
+            var model = new tonto.Model("model", options.columns);
+            model.setData(data);
+        });
+    });
+</script>
+</body>
+
+</html>
