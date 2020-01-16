@@ -117,20 +117,20 @@
                             if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
                             return fa - fb;
                         }},
+                    {field: 'ev70009', title: '手术例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
+                        sorter: function(fa, fb, ra, rb) {
+                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
+                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
+                            return fa - fb;
+                        }},
                     {field: 'strDefault2', title: '%', formatter:function (value, row, index) {
-                            let number = row.ev70003 ? row.ev70003 : 0;
+                            let number = row.ev70009 ? row.ev70009 : 0;
                             let number1 = row.ev51003 ? row.ev51003 : 0;
                             let c = 0;
                             if (number && number1) {
                                 c = number /number1 * 100;
                             }
                             return c.toFixed(2) ;
-                        }},
-                    {field: 'ev70009', title: '手术例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
-                        sorter: function(fa, fb, ra, rb) {
-                            if (fa == '-') return table.options.sortOrder == 'desc' ? -1 : 1;
-                            if (fb == '-') return table.options.sortOrder == 'desc' ? 1 : -1;
-                            return fa - fb;
                         }},
                     {field: 'ev70004', title: '例数', formatter:function (value, row, index) {return value ? value : 0 ;},sortable: true,
                         sorter: function(fa, fb, ra, rb) {
